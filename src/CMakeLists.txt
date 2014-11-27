@@ -1,5 +1,5 @@
-set(SOURCES main.cpp)
-set(HEADERS Point.hpp PointOfR.hpp)
+set(SOURCES main.cpp CartesianProduct.cpp Manifold.cpp Point.cpp RealSpace.cpp)
+set(HEADERS CartesianProduct.h defs.h Manifold.h Point.h RealSpace.h)
 
 add_library(PGSolver SHARED ${SOURCES} ${HEADERS})
 
