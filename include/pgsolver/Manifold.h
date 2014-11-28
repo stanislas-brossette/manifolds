@@ -2,8 +2,8 @@
 #define _PGS_MANIFOLD_H_
 
 #include <iostream>
-#include "Point.h"
-#include "defs.h"
+#include <pgsolver/Point.h>
+#include <pgsolver/defs.h>
 
 namespace pgs
 {

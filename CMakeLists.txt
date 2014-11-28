@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 2.8)
 #project(PGSolver)
 #add_executable(PGSolver src/main.cpp)
 
+enable_testing()
+
 include(cmake/base.cmake)
 include(cmake/boost.cmake)
 include(cmake/eigen.cmake)
@@ -23,10 +25,12 @@ PKG_CONFIG_APPEND_LIBS(PGSolver)
 #search_for_boost()
 search_for_eigen()
 
+include_directories(include)
+
 # add_subdirectory(bin)
 # add_subdirectory(share)
 add_subdirectory(src)
-# add_subdirectory(tests)
+add_subdirectory(tests)
 # add_subdirectory(var)
 
 setup_project_finalize()

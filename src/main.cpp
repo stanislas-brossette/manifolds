@@ -1,9 +1,9 @@
 #include <iostream>
 #include <stdexcept>
-#include "RealSpace.h"
-#include "SO3.h"
-#include "CartesianProduct.h"
-#include "Point.h"
+#include <pgsolver/RealSpace.h>
+#include <pgsolver/SO3.h>
+#include <pgsolver/CartesianProduct.h>
+#include <pgsolver/Point.h>
 
 using namespace pgs;
 int main()

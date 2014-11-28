@@ -1,4 +1,4 @@
-#include "CartesianProduct.h"
+#include <pgsolver/CartesianProduct.h>
 
 namespace pgs
 {

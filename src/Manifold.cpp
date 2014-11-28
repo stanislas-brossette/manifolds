@@ -1,5 +1,5 @@
 #include <stdexcept>
-#include "Manifold.h"
+#include <pgsolver/Manifold.h>
 
 namespace pgs
 {

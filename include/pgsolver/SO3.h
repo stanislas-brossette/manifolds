@@ -1,7 +1,7 @@
 #ifndef _PGS_SO3_H_
 #define _PGS_SO3_H_
 
-#include "Manifold.h"
+#include <pgsolver/Manifold.h>
 
 namespace pgs
 {

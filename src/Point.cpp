@@ -1,5 +1,5 @@
-#include "Point.h"
-#include "Manifold.h"
+#include <pgsolver/Point.h>
+#include <pgsolver/Manifold.h>
 #include <assert.h>
 #include <iostream>
 

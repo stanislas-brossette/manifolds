@@ -1,7 +1,7 @@
 #ifndef _PGS_CARTESIAN_PRODUCT_H_
 #define _PGS_CARTESIAN_PRODUCT_H_
 
-#include "Manifold.h"
+#include <pgsolver/Manifold.h>
 #include <vector>
 
 namespace pgs

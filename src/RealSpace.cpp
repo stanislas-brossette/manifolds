@@ -1,4 +1,4 @@
-#include "RealSpace.h"
+#include <pgsolver/RealSpace.h>
 
 namespace pgs
 {

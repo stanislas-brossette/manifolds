@@ -1,4 +1,4 @@
-#include "SO3.h"
+#include <pgsolver/SO3.h>
 
 namespace pgs
 {

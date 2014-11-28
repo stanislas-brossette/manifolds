@@ -1,6 +1,13 @@
 set(SOURCES main.cpp CartesianProduct.cpp Manifold.cpp Point.cpp RealSpace.cpp
   SO3.cpp)
-set(HEADERS CartesianProduct.h defs.h Manifold.h Point.h RealSpace.h SO3.h)
+set(HEADERS
+  ../include/pgsolver/CartesianProduct.h
+  ../include/pgsolver/defs.h
+  ../include/pgsolver/Manifold.h
+  ../include/pgsolver/Point.h
+  ../include/pgsolver/RealSpace.h
+  ../include/pgsolver/SO3.h
+)
 
 add_library(PGSolver SHARED ${SOURCES} ${HEADERS})
 
