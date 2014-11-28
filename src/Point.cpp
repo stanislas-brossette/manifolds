@@ -6,7 +6,7 @@ namespace pgs
 {
   Point::Point(const Manifold& M)
     : manifold_(M)
-    , value_(M.representationDim())
+    , value_(static_cast<long> (M.representationDim()))
   {
   }
 

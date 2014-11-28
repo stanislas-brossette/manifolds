@@ -25,7 +25,7 @@ namespace pgs
   Point Manifold::getIdentity() const
   {
     lock();
-    Eigen::VectorXd id(representationDim_);
+    Eigen::VectorXd id(static_cast<long> (representationDim_));
     setIdentity(id);
     return Point(*this, id);
   }

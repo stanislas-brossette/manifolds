@@ -8,6 +8,9 @@ set_target_properties(PGSolver PROPERTIES
   SOVERSION 0.1
 )
 
-add_executable(PGSolverExe main.cpp)
+target_link_libraries(PGSolver)
+
 install(TARGETS PGSolver
   DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
+add_executable(PGSolverExe main.cpp)
+target_link_libraries(PGSolverExe PGSolver)

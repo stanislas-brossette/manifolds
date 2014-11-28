@@ -42,5 +42,5 @@ int main()
   std::cout << x.value().transpose() << std::endl;
   std::cout << y.value().transpose() << std::endl;
   std::cout << (y + p).value().transpose() << std::endl;
-  system("pause");
+  return 0;
 }

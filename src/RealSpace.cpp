@@ -20,13 +20,13 @@ namespace pgs
   ConstSegment RealSpace::getValueConst(const Eigen::Ref<const Eigen::VectorXd>& val, size_t i) const
   {
     assert(i < 1 && "invalid index");
-    return val.segment(0,representationDim());
+    return val.segment(0,static_cast<long> (representationDim()));
   }
 
   Segment RealSpace::getValue(Eigen::Ref<Eigen::VectorXd> val, size_t i) const
   {
     assert(i < 1 && "invalid index");
-    return val.segment(0, representationDim());
+    return val.segment(0, static_cast<long> (representationDim()));
   }
 
   void RealSpace::plus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const
