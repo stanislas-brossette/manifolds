@@ -43,13 +43,24 @@ namespace pgs
   Segment CartesianProduct::getValue(Eigen::Ref<Eigen::VectorXd> val, size_t i) const
   {
     assert(i < submanifolds_.size() && "invalid index");
-    return val.segment(static_cast<long> (startIndexR_[i]),static_cast<long> (submanifolds_[i]->representationDim()));
+    return val.segment(startIndexR_[i], submanifolds_[i]->representationDim());
   }
 
   ConstSegment CartesianProduct::getValueConst(const Eigen::Ref<const Eigen::VectorXd>& val, size_t i) const
   {
     assert(i < submanifolds_.size() && "invalid index");
-    return val.segment(static_cast<long> (startIndexR_[i]), static_cast<long> (submanifolds_[i]->representationDim()));
+    return val.segment(startIndexR_[i], submanifolds_[i]->representationDim());
+  }
+
+  std::string CartesianProduct::toString(const Eigen::Ref<const Eigen::VectorXd>& val, std::string& prefix) const
+  {
+    std::stringstream ss;
+    std::string SubManPrefix("  ");
+    for (std::size_t i = 0; i<numberOfSubmanifolds(); ++i)
+    {
+      ss << prefix << submanifolds_[i]->toString(getValueConst(val, i), SubManPrefix);
+    }
+    return ss.str();
   }
 
   void CartesianProduct::plus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const
@@ -58,7 +69,7 @@ namespace pgs
     {
       submanifolds_[i]->plus(getValue(out, i), 
                               getValueConst(x, i), 
-                              v.segment(static_cast<long> (startIndexT_[i]),static_cast<long> ( submanifolds_[i]->dim())));
+                              v.segment(startIndexT_[i], submanifolds_[i]->dim()));
     }
   }
 

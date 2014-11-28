@@ -25,7 +25,11 @@ namespace pgs
     Segment operator[](size_t i);
 
     const Manifold& getManifold() const;
+    
+    std::string toString(std::string& prefix) const; //Dislays point in representation space
 
+    friend inline std::ostream& operator<< (std::ostream& os, const Point& x);
+    
   private:
     
 
@@ -37,6 +41,13 @@ namespace pgs
   };
 
   Point operator+(const Point& x, const Eigen::Ref<const Eigen::VectorXd>& v);
+
+  inline std::ostream& operator<< (std::ostream& os, const Point& x)
+  {
+    std::string prefix("");
+    os << x.toString(prefix);
+    return os;
+  }
 }
 
 #endif //_PGS_POINT_H_

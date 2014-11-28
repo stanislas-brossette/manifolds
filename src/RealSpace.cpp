@@ -2,7 +2,7 @@
 
 namespace pgs
 {
-  RealSpace::RealSpace(size_t n)
+  RealSpace::RealSpace(Index n)
     : Manifold(n, n)
   {
   }
@@ -21,6 +21,13 @@ namespace pgs
   {
     assert(i < 1 && "invalid index");
     return val.segment(0,static_cast<long> (representationDim()));
+  }
+
+  std::string RealSpace::toString(const Eigen::Ref<const Eigen::VectorXd>& val, std::string& prefix) const
+  {
+    std::stringstream ss;
+    ss << prefix << val.transpose() << std::endl;
+    return ss.str();
   }
 
   Segment RealSpace::getValue(Eigen::Ref<Eigen::VectorXd> val, size_t i) const

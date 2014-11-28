@@ -3,11 +3,13 @@
 
 namespace pgs
 {
-  Manifold::Manifold(size_t dimension, size_t representationDimension)
+  Manifold::Manifold(Index dimension, Index representationDimension)
     : dimension_(dimension)
     , representationDim_(representationDimension)
     , lock_(false)
   {
+    assert(dimension>=0 && "Negative dimension not accepted");
+    assert(representationDimension>=0 && "Negative dimension not accepted");
   }
 
   Point Manifold::createPoint() const
@@ -25,38 +27,40 @@ namespace pgs
   Point Manifold::getIdentity() const
   {
     lock();
-    Eigen::VectorXd id(static_cast<long> (representationDim_));
+    Eigen::VectorXd id(representationDim_);
     setIdentity(id);
     return Point(*this, id);
   }
 
-  size_t Manifold::dim() const
+  Index Manifold::dim() const
   {
     return dimension_;
   }
 
-  size_t Manifold::representationDim() const
+  Index Manifold::representationDim() const
   {
     return representationDim_;
   }
 
   void Manifold::plus(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const
   {
-    assert(out.size() == static_cast<int> (representationDim_));
-    assert(x.size() == static_cast<int> (representationDim_));
-    assert(v.size() == static_cast<int> (dimension_));
+    assert(out.size() ==  representationDim_);
+    assert(x.size() == representationDim_);
+    assert(v.size() == dimension_);
     plus_(out, x, v);
   }
 
 
-  void Manifold::setDimension(size_t d)
+  void Manifold::setDimension(Index d)
   {
+    assert(d>0 && "Negative dimension not accepted");
     testLock();
     dimension_ = d;
   }
 
-  void Manifold::setRepresentationDimension(size_t rd)
+  void Manifold::setRepresentationDimension(Index rd)
   {
+    assert(rd>0 && "Negative dimension not accepted");
     testLock();
     representationDim_ = rd;
   }

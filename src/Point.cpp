@@ -1,12 +1,13 @@
 #include "Point.h"
 #include "Manifold.h"
 #include <assert.h>
+#include <iostream>
 
 namespace pgs
 {
   Point::Point(const Manifold& M)
     : manifold_(M)
-    , value_(static_cast<long> (M.representationDim()))
+    , value_(M.representationDim())
   {
   }
 
@@ -15,7 +16,7 @@ namespace pgs
     : manifold_(M)
     , value_(val)
   {
-    assert(static_cast<int> (M.representationDim()) == val.size());
+    assert(M.representationDim() == val.size());
   }
 
   
@@ -55,5 +56,10 @@ namespace pgs
   Point operator+(const Point& x, const Eigen::Ref<const Eigen::VectorXd>& v)
   {
     return x.getManifold().createPoint(x.value()).increment(v);
+  }
+
+  std::string Point::toString(std::string& prefix) const
+  {
+    return manifold_.toString(value_, prefix);
   }
 }

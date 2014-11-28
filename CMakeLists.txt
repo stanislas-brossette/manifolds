@@ -20,7 +20,7 @@ setup_project()
 # Add main library to pkg-config file.
 PKG_CONFIG_APPEND_LIBS(PGSolver)
 #
-search_for_boost()
+#search_for_boost()
 search_for_eigen()
 
 # add_subdirectory(bin)

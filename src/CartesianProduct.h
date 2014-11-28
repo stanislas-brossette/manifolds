@@ -19,6 +19,9 @@ namespace pgs
 
     virtual Segment getValue(Eigen::Ref<Eigen::VectorXd> val, size_t i) const;
     virtual ConstSegment getValueConst(const Eigen::Ref<const Eigen::VectorXd>& val, size_t i) const;
+    virtual std::string toString(const Eigen::Ref<const Eigen::VectorXd>& val, std::string& prefix) const;
+  
+
 
   protected:
     virtual void plus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const;
@@ -26,8 +29,8 @@ namespace pgs
 
   private:
     std::vector<const Manifold*> submanifolds_;
-    std::vector<size_t> startIndexT_;
-    std::vector<size_t> startIndexR_;
+    std::vector<Index> startIndexT_;
+    std::vector<Index> startIndexR_;
   };
 }
 

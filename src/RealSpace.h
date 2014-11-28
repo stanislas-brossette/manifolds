@@ -1,6 +1,7 @@
 #ifndef _PGS_REAL_SPACE_H_
 #define _PGS_REAL_SPACE_H_
 
+#include <iostream>
 #include "Manifold.h"
 
 namespace pgs
@@ -8,14 +9,15 @@ namespace pgs
   class RealSpace: public Manifold
   {
   public:
-    RealSpace(size_t n);
+    RealSpace(Index n);
 
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
 
     virtual Segment getValue(Eigen::Ref<Eigen::VectorXd> val, size_t i) const;
     virtual ConstSegment getValueConst(const Eigen::Ref<const Eigen::VectorXd>& val, size_t i) const;
-
+    virtual std::string toString(const Eigen::Ref<const Eigen::VectorXd>& val, std::string& prefix) const;
+  
   protected:
     //map operations
     virtual void plus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const;
