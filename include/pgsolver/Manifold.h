@@ -29,6 +29,8 @@ namespace pgs
     //map operations
     void setIdentity(Eigen::Ref<Eigen::VectorXd> out) const;
     void plus(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const;
+    void minus(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const;
+    
 
     //for internal use
     void lock() const;
@@ -39,6 +41,7 @@ namespace pgs
 
 
     virtual void plus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const = 0;
+    virtual void minus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const = 0;
     virtual void setIdentity_(Eigen::Ref<Eigen::VectorXd> out) const = 0;
 
     void testLock() const;

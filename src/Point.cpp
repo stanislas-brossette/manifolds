@@ -58,6 +58,13 @@ namespace pgs
     return x.getManifold().createPoint(x.value()).increment(v);
   }
 
+  Eigen::VectorXd operator-(const Point& x, const Point& y)
+  {
+    Eigen::VectorXd output(x.getManifold().dim());
+    x.getManifold().minus(output, x.value(), y.value());
+    return output;
+  }
+
   Point & Point::operator=(const Point& x)
   {
     assert(this->manifold_.dim() == x.manifold_.dim());

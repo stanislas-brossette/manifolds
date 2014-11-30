@@ -62,6 +62,11 @@ namespace pgs
     rot = (Eigen::Map<const Eigen::Matrix3d>(x.data()))*E;
     out = (Eigen::Map<const Eigen::VectorXd>(rot.data(),9));
   }
+  
+  void SO3::minus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& y) const
+  {
+    out = x - y;
+  }
 
   void SO3::setIdentity_(Eigen::Ref<Eigen::VectorXd> out) const
   {

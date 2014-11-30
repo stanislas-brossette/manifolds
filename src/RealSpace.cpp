@@ -41,6 +41,11 @@ namespace pgs
     out = x + v;
   }
 
+  void RealSpace::minus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& y) const
+  {
+    out = x - y;
+  }
+
   void RealSpace::setIdentity_(Eigen::Ref<Eigen::VectorXd> out) const
   {
     out.setZero();

@@ -50,6 +50,13 @@ namespace pgs
     plus_(out, x, v);
   }
 
+  void Manifold::minus(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& y) const
+  {
+    assert(out.size() == dimension_);
+    assert(x.size() == representationDim_);
+    assert(y.size() == representationDim_);
+    minus_(out, x, y);
+  }
 
   void Manifold::setDimension(Index d)
   {
