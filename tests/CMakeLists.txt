@@ -8,3 +8,9 @@ add_executable(RealSpaceTest RealSpaceTest.cpp)
 target_link_libraries(RealSpaceTest PGSolver ${Boost_LIBRARIES})
 
 add_test(RealSpaceTest RealSpaceTest)
+
+
+add_executable(SO3Test SO3Test.cpp)
+target_link_libraries(SO3Test PGSolver ${Boost_LIBRARIES})
+
+add_test(SO3Test SO3Test)

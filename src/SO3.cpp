@@ -40,7 +40,27 @@ namespace pgs
 
   void SO3::plus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const
   {
-    out = x + v;
+    double n = v.squaredNorm();
+    double c, s;
+    if (n < 1e-8)
+    {
+      c = 0.5 - n / 24;
+      s = 1 - n / 6;
+    }
+    else
+    {
+      double t = sqrt(n);
+      c = (1 - cos(t)) / n;
+      s = sin(t) / t;
+    }
+    Eigen::Matrix3d E;
+    E <<  1 - c*(v.y()*v.y() + v.z()*v.z()), -s*v.z() + c * v.x()*v.y(), s*v.y() + c * v.x()*v.z(),
+          s * v.z() + c*v.x()*v.y(), 1 - c*(v.x()*v.x() + v.z()*v.z()) , -s*v.x() + c*v.y()*v.z(),
+          -s*v.y() + c*v.x()*v.z(), s*v.x() + c*v.y()*v.z(), 1 - c*(v.x()*v.x() + v.y()*v.y());
+
+    Eigen::Matrix3d rot;
+    rot = (Eigen::Map<const Eigen::Matrix3d>(x.data()))*E;
+    out = (Eigen::Map<const Eigen::VectorXd>(rot.data(),9));
   }
 
   void SO3::setIdentity_(Eigen::Ref<Eigen::VectorXd> out) const
