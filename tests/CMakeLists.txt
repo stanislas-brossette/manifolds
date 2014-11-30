@@ -14,3 +14,9 @@ add_executable(SO3Test SO3Test.cpp)
 target_link_libraries(SO3Test PGSolver ${Boost_LIBRARIES})
 
 add_test(SO3Test SO3Test)
+
+
+add_executable(CartesianProductTest CartesianProductTest.cpp)
+target_link_libraries(CartesianProductTest PGSolver ${Boost_LIBRARIES})
+
+add_test(CartesianProductTest CartesianProductTest)
