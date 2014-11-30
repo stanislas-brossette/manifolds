@@ -28,6 +28,7 @@ namespace pgs
     
     std::string toString(std::string& prefix) const; //Dislays point in representation space
 
+    Point & operator=(const Point& x);
     friend inline std::ostream& operator<< (std::ostream& os, const Point& x);
     
   private:

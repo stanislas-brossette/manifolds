@@ -58,6 +58,14 @@ namespace pgs
     return x.getManifold().createPoint(x.value()).increment(v);
   }
 
+  Point & Point::operator=(const Point& x)
+  {
+    assert(this->manifold_.dim() == x.manifold_.dim());
+    assert(this->manifold_.representationDim() == x.manifold_.representationDim());
+    this->value_ = x.value();
+    return *this;
+  }
+
   std::string Point::toString(std::string& prefix) const
   {
     return manifold_.toString(value_, prefix);

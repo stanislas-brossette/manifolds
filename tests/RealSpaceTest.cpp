@@ -57,3 +57,16 @@ BOOST_AUTO_TEST_CASE(RealPointIncrement)
   BOOST_CHECK_EQUAL(x.value()[1], 4);
   BOOST_CHECK_EQUAL(x.value()[2], 6);
 }
+
+BOOST_AUTO_TEST_CASE(RealPointAddition)
+{
+  RealSpace R3(3);
+  Point y = R3.getIdentity();
+  Eigen::Vector3d vy;
+  vy << 1,2,3;
+  y=y+vy+vy;
+  BOOST_CHECK_EQUAL(y.value().size(), 3);
+  BOOST_CHECK_EQUAL(y.value()[0], 2);
+  BOOST_CHECK_EQUAL(y.value()[1], 4);
+  BOOST_CHECK_EQUAL(y.value()[2], 6);
+}
