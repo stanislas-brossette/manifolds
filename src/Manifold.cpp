@@ -15,18 +15,21 @@ namespace pgs
   Point Manifold::createPoint() const
   {
     lock();
+    incrementRefCounter();
     return Point(*this);
   }
 
   Point Manifold::createPoint(const Eigen::VectorXd& val) const
   {
     lock();
+    incrementRefCounter();
     return Point(*this, val);
   }
 
   Point Manifold::getIdentity() const
   {
     lock();
+    incrementRefCounter();
     Eigen::VectorXd id(representationDim_);
     setIdentity(id);
     return Point(*this, id);

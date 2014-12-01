@@ -4,10 +4,11 @@
 #include <iostream>
 #include <pgsolver/Point.h>
 #include <pgsolver/defs.h>
+#include <pgsolver/RefCounter.h>
 
 namespace pgs
 {
-  class Manifold
+  class Manifold : public RefCounter
   {
   public:
     Manifold(Index dimension, Index representationDimension);

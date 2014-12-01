@@ -14,6 +14,8 @@ namespace pgs
     Point(const Manifold& M, const Eigen::VectorXd& val);
 
   public:
+    Point(const Point& other);
+    ~Point();
     Point& increment(const Eigen::VectorXd& v);
 
     //get a sub point

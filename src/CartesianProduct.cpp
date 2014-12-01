@@ -75,7 +75,12 @@ namespace pgs
 
   void CartesianProduct::minus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& y) const
   {
-    out = x - y;
+    for (size_t i = 0; i < submanifolds_.size(); ++i)
+    {
+      submanifolds_[i]->minus(out.segment(startIndexT_[i], submanifolds_[i]->dim()), 
+                              getValueConst(x, i), 
+                              getValueConst(y, i));
+    }
   }
 
   void CartesianProduct::setIdentity_(Eigen::Ref<Eigen::VectorXd> out) const

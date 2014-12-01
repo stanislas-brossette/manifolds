@@ -1,8 +1,8 @@
 #ifndef _PGS_CARTESIAN_PRODUCT_H_
 #define _PGS_CARTESIAN_PRODUCT_H_
 
-#include <pgsolver/Manifold.h>
 #include <vector>
+#include <pgsolver/Manifold.h>
 
 namespace pgs
 {
@@ -29,7 +29,7 @@ namespace pgs
     virtual void setIdentity_(Eigen::Ref<Eigen::VectorXd> out) const;
 
   private:
-    std::vector<const Manifold*> submanifolds_;
+    std::vector<const Manifold* > submanifolds_;
     std::vector<Index> startIndexT_;
     std::vector<Index> startIndexR_;
   };

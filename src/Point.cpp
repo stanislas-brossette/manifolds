@@ -11,12 +11,23 @@ namespace pgs
   {
   }
 
-
   Point::Point(const Manifold& M, const Eigen::VectorXd& val)
     : manifold_(M)
     , value_(val)
   {
     assert(M.representationDim() == val.size());
+  }
+
+  Point::Point(const Point& other)
+    : manifold_(other.manifold_)
+    , value_(other.value_)
+  {
+    other.manifold_.incrementRefCounter();
+  }
+
+  Point::~Point()
+  {
+    manifold_.decrementRefCounter();
   }
 
   

@@ -1,3 +1,4 @@
+#include <cmath>
 #include <pgsolver/SO3.h>
 
 namespace pgs
@@ -40,7 +41,9 @@ namespace pgs
 
   void SO3::plus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const
   {
+    assert(v.size() == 3 && "Increment for expMap must be of size 3");
     double n = v.squaredNorm();
+    assert(sqrt(n) < M_PI && "Increment for expMap must be of norm at most pi");
     double c, s;
     if (n < 1e-8)
     {
@@ -65,7 +68,20 @@ namespace pgs
   
   void SO3::minus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& y) const
   {
-    out = x - y;
+    Eigen::Matrix3d R(((Eigen::Map<const Eigen::Matrix3d>(y.data())).transpose())*(Eigen::Map<const Eigen::Matrix3d>(x.data())));
+    Eigen::Vector3d v(-R(1,2), R(0,2), -R(0,1)); 
+    double acosTr = std::acos((R.trace()-1)/2);
+    if (v.norm() < 1e-8)
+      out = v;
+    else 
+      {
+        Eigen::Matrix3d diff(R-R.transpose());
+        R = acosTr/(2*std::sin(acosTr))*(diff);
+        v(0)=R(2,1);
+        v(1)=R(0,2);
+        v(2)=R(1,0);
+        out = v;
+      }
   }
 
   void SO3::setIdentity_(Eigen::Ref<Eigen::VectorXd> out) const
