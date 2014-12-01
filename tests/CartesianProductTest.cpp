@@ -123,26 +123,34 @@ BOOST_AUTO_TEST_CASE(CartProdAddition)
 
 BOOST_AUTO_TEST_CASE(CartProSubstraction)
 {
-  RealSpace R3(3);
   RealSpace R2(2);
+  RealSpace R3(3);
   SO3<ExpMapMatrix> RotSpace;
-  CartesianProduct P(R2, R3);
-  P.multiply(R2);
-  CartesianProduct Q(RotSpace, P);
-  Point xQ = Q.getIdentity();
-  Eigen::VectorXd vxQ(10);
-  vxQ << 0.1,0.2,0.3,1,2,3,4,5,6,7;
-  Point yQ = xQ + vxQ;
-  Eigen::VectorXd z = yQ-xQ;
-  BOOST_CHECK_EQUAL(z.size(), 10);
-  BOOST_CHECK_CLOSE(z[0], 0.1, 1e-12);
-  BOOST_CHECK_CLOSE(z[1], 0.2, 1e-12);
-  BOOST_CHECK_CLOSE(z[2], 0.3, 1e-12);
-  BOOST_CHECK_CLOSE(z[3], 1,   1e-12);
-  BOOST_CHECK_CLOSE(z[4], 2,   1e-12);
-  BOOST_CHECK_CLOSE(z[5], 3,   1e-12);
-  BOOST_CHECK_CLOSE(z[6], 4,   1e-12);
-  BOOST_CHECK_CLOSE(z[7], 5,   1e-12);
-  BOOST_CHECK_CLOSE(z[8], 6,   1e-12);
-  BOOST_CHECK_CLOSE(z[9], 7,   1e-12); 
+  CartesianProduct R2R3R2(R2, R3);
+  R2R3R2.multiply(R2);
+  CartesianProduct SO3R2R3R2(RotSpace, R2R3R2);
+  Point x = SO3R2R3R2.getIdentity();
+  Point y = SO3R2R3R2.getIdentity();
+  Eigen::VectorXd vx(10);
+  Eigen::VectorXd vy(10);
+  vx << 1,0.1,1,1,2,3,4,5,6,7;
+  vy << 0.07,3,0.01,4,6,2,1,4,6,4;
+  x = x + vx;
+  y = y + vy;
+  Point z = x+(y-x);
+  std::cout << "x = " << std::endl << x << std::endl;
+  std::cout << "y = " << std::endl << y << std::endl;
+  std::cout << "z = x+(y-x) = " << std::endl << z << std::endl;
+
+  BOOST_CHECK_EQUAL(z.value().size(), 16);
+  BOOST_CHECK_CLOSE(y.value()[0], z.value()[0], 1e-8);
+  BOOST_CHECK_CLOSE(y.value()[1], z.value()[1], 1e-8);
+  BOOST_CHECK_CLOSE(y.value()[2], z.value()[2], 1e-8);
+  BOOST_CHECK_CLOSE(y.value()[3], z.value()[3], 1e-8);
+  BOOST_CHECK_CLOSE(y.value()[4], z.value()[4], 1e-8);
+  BOOST_CHECK_CLOSE(y.value()[5], z.value()[5], 1e-8);
+  BOOST_CHECK_CLOSE(y.value()[6], z.value()[6], 1e-8);
+  BOOST_CHECK_CLOSE(y.value()[7], z.value()[7], 1e-8);
+  BOOST_CHECK_CLOSE(y.value()[8], z.value()[8], 1e-8);
+  BOOST_CHECK_CLOSE(y.value()[9], z.value()[9], 1e-8); 
 }

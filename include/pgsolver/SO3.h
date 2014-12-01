@@ -22,7 +22,7 @@ namespace pgs
     virtual void setIdentity_(Eigen::Ref<Eigen::VectorXd> out) const;
   };
 
-
+  //Implementations of the methods
   template<typename Map>
   inline SO3<Map>::SO3()
     : Manifold(3, Map::OutputDim())
