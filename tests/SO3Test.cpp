@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <pgsolver/SO3.h>
 #include <pgsolver/Point.h>
+#include <pgsolver/ExpMapMatrix.h>
 
 #define BOOST_TEST_MODULE PGSolver 
 
@@ -14,7 +15,7 @@ using namespace pgs;
 
 BOOST_AUTO_TEST_CASE(RotSpaceConstructor)
 {
-  SO3 RotSpace;
+  SO3<ExpMapMatrix> RotSpace;
   BOOST_CHECK_EQUAL(RotSpace.dim(), 3);
   BOOST_CHECK_EQUAL(RotSpace.representationDim(), 9);
   BOOST_CHECK_EQUAL(RotSpace.numberOfSubmanifolds(), 1);
@@ -22,7 +23,7 @@ BOOST_AUTO_TEST_CASE(RotSpaceConstructor)
 
 BOOST_AUTO_TEST_CASE(SO3Constructor)
 {
-  SO3 RotSpace;
+  SO3<ExpMapMatrix> RotSpace;
   Point x = RotSpace.getIdentity();
   Eigen::VectorXd v(9);
   v << 1,2,3,4,5,6,7,8,9;
@@ -51,7 +52,7 @@ BOOST_AUTO_TEST_CASE(SO3Constructor)
 
 BOOST_AUTO_TEST_CASE(SO3Increment)
 {
-  SO3 RotSpace;
+  SO3<ExpMapMatrix> RotSpace;
   Point x = RotSpace.getIdentity();
   Eigen::Vector3d vy;
   vy << 0.1,0.2,0.3;
@@ -71,7 +72,7 @@ BOOST_AUTO_TEST_CASE(SO3Increment)
 
 BOOST_AUTO_TEST_CASE(SO3Addition)
 {
-  SO3 RotSpace;
+  SO3<ExpMapMatrix> RotSpace;
   Point y = RotSpace.getIdentity();
   Eigen::Vector3d vy;
   vy << 0.1,0.2,0.3;
@@ -90,7 +91,7 @@ BOOST_AUTO_TEST_CASE(SO3Addition)
 
 BOOST_AUTO_TEST_CASE(SO3Substraction)
 {
-  SO3 RotSpace;
+  SO3<ExpMapMatrix> RotSpace;
   Eigen::Vector3d v( 0.2, 0.4, 0.6);
   Point R1 = RotSpace.getIdentity();
   R1 = R1 + v;

@@ -1,8 +1,15 @@
-set(SOURCES main.cpp CartesianProduct.cpp Manifold.cpp Point.cpp RealSpace.cpp
-  SO3.cpp)
+set(SOURCES 
+  main.cpp 
+  CartesianProduct.cpp 
+  ExpMapMatrix.cpp 
+  Manifold.cpp 
+  Point.cpp 
+  RealSpace.cpp
+  )
 set(HEADERS
   ../include/pgsolver/CartesianProduct.h
   ../include/pgsolver/defs.h
+  ../include/pgsolver/ExpMapMatrix.h
   ../include/pgsolver/Manifold.h
   ../include/pgsolver/Point.h
   ../include/pgsolver/RealSpace.h

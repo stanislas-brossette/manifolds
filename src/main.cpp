@@ -4,6 +4,7 @@
 #include <pgsolver/SO3.h>
 #include <pgsolver/CartesianProduct.h>
 #include <pgsolver/Point.h>
+#include <pgsolver/ExpMapMatrix.h>
 
 using namespace pgs;
 
@@ -18,7 +19,7 @@ int main()
   std::cout << "x2=" <<  x2 << std::endl;
   std::cout << "x2-x1=" <<  (x2-x1).transpose() << std::endl;
 
-  SO3 RotSpace;
+  SO3<ExpMapMatrix> RotSpace;
   Point x = RotSpace.getIdentity();
   Eigen::Vector3d vy;
   vy << 0.1,0.2,0.3;
@@ -44,3 +45,4 @@ int main()
   std::cout << yQ-xQ;
   return 0;
 }
+

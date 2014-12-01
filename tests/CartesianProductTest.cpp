@@ -5,6 +5,7 @@
 #include <pgsolver/RealSpace.h>
 #include <pgsolver/CartesianProduct.h>
 #include <pgsolver/Point.h>
+#include <pgsolver/ExpMapMatrix.h>
 
 #define BOOST_TEST_MODULE PGSolver 
 
@@ -19,7 +20,7 @@ BOOST_AUTO_TEST_CASE(CartProdConstructor)
 {
   RealSpace R3(3);
   RealSpace R2(2);
-  SO3 RotSpace;
+  SO3<ExpMapMatrix> RotSpace;
   CartesianProduct P(R2, R3);
   P.multiply(R2);
   CartesianProduct Q(P, RotSpace);
@@ -33,7 +34,7 @@ BOOST_AUTO_TEST_CASE(CartProdIdentity)
 {
   RealSpace R3(3);
   RealSpace R2(2);
-  SO3 RotSpace;
+  SO3<ExpMapMatrix> RotSpace;
   CartesianProduct P(R2, R3);
   P.multiply(R2);
   CartesianProduct Q(P, RotSpace);
@@ -61,7 +62,7 @@ BOOST_AUTO_TEST_CASE(CartProdIncrement)
 {
   RealSpace R3(3);
   RealSpace R2(2);
-  SO3 RotSpace;
+  SO3<ExpMapMatrix> RotSpace;
   CartesianProduct P(R2, R3);
   P.multiply(R2);
   CartesianProduct Q(P, RotSpace);
@@ -93,7 +94,7 @@ BOOST_AUTO_TEST_CASE(CartProdAddition)
 {
   RealSpace R3(3);
   RealSpace R2(2);
-  SO3 RotSpace;
+  SO3<ExpMapMatrix> RotSpace;
   CartesianProduct P(R2, R3);
   P.multiply(R2);
   CartesianProduct Q(RotSpace, P);
@@ -124,7 +125,7 @@ BOOST_AUTO_TEST_CASE(CartProSubstraction)
 {
   RealSpace R3(3);
   RealSpace R2(2);
-  SO3 RotSpace;
+  SO3<ExpMapMatrix> RotSpace;
   CartesianProduct P(R2, R3);
   P.multiply(R2);
   CartesianProduct Q(RotSpace, P);
