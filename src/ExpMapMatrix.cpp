@@ -1,3 +1,5 @@
+
+#include <iostream>
 #include <pgsolver/ExpMapMatrix.h>
 
 namespace pgs
@@ -52,6 +54,13 @@ namespace pgs
   void ExpMapMatrix::setIdentity_(Eigen::Ref<Eigen::VectorXd> out)
   {
     out << 1,0,0,0,1,0,0,0,1;
+  }
+
+  bool ExpMapMatrix::isValidInit(const Eigen::VectorXd& val)
+  {
+    std::cout << "checkValidRotation called" << std::endl;
+    std::cout << val.transpose() << std::endl;
+    return true;
   }
 }
 

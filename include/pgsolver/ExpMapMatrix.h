@@ -13,6 +13,7 @@ namespace pgs
     static void plus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v);
     static void minus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& y);
     static void setIdentity_(Eigen::Ref<Eigen::VectorXd> out);
+    static bool isValidInit(const Eigen::VectorXd& val);
   };
 }
 

@@ -10,6 +10,7 @@ namespace pgs
   {
   public:
     SO3();
+    virtual bool isValidInit(const Eigen::VectorXd& val) const;
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
     virtual Segment getValue(Eigen::Ref<Eigen::VectorXd> val, size_t i) const;
@@ -27,6 +28,12 @@ namespace pgs
   inline SO3<Map>::SO3()
     : Manifold(3, Map::OutputDim())
   {
+  }
+  
+  template<typename Map>
+  inline bool SO3<Map>::isValidInit(const Eigen::VectorXd& val) const
+  {
+    return Map::isValidInit(val);
   }
 
   template<typename Map>

@@ -12,11 +12,12 @@ namespace pgs
   {
   public:
     Manifold(Index dimension, Index representationDimension);
-    
 
     Point createPoint() const;
     Point createPoint(const Eigen::VectorXd& val) const;
     Point getIdentity() const;
+
+    virtual bool isValidInit(const Eigen::VectorXd& val) const;
 
     Index dim() const;
     Index representationDim() const;

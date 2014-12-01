@@ -6,6 +6,11 @@ namespace pgs
     : Manifold(n, n)
   {
   }
+  
+  bool RealSpace::isValidInit(const Eigen::VectorXd& val) const
+  {
+    return (dim() == val.size());
+  }
 
   size_t RealSpace::numberOfSubmanifolds() const
   {

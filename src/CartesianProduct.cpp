@@ -18,6 +18,16 @@ namespace pgs
     multiply(m2);
   }
 
+  bool CartesianProduct::isValidInit(const Eigen::VectorXd& val) const
+  {
+    bool out = true;
+    for (std::size_t i = 0; i<numberOfSubmanifolds(); ++i)
+    {
+      out = out && submanifolds_[i]->isValidInit(val);
+    }
+    return out;
+  }
+
   CartesianProduct& CartesianProduct::multiply(const Manifold& m)
   {
     m.lock();
