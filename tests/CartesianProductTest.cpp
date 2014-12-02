@@ -154,3 +154,44 @@ BOOST_AUTO_TEST_CASE(CartProSubstraction)
   BOOST_CHECK_CLOSE(y.value()[8], z.value()[8], 1e-8);
   BOOST_CHECK_CLOSE(y.value()[9], z.value()[9], 1e-8); 
 }
+
+BOOST_AUTO_TEST_CASE(CartProInvMap)
+{
+  RealSpace R2(2);
+  RealSpace R3(3);
+  SO3<ExpMapMatrix> RotSpace;
+  CartesianProduct R2SO3(R2, RotSpace);
+  CartesianProduct R2R3(R2, R3);
+  CartesianProduct R2SO3R2R3(R2SO3, R2R3);
+  Point x = R2SO3R2R3.getIdentity();
+  Point Id = R2SO3R2R3.getIdentity();
+  Eigen::VectorXd vx(10);
+  Eigen::VectorXd vy(10);
+  vx << -7,2,1,0.1,1,3,4,5,6,7;
+  vy << 4,6,0.07,3,0.01,2,1,4,6,4;
+  x = x + vx +vy;
+  Eigen::VectorXd x0 = x.invMap();
+  std::cout << "x = " << std::endl << x << std::endl;
+  std::cout << "x0 = " << std::endl << x0.transpose() << std::endl;
+
+  Point newX = Id.increment(x0); 
+  std::cout << "newX = Id.increment(x.InvMap()) =" << std::endl << newX << std::endl;
+
+  BOOST_CHECK_EQUAL(newX.value().size(), 16);
+  BOOST_CHECK_CLOSE(newX.value()[0], x.value()[0], 1e-8);
+  BOOST_CHECK_CLOSE(newX.value()[1], x.value()[1], 1e-8);
+  BOOST_CHECK_CLOSE(newX.value()[2], x.value()[2], 1e-8);
+  BOOST_CHECK_CLOSE(newX.value()[3], x.value()[3], 1e-8);
+  BOOST_CHECK_CLOSE(newX.value()[4], x.value()[4], 1e-8);
+  BOOST_CHECK_CLOSE(newX.value()[5], x.value()[5], 1e-8);
+  BOOST_CHECK_CLOSE(newX.value()[6], x.value()[6], 1e-8);
+  BOOST_CHECK_CLOSE(newX.value()[7], x.value()[7], 1e-8);
+  BOOST_CHECK_CLOSE(newX.value()[8], x.value()[8], 1e-8);
+  BOOST_CHECK_CLOSE(newX.value()[9], x.value()[9], 1e-8); 
+  BOOST_CHECK_CLOSE(newX.value()[10], x.value()[10], 1e-8);
+  BOOST_CHECK_CLOSE(newX.value()[11], x.value()[11], 1e-8);
+  BOOST_CHECK_CLOSE(newX.value()[12], x.value()[12], 1e-8);
+  BOOST_CHECK_CLOSE(newX.value()[13], x.value()[13], 1e-8);
+  BOOST_CHECK_CLOSE(newX.value()[14], x.value()[14], 1e-8);
+  BOOST_CHECK_CLOSE(newX.value()[15], x.value()[15], 1e-8);
+}
