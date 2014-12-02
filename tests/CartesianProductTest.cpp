@@ -143,16 +143,10 @@ BOOST_AUTO_TEST_CASE(CartProSubstraction)
   std::cout << "z = x+(y-x) = " << std::endl << z << std::endl;
 
   BOOST_CHECK_EQUAL(z.value().size(), 16);
-  BOOST_CHECK_CLOSE(y.value()[0], z.value()[0], 1e-8);
-  BOOST_CHECK_CLOSE(y.value()[1], z.value()[1], 1e-8);
-  BOOST_CHECK_CLOSE(y.value()[2], z.value()[2], 1e-8);
-  BOOST_CHECK_CLOSE(y.value()[3], z.value()[3], 1e-8);
-  BOOST_CHECK_CLOSE(y.value()[4], z.value()[4], 1e-8);
-  BOOST_CHECK_CLOSE(y.value()[5], z.value()[5], 1e-8);
-  BOOST_CHECK_CLOSE(y.value()[6], z.value()[6], 1e-8);
-  BOOST_CHECK_CLOSE(y.value()[7], z.value()[7], 1e-8);
-  BOOST_CHECK_CLOSE(y.value()[8], z.value()[8], 1e-8);
-  BOOST_CHECK_CLOSE(y.value()[9], z.value()[9], 1e-8); 
+  for (int i = 0; i < 10; ++i)
+  {
+    BOOST_CHECK_CLOSE(y.value()[i], z.value()[i], 1e-8);
+  }
 }
 
 BOOST_AUTO_TEST_CASE(CartProInvMap)
@@ -178,20 +172,8 @@ BOOST_AUTO_TEST_CASE(CartProInvMap)
   std::cout << "newX = Id.increment(x.InvMap()) =" << std::endl << newX << std::endl;
 
   BOOST_CHECK_EQUAL(newX.value().size(), 16);
-  BOOST_CHECK_CLOSE(newX.value()[0], x.value()[0], 1e-8);
-  BOOST_CHECK_CLOSE(newX.value()[1], x.value()[1], 1e-8);
-  BOOST_CHECK_CLOSE(newX.value()[2], x.value()[2], 1e-8);
-  BOOST_CHECK_CLOSE(newX.value()[3], x.value()[3], 1e-8);
-  BOOST_CHECK_CLOSE(newX.value()[4], x.value()[4], 1e-8);
-  BOOST_CHECK_CLOSE(newX.value()[5], x.value()[5], 1e-8);
-  BOOST_CHECK_CLOSE(newX.value()[6], x.value()[6], 1e-8);
-  BOOST_CHECK_CLOSE(newX.value()[7], x.value()[7], 1e-8);
-  BOOST_CHECK_CLOSE(newX.value()[8], x.value()[8], 1e-8);
-  BOOST_CHECK_CLOSE(newX.value()[9], x.value()[9], 1e-8); 
-  BOOST_CHECK_CLOSE(newX.value()[10], x.value()[10], 1e-8);
-  BOOST_CHECK_CLOSE(newX.value()[11], x.value()[11], 1e-8);
-  BOOST_CHECK_CLOSE(newX.value()[12], x.value()[12], 1e-8);
-  BOOST_CHECK_CLOSE(newX.value()[13], x.value()[13], 1e-8);
-  BOOST_CHECK_CLOSE(newX.value()[14], x.value()[14], 1e-8);
-  BOOST_CHECK_CLOSE(newX.value()[15], x.value()[15], 1e-8);
+  for (int i = 0; i < 10; ++i)
+  {
+    BOOST_CHECK_CLOSE(newX.value()[i], x.value()[i], 1e-8);
+  }
 }

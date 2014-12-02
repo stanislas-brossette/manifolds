@@ -1,6 +1,7 @@
 #ifndef _PGS_SO3_H_
 #define _PGS_SO3_H_
 
+#include <pgsolver/defs.h>
 #include <pgsolver/Manifold.h>
 
 namespace pgs
@@ -21,12 +22,14 @@ namespace pgs
     void plus_(RefVec out, ConstRefVec& x, ConstRefVec& v) const;
     virtual void minus_(RefVec out, ConstRefVec& x, ConstRefVec& y) const;
     virtual void setIdentity_(RefVec out) const;
+    virtual Eigen::MatrixXd diffMap_(ConstRefVec& x) const;
+    virtual void applyDiffMap_(RefMat inOut, ConstRefVec& x) const;
   };
 
   //Implementations of the methods
   template<typename Map>
   inline SO3<Map>::SO3()
-    : Manifold(3, Map::OutputDim())
+    : Manifold(Map::InputDim_, Map::OutputDim_)
   {
   }
   
@@ -90,6 +93,19 @@ namespace pgs
   {
     Map::setIdentity_(out);
   }
+
+  template<typename Map>
+  inline Eigen::MatrixXd SO3<Map>::diffMap_(ConstRefVec& x) const
+  {
+    return Map::diffMap_(x);
+  }
+
+  template<typename Map>
+  inline void SO3<Map>::applyDiffMap_(RefMat inOut, ConstRefVec& x) const
+  {
+    Map::applyDiffMap_(inOut, x);
+  }
+
 }
 #endif //_PGS_SO3_H_
 

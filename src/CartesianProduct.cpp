@@ -101,5 +101,25 @@ namespace pgs
     for (size_t i = 0; i < submanifolds_.size(); ++i)
       submanifolds_[i]->setIdentity(getValue(out, i));
   }
+
+  Eigen::MatrixXd CartesianProduct::diffMap_(ConstRefVec& x ) const
+  {
+    Eigen::MatrixXd J(representationDim(),dim());
+    J.setZero();
+    for (size_t i = 0; i < submanifolds_.size(); ++i)
+    {
+      J.block(startIndexR_[i],
+              startIndexT_[i],
+              submanifolds_[i]->representationDim(),
+              submanifolds_[i]->dim()) 
+        = submanifolds_[i]->diffMap(x.segment(startIndexR_[i], 
+                                  submanifolds_[i]->representationDim()));
+    }
+    return J;
+  }
+
+  void CartesianProduct::applyDiffMap_(RefMat , ConstRefVec& ) const
+  {
+  }
 }
 

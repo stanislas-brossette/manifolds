@@ -56,4 +56,13 @@ namespace pgs
   {
     out.setZero();
   }
+
+  Eigen::MatrixXd RealSpace::diffMap_(ConstRefVec& ) const
+  {
+    return Eigen::MatrixXd::Identity(representationDim(),dim());
+  }
+
+  void RealSpace::applyDiffMap_(RefMat , ConstRefVec& ) const
+  {
+  }
 }

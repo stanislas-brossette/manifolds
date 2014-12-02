@@ -6,15 +6,15 @@
 
 namespace pgs
 {
-  int ExpMapMatrix::OutputDim() {return 9;}
-  
+  const double ExpMapMatrix::prec = 1e-12;
+ 
   void ExpMapMatrix::plus_(RefVec out, ConstRefVec& x, ConstRefVec& v)
   {
     assert(v.size() == 3 && "Increment for expMap must be of size 3");
     double n = v.squaredNorm();
     assert(sqrt(n) < M_PI && "Increment for expMap must be of norm at most pi");
     double c, s;
-    if (n < 1e-8)
+    if (n < prec)
     {
       c = 0.5 - n / 24;
       s = 1 - n / 6;
@@ -36,9 +36,7 @@ namespace pgs
           s*v.x() + c*v.y()*v.z(), 
           1 - c*(v.x()*v.x() + v.y()*v.y());
                                                                                                                                                  
-    DisplayType rot;
-    rot = (Eigen::Map<const DisplayType>(x.data()))*E;
-    out = (Eigen::Map<const OutputType>(rot.data(),9));
+    Eigen::Map<DisplayType>(out.data()) = (Eigen::Map<const DisplayType>(x.data()))*E;
   }
 
   void ExpMapMatrix::minus_(RefVec out, ConstRefVec& x, ConstRefVec& y)
@@ -47,7 +45,7 @@ namespace pgs
     DisplayType R(((ConstMapMat3(y.data())).transpose())*(ConstMapMat3(x.data())));
     Eigen::Vector3d v(-R(1,2), R(0,2), -R(0,1)); 
     double acosTr = std::acos((R.trace()-1)/2);
-    if (v.norm() < 1e-8)
+    if (v.norm() < prec)
       out = v;
     else 
       {
@@ -70,19 +68,21 @@ namespace pgs
     typedef Eigen::Map<const Eigen::Matrix3d> toMat3;
     bool out(val.size()==9);
     double det = toMat3(val.data()).determinant();
-    Eigen::Matrix3d M = (((toMat3(val.data()).transpose())*toMat3(val.data()))
-                              - Eigen::Matrix3d::Identity()).array().abs();
-    out = out && (det - 1 < 1e-8);
-    out = out && (M(0,0) <1.0e-8);
-    out = out && (M(0,1) <1.0e-8);
-    out = out && (M(0,2) <1.0e-8);
-    out = out && (M(1,0) <1.0e-8);
-    out = out && (M(1,1) <1.0e-8);
-    out = out && (M(1,2) <1.0e-8);
-    out = out && (M(2,0) <1.0e-8);
-    out = out && (M(2,1) <1.0e-8);
-    out = out && (M(2,2) <1.0e-8);
+    out = out && (fabs(det - 1) < prec);
+    out = out && 
+      ((toMat3(val.data()).transpose())*toMat3(val.data())).isIdentity(prec);
     return out;
+  }
+
+  Eigen::MatrixXd ExpMapMatrix::diffMap_(ConstRefVec& )
+  {
+    Eigen::MatrixXd J(9,3);
+    J <<  0, 0, 0, 0, 0, 1, 0,-1, 0,   0, 0,-1, 0, 0, 0, 1, 0, 0,   0, 1, 0,-1, 0, 0, 0, 0, 0;
+    return J;
+  }
+
+  void ExpMapMatrix::applyDiffMap_(RefMat , ConstRefVec& )
+  {
   }
 }
 

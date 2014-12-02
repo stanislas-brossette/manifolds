@@ -68,6 +68,20 @@ namespace pgs
     minus_(out, x, y);
   }
 
+  Eigen::MatrixXd Manifold::diffMap(ConstRefVec& x) const
+  {
+    assert(x.size() == representationDim_);
+    return diffMap_(x);
+  }
+  
+  void Manifold::applyDiffMap(RefMat inOut, ConstRefVec& x) const
+  {
+    assert(inOut.rows() == representationDim_);
+    assert(inOut.cols() == dimension_);
+    assert(x.size() == representationDim_);
+    applyDiffMap_(inOut, x);
+  }
+
   void Manifold::setDimension(Index d)
   {
     assert(d>0 && "Negative dimension not accepted");
