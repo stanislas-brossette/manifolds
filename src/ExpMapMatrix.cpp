@@ -26,9 +26,15 @@ namespace pgs
       s = sin(t) / t;
     }
     DisplayType E;
-    E <<  1 - c*(v.y()*v.y() + v.z()*v.z()), -s*v.z() + c * v.x()*v.y(), s*v.y() + c * v.x()*v.z(),
-          s * v.z() + c*v.x()*v.y(), 1 - c*(v.x()*v.x() + v.z()*v.z()) , -s*v.x() + c*v.y()*v.z(),
-          -s*v.y() + c*v.x()*v.z(), s*v.x() + c*v.y()*v.z(), 1 - c*(v.x()*v.x() + v.y()*v.y());
+    E <<  1 - c*(v.y()*v.y() + v.z()*v.z()), 
+          -s*v.z() + c * v.x()*v.y(), 
+          s*v.y() + c * v.x()*v.z(),
+          s * v.z() + c*v.x()*v.y(), 
+          1 - c*(v.x()*v.x() + v.z()*v.z()) , 
+          -s*v.x() + c*v.y()*v.z(),
+          -s*v.y() + c*v.x()*v.z(), 
+          s*v.x() + c*v.y()*v.z(), 
+          1 - c*(v.x()*v.x() + v.y()*v.y());
                                                                                                                                                  
     DisplayType rot;
     rot = (Eigen::Map<const DisplayType>(x.data()))*E;
@@ -64,7 +70,8 @@ namespace pgs
     typedef Eigen::Map<const Eigen::Matrix3d> toMat3;
     bool out(val.size()==9);
     double det = toMat3(val.data()).determinant();
-    Eigen::Matrix3d M = (((toMat3(val.data()).transpose())*toMat3(val.data())) - Eigen::Matrix3d::Identity()).array().abs();
+    Eigen::Matrix3d M = (((toMat3(val.data()).transpose())*toMat3(val.data()))
+                              - Eigen::Matrix3d::Identity()).array().abs();
     out = out && (det - 1 < 1e-8);
     out = out && (M(0,0) <1.0e-8);
     out = out && (M(0,1) <1.0e-8);

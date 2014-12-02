@@ -52,7 +52,7 @@ namespace pgs
     return representationDim_;
   }
 
-  void Manifold::plus(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const
+  void Manifold::plus(RefVec out, ConstRefVec& x, ConstRefVec& v) const
   {
     assert(out.size() ==  representationDim_);
     assert(x.size() == representationDim_);
@@ -60,7 +60,7 @@ namespace pgs
     plus_(out, x, v);
   }
 
-  void Manifold::minus(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& y) const
+  void Manifold::minus(RefVec out, ConstRefVec& x, ConstRefVec& y) const
   {
     assert(out.size() == dimension_);
     assert(x.size() == representationDim_);
@@ -83,7 +83,7 @@ namespace pgs
   }
 
 
-  void Manifold::setIdentity(Eigen::Ref<Eigen::VectorXd> out) const
+  void Manifold::setIdentity(RefVec out) const
   {
     assert(out.size() == static_cast<int> (representationDim_));
     setIdentity_(out);

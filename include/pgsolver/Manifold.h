@@ -2,6 +2,7 @@
 #define _PGS_MANIFOLD_H_
 
 #include <iostream>
+#include <Eigen/Core>
 #include <pgsolver/Point.h>
 #include <pgsolver/defs.h>
 #include <pgsolver/RefCounter.h>
@@ -24,14 +25,14 @@ namespace pgs
     virtual size_t numberOfSubmanifolds() const = 0;
     virtual const Manifold& operator()(size_t i) const = 0;
 
-    virtual Segment getValue(Eigen::Ref<Eigen::VectorXd> val, size_t i) const = 0;
-    virtual ConstSegment getValueConst(const Eigen::Ref<const Eigen::VectorXd>& val, size_t i) const = 0;
+    virtual Segment getValue(RefVec val, size_t i) const = 0;
+    virtual ConstSegment getValueConst(ConstRefVec& val, size_t i) const = 0;
 
-    virtual std::string toString(const Eigen::Ref<const Eigen::VectorXd>& val, std::string& prefix) const = 0;
+    virtual std::string toString(ConstRefVec& val, std::string& prefix) const = 0;
     //map operations
-    void setIdentity(Eigen::Ref<Eigen::VectorXd> out) const;
-    void plus(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const;
-    void minus(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const;
+    void setIdentity(RefVec out) const;
+    void plus(RefVec out, ConstRefVec& x, ConstRefVec& v) const;
+    void minus(RefVec out, ConstRefVec& x, ConstRefVec& v) const;
     
 
     //for internal use
@@ -42,9 +43,9 @@ namespace pgs
     void setRepresentationDimension(Index rd);
 
 
-    virtual void plus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const = 0;
-    virtual void minus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const = 0;
-    virtual void setIdentity_(Eigen::Ref<Eigen::VectorXd> out) const = 0;
+    virtual void plus_(RefVec out, ConstRefVec& x, ConstRefVec& v) const = 0;
+    virtual void minus_(RefVec out, ConstRefVec& x, ConstRefVec& v) const = 0;
+    virtual void setIdentity_(RefVec out) const = 0;
 
     void testLock() const;
 

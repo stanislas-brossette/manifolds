@@ -23,36 +23,36 @@ namespace pgs
     return *this;
   }
 
-  ConstSegment RealSpace::getValueConst(const Eigen::Ref<const Eigen::VectorXd>& val, size_t i) const
+  ConstSegment RealSpace::getValueConst(ConstRefVec& val, size_t i) const
   {
     assert(i < 1 && "invalid index");
     return val.segment(0,static_cast<long> (representationDim()));
   }
 
-  std::string RealSpace::toString(const Eigen::Ref<const Eigen::VectorXd>& val, std::string& prefix) const
+  std::string RealSpace::toString(ConstRefVec& val, std::string& prefix) const
   {
     std::stringstream ss;
     ss << prefix << val.transpose() << std::endl;
     return ss.str();
   }
 
-  Segment RealSpace::getValue(Eigen::Ref<Eigen::VectorXd> val, size_t i) const
+  Segment RealSpace::getValue(RefVec val, size_t i) const
   {
     assert(i < 1 && "invalid index");
     return val.segment(0, static_cast<long> (representationDim()));
   }
 
-  void RealSpace::plus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const
+  void RealSpace::plus_(RefVec out, ConstRefVec& x, ConstRefVec& v) const
   {
     out = x + v;
   }
 
-  void RealSpace::minus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& y) const
+  void RealSpace::minus_(RefVec out, ConstRefVec& x, ConstRefVec& y) const
   {
     out = x - y;
   }
 
-  void RealSpace::setIdentity_(Eigen::Ref<Eigen::VectorXd> out) const
+  void RealSpace::setIdentity_(RefVec out) const
   {
     out.setZero();
   }

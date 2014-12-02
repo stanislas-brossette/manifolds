@@ -13,14 +13,14 @@ namespace pgs
     virtual bool isValidInit(const Eigen::VectorXd& val) const;
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
-    virtual Segment getValue(Eigen::Ref<Eigen::VectorXd> val, size_t i) const;
-    virtual ConstSegment getValueConst(const Eigen::Ref<const Eigen::VectorXd>& val, size_t i) const;
-    virtual std::string toString(const Eigen::Ref<const Eigen::VectorXd>& val, std::string& prefix) const;
+    virtual Segment getValue(RefVec val, size_t i) const;
+    virtual ConstSegment getValueConst(ConstRefVec& val, size_t i) const;
+    virtual std::string toString(ConstRefVec& val, std::string& prefix) const;
   protected:
     //map operations
-    void plus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const;
-    virtual void minus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& y) const;
-    virtual void setIdentity_(Eigen::Ref<Eigen::VectorXd> out) const;
+    void plus_(RefVec out, ConstRefVec& x, ConstRefVec& v) const;
+    virtual void minus_(RefVec out, ConstRefVec& x, ConstRefVec& y) const;
+    virtual void setIdentity_(RefVec out) const;
   };
 
   //Implementations of the methods
@@ -50,21 +50,21 @@ namespace pgs
   }
 
   template<typename Map>
-  inline Segment SO3<Map>::getValue(Eigen::Ref<Eigen::VectorXd> val, size_t i) const
+  inline Segment SO3<Map>::getValue(RefVec val, size_t i) const
   {
     assert(i < 1 && "invalid index");
     return val.segment(0, static_cast<long> (representationDim()));
   }
 
   template<typename Map>
-  inline ConstSegment SO3<Map>::getValueConst(const Eigen::Ref<const Eigen::VectorXd>& val, size_t i) const
+  inline ConstSegment SO3<Map>::getValueConst(ConstRefVec& val, size_t i) const
   {
     assert(i < 1 && "invalid index");
     return val.segment(0,static_cast<long> (representationDim()));
   }
    
   template<typename Map>
-  inline std::string SO3<Map>::toString(const Eigen::Ref<const Eigen::VectorXd>& val, std::string& prefix) const
+  inline std::string SO3<Map>::toString(ConstRefVec& val, std::string& prefix) const
   {
     std::string matPrefix = prefix + '[';
     Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", matPrefix, "]");
@@ -74,19 +74,19 @@ namespace pgs
   }
 
   template<typename Map>
-  inline void SO3<Map>::plus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v) const
+  inline void SO3<Map>::plus_(RefVec out, ConstRefVec& x, ConstRefVec& v) const
   {
     Map::plus_(out, x, v);
   }
 
   template<typename Map>
-  inline void SO3<Map>::minus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& y) const
+  inline void SO3<Map>::minus_(RefVec out, ConstRefVec& x, ConstRefVec& y) const
   {
     Map::minus_( out, x, y);
   }
   
   template<typename Map>
-  inline void SO3<Map>::setIdentity_(Eigen::Ref<Eigen::VectorXd> out) const
+  inline void SO3<Map>::setIdentity_(RefVec out) const
   {
     Map::setIdentity_(out);
   }

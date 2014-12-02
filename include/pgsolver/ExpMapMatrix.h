@@ -10,9 +10,9 @@ namespace pgs
     static int OutputDim();
     typedef Eigen::Matrix3d DisplayType;
     typedef Eigen::VectorXd OutputType;
-    static void plus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v);
-    static void minus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& y);
-    static void setIdentity_(Eigen::Ref<Eigen::VectorXd> out);
+    static void plus_(RefVec out, ConstRefVec& x, ConstRefVec& v);
+    static void minus_(RefVec out, ConstRefVec& x, ConstRefVec& y);
+    static void setIdentity_(RefVec out);
     static bool isValidInit(const Eigen::VectorXd& val);
   };
 }

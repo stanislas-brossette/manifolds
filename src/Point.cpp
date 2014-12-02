@@ -48,7 +48,6 @@ namespace pgs
     return value_;
   }
 
-
   ConstSegment Point::operator[](size_t i) const
   {
     return manifold_.getValueConst(value_, i);
@@ -64,7 +63,7 @@ namespace pgs
     return manifold_;
   }
 
-  Point operator+(const Point& x, const Eigen::Ref<const Eigen::VectorXd>& v)
+  Point operator+(const Point& x, ConstRefVec& v)
   {
     return x.getManifold().createPoint(x.value()).increment(v);
   }
