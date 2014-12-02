@@ -17,7 +17,7 @@ namespace pgs
     Point createPoint(const Eigen::VectorXd& val) const;
     Point getIdentity() const;
 
-    virtual bool isValidInit(const Eigen::VectorXd& val) const;
+    virtual bool isValidInit(const Eigen::VectorXd& val) const = 0;
 
     Index dim() const;
     Index representationDim() const;

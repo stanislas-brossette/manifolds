@@ -7,9 +7,10 @@ namespace pgs
   {
   }
   
-  bool RealSpace::isValidInit(const Eigen::VectorXd& val) const
+  bool RealSpace::isValidInit(const Eigen::VectorXd& val ) const
   {
-    return (dim() == val.size());
+    bool out( dim() == val.size());
+    return out;
   }
 
   size_t RealSpace::numberOfSubmanifolds() const

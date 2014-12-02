@@ -23,7 +23,7 @@ namespace pgs
     bool out = true;
     for (std::size_t i = 0; i<numberOfSubmanifolds(); ++i)
     {
-      out = out && submanifolds_[i]->isValidInit(val);
+      out = out && submanifolds_[i]->isValidInit(val.segment(startIndexR_[i], submanifolds_[i]->representationDim()));
     }
     return out;
   }

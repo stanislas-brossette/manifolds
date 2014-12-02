@@ -5,6 +5,8 @@
 
 namespace pgs
 {
+  typedef Eigen::Ref<Eigen::VectorXd> RefVec;
+  typedef const Eigen::Ref<const Eigen::VectorXd> ConstRefVec;
   typedef Eigen::Ref<Eigen::VectorXd>::SegmentReturnType Segment;
   typedef Eigen::Ref<const Eigen::VectorXd>::ConstSegmentReturnType ConstSegment;
   typedef Eigen::VectorXd::Index Index;

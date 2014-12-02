@@ -1,12 +1,14 @@
 
 #include <iostream>
+#include <Eigen/Dense>
+#include <pgsolver/defs.h>
 #include <pgsolver/ExpMapMatrix.h>
 
 namespace pgs
 {
   int ExpMapMatrix::OutputDim() {return 9;}
   
-  void ExpMapMatrix::plus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& v)
+  void ExpMapMatrix::plus_(RefVec out, ConstRefVec& x, ConstRefVec& v)
   {
     assert(v.size() == 3 && "Increment for expMap must be of size 3");
     double n = v.squaredNorm();
@@ -33,9 +35,10 @@ namespace pgs
     out = (Eigen::Map<const OutputType>(rot.data(),9));
   }
 
-  void ExpMapMatrix::minus_(Eigen::Ref<Eigen::VectorXd> out, const Eigen::Ref<const Eigen::VectorXd>& x, const Eigen::Ref<const Eigen::VectorXd>& y)
+  void ExpMapMatrix::minus_(RefVec out, ConstRefVec& x, ConstRefVec& y)
   {
-    DisplayType R(((Eigen::Map<const Eigen::Matrix3d>(y.data())).transpose())*(Eigen::Map<const Eigen::Matrix3d>(x.data())));
+    typedef Eigen::Map<const Eigen::Matrix3d> ConstMapMat3;
+    DisplayType R(((ConstMapMat3(y.data())).transpose())*(ConstMapMat3(x.data())));
     Eigen::Vector3d v(-R(1,2), R(0,2), -R(0,1)); 
     double acosTr = std::acos((R.trace()-1)/2);
     if (v.norm() < 1e-8)
@@ -51,16 +54,28 @@ namespace pgs
       }
   }
 
-  void ExpMapMatrix::setIdentity_(Eigen::Ref<Eigen::VectorXd> out)
+  void ExpMapMatrix::setIdentity_(RefVec out)
   {
     out << 1,0,0,0,1,0,0,0,1;
   }
 
   bool ExpMapMatrix::isValidInit(const Eigen::VectorXd& val)
   {
-    std::cout << "checkValidRotation called" << std::endl;
-    std::cout << val.transpose() << std::endl;
-    return true;
+    typedef Eigen::Map<const Eigen::Matrix3d> toMat3;
+    bool out(val.size()==9);
+    double det = toMat3(val.data()).determinant();
+    Eigen::Matrix3d M = (((toMat3(val.data()).transpose())*toMat3(val.data())) - Eigen::Matrix3d::Identity()).array().abs();
+    out = out && (det - 1 < 1e-8);
+    out = out && (M(0,0) <1.0e-8);
+    out = out && (M(0,1) <1.0e-8);
+    out = out && (M(0,2) <1.0e-8);
+    out = out && (M(1,0) <1.0e-8);
+    out = out && (M(1,1) <1.0e-8);
+    out = out && (M(1,2) <1.0e-8);
+    out = out && (M(2,0) <1.0e-8);
+    out = out && (M(2,1) <1.0e-8);
+    out = out && (M(2,2) <1.0e-8);
+    return out;
   }
 }
 

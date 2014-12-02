@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE(SO3Constructor)
   SO3<ExpMapMatrix> RotSpace;
   Point x = RotSpace.getIdentity();
   Eigen::VectorXd v(9);
-  v << 1,2,3,4,5,6,7,8,9;
+  v << 1,0,0,0,1,0,0,0,1;
   Point y = RotSpace.createPoint(v);
   BOOST_CHECK_EQUAL(x.value().size(), 9);
   BOOST_CHECK_EQUAL(x.value()[0], 1);
@@ -40,14 +40,14 @@ BOOST_AUTO_TEST_CASE(SO3Constructor)
   BOOST_CHECK_EQUAL(x.value()[8], 1);
   BOOST_CHECK_EQUAL(y.value().size(), 9);
   BOOST_CHECK_EQUAL(y.value()[0], 1);
-  BOOST_CHECK_EQUAL(y.value()[1], 2);
-  BOOST_CHECK_EQUAL(y.value()[2], 3);
-  BOOST_CHECK_EQUAL(y.value()[3], 4);
-  BOOST_CHECK_EQUAL(y.value()[4], 5);
-  BOOST_CHECK_EQUAL(y.value()[5], 6);
-  BOOST_CHECK_EQUAL(y.value()[6], 7);
-  BOOST_CHECK_EQUAL(y.value()[7], 8);
-  BOOST_CHECK_EQUAL(y.value()[8], 9);
+  BOOST_CHECK_EQUAL(y.value()[1], 0);
+  BOOST_CHECK_EQUAL(y.value()[2], 0);
+  BOOST_CHECK_EQUAL(y.value()[3], 0);
+  BOOST_CHECK_EQUAL(y.value()[4], 1);
+  BOOST_CHECK_EQUAL(y.value()[5], 0);
+  BOOST_CHECK_EQUAL(y.value()[6], 0);
+  BOOST_CHECK_EQUAL(y.value()[7], 0);
+  BOOST_CHECK_EQUAL(y.value()[8], 1);
 }
 
 BOOST_AUTO_TEST_CASE(SO3Increment)

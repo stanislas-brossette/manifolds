@@ -21,18 +21,16 @@ namespace pgs
 
   Point Manifold::createPoint(const Eigen::VectorXd& val) const
   {
-    std::cout << "Manifold::createPoint called" << std::endl;
-    assert(isValidInit(val) && "point initialization value invalid");
-    lock();
-    incrementRefCounter();
-    return Point(*this, val);
-  }
-
-  bool Manifold::isValidInit(const Eigen::VectorXd& val) const
-  {
-    std::cout << "Manifold::IsValidInit called" << std::endl;
-    std::cout << val.transpose() << std::endl;
-    return true;
+    if(isValidInit(val))
+    {
+      lock();
+      incrementRefCounter();
+      return Point(*this, val);
+    }
+    else
+    {
+      throw std::runtime_error("Bad Point Initialization"); 
+    }
   }
 
   Point Manifold::getIdentity() const
