@@ -36,7 +36,13 @@ namespace pgs
     manifold_.plus(value_, value_, v);
     return *this;
   }
-
+  
+  Eigen::VectorXd Point::invMap() const
+  {
+    Eigen::VectorXd res(manifold_.dim());
+    manifold_.minus(res,value_,manifold_.getIdentity().value());
+    return res;
+  }
 
   Point Point::operator()(size_t i) const
   {

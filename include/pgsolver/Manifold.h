@@ -33,7 +33,6 @@ namespace pgs
     void setIdentity(RefVec out) const;
     void plus(RefVec out, ConstRefVec& x, ConstRefVec& v) const;
     void minus(RefVec out, ConstRefVec& x, ConstRefVec& v) const;
-    
 
     //for internal use
     void lock() const;
