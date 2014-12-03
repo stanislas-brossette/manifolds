@@ -60,7 +60,9 @@ namespace pgs
 
   void ExpMapMatrix::setIdentity_(RefVec out)
   {
-    out << 1,0,0,0,1,0,0,0,1;
+    out << 1,0,0,
+           0,1,0,
+           0,0,1;
   }
 
   bool ExpMapMatrix::isValidInit(const Eigen::VectorXd& val)
@@ -77,7 +79,15 @@ namespace pgs
   Eigen::MatrixXd ExpMapMatrix::diffMap_(ConstRefVec& )
   {
     Eigen::MatrixXd J(9,3);
-    J <<  0, 0, 0, 0, 0, 1, 0,-1, 0,   0, 0,-1, 0, 0, 0, 1, 0, 0,   0, 1, 0,-1, 0, 0, 0, 0, 0;
+    J << 0, 0, 0,  
+         0, 0, 1,
+         0,-1, 0,
+         0, 0,-1,
+         0, 0, 0,
+         1, 0, 0,
+         0, 1, 0,
+        -1, 0, 0,
+         0, 0, 0;
     return J;
   }
 

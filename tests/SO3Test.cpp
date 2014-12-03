@@ -101,3 +101,24 @@ BOOST_AUTO_TEST_CASE(SO3Substraction)
   BOOST_CHECK_CLOSE(d[1], 0.4, 1e-8);
   BOOST_CHECK_CLOSE(d[2], 0.6, 1e-8);
 }
+
+BOOST_AUTO_TEST_CASE(SO3Diff)
+{
+  SO3<ExpMapMatrix> RotSpace;
+  Eigen::MatrixXd J;
+  Eigen::MatrixXd Jtest(9,3);
+  Jtest << 0, 0, 0,  
+           0, 0, 1,
+           0,-1, 0,
+           0, 0,-1,
+           0, 0, 0,
+           1, 0, 0,
+           0, 1, 0,
+          -1, 0, 0,
+           0, 0, 0;
+  Point x = RotSpace.createPoint();
+  J = RotSpace.diffMap(x.value());
+  bool test = J.isApprox(Jtest);
+  BOOST_CHECK_EQUAL(test,1);
+}
+

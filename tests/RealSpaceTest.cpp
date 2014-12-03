@@ -84,3 +84,13 @@ BOOST_AUTO_TEST_CASE(RealPointSubstraction)
   BOOST_CHECK_EQUAL(z[1], 4);
   BOOST_CHECK_EQUAL(z[2], 6);
 }
+
+BOOST_AUTO_TEST_CASE(RealPointDiff)
+{
+  RealSpace R7(7);
+  Eigen::MatrixXd J;
+  Point x = R7.createPoint();
+  J = R7.diffMap(x.value());
+  bool test = J.isIdentity();
+  BOOST_CHECK_EQUAL(test,1);
+}

@@ -177,3 +177,29 @@ BOOST_AUTO_TEST_CASE(CartProInvMap)
     BOOST_CHECK_CLOSE(newX.value()[i], x.value()[i], 1e-8);
   }
 }
+BOOST_AUTO_TEST_CASE(SO3Diff)
+{
+  RealSpace R2(2);
+  RealSpace R3(3);
+  SO3<ExpMapMatrix> RotSpace;
+  CartesianProduct R2SO3(R2, RotSpace);
+  Eigen::MatrixXd J;
+  Eigen::MatrixXd Jtest(11,5);
+  Jtest <<  1, 0, 0, 0, 0, 
+            0, 1, 0, 0, 0, 
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 1,
+            0, 0, 0,-1, 0,
+            0, 0, 0, 0,-1,
+            0, 0, 0, 0, 0,
+            0, 0, 1, 0, 0,
+            0, 0, 0, 1, 0,
+            0, 0,-1, 0, 0,
+            0, 0, 0, 0, 0;
+  Point x = R2SO3.createPoint();
+  J = R2SO3.diffMap(x.value());
+  bool test = J.isApprox(Jtest);
+  std::cout << J << std::endl << std::endl;
+  std::cout << Jtest << std::endl << std::endl;
+  BOOST_CHECK_EQUAL(test,1);
+}
