@@ -52,7 +52,7 @@ namespace pgs
     return representationDim_;
   }
 
-  void Manifold::plus(RefVec out, ConstRefVec& x, ConstRefVec& v) const
+  void Manifold::plus(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
     assert(out.size() ==  representationDim_);
     assert(x.size() == representationDim_);
@@ -60,7 +60,7 @@ namespace pgs
     plus_(out, x, v);
   }
 
-  void Manifold::minus(RefVec out, ConstRefVec& x, ConstRefVec& y) const
+  void Manifold::minus(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   {
     assert(out.size() == dimension_);
     assert(x.size() == representationDim_);
@@ -68,18 +68,20 @@ namespace pgs
     minus_(out, x, y);
   }
 
-  Eigen::MatrixXd Manifold::diffMap(ConstRefVec& x) const
+  Eigen::MatrixXd Manifold::diffMap(const ConstRefVec& x) const
   {
     assert(x.size() == representationDim_);
     return diffMap_(x);
   }
   
-  void Manifold::applyDiffMap(RefMat inOut, ConstRefVec& x) const
+  void Manifold::applyDiffMap(
+      RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
-    assert(inOut.rows() == representationDim_);
-    assert(inOut.cols() == dimension_);
+    assert(in.cols() == representationDim_);
+    assert(out.cols() == dimension_);
+    assert(in.rows() == out.rows());
     assert(x.size() == representationDim_);
-    applyDiffMap_(inOut, x);
+    applyDiffMap_(out, in, x);
   }
 
   void Manifold::setDimension(Index d)

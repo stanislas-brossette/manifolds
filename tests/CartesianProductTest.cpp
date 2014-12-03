@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(CartProInvMap)
     BOOST_CHECK_CLOSE(newX.value()[i], x.value()[i], 1e-8);
   }
 }
-BOOST_AUTO_TEST_CASE(SO3Diff)
+BOOST_AUTO_TEST_CASE(CardProdDiff)
 {
   RealSpace R2(2);
   RealSpace R3(3);
@@ -201,5 +201,23 @@ BOOST_AUTO_TEST_CASE(SO3Diff)
   bool test = J.isApprox(Jtest);
   std::cout << J << std::endl << std::endl;
   std::cout << Jtest << std::endl << std::endl;
+  BOOST_CHECK_EQUAL(test,1);
+}
+
+BOOST_AUTO_TEST_CASE(CardProdApplyDiff)
+{
+  RealSpace R2(2);
+  RealSpace R3(3);
+  SO3<ExpMapMatrix> RotSpace;
+  CartesianProduct R2R3R2(R2, R3);
+  R2R3R2.multiply(R2);
+  CartesianProduct SO3R2R3R2(RotSpace, R2R3R2);
+  CartesianProduct SO3R2R3R2SO3(SO3R2R3R2, RotSpace);
+  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(5,25);
+  Point x = SO3R2R3R2SO3.getIdentity();
+  Eigen::MatrixXd expectedRes = Jf*SO3R2R3R2SO3.diffMap(x.value());
+  Eigen::Map<Eigen::MatrixXd> J(Jf.data(),5,13);
+  SO3R2R3R2SO3.applyDiffMap(J, Jf, x.value());
+  bool test = expectedRes.isApprox(J);
   BOOST_CHECK_EQUAL(test,1);
 }

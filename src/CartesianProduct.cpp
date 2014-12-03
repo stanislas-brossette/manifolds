@@ -57,13 +57,13 @@ namespace pgs
     return val.segment(startIndexR_[i], submanifolds_[i]->representationDim());
   }
 
-  ConstSegment CartesianProduct::getValueConst(ConstRefVec& val, size_t i) const
+  ConstSegment CartesianProduct::getValueConst(const ConstRefVec& val, size_t i) const
   {
     assert(i < submanifolds_.size() && "invalid index");
     return val.segment(startIndexR_[i], submanifolds_[i]->representationDim());
   }
 
-  std::string CartesianProduct::toString(ConstRefVec& val, std::string& prefix) const
+  std::string CartesianProduct::toString(const ConstRefVec& val, std::string& prefix) const
   {
     std::stringstream ss;
     std::string SubManPrefix("  ");
@@ -75,7 +75,7 @@ namespace pgs
     return ss.str();
   }
 
-  void CartesianProduct::plus_(RefVec out, ConstRefVec& x, ConstRefVec& v) const
+  void CartesianProduct::plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
@@ -85,7 +85,7 @@ namespace pgs
     }
   }
 
-  void CartesianProduct::minus_(RefVec out, ConstRefVec& x, ConstRefVec& y) const
+  void CartesianProduct::minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
@@ -102,7 +102,7 @@ namespace pgs
       submanifolds_[i]->setIdentity(getValue(out, i));
   }
 
-  Eigen::MatrixXd CartesianProduct::diffMap_(ConstRefVec& x ) const
+  Eigen::MatrixXd CartesianProduct::diffMap_(const ConstRefVec& x ) const
   {
     Eigen::MatrixXd J(representationDim(),dim());
     J.setZero();
@@ -118,8 +118,18 @@ namespace pgs
     return J;
   }
 
-  void CartesianProduct::applyDiffMap_(RefMat , ConstRefVec& ) const
+  void CartesianProduct::applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
+    for (size_t i = 0; i < submanifolds_.size(); ++i)
+    {
+      Index startTi = startIndexT_[i];
+      Index startRi = startIndexR_[i];
+      Index repDimi = submanifolds_[i]->representationDim();
+      Index dimi = submanifolds_[i]->dim();
+      submanifolds_[i]->applyDiffMap( out.middleCols(startTi, dimi),
+                                      in.middleCols(startRi, repDimi),
+                                      x.segment(startRi, repDimi));
+    }
   }
 }
 

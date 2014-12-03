@@ -14,11 +14,12 @@ namespace pgs
     typedef Eigen::Matrix3d DisplayType;
     typedef Eigen::Matrix<double, 9, 1> OutputType;
     static bool isValidInit(const Eigen::VectorXd& val);
-    static void plus_(RefVec out, ConstRefVec& x, ConstRefVec& v);
-    static void minus_(RefVec out, ConstRefVec& x, ConstRefVec& y);
+    static void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v);
+    static void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y);
     static void setIdentity_(RefVec out);
-    static Eigen::MatrixXd diffMap_(ConstRefVec& x);
-    static void applyDiffMap_(RefMat inOut, ConstRefVec& x);
+    static Eigen::MatrixXd diffMap_(const ConstRefVec& x);
+    static void applyDiffMap_(
+        RefMat out, const ConstRefMat& in, const ConstRefVec& x);
   };
 }
 

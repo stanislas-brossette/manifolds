@@ -69,7 +69,7 @@ namespace pgs
     return manifold_;
   }
 
-  Point operator+(const Point& x, ConstRefVec& v)
+  Point operator+(const Point& x, const ConstRefVec& v)
   {
     return x.getManifold().createPoint(x.value()).increment(v);
   }

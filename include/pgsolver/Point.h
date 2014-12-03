@@ -44,7 +44,7 @@ namespace pgs
     friend class Manifold;
   };
 
-  Point operator+(const Point& x, ConstRefVec& v);
+  Point operator+(const Point& x, const ConstRefVec& v);
   Eigen::VectorXd operator-(const Point& x, const Point& y);
 
   inline std::ostream& operator<< (std::ostream& os, const Point& x)

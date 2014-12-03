@@ -8,7 +8,7 @@ namespace pgs
 {
   const double ExpMapMatrix::prec = 1e-12;
  
-  void ExpMapMatrix::plus_(RefVec out, ConstRefVec& x, ConstRefVec& v)
+  void ExpMapMatrix::plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v)
   {
     assert(v.size() == 3 && "Increment for expMap must be of size 3");
     double n = v.squaredNorm();
@@ -39,7 +39,7 @@ namespace pgs
     Eigen::Map<DisplayType>(out.data()) = (Eigen::Map<const DisplayType>(x.data()))*E;
   }
 
-  void ExpMapMatrix::minus_(RefVec out, ConstRefVec& x, ConstRefVec& y)
+  void ExpMapMatrix::minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y)
   {
     typedef Eigen::Map<const Eigen::Matrix3d> ConstMapMat3;
     DisplayType R(((ConstMapMat3(y.data())).transpose())*(ConstMapMat3(x.data())));
@@ -76,7 +76,7 @@ namespace pgs
     return out;
   }
 
-  Eigen::MatrixXd ExpMapMatrix::diffMap_(ConstRefVec& )
+  Eigen::MatrixXd ExpMapMatrix::diffMap_(const ConstRefVec& )
   {
     Eigen::MatrixXd J(9,3);
     J << 0, 0, 0,  
@@ -91,8 +91,16 @@ namespace pgs
     return J;
   }
 
-  void ExpMapMatrix::applyDiffMap_(RefMat , ConstRefVec& )
+  void ExpMapMatrix::applyDiffMap_(
+      RefMat out, const ConstRefMat& in, const ConstRefVec&)
   {
+    //out.col(0) is used as a buffer to avoid aliasing in case where in and out
+    //are the same memory array.
+    out.col(0) = in.col(2);
+
+    out.col(2) =  in.col(1) - in.col(3);
+    out.col(1) = -out.col(0) + in.col(6);
+    out.col(0) =  in.col(5) - in.col(7);
   }
 }
 

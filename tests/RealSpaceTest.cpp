@@ -94,3 +94,15 @@ BOOST_AUTO_TEST_CASE(RealPointDiff)
   bool test = J.isIdentity();
   BOOST_CHECK_EQUAL(test,1);
 }
+
+BOOST_AUTO_TEST_CASE(RealApplyDiff)
+{
+  RealSpace R7(7);
+  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(5,7);
+  Point x = R7.getIdentity();
+  Eigen::MatrixXd expectedRes = Jf*R7.diffMap(x.value());
+  Eigen::Map<Eigen::MatrixXd> J(Jf.data(),5,7);
+  R7.applyDiffMap(J, Jf, x.value());
+  bool test = expectedRes.isApprox(J);
+  BOOST_CHECK_EQUAL(test,1);
+}

@@ -23,13 +23,13 @@ namespace pgs
     return *this;
   }
 
-  ConstSegment RealSpace::getValueConst(ConstRefVec& val, size_t i) const
+  ConstSegment RealSpace::getValueConst(const ConstRefVec& val, size_t i) const
   {
     assert(i < 1 && "invalid index");
     return val.segment(0,static_cast<long> (representationDim()));
   }
 
-  std::string RealSpace::toString(ConstRefVec& val, std::string& prefix) const
+  std::string RealSpace::toString(const ConstRefVec& val, std::string& prefix) const
   {
     std::stringstream ss;
     ss << prefix << val.transpose() << std::endl;
@@ -42,12 +42,12 @@ namespace pgs
     return val.segment(0, static_cast<long> (representationDim()));
   }
 
-  void RealSpace::plus_(RefVec out, ConstRefVec& x, ConstRefVec& v) const
+  void RealSpace::plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
     out = x + v;
   }
 
-  void RealSpace::minus_(RefVec out, ConstRefVec& x, ConstRefVec& y) const
+  void RealSpace::minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   {
     out = x - y;
   }
@@ -57,12 +57,13 @@ namespace pgs
     out.setZero();
   }
 
-  Eigen::MatrixXd RealSpace::diffMap_(ConstRefVec& ) const
+  Eigen::MatrixXd RealSpace::diffMap_(const ConstRefVec& ) const
   {
     return Eigen::MatrixXd::Identity(representationDim(),dim());
   }
 
-  void RealSpace::applyDiffMap_(RefMat , ConstRefVec& ) const
+  void RealSpace::applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& ) const
   {
+    out = in;
   }
 }

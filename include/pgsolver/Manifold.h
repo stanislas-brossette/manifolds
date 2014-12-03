@@ -26,16 +26,16 @@ namespace pgs
     virtual const Manifold& operator()(size_t i) const = 0;
 
     virtual Segment getValue(RefVec val, size_t i) const = 0;
-    virtual ConstSegment getValueConst(ConstRefVec& val, size_t i) const = 0;
+    virtual ConstSegment getValueConst(const ConstRefVec& val, size_t i) const = 0;
 
-    virtual std::string toString(ConstRefVec& val, std::string& prefix) const = 0;
+    virtual std::string toString(const ConstRefVec& val, std::string& prefix) const = 0;
 
     //map operations
     void setIdentity(RefVec out) const;
-    void plus(RefVec out, ConstRefVec& x, ConstRefVec& v) const;
-    void minus(RefVec out, ConstRefVec& x, ConstRefVec& v) const;
-    Eigen::MatrixXd diffMap(ConstRefVec& x) const;
-    void applyDiffMap(RefMat inOut, ConstRefVec& x) const;
+    void plus(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
+    void minus(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
+    Eigen::MatrixXd diffMap(const ConstRefVec& x) const;
+    void applyDiffMap(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
 
     //for internal use
     void lock() const;
@@ -44,11 +44,11 @@ namespace pgs
     void setDimension(Index d);
     void setRepresentationDimension(Index rd);
 
-    virtual void plus_(RefVec out, ConstRefVec& x, ConstRefVec& v) const = 0;
-    virtual void minus_(RefVec out, ConstRefVec& x, ConstRefVec& v) const = 0;
+    virtual void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
+    virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
     virtual void setIdentity_(RefVec out) const = 0;
-    virtual Eigen::MatrixXd diffMap_(ConstRefVec& x) const = 0;
-    virtual void applyDiffMap_(RefMat inOut, ConstRefVec& x) const = 0;
+    virtual Eigen::MatrixXd diffMap_(const ConstRefVec& x) const = 0;
+    virtual void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const = 0;
 
     void testLock() const;
 

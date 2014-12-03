@@ -15,15 +15,15 @@ namespace pgs
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
     virtual Segment getValue(RefVec val, size_t i) const;
-    virtual ConstSegment getValueConst(ConstRefVec& val, size_t i) const;
-    virtual std::string toString(ConstRefVec& val, std::string& prefix) const;
+    virtual ConstSegment getValueConst(const ConstRefVec& val, size_t i) const;
+    virtual std::string toString(const ConstRefVec& val, std::string& prefix) const;
   protected:
     //map operations
-    void plus_(RefVec out, ConstRefVec& x, ConstRefVec& v) const;
-    virtual void minus_(RefVec out, ConstRefVec& x, ConstRefVec& y) const;
+    void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
+    virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void setIdentity_(RefVec out) const;
-    virtual Eigen::MatrixXd diffMap_(ConstRefVec& x) const;
-    virtual void applyDiffMap_(RefMat inOut, ConstRefVec& x) const;
+    virtual Eigen::MatrixXd diffMap_(const ConstRefVec& x) const;
+    virtual void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
   };
 
   //Implementations of the methods
@@ -60,14 +60,14 @@ namespace pgs
   }
 
   template<typename Map>
-  inline ConstSegment SO3<Map>::getValueConst(ConstRefVec& val, size_t i) const
+  inline ConstSegment SO3<Map>::getValueConst(const ConstRefVec& val, size_t i) const
   {
     assert(i < 1 && "invalid index");
     return val.segment(0,static_cast<long> (representationDim()));
   }
    
   template<typename Map>
-  inline std::string SO3<Map>::toString(ConstRefVec& val, std::string& prefix) const
+  inline std::string SO3<Map>::toString(const ConstRefVec& val, std::string& prefix) const
   {
     std::string matPrefix = prefix + '[';
     Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", matPrefix, "]");
@@ -77,13 +77,13 @@ namespace pgs
   }
 
   template<typename Map>
-  inline void SO3<Map>::plus_(RefVec out, ConstRefVec& x, ConstRefVec& v) const
+  inline void SO3<Map>::plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
     Map::plus_(out, x, v);
   }
 
   template<typename Map>
-  inline void SO3<Map>::minus_(RefVec out, ConstRefVec& x, ConstRefVec& y) const
+  inline void SO3<Map>::minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   {
     Map::minus_( out, x, y);
   }
@@ -95,15 +95,15 @@ namespace pgs
   }
 
   template<typename Map>
-  inline Eigen::MatrixXd SO3<Map>::diffMap_(ConstRefVec& x) const
+  inline Eigen::MatrixXd SO3<Map>::diffMap_(const ConstRefVec& x) const
   {
     return Map::diffMap_(x);
   }
 
   template<typename Map>
-  inline void SO3<Map>::applyDiffMap_(RefMat inOut, ConstRefVec& x) const
+  inline void SO3<Map>::applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
-    Map::applyDiffMap_(inOut, x);
+    Map::applyDiffMap_(out, in, x);
   }
 
 }

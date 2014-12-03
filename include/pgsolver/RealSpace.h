@@ -17,16 +17,16 @@ namespace pgs
     virtual const Manifold& operator()(size_t i) const;
 
     virtual Segment getValue(RefVec val, size_t i) const;
-    virtual ConstSegment getValueConst(ConstRefVec& val, size_t i) const;
-    virtual std::string toString(ConstRefVec& val, std::string& prefix) const;
+    virtual ConstSegment getValueConst(const ConstRefVec& val, size_t i) const;
+    virtual std::string toString(const ConstRefVec& val, std::string& prefix) const;
   
   protected:
     //map operations
-    virtual void plus_(RefVec out, ConstRefVec& x, ConstRefVec& v) const;
-    virtual void minus_(RefVec out, ConstRefVec& x, ConstRefVec& y) const;
+    virtual void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
+    virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void setIdentity_(RefVec out) const;
-    virtual Eigen::MatrixXd diffMap_(ConstRefVec& x) const;
-    virtual void applyDiffMap_(RefMat inOut, ConstRefVec& x) const;
+    virtual Eigen::MatrixXd diffMap_(const ConstRefVec& x) const;
+    virtual void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
   };
 }
 
