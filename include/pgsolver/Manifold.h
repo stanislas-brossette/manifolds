@@ -18,6 +18,8 @@ namespace pgs
     Point createPoint(const Eigen::VectorXd& val) const;
     Point getIdentity() const;
 
+    virtual bool isValidInit(const Eigen::VectorXd& val) const;
+
     Index dim() const;
     Index representationDim() const;
     virtual size_t numberOfSubmanifolds() const = 0;
@@ -29,12 +31,12 @@ namespace pgs
     virtual std::string toString(const ConstRefVec& val, std::string& prefix) const = 0;
 
     //map operations
-    bool isValidInit(const Eigen::VectorXd& val) const;
     void setIdentity(RefVec out) const;
     void plus(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     void minus(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     Eigen::MatrixXd diffMap(const ConstRefVec& x) const;
     void applyDiffMap(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
+
     //for internal use
     void lock() const;
 

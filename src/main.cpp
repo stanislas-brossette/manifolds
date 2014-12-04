@@ -90,6 +90,10 @@ int main()
   //  std::cout << "J after applyDiffMap = " << std::endl << J << std::endl;
   //  std::cout << "Jf*Jac - J=" << std::endl << expectedRes - J << std::endl;
   //}
+
+#ifdef _WIN32
+  system("pause");
+#endif
   return 0;
 }
 

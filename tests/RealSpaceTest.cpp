@@ -5,7 +5,9 @@
 #include <pgsolver/RealSpace.h>
 #include <pgsolver/Point.h>
 
+#ifndef _WIN32
 #define BOOST_TEST_MODULE PGSolver 
+#endif
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
@@ -93,8 +95,7 @@ BOOST_AUTO_TEST_CASE(RealPointDiff)
   Eigen::MatrixXd J;
   Point x = R7.createPoint();
   J = R7.diffMap(x.value());
-  bool test = J.isIdentity();
-  BOOST_CHECK(test);
+  BOOST_CHECK(J.isIdentity());
 }
 
 BOOST_AUTO_TEST_CASE(RealApplyDiff)
@@ -106,8 +107,7 @@ BOOST_AUTO_TEST_CASE(RealApplyDiff)
   expectedRes = Jf*R7.diffMap(x.value());
   Eigen::MatrixXd J(5,7);
   R7.applyDiffMap(J, Jf, x.value());
-  bool test = expectedRes.isApprox(J);
-  BOOST_CHECK(test);
+  BOOST_CHECK(expectedRes.isApprox(J));
 }
 
 BOOST_AUTO_TEST_CASE(RealApplyDiffGuaranteedResultTest)
@@ -120,8 +120,6 @@ BOOST_AUTO_TEST_CASE(RealApplyDiffGuaranteedResultTest)
   Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
   Point x = Space.getIdentity();
   Space.applyDiffMap(Jres, Jf, x.value());
-  
-  bool worked = true;
 
   for (int i = 0; i<dim+1; ++i)
   {
@@ -130,8 +128,6 @@ BOOST_AUTO_TEST_CASE(RealApplyDiffGuaranteedResultTest)
     Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
     Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
     Space.applyDiffMap(Gres,Gf,x.value());
-    bool success = Jres.isApprox(Gres);
-    worked = worked && success;
+    BOOST_CHECK(Jres.isApprox(Gres));
   }
-  BOOST_CHECK(worked);
 }
