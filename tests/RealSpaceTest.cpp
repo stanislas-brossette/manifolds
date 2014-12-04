@@ -1,5 +1,7 @@
 #include <iostream>
 #include <stdexcept>
+
+#include <pgsolver/pgs_assert.h>
 #include <pgsolver/RealSpace.h>
 #include <pgsolver/Point.h>
 
@@ -107,3 +109,4 @@ BOOST_AUTO_TEST_CASE(RealApplyDiff)
   bool test = expectedRes.isApprox(J);
   BOOST_CHECK_EQUAL(test,1);
 }
+

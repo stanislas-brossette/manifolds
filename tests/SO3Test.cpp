@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include <pgsolver/pgs_assert.h>
 #include <pgsolver/SO3.h>
 #include <pgsolver/Point.h>
 #include <pgsolver/ExpMapMatrix.h>
@@ -135,3 +136,34 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
   BOOST_CHECK_EQUAL(test,1);
 }
 
+BOOST_AUTO_TEST_CASE(SO3ApplyDiffMemoryTest)
+{
+  Index c = 5;
+  SO3<ExpMapMatrix> Space;
+  Index dim = Space.dim();
+  Index repDim = Space.representationDim();
+  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
+  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
+  Point x = Space.getIdentity();
+  Space.applyDiffMap(Jres, Jf, x.value());
+  
+  bool worked = true;
+
+  for (int i = 0; i<dim+repDim; ++i)
+  {
+    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+2*dim);
+    G.middleCols(dim,repDim) = Jf;
+    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
+    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
+    try
+    {
+      Space.applyDiffMap(Gres,Gf,x.value());
+    }
+    catch (pgs_exception &e)
+    {
+      continue;
+    }
+    worked = worked && Jres.isApprox(Gres);
+  }
+  BOOST_CHECK_EQUAL(worked,1);
+}
