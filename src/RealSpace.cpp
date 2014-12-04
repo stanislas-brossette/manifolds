@@ -7,7 +7,7 @@ namespace pgs
   {
   }
   
-  bool RealSpace::isValidInit(const Eigen::VectorXd& val ) const
+  bool RealSpace::isValidInit_(const Eigen::VectorXd& val ) const
   {
     bool out( dim() == val.size());
     return out;

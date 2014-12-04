@@ -11,8 +11,6 @@ namespace pgs
   public:
     RealSpace(Index n);
 
-    virtual bool isValidInit(const Eigen::VectorXd& ) const;
-
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
 
@@ -22,6 +20,7 @@ namespace pgs
   
   protected:
     //map operations
+    virtual bool isValidInit_(const Eigen::VectorXd& ) const;
     virtual void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void setIdentity_(RefVec out) const;
