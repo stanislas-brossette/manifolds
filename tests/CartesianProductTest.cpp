@@ -195,8 +195,7 @@ BOOST_AUTO_TEST_CASE(CardProdDiff)
             0, 0, 0, 0, 0;
   Point x = R2SO3.createPoint();
   J = R2SO3.diffMap(x.value());
-  bool test = J.isApprox(Jtest);
-  BOOST_CHECK(test);
+  BOOST_CHECK(J.isApprox(Jtest));
 }
 
 BOOST_AUTO_TEST_CASE(CardProdApplyDiff)
@@ -214,8 +213,7 @@ BOOST_AUTO_TEST_CASE(CardProdApplyDiff)
   expectedRes = Jf*SO3R2R3R2SO3.diffMap(x.value());
   Eigen::MatrixXd J(5,13);
   SO3R2R3R2SO3.applyDiffMap(J, Jf, x.value());
-  bool test = expectedRes.isApprox(J);
-  BOOST_CHECK(test);
+  BOOST_CHECK(expectedRes.isApprox(J));
 }
 
 BOOST_AUTO_TEST_CASE(CardProdApplyDiffGuaranteedResultTest)
@@ -234,8 +232,6 @@ BOOST_AUTO_TEST_CASE(CardProdApplyDiffGuaranteedResultTest)
   Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
   Point x = Space.getIdentity();
   Space.applyDiffMap(Jres, Jf, x.value());
-  
-  bool worked = true;
 
   for (int i = 0; i<dim+1; ++i)
   {
@@ -244,8 +240,6 @@ BOOST_AUTO_TEST_CASE(CardProdApplyDiffGuaranteedResultTest)
     Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
     Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
     Space.applyDiffMap(Gres,Gf,x.value());
-    bool success = Jres.isApprox(Gres);
-    worked = worked && success;
+    BOOST_CHECK(Jres.isApprox(Gres));
   }
-  BOOST_CHECK(worked);
 }

@@ -121,8 +121,7 @@ BOOST_AUTO_TEST_CASE(SO3Diff)
            0, 0, 0;
   Point x = RotSpace.createPoint();
   J = RotSpace.diffMap(x.value());
-  bool test = J.isApprox(Jtest);
-  BOOST_CHECK(test);
+  BOOST_CHECK(J.isApprox(Jtest));
 }
 
 BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
@@ -134,8 +133,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
   expectedRes = Jf*RotSpace.diffMap(x.value());
   Eigen::MatrixXd J(5,3);
   RotSpace.applyDiffMap(J, Jf, x.value());
-  bool test = expectedRes.isApprox(J);
-  BOOST_CHECK(test);
+  BOOST_CHECK(expectedRes.isApprox(J));
 }
 
 BOOST_AUTO_TEST_CASE(SO3ApplyDiffMemoryTest)
@@ -191,8 +189,6 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiffGuaranteedResultTest)
     Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
     Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
     Space.applyDiffMap(Gres,Gf,x.value());
-    bool success = Jres.isApprox(Gres);
-    worked = worked && success;
+    BOOST_CHECK(Jres.isApprox(Gres));
   }
-  BOOST_CHECK(worked);
 }
