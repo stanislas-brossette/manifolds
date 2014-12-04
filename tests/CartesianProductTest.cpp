@@ -222,3 +222,41 @@ BOOST_AUTO_TEST_CASE(CardProdApplyDiff)
   bool test = expectedRes.isApprox(J);
   BOOST_CHECK_EQUAL(test,1);
 }
+
+BOOST_AUTO_TEST_CASE(RealApplyDiffGuaranteedResultTest)
+{
+  Index c = 5;
+  RealSpace R2(2);
+  RealSpace R3(3);
+  SO3<ExpMapMatrix> RotSpace;
+  CartesianProduct R2R3R2(R2, R3);
+  R2R3R2.multiply(R2);
+  CartesianProduct SO3R2R3R2(RotSpace, R2R3R2);
+  CartesianProduct Space(SO3R2R3R2, RotSpace);
+  Index dim = Space.dim();
+  Index repDim = Space.representationDim();
+  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
+  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
+  //std::cout << "Jf=" << Jf << std::endl;
+  //std::cout << "Jres=" << Jres << std::endl;
+  Point x = Space.getIdentity();
+  Space.applyDiffMap(Jres, Jf, x.value());
+  
+  bool worked = true;
+
+  for (int i = 0; i<dim+1; ++i)
+  {
+    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+dim);
+    G.middleCols(dim,repDim) = Jf;
+    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
+    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
+    //std::cout << std::endl << "Gf=" << Gf << std::endl;
+    //std::cout << "Gres=" << Gres << std::endl;
+    Space.applyDiffMap(Gres,Gf,x.value());
+    //std::cout << "Gres after apply=" << Gres << std::endl;
+    bool success = Jres.isApprox(Gres);
+    //std::cout << "At iteration " << i << " (Jres == Gres) = " << success << std::endl;
+    worked = worked && success;
+  }
+  BOOST_CHECK_EQUAL(worked,1);
+}
