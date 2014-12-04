@@ -215,8 +215,9 @@ BOOST_AUTO_TEST_CASE(CardProdApplyDiff)
   CartesianProduct SO3R2R3R2SO3(SO3R2R3R2, RotSpace);
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(5,25);
   Point x = SO3R2R3R2SO3.getIdentity();
-  Eigen::MatrixXd expectedRes = Jf*SO3R2R3R2SO3.diffMap(x.value());
-  Eigen::Map<Eigen::MatrixXd> J(Jf.data(),5,13);
+  Eigen::MatrixXd expectedRes;
+  expectedRes = Jf*SO3R2R3R2SO3.diffMap(x.value());
+  Eigen::MatrixXd J(5,13);
   SO3R2R3R2SO3.applyDiffMap(J, Jf, x.value());
   bool test = expectedRes.isApprox(J);
   BOOST_CHECK_EQUAL(test,1);

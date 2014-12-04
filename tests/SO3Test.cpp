@@ -127,8 +127,9 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
   SO3<ExpMapMatrix> RotSpace;
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(5,9);
   Point x = RotSpace.getIdentity();
-  Eigen::MatrixXd expectedRes = Jf*RotSpace.diffMap(x.value());
-  Eigen::Map<Eigen::MatrixXd> J(Jf.data(),5,3);
+  Eigen::MatrixXd expectedRes;
+  expectedRes = Jf*RotSpace.diffMap(x.value());
+  Eigen::MatrixXd J(5,3);
   RotSpace.applyDiffMap(J, Jf, x.value());
   bool test = expectedRes.isApprox(J);
   BOOST_CHECK_EQUAL(test,1);

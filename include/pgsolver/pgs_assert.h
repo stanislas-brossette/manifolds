@@ -1,0 +1,28 @@
+#ifndef _PGS_ASSERT_
+#define _PGS_ASSERT_
+
+#include <cassert>
+#include <string>
+
+namespace pgs
+{
+  struct pgs_exception
+  {
+  };
+
+  inline void pgs_assert(bool value, std::string message)
+  {
+    if(!value)
+    {
+      std::cerr << "PGS ASSERT error is " << message << std::endl;
+#ifdef _PGS_ASSERT_THROW_
+      throw pgs_exception(); 
+#else
+      assert(value);
+#endif //_PGS_ASSERT_THROW_
+    }
+  }
+    
+}
+
+#endif //_PGS_ASSERT_

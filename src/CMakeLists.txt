@@ -11,6 +11,7 @@ set(HEADERS
   ../include/pgsolver/defs.h
   ../include/pgsolver/ExpMapMatrix.h
   ../include/pgsolver/Manifold.h
+  ../include/pgsolver/pgs_assert.h
   ../include/pgsolver/Point.h
   ../include/pgsolver/RealSpace.h
   ../include/pgsolver/SO3.h

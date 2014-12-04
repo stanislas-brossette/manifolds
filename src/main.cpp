@@ -1,5 +1,9 @@
+
 #include <iostream>
 #include <stdexcept>
+
+#include <Eigen/Core>
+
 #include <pgsolver/RealSpace.h>
 #include <pgsolver/SO3.h>
 #include <pgsolver/CartesianProduct.h>
@@ -39,24 +43,26 @@ int main()
     std::cout << "Test SO3" << std::endl;
     Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(5,9);
     Point x = RotSpace.getIdentity();
-    Eigen::MatrixXd expectedRes = Jf*RotSpace.diffMap(x.value());
+    Eigen::MatrixXd Jac = RotSpace.diffMap(x.value());
+    Eigen::MatrixXd expectedRes;
+    expectedRes = Jf*Jac;
     std::cout << "Jf=" << std::endl << Jf << std::endl;
     Eigen::Map<Eigen::MatrixXd> J(Jf.data(),5,3);
     RotSpace.applyDiffMap(J, Jf, x.value());
     std::cout << "J after applyDiffMap = " << std::endl << J << std::endl;
     std::cout << "Jf*Jac - J=" << std::endl << expectedRes - J << std::endl;
   }
-  {
-    std::cout << "Test CardProd" << std::endl;
-    Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(5,25);
-    Point x = SO3R2R3R2SO3.getIdentity();
-    Eigen::MatrixXd expectedRes = Jf*SO3R2R3R2SO3.diffMap(x.value());
-    std::cout << "Jf=" << std::endl << Jf << std::endl;
-    Eigen::Map<Eigen::MatrixXd> J(Jf.data(),5,13);
-    SO3R2R3R2SO3.applyDiffMap(J, Jf, x.value());
-    std::cout << "J after applyDiffMap = " << std::endl << J << std::endl;
-    std::cout << "Jf*Jac - J=" << std::endl << expectedRes - J << std::endl;
-  }
+  //{
+  //  std::cout << "Test CardProd" << std::endl;
+  //  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(5,25);
+  //  Point x = SO3R2R3R2SO3.getIdentity();
+  //  Eigen::MatrixXd expectedRes = Jf*SO3R2R3R2SO3.diffMap(x.value());
+  //  std::cout << "Jf=" << std::endl << Jf << std::endl;
+  //  Eigen::Map<Eigen::MatrixXd> J(Jf.data(),5,13);
+  //  SO3R2R3R2SO3.applyDiffMap(J, Jf, x.value());
+  //  std::cout << "J after applyDiffMap = " << std::endl << J << std::endl;
+  //  std::cout << "Jf*Jac - J=" << std::endl << expectedRes - J << std::endl;
+  //}
   return 0;
 }
 
