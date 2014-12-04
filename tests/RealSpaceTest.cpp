@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(RealSpaceIdentity)
   Point x = R3.getIdentity();
   for(long i = 0; i < x.value().size(); ++i)
   {
-    BOOST_CHECK_EQUAL(x.value()[0], 0);
+    BOOST_CHECK_EQUAL(x.value()[i], 0);
   }
 }
 
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(RealPointDiff)
   Point x = R7.createPoint();
   J = R7.diffMap(x.value());
   bool test = J.isIdentity();
-  BOOST_CHECK_EQUAL(test,1);
+  BOOST_CHECK(test);
 }
 
 BOOST_AUTO_TEST_CASE(RealApplyDiff)
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(RealApplyDiff)
   Eigen::MatrixXd J(5,7);
   R7.applyDiffMap(J, Jf, x.value());
   bool test = expectedRes.isApprox(J);
-  BOOST_CHECK_EQUAL(test,1);
+  BOOST_CHECK(test);
 }
 
 BOOST_AUTO_TEST_CASE(RealApplyDiffGuaranteedResultTest)
@@ -118,8 +118,6 @@ BOOST_AUTO_TEST_CASE(RealApplyDiffGuaranteedResultTest)
   Index repDim = Space.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
   Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
-  //std::cout << "Jf=" << Jf << std::endl;
-  //std::cout << "Jres=" << Jres << std::endl;
   Point x = Space.getIdentity();
   Space.applyDiffMap(Jres, Jf, x.value());
   
@@ -131,13 +129,9 @@ BOOST_AUTO_TEST_CASE(RealApplyDiffGuaranteedResultTest)
     G.middleCols(dim,repDim) = Jf;
     Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
     Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
-    //std::cout << std::endl << "Gf=" << Gf << std::endl;
-    //std::cout << "Gres=" << Gres << std::endl;
     Space.applyDiffMap(Gres,Gf,x.value());
-    //std::cout << "Gres after apply=" << Gres << std::endl;
     bool success = Jres.isApprox(Gres);
-    //std::cout << "At iteration " << i << " (Jres == Gres) = " << success << std::endl;
     worked = worked && success;
   }
-  BOOST_CHECK_EQUAL(worked,1);
+  BOOST_CHECK(worked);
 }

@@ -10,11 +10,11 @@ namespace pgs
   {
   };
 
-  inline void pgs_assert(bool value, std::string message)
+  inline void pgs_assert(bool value, std::string)
   {
     if(!value)
     {
-      std::cerr << "PGS ASSERT error is " << message << std::endl;
+      //std::cerr << "PGS ASSERT error is " << message << std::endl;
 #ifdef _PGS_ASSERT_THROW_
       throw pgs_exception(); 
 #else

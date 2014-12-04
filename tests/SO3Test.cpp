@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE(SO3Diff)
   Point x = RotSpace.createPoint();
   J = RotSpace.diffMap(x.value());
   bool test = J.isApprox(Jtest);
-  BOOST_CHECK_EQUAL(test,1);
+  BOOST_CHECK(test);
 }
 
 BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
   Eigen::MatrixXd J(5,3);
   RotSpace.applyDiffMap(J, Jf, x.value());
   bool test = expectedRes.isApprox(J);
-  BOOST_CHECK_EQUAL(test,1);
+  BOOST_CHECK(test);
 }
 
 BOOST_AUTO_TEST_CASE(SO3ApplyDiffMemoryTest)
@@ -144,8 +144,6 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiffMemoryTest)
   Index repDim = Space.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
   Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
-  //std::cout << "Jf=" << Jf << std::endl;
-  //std::cout << "Jres=" << Jres << std::endl;
   Point x = Space.getIdentity();
   Space.applyDiffMap(Jres, Jf, x.value());
   
@@ -157,22 +155,18 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiffMemoryTest)
     G.middleCols(dim,repDim) = Jf;
     Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
     Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
-    //std::cout << std::endl << "Gf=" << Gf << std::endl;
-    //std::cout << "Gres=" << Gres << std::endl;
     try
     {
       Space.applyDiffMap(Gres,Gf,x.value());
     }
     catch (pgs_exception &e)
     {
-      //std::cout << "At iteration " << i << " iteration caught" << std::endl;
       continue;
     }
     bool success = Jres.isApprox(Gres);
-    //std::cout << "At iteration " << i << " (Jres == Gres) = " << success << std::endl;
     worked = worked && success;
   }
-  BOOST_CHECK_EQUAL(worked,1);
+  BOOST_CHECK(worked);
 }
 
 BOOST_AUTO_TEST_CASE(SO3ApplyDiffGuaranteedResultTest)
@@ -183,8 +177,6 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiffGuaranteedResultTest)
   Index repDim = Space.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
   Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
-  //std::cout << "Jf=" << Jf << std::endl;
-  //std::cout << "Jres=" << Jres << std::endl;
   Point x = Space.getIdentity();
   Space.applyDiffMap(Jres, Jf, x.value());
   
@@ -196,13 +188,9 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiffGuaranteedResultTest)
     G.middleCols(dim,repDim) = Jf;
     Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
     Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
-    //std::cout << std::endl << "Gf=" << Gf << std::endl;
-    //std::cout << "Gres=" << Gres << std::endl;
     Space.applyDiffMap(Gres,Gf,x.value());
-    //std::cout << "Gres after apply=" << Gres << std::endl;
     bool success = Jres.isApprox(Gres);
-    //std::cout << "At iteration " << i << " (Jres == Gres) = " << success << std::endl;
     worked = worked && success;
   }
-  BOOST_CHECK_EQUAL(worked,1);
+  BOOST_CHECK(worked);
 }

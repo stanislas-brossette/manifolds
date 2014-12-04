@@ -138,9 +138,6 @@ BOOST_AUTO_TEST_CASE(CartProSubstraction)
   x = x + vx;
   y = y + vy;
   Point z = x+(y-x);
-  std::cout << "x = " << std::endl << x << std::endl;
-  std::cout << "y = " << std::endl << y << std::endl;
-  std::cout << "z = x+(y-x) = " << std::endl << z << std::endl;
 
   BOOST_CHECK_EQUAL(z.value().size(), 16);
   for (int i = 0; i < 10; ++i)
@@ -165,11 +162,8 @@ BOOST_AUTO_TEST_CASE(CartProInvMap)
   vy << 4,6,0.07,3,0.01,2,1,4,6,4;
   x = x + vx +vy;
   Eigen::VectorXd x0 = x.invMap();
-  std::cout << "x = " << std::endl << x << std::endl;
-  std::cout << "x0 = " << std::endl << x0.transpose() << std::endl;
 
   Point newX = Id.increment(x0); 
-  std::cout << "newX = Id.increment(x.InvMap()) =" << std::endl << newX << std::endl;
 
   BOOST_CHECK_EQUAL(newX.value().size(), 16);
   for (int i = 0; i < 10; ++i)
@@ -177,6 +171,7 @@ BOOST_AUTO_TEST_CASE(CartProInvMap)
     BOOST_CHECK_CLOSE(newX.value()[i], x.value()[i], 1e-8);
   }
 }
+
 BOOST_AUTO_TEST_CASE(CardProdDiff)
 {
   RealSpace R2(2);
@@ -199,9 +194,7 @@ BOOST_AUTO_TEST_CASE(CardProdDiff)
   Point x = R2SO3.createPoint();
   J = R2SO3.diffMap(x.value());
   bool test = J.isApprox(Jtest);
-  std::cout << J << std::endl << std::endl;
-  std::cout << Jtest << std::endl << std::endl;
-  BOOST_CHECK_EQUAL(test,1);
+  BOOST_CHECK(test);
 }
 
 BOOST_AUTO_TEST_CASE(CardProdApplyDiff)
@@ -220,7 +213,7 @@ BOOST_AUTO_TEST_CASE(CardProdApplyDiff)
   Eigen::MatrixXd J(5,13);
   SO3R2R3R2SO3.applyDiffMap(J, Jf, x.value());
   bool test = expectedRes.isApprox(J);
-  BOOST_CHECK_EQUAL(test,1);
+  BOOST_CHECK(test);
 }
 
 BOOST_AUTO_TEST_CASE(RealApplyDiffGuaranteedResultTest)
@@ -237,8 +230,6 @@ BOOST_AUTO_TEST_CASE(RealApplyDiffGuaranteedResultTest)
   Index repDim = Space.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
   Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
-  //std::cout << "Jf=" << Jf << std::endl;
-  //std::cout << "Jres=" << Jres << std::endl;
   Point x = Space.getIdentity();
   Space.applyDiffMap(Jres, Jf, x.value());
   
@@ -250,13 +241,9 @@ BOOST_AUTO_TEST_CASE(RealApplyDiffGuaranteedResultTest)
     G.middleCols(dim,repDim) = Jf;
     Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
     Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
-    //std::cout << std::endl << "Gf=" << Gf << std::endl;
-    //std::cout << "Gres=" << Gres << std::endl;
     Space.applyDiffMap(Gres,Gf,x.value());
-    //std::cout << "Gres after apply=" << Gres << std::endl;
     bool success = Jres.isApprox(Gres);
-    //std::cout << "At iteration " << i << " (Jres == Gres) = " << success << std::endl;
     worked = worked && success;
   }
-  BOOST_CHECK_EQUAL(worked,1);
+  BOOST_CHECK(worked);
 }
