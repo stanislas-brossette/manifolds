@@ -4,7 +4,9 @@
 #include <pgsolver/Point.h>
 #include <pgsolver/ExpMapMatrix.h>
 
+#ifndef _WIN32
 #define BOOST_TEST_MODULE PGSolver 
+#endif
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
@@ -131,6 +133,6 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
   Eigen::Map<Eigen::MatrixXd> J(Jf.data(),5,3);
   RotSpace.applyDiffMap(J, Jf, x.value());
   bool test = expectedRes.isApprox(J);
-  BOOST_CHECK_EQUAL(test,1);
+  BOOST_CHECK_EQUAL(test,true);
 }
 
