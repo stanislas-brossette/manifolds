@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include <pgsolver/pgs_assert.h>
 #include <pgsolver/SO3.h>
 #include <pgsolver/Point.h>
 #include <pgsolver/ExpMapMatrix.h>
@@ -121,7 +122,7 @@ BOOST_AUTO_TEST_CASE(SO3Diff)
   Point x = RotSpace.createPoint();
   J = RotSpace.diffMap(x.value());
   bool test = J.isApprox(Jtest);
-  BOOST_CHECK_EQUAL(test,1);
+  BOOST_CHECK(test);
 }
 
 BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
@@ -129,10 +130,69 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
   SO3<ExpMapMatrix> RotSpace;
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(5,9);
   Point x = RotSpace.getIdentity();
-  Eigen::MatrixXd expectedRes = Jf*RotSpace.diffMap(x.value());
-  Eigen::Map<Eigen::MatrixXd> J(Jf.data(),5,3);
+  Eigen::MatrixXd expectedRes;
+  expectedRes = Jf*RotSpace.diffMap(x.value());
+  Eigen::MatrixXd J(5,3);
   RotSpace.applyDiffMap(J, Jf, x.value());
   bool test = expectedRes.isApprox(J);
-  BOOST_CHECK_EQUAL(test,true);
+  BOOST_CHECK(test);
 }
 
+BOOST_AUTO_TEST_CASE(SO3ApplyDiffMemoryTest)
+{
+  Index c = 6;
+  SO3<ExpMapMatrix> Space;
+  Index dim = Space.dim();
+  Index repDim = Space.representationDim();
+  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
+  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
+  Point x = Space.getIdentity();
+  Space.applyDiffMap(Jres, Jf, x.value());
+  
+  bool worked = true;
+
+  for (int i = 0; i<dim+repDim; ++i)
+  {
+    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+2*dim);
+    G.middleCols(dim,repDim) = Jf;
+    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
+    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
+    try
+    {
+      Space.applyDiffMap(Gres,Gf,x.value());
+    }
+    catch (pgs_exception &e)
+    {
+      continue;
+    }
+    bool success = Jres.isApprox(Gres);
+    worked = worked && success;
+  }
+  BOOST_CHECK(worked);
+}
+
+BOOST_AUTO_TEST_CASE(SO3ApplyDiffGuaranteedResultTest)
+{
+  Index c = 5;
+  SO3<ExpMapMatrix> Space;
+  Index dim = Space.dim();
+  Index repDim = Space.representationDim();
+  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
+  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
+  Point x = Space.getIdentity();
+  Space.applyDiffMap(Jres, Jf, x.value());
+  
+  bool worked = true;
+
+  for (int i = 0; i<dim+1; ++i)
+  {
+    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+dim);
+    G.middleCols(dim,repDim) = Jf;
+    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
+    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
+    Space.applyDiffMap(Gres,Gf,x.value());
+    bool success = Jres.isApprox(Gres);
+    worked = worked && success;
+  }
+  BOOST_CHECK(worked);
+}

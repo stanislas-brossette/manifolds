@@ -1,8 +1,35 @@
-
+#define _PGS_ASSERT_THROW_
 #include <iostream>
 #include <Eigen/Dense>
 #include <pgsolver/defs.h>
 #include <pgsolver/ExpMapMatrix.h>
+#include <pgsolver/pgs_assert.h>
+
+namespace utility
+{
+  // areOverlappingData tests if the data pointed by a and b are overlapping, in
+  // which case, some aliasing could appear.
+  // TODO, explain more.
+  // This function assumes that there wasn't any copies of a or b before the
+  // call.
+  bool areOverlappingData(const pgs::ConstRefVec& a, const pgs::ConstRefVec& b)
+  {
+    bool res = false;
+    if (&a.coeff(a.rows()-1) < &b.coeff(0) || &b.coeff(b.rows()-1) < &a.coeff(0))
+    {
+      return false;
+    }
+
+    for (int i = 0;i<a.rows();++i)
+    {
+      for (int j = i;j<b.rows();++j)
+      {
+        res = res || (&a.coeff(i) == &b.coeff(j));
+      }
+    }
+    return res;
+  }
+}
 
 namespace pgs
 {
@@ -96,8 +123,22 @@ namespace pgs
   {
     //out.col(0) is used as a buffer to avoid aliasing in case where in and out
     //are the same memory array.
-    out.col(0) = in.col(2);
 
+    std::string message("memory overlapping");
+    pgs_assert(!utility::areOverlappingData(out.col(0), in.col(1)), message);
+    pgs_assert(!utility::areOverlappingData(out.col(0), in.col(3)), message);
+    pgs_assert(!utility::areOverlappingData(out.col(0), in.col(5)), message);
+    pgs_assert(!utility::areOverlappingData(out.col(0), in.col(6)), message);
+    pgs_assert(!utility::areOverlappingData(out.col(0), in.col(7)), message);
+    pgs_assert(!utility::areOverlappingData(out.col(2), out.col(0)), message);
+    pgs_assert(!utility::areOverlappingData(out.col(2), in.col(6)), message);
+    pgs_assert(!utility::areOverlappingData(out.col(2), in.col(5)), message);
+    pgs_assert(!utility::areOverlappingData(out.col(2), in.col(7)), message);
+    pgs_assert(!utility::areOverlappingData(out.col(1), in.col(5)), message);
+    pgs_assert(!utility::areOverlappingData(out.col(1), in.col(7)), message);
+
+
+    out.col(0) = in.col(2);
     out.col(2) =  in.col(1) - in.col(3);
     out.col(1) = -out.col(0) + in.col(6);
     out.col(0) =  in.col(5) - in.col(7);
