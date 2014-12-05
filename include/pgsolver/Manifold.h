@@ -18,7 +18,7 @@ namespace pgs
     Point createPoint(const Eigen::VectorXd& val) const;
     Point getIdentity() const;
 
-    virtual bool isValidInit(const Eigen::VectorXd& val) const = 0;
+    virtual bool isValidInit(const Eigen::VectorXd& val) const;
 
     Index dim() const;
     Index representationDim() const;
@@ -43,6 +43,7 @@ namespace pgs
   protected:
     void setDimension(Index d);
     void setRepresentationDimension(Index rd);
+    virtual bool isValidInit_(const Eigen::VectorXd& val) const = 0;
 
     virtual void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;

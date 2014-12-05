@@ -33,6 +33,12 @@ namespace pgs
     }
   }
 
+  bool Manifold::isValidInit(const Eigen::VectorXd& val) const
+  {
+    assert(val.size() == representationDim());
+    return isValidInit_(val);
+  }
+
   Point Manifold::getIdentity() const
   {
     lock();

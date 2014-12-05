@@ -12,8 +12,6 @@ namespace pgs
     CartesianProduct();
     CartesianProduct(const Manifold& m1, const Manifold& m2);
 
-    virtual bool isValidInit(const Eigen::VectorXd& val) const;
-
     CartesianProduct& multiply(const Manifold& m);
 
     virtual size_t numberOfSubmanifolds() const;
@@ -26,6 +24,7 @@ namespace pgs
 
 
   protected:
+    virtual bool isValidInit_(const Eigen::VectorXd& val) const;
     virtual void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void setIdentity_(RefVec out) const;

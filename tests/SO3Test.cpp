@@ -144,8 +144,6 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiffMemoryTest)
   Point x = Space.getIdentity();
   Space.applyDiffMap(Jres, Jf, x.value());
   
-  bool worked = true;
-
   for (int i = 0; i<dim+repDim; ++i)
   {
     Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+2*dim);
@@ -156,14 +154,12 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiffMemoryTest)
     {
       Space.applyDiffMap(Gres,Gf,x.value());
     }
-    catch (pgs_exception &e)
+    catch (pgs_exception&)
     {
       continue;
     }
-    bool success = Jres.isApprox(Gres);
-    worked = worked && success;
+    BOOST_CHECK(Jres.isApprox(Gres));
   }
-  BOOST_CHECK(worked);
 }
 
 BOOST_AUTO_TEST_CASE(SO3ApplyDiffGuaranteedResultTest)
@@ -177,8 +173,6 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiffGuaranteedResultTest)
   Point x = Space.getIdentity();
   Space.applyDiffMap(Jres, Jf, x.value());
   
-  bool worked = true;
-
   for (int i = 0; i<dim+1; ++i)
   {
     Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+dim);

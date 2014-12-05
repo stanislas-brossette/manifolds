@@ -11,7 +11,6 @@ namespace pgs
   {
   public:
     SO3();
-    virtual bool isValidInit(const Eigen::VectorXd& val) const;
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
     virtual Segment getValue(RefVec val, size_t i) const;
@@ -19,6 +18,7 @@ namespace pgs
     virtual std::string toString(const ConstRefVec& val, std::string& prefix) const;
   protected:
     //map operations
+    virtual bool isValidInit_(const Eigen::VectorXd& val) const;
     void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void setIdentity_(RefVec out) const;
@@ -34,9 +34,9 @@ namespace pgs
   }
   
   template<typename Map>
-  inline bool SO3<Map>::isValidInit(const Eigen::VectorXd& val) const
+  inline bool SO3<Map>::isValidInit_(const Eigen::VectorXd& val) const
   {
-    return Map::isValidInit(val);
+    return Map::isValidInit_(val);
   }
 
   template<typename Map>
