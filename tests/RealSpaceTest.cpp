@@ -86,6 +86,17 @@ BOOST_AUTO_TEST_CASE(RealPointSubstraction)
   BOOST_CHECK_EQUAL(z[2], 6);
 }
 
+BOOST_AUTO_TEST_CASE(RealPointInvMap)
+{
+  RealSpace Space(7);
+  Point x = Space.getIdentity();
+  Eigen::VectorXd vy = Eigen::VectorXd::Random(Space.dim());;
+  x = x + vy;
+  Eigen::VectorXd z(Space.dim());
+  Space.invMap(z, x.value()); 
+  BOOST_CHECK(z.isApprox(vy));
+}
+
 BOOST_AUTO_TEST_CASE(RealPointDiff)
 {
   RealSpace R7(7);

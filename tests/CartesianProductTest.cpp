@@ -145,6 +145,23 @@ BOOST_AUTO_TEST_CASE(CartProSubstraction)
   }
 }
 
+BOOST_AUTO_TEST_CASE(CardProdPointInvMap)
+{
+  RealSpace R2(2);
+  RealSpace R3(3);
+  SO3<ExpMapMatrix> RotSpace;
+  CartesianProduct R2R3R2(R2, R3);
+  R2R3R2.multiply(R2);
+  CartesianProduct SO3R2R3R2(RotSpace, R2R3R2);
+  CartesianProduct Space(SO3R2R3R2, RotSpace);
+  Point x = Space.getIdentity();
+  Eigen::VectorXd vy = Eigen::VectorXd::Random(Space.dim());;
+  x = x + vy;
+  Eigen::VectorXd z(Space.dim());
+  Space.invMap(z, x.value()); 
+  BOOST_CHECK(z.isApprox(vy));
+}
+
 BOOST_AUTO_TEST_CASE(CartProInvMap)
 {
   RealSpace R2(2);

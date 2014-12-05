@@ -74,6 +74,13 @@ namespace pgs
     minus_(out, x, y);
   }
 
+  void Manifold::invMap(RefVec out, const ConstRefVec& x) const
+  {
+    assert(out.size() == dimension_);
+    assert(x.size() == representationDim_);
+    minus_(out, x, getIdentity().value());
+  }
+
   Eigen::MatrixXd Manifold::diffMap(const ConstRefVec& x) const
   {
     assert(x.size() == representationDim_);

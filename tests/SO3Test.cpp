@@ -102,6 +102,17 @@ BOOST_AUTO_TEST_CASE(SO3Substraction)
   BOOST_CHECK_CLOSE(d[2], 0.6, 1e-8);
 }
 
+BOOST_AUTO_TEST_CASE(SO3PointInvMap)
+{
+  SO3<ExpMapMatrix> Space;
+  Point x = Space.getIdentity();
+  Eigen::VectorXd vy = Eigen::VectorXd::Random(Space.dim());;
+  x = x + vy;
+  Eigen::VectorXd z(Space.dim());
+  Space.invMap(z, x.value()); 
+  BOOST_CHECK(z.isApprox(vy));
+}
+
 BOOST_AUTO_TEST_CASE(SO3Diff)
 {
   SO3<ExpMapMatrix> RotSpace;

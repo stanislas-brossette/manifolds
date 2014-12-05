@@ -34,6 +34,7 @@ namespace pgs
     void setIdentity(RefVec out) const;
     void plus(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     void minus(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
+    void invMap(RefVec out, const ConstRefVec& x) const;
     Eigen::MatrixXd diffMap(const ConstRefVec& x) const;
     void applyDiffMap(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
 
