@@ -119,7 +119,7 @@ namespace pgs
   }
 
   void ExpMapMatrix::applyDiffMap_(
-      RefMat out, const ConstRefMat& in, const ConstRefVec&)
+      RefMat out, const ConstRefMat& in, const ConstRefVec& v)
   {
     //out.col(0) is used as a buffer to avoid aliasing in case where in and out
     //are the same memory array.
@@ -137,6 +137,12 @@ namespace pgs
     pgs_assert(!utility::areOverlappingData(out.col(1), in.col(5)), message);
     pgs_assert(!utility::areOverlappingData(out.col(1), in.col(7)), message);
 
+    applyDiffMapNoAssert_(out, in, v);
+  }
+
+  void ExpMapMatrix::applyDiffMapNoAssert_(
+      RefMat out, const ConstRefMat& in, const ConstRefVec&)
+  {
 
     out.col(0) = in.col(2);
     out.col(2) =  in.col(1) - in.col(3);

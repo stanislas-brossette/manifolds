@@ -20,6 +20,8 @@ namespace pgs
     static Eigen::MatrixXd diffMap_(const ConstRefVec& x);
     static void applyDiffMap_(
         RefMat out, const ConstRefMat& in, const ConstRefVec& x);
+    static void applyDiffMapNoAssert_(
+        RefMat out, const ConstRefMat& in, const ConstRefVec& x);
   };
 }
 

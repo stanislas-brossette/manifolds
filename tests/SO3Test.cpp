@@ -156,6 +156,8 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiffMemoryTest)
     }
     catch (pgs_exception&)
     {
+      ExpMapMatrix::applyDiffMapNoAssert_(Gres,Gf,x.value());
+      BOOST_CHECK(!Jres.isApprox(Gres));
       continue;
     }
     BOOST_CHECK(Jres.isApprox(Gres));
