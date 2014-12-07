@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE(SO3PointInvMap)
 {
   SO3<ExpMapMatrix> Space;
   Point x = Space.getIdentity();
-  Eigen::VectorXd vy = Eigen::VectorXd::Random(Space.dim());;
+  Eigen::VectorXd vy = Eigen::VectorXd::Random(Space.dim());
   x = x + vy;
   Eigen::VectorXd z(Space.dim());
   Space.invMap(z, x.value()); 
