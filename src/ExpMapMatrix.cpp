@@ -153,42 +153,31 @@ namespace pgs
   {
     Eigen::MatrixXd J(3,9);
     J.setZero();
-    Eigen::Vector3d v;
-    v << -R(7), R(6), -R(3);  //Valid approximation of the log when v<<1
+    Eigen::Vector3d v(R(7), R(6), -R(3));  //Valid approximation of the log when v<<1
     double trR = R(0)+R(4)+R(8); //Trace of R;
 
+    double trRm1o2 = (trR-1) / 2;
+    double s2 = 1 - trRm1o2*trRm1o2;
+    double f = acos(trRm1o2) / sqrt(s2); //=acos(trRm1o2)/sin(acos(trRm1o2));
+    double hf = f/2;
     if (v.norm()<prec) //Probably should not use prec here
     {
-      double trRm1o2 = (trR-1)/2;
-      double f = acos(trRm1o2)/sqrt(1-trRm1o2*trRm1o2); //=acos(trRm1o2)/sin(acos(trRm1o2));
       double df = -1/6+1/15*(trR-3);
       J.col(0) = df*v;
-      J.col(1) = f*Eigen::Vector3d(0   , 0   , 1/2 );
-      J.col(2) = f*Eigen::Vector3d(0   , -1/2, 0   );
-      J.col(3) = f*Eigen::Vector3d(0   , 0   , -1/2);
-      J.col(4) = df*v;
-      J.col(5) = f*Eigen::Vector3d(1/2 , 0   , 0   );
-      J.col(6) = f*Eigen::Vector3d(0   , 1/2 , 0   );
-      J.col(7) = f*Eigen::Vector3d(-1/2, 0   , 0   );
-      J.col(8) = df*v;
     }
     else
     {
-      double trRm1o2 = (trR-1)/2;
-      double f = acos(trRm1o2)/sqrt(1-trRm1o2*trRm1o2); //=acos(trRm1o2)/sin(acos(trRm1o2));
-      double df = 1/(2*(trRm1o2*trRm1o2-1))+
-        (trRm1o2*acos(trRm1o2))/(2*pow((1-trRm1o2*trRm1o2),(1.5)));
-      Eigen::Vector3d g(R(5) - R(7), R(6) - R(2), R(1) - R(3));
-      J.col(0) << 0.5*df*g;
-      J.col(1) << 0 , 0 , 0.5*f ;
-      J.col(2) << 0 , -0.5*f, 0 ;
-      J.col(3) << 0 , 0 , -0.5*f;
-      J.col(4) = J.col(0); 
-      J.col(5) << 0.5*f , 0 , 0 ;
-      J.col(6) << 0 , 0.5*f , 0 ;
-      J.col(7) << -0.5*f, 0 , 0 ;
-      J.col(8) = J.col(0); 
+      double hdf = (trRm1o2*f-1) / (4 * s2);
+      J.col(0) = hdf * Eigen::Vector3d(R(5)-R(7), R(6)-R(2), R(1)-R(3));
     }
+      J.col(1) = Eigen::Vector3d( 0 , 0 , hf);
+      J.col(2) = Eigen::Vector3d( 0 ,-hf, 0 );
+      J.col(3) = Eigen::Vector3d( 0 , 0 ,-hf);
+      J.col(4) = J.col(0);
+      J.col(5) = Eigen::Vector3d( hf, 0 , 0 );
+      J.col(6) = Eigen::Vector3d( 0 , hf, 0 );
+      J.col(7) = Eigen::Vector3d(-hf, 0 , 0 );
+      J.col(8) = J.col(0);
 
     return J;
   }
