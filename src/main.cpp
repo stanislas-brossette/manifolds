@@ -35,27 +35,27 @@ int main()
   //  R3.applyDiffMap(JacF, x.value());
   //  std::cout << "JacF = " << JacF << std::endl;
   //}
-  {
-    SO3<ExpMapMatrix> RotSpace;
-    Eigen::Vector3d v ;//= Eigen::Vector3d::Random();
-    v << 0.680375, -0.211234,  0.566198;
-    Point x = RotSpace.getIdentity();
-    x = x+v;
-    std::cout << "v = "<< v.transpose() << std::endl;
-    std::cout << "x = "<< x << std::endl;
-    Eigen::MatrixXd Jinv = RotSpace.diffInvMap(x.value());
-    std::cout << "Jinv = " << std::endl << Jinv << std::endl;
-    Eigen::MatrixXd J = RotSpace.diffMap(x.value());
-    std::cout << "J = " << std::endl << J << std::endl;
-    Eigen::Matrix<double, 2, 3> out;
-    Eigen::Matrix<double, 2, 9> in = Eigen::Matrix<double, 2, 9>::Random();
-    in << 1,2,3,4,5,6,7,8,9,
-    9,8,7,6,5,4,3,2,1;
-    RotSpace.applyDiffMap(out,in,x.value());
-    std::cout << "in = "  << std::endl << in << std::endl;
-    std::cout << "out = "  << std::endl << out << std::endl;
+  //{
+  //  SO3<ExpMapMatrix> RotSpace;
+  //  Eigen::Vector3d v ;//= Eigen::Vector3d::Random();
+  //  v << 0.680375, -0.211234,  0.566198;
+  //  Point x = RotSpace.getIdentity();
+  //  x = x+v;
+  //  std::cout << "v = "<< v.transpose() << std::endl;
+  //  std::cout << "x = "<< x << std::endl;
+  //  Eigen::MatrixXd Jinv = RotSpace.diffInvMap(x.value());
+  //  std::cout << "Jinv = " << std::endl << Jinv << std::endl;
+  //  Eigen::MatrixXd J = RotSpace.diffMap(x.value());
+  //  std::cout << "J = " << std::endl << J << std::endl;
+  //  Eigen::Matrix<double, 2, 3> out;
+  //  Eigen::Matrix<double, 2, 9> in = Eigen::Matrix<double, 2, 9>::Random();
+  //  in << 1,2,3,4,5,6,7,8,9,
+  //  9,8,7,6,5,4,3,2,1;
+  //  RotSpace.applyDiffMap(out,in,x.value());
+  //  std::cout << "in = "  << std::endl << in << std::endl;
+  //  std::cout << "out = "  << std::endl << out << std::endl;
 
-  }
+  //}
   
   //{
   //  std::cout << "Test SO3" << std::endl;
@@ -82,16 +82,16 @@ int main()
   //  std::cout << "Jf*Jac - J=" << std::endl << expectedRes - J << std::endl;
   //}
 
-  //ReusableTemporaryMap rtm;
-  //Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp = rtm.getMap(5, 7);
-  //tmp.setIdentity();
-  //std::cout << "initial 5x7 matrix: " << std::endl << tmp << std::endl;
-  //Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp2 = rtm.getMap(4, 6);
-  //std::cout << "new map 4x6, smaller. No reallocation, only use initialized values of previous map : " << std::endl << tmp2 << std::endl;
-  //Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp3 = rtm.getMap(7, 7);
-  //std::cout << "bigger 7x7, no reallocation but some values are not initialized : " << std::endl << tmp3 << std::endl;
-  //Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp4 = rtm.getMap(17, 17);
-  //std::cout << "a 17x17 matrix doesn't fit in the initial buffer. Memory is reallocated and initialized values may be lost : " << std::endl << tmp4 << std::endl;
+  ReusableTemporaryMap rtm;
+  Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp = rtm.getMap(5, 7);
+  tmp.setIdentity();
+  std::cout << "initial 5x7 matrix: " << std::endl << tmp << std::endl;
+  Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp2 = rtm.getMap(4, 6);
+  std::cout << "new map 4x6, smaller. No reallocation, only use initialized values of previous map : " << std::endl << tmp2 << std::endl;
+  Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp3 = rtm.getMap(7, 7);
+  std::cout << "bigger 7x7, no reallocation but some values are not initialized : " << std::endl << tmp3 << std::endl;
+  Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp4 = rtm.getMap(17, 17);
+  std::cout << "a 17x17 matrix doesn't fit in the initial buffer. Memory is reallocated and initialized values may be lost : " << std::endl << tmp4 << std::endl;
 #ifdef _WIN32
   system("pause");
 #endif

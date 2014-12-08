@@ -103,9 +103,9 @@ namespace pgs
     return out;
   }
 
-  Eigen::MatrixXd ExpMapMatrix::diffMap_(const ConstRefVec& x)
+  Eigen::Matrix<double, 9, 3> ExpMapMatrix::diffMap_(const ConstRefVec& x)
   {
-    Eigen::MatrixXd J(9,3);
+    Eigen::Matrix<double, 9, 3> J;
     J << 0   , -x(6), x(3) ,  
          0   , -x(7), x(4) ,
          0   , -x(8), x(5) ,
@@ -119,16 +119,17 @@ namespace pgs
   }
 
   void ExpMapMatrix::applyDiffMap_(
-      RefMat out, const ConstRefMat& in, const ConstRefVec& x)
+      RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m)
   {
     assert(in.cols() == OutputDim_ && "Dimensions mismatch" );
-    // For now we use this very basic implementation. Needs to be improved
-    out = in*diffMap_(x);
+    Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),3);
+    a = in*diffMap_(x);
+    out = a;
   }
 
-  Eigen::MatrixXd ExpMapMatrix::diffInvMap_(const ConstRefVec& R)
+  Eigen::Matrix<double, 3, 9> ExpMapMatrix::diffInvMap_(const ConstRefVec& R)
   {
-    Eigen::MatrixXd J(3,9);
+    Eigen::Matrix<double, 3, 9> J;
     J.setZero();
     Eigen::Vector3d v(R(7), R(6), -R(3));  //Valid approximation of the log when v<<1
     double trR = R(0)+R(4)+R(8); //Trace of R;
@@ -160,11 +161,12 @@ namespace pgs
   }
 
   void ExpMapMatrix::applyDiffInvMap_(
-      RefMat out, const ConstRefMat& in, const ConstRefVec& x)
+      RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m)
   {
     assert(in.cols() == InputDim_ && "Dimensions mismatch" );
-    // For now we use this very basic implementation. Needs to be improved
-    out = in*diffInvMap_(x);
+    Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),9);
+    a = in*diffInvMap_(x);
+    out = a;
   }
 }
 

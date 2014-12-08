@@ -3,6 +3,7 @@
 
 #include <pgsolver/defs.h>
 #include <pgsolver/Manifold.h>
+#include <pgsolver/ReusableTemporaryMap.h>
 
 namespace pgs
 {
@@ -28,6 +29,8 @@ namespace pgs
     virtual void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
     virtual Eigen::MatrixXd diffInvMap_(const ConstRefVec& x) const;
     virtual void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
+
+    mutable ReusableTemporaryMap bufferMap_;
   };
 
   //Implementations of the methods
@@ -125,7 +128,7 @@ namespace pgs
   template<typename Map>
   inline void SO3<Map>::applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
-    Map::applyDiffMap_(out, in, x);
+    Map::applyDiffMap_(out, in, x, bufferMap_);
   }
 
   template<typename Map>
@@ -137,7 +140,7 @@ namespace pgs
   template<typename Map>
   inline void SO3<Map>::applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
-    Map::applyDiffInvMap_(out, in, x);
+    Map::applyDiffInvMap_(out, in, x, bufferMap_);
   }
 }
 #endif //_PGS_SO3_H_
