@@ -31,7 +31,7 @@ namespace pgs
 
   inline Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> ReusableTemporaryMap::getMap(Eigen::DenseIndex m, Eigen::DenseIndex n)
   {
-    reallocate(m*n);
+    reallocate(static_cast<size_t>(m*n));
     return Eigen::Map<Eigen::MatrixXd, Eigen::Aligned>(buffer_, m, n);
   }
 

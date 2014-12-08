@@ -5,6 +5,7 @@ set(SOURCES
   Manifold.cpp 
   Point.cpp 
   RealSpace.cpp
+  ReusableTemporaryMap.cpp
   )
 set(HEADERS
   ../include/pgsolver/CartesianProduct.h
@@ -14,6 +15,7 @@ set(HEADERS
   ../include/pgsolver/pgs_assert.h
   ../include/pgsolver/Point.h
   ../include/pgsolver/RealSpace.h
+  ../include/pgsolver/ReusableTemporaryMap.h
   ../include/pgsolver/SO3.h
 )
 

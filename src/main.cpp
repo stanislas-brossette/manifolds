@@ -48,24 +48,6 @@ int main()
     Eigen::MatrixXd J = RotSpace.diffMap(x.value());
     std::cout << "J = " << std::endl << J << std::endl;
 
-    for (int i = 0; i<13; ++i)
-    {
-      Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,15);
-      G.middleCols(3,9) = Jf;
-      Eigen::Map<Eigen::MatrixXd> Gf(G.data()+3*c,c,9);
-      Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,3);
-      try
-      {
-        RotSpace.applyDiffMap(Gres,Gf,x.value());
-      }
-      catch (pgs_exception)
-      {
-        std::cout << "At iteration " << i << ", exception caught" << std::endl;
-        continue;
-      }
-      worked = worked && Jres.isApprox(Gres);
-      std::cout << "At iteration " << i << ": Gres-Jres=" << std::endl << Gres-Jres << std::endl;
-    }
   }
   
   //{
