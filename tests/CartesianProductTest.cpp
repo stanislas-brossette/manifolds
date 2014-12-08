@@ -290,7 +290,7 @@ BOOST_AUTO_TEST_CASE(CardProdDiffInv)
   BOOST_CHECK(J.isApprox(Jtest));
 }
 
-BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
+BOOST_AUTO_TEST_CASE(CardProdApplyInvDiff)
 {
   int c = 5;
   RealSpace R2(2);

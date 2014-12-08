@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(RealApplyDiff)
 //  }
 //}
 
-BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
+BOOST_AUTO_TEST_CASE(RealApplyInvDiff)
 {
   int c = 5;
   RealSpace Space(7);
