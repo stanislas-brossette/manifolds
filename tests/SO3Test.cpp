@@ -198,3 +198,19 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiffGuaranteedResultTest)
     BOOST_CHECK(Jres.isApprox(Gres));
   }
 }
+
+BOOST_AUTO_TEST_CASE(SO3invDiff)
+{
+  SO3<ExpMapMatrix> RotSpace;
+  Eigen::MatrixXd J;
+  Eigen::MatrixXd Jtest(3,9);
+  Jtest <<
+  -0.064043491813865,                 0,                  0,                  0, -0.064043491813865, 0.545030346992499,                 0, -0.545030346992499, -0.064043491813865,
+  -0.110117993664377,                 0, -0.545030346992499,                  0, -0.110117993664377,                 0, 0.545030346992499,                  0, -0.110117993664377,
+  -0.042109988599266, 0.545030346992499,                  0, -0.545030346992499, -0.042109988599266,                 0,                 0,                  0, -0.042109988599266;
+  Eigen::Vector3d v(0.3403857, 0.58526775, 0.223811);
+  Point x = RotSpace.getIdentity();
+  x.increment(v);
+  J = RotSpace.diffInvMap(x.value());
+  BOOST_CHECK(J.isApprox(Jtest));
+}

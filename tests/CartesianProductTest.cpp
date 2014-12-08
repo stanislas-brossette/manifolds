@@ -212,7 +212,6 @@ BOOST_AUTO_TEST_CASE(CardProdDiff)
   v << 243.27432598, -2314327.23748, 0.3403857, 0.58526775, 0.223811;
   x.increment(v);
   J = R2SO3.diffMap(x.value());
-  std::cout << J << std::endl << Jtest << std::endl;
   BOOST_CHECK(J.isApprox(Jtest));
 }
 
@@ -260,4 +259,29 @@ BOOST_AUTO_TEST_CASE(CardProdApplyDiffGuaranteedResultTest)
     Space.applyDiffMap(Gres,Gf,x.value());
     BOOST_CHECK(Jres.isApprox(Gres));
   }
+}
+
+BOOST_AUTO_TEST_CASE(CardProdDiffInv)
+{
+  RealSpace R2(2);
+  RealSpace R3(3);
+  SO3<ExpMapMatrix> RotSpace;
+  CartesianProduct R2SO3(R2, RotSpace);
+  CartesianProduct R2SO3R3(R2SO3, R3);
+  Eigen::MatrixXd J;
+  Eigen::MatrixXd Jtest(8,14);
+  Jtest << 1,0,0                 ,0                ,0                 ,                 0,                  0,                 0,                 0,                  0,                  0,0,0,0,
+           0,1,0                 ,0                ,0                 ,                 0,                  0,                 0,                 0,                  0,                  0,0,0,0,
+           0,0,-0.064043491813865,                0,                 0,                 0, -0.064043491813865, 0.545030346992499,                 0, -0.545030346992499, -0.064043491813865,0,0,0,
+           0,0,-0.110117993664377,                0,-0.545030346992499,                 0, -0.110117993664377,                 0, 0.545030346992499,                  0, -0.110117993664377,0,0,0,
+           0,0,-0.042109988599266,0.545030346992499,                 0,-0.545030346992499, -0.042109988599266,                 0,                 0,                  0, -0.042109988599266,0,0,0,
+           0,0,                 0,                0,                 0,                 0,                  0,                 0,                 0,                  0,                  0,1,0,0, 
+           0,0,                 0,                0,                 0,                 0,                  0,                 0,                 0,                  0,                  0,0,1,0, 
+           0,0,                 0,                0,                 0,                 0,                  0,                 0,                 0,                  0,                  0,0,0,1; 
+  Point x = R2SO3R3.getIdentity();
+  Eigen::VectorXd v(8);
+  v << 243.27432598, -2314327.23748, 0.3403857, 0.58526775, 0.223811, 3.08, 0.00000001, 232.5;
+  x.increment(v);
+  J = R2SO3R3.diffInvMap(x.value());
+  BOOST_CHECK(J.isApprox(Jtest));
 }

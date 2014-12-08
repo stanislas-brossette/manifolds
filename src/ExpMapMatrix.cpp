@@ -159,11 +159,9 @@ namespace pgs
 
     if (v.norm()<prec) //Probably should not use prec here
     {
-      std::cout << "small angle: "<< std::endl;
-      double f = (acos((trR-1)/2/M_PI))/sin(acos((trR-1)/2/M_PI));
-      std::cout << "f = " << f << std::endl;
+      double trRm1o2 = (trR-1)/2;
+      double f = acos(trRm1o2)/sqrt(1-trRm1o2*trRm1o2); //=acos(trRm1o2)/sin(acos(trRm1o2));
       double df = -1/6+1/15*(trR-3);
-      std::cout << "df = " << df << std::endl;
       J.col(0) = df*v;
       J.col(1) = f*Eigen::Vector3d(0   , 0   , 1/2 );
       J.col(2) = f*Eigen::Vector3d(0   , -1/2, 0   );
@@ -176,15 +174,11 @@ namespace pgs
     }
     else
     {
-      std::cout << "small angle: "<< std::endl;
       double trRm1o2 = (trR-1)/2;
-      std::cout << "trRm1o2 = " << trRm1o2 << std::endl;
-      double f = acos(trRm1o2)/sin(acos(trRm1o2));
-      std::cout << "f = " << f << std::endl;
-      double df = 1/(2*(pow(trRm1o2,2)-1))+(trRm1o2*acos(trRm1o2))/(2*pow((1-pow(trRm1o2,2)),(1.5)));
-      std::cout << "df = " << df << std::endl;
+      double f = acos(trRm1o2)/sqrt(1-trRm1o2*trRm1o2); //=acos(trRm1o2)/sin(acos(trRm1o2));
+      double df = 1/(2*(trRm1o2*trRm1o2-1))+
+        (trRm1o2*acos(trRm1o2))/(2*pow((1-trRm1o2*trRm1o2),(1.5)));
       Eigen::Vector3d g(R(5) - R(7), R(6) - R(2), R(1) - R(3));
-      std::cout << "g = " << g << std::endl;
       J.col(0) << 0.5*df*g;
       J.col(1) << 0 , 0 , 0.5*f ;
       J.col(2) << 0 , -0.5*f, 0 ;
