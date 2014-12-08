@@ -219,6 +219,23 @@ BOOST_AUTO_TEST_CASE(SO3invDiff)
   BOOST_CHECK(J.isApprox(Jtest));
 }
 
+//BOOST_AUTO_TEST_CASE(SO3invDiffSmallValue)
+//{
+//  SO3<ExpMapMatrix> RotSpace;
+//  Eigen::MatrixXd J;
+//  Eigen::MatrixXd Jtest(3,9);
+//  Jtest <<
+//  -0.064043491813865,                 0,                  0,                  0, -0.064043491813865, 0.545030346992499,                 0, -0.545030346992499, -0.064043491813865,
+//  -0.110117993664377,                 0, -0.545030346992499,                  0, -0.110117993664377,                 0, 0.545030346992499,                  0, -0.110117993664377,
+//  -0.042109988599266, 0.545030346992499,                  0, -0.545030346992499, -0.042109988599266,                 0,                 0,                  0, -0.042109988599266;
+//  Eigen::Vector3d v( 1.0e-08*0.081125768865785, 1.0e-08*0.929385970968730, 1.0e-08*0.775712678608402);
+//  Point x = RotSpace.getIdentity();
+//  x.increment(v);
+//  J = RotSpace.diffInvMap(x.value());
+//  std::cout << "J = " << J << std::endl; 
+//  BOOST_CHECK(J.isApprox(Jtest));
+//}
+
 BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
 {
   int c = 5;
