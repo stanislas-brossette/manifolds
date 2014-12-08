@@ -82,16 +82,16 @@ int main()
   //  std::cout << "Jf*Jac - J=" << std::endl << expectedRes - J << std::endl;
   //}
 
-  ReusableTemporaryMap rtm;
-  Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp = rtm.getMap(5, 7);
-  tmp.setIdentity();
-  std::cout << "initial 5x7 matrix: " << std::endl << tmp << std::endl;
-  Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp2 = rtm.getMap(4, 6);
-  std::cout << "new map 4x6, smaller. No reallocation, only use initialized values of previous map : " << std::endl << tmp2 << std::endl;
-  Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp3 = rtm.getMap(7, 7);
-  std::cout << "bigger 7x7, no reallocation but some values are not initialized : " << std::endl << tmp3 << std::endl;
-  Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp4 = rtm.getMap(17, 17);
-  std::cout << "a 17x17 matrix doesn't fit in the initial buffer. Memory is reallocated and initialized values may be lost : " << std::endl << tmp4 << std::endl;
+  //ReusableTemporaryMap rtm;
+  //Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp = rtm.getMap(5, 7);
+  //tmp.setIdentity();
+  //std::cout << "initial 5x7 matrix: " << std::endl << tmp << std::endl;
+  //Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp2 = rtm.getMap(4, 6);
+  //std::cout << "new map 4x6, smaller. No reallocation, only use initialized values of previous map : " << std::endl << tmp2 << std::endl;
+  //Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp3 = rtm.getMap(7, 7);
+  //std::cout << "bigger 7x7, no reallocation but some values are not initialized : " << std::endl << tmp3 << std::endl;
+  //Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> tmp4 = rtm.getMap(17, 17);
+  //std::cout << "a 17x17 matrix doesn't fit in the initial buffer. Memory is reallocated and initialized values may be lost : " << std::endl << tmp4 << std::endl;
 #ifdef _WIN32
   system("pause");
 #endif
