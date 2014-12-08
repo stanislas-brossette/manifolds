@@ -147,5 +147,19 @@ namespace pgs
     }
     return J;
   }
+
+  void CartesianProduct::applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  {
+    for (size_t i = 0; i < submanifolds_.size(); ++i)
+    {
+      Index startTi = startIndexT_[i];
+      Index startRi = startIndexR_[i];
+      Index repDimi = submanifolds_[i]->representationDim();
+      Index dimi = submanifolds_[i]->dim();
+      submanifolds_[i]->applyDiffInvMap( out.middleCols(startRi, repDimi),
+                                      in.middleCols(startTi, dimi),
+                                      x.segment(startRi, repDimi));
+    }
+  }
 }
 

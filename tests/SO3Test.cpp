@@ -218,3 +218,19 @@ BOOST_AUTO_TEST_CASE(SO3invDiff)
   J = RotSpace.diffInvMap(x.value());
   BOOST_CHECK(J.isApprox(Jtest));
 }
+
+BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
+{
+  int c = 5;
+  SO3<ExpMapMatrix> Space;
+  Index dim = Space.dim();
+  Index repDim = Space.representationDim();
+  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,dim);
+  Point x = Space.getIdentity();
+  x.increment(Eigen::VectorXd::Random(dim));
+  Eigen::MatrixXd expectedRes;
+  expectedRes = Jf*Space.diffInvMap(x.value());
+  Eigen::MatrixXd J(c,repDim);
+  Space.applyDiffInvMap(J, Jf, x.value());
+  BOOST_CHECK(expectedRes.isApprox(J));
+}

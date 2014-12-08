@@ -29,9 +29,9 @@ namespace pgs
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void setIdentity_(RefVec out) const;
     virtual Eigen::MatrixXd diffMap_(const ConstRefVec& x) const;
-    virtual void applyDiffMap_(
-        RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
+    virtual void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
     virtual Eigen::MatrixXd diffInvMap_(const ConstRefVec& x) const;
+    virtual void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
 
   private:
     std::vector<const Manifold* > submanifolds_;

@@ -122,12 +122,6 @@ namespace pgs
       RefMat out, const ConstRefMat& in, const ConstRefVec& x)
   {
     assert(in.cols() == OutputDim_ && "Dimensions mismatch" );
-    applyDiffMapNoAssert_(out, in, x);
-  }
-
-  void ExpMapMatrix::applyDiffMapNoAssert_(
-      RefMat out, const ConstRefMat& in, const ConstRefVec& x)
-  {
     // For now we use this very basic implementation. Needs to be improved
     out = in*diffMap_(x);
   }
@@ -174,6 +168,14 @@ namespace pgs
     }
 
     return J;
+  }
+
+  void ExpMapMatrix::applyDiffInvMap_(
+      RefMat out, const ConstRefMat& in, const ConstRefVec& x)
+  {
+    assert(in.cols() == InputDim_ && "Dimensions mismatch" );
+    // For now we use this very basic implementation. Needs to be improved
+    out = in*diffInvMap_(x);
   }
 }
 

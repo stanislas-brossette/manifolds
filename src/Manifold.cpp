@@ -103,6 +103,16 @@ namespace pgs
     return diffInvMap_(x);
   }
 
+  void Manifold::applyDiffInvMap(
+      RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  {
+    assert(out.cols() == representationDim_);
+    assert(in.cols() == dimension_);
+    assert(in.rows() == out.rows());
+    assert(x.size() == representationDim_);
+    applyDiffInvMap_(out, in, x);
+  }
+
   void Manifold::setDimension(Index d)
   {
     assert(d>0 && "Negative dimension not accepted");

@@ -289,3 +289,25 @@ BOOST_AUTO_TEST_CASE(CardProdDiffInv)
   J = R2SO3R3.diffInvMap(x.value());
   BOOST_CHECK(J.isApprox(Jtest));
 }
+
+BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
+{
+  int c = 5;
+  RealSpace R2(2);
+  RealSpace R3(3);
+  SO3<ExpMapMatrix> RotSpace;
+  CartesianProduct R2R3R2(R2, R3);
+  R2R3R2.multiply(R2);
+  CartesianProduct SO3R2R3R2(RotSpace, R2R3R2);
+  CartesianProduct Space(SO3R2R3R2, RotSpace);
+  Index dim = Space.dim();
+  Index repDim = Space.representationDim();
+  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,dim);
+  Point x = Space.getIdentity();
+  x.increment(Eigen::VectorXd::Random(dim));
+  Eigen::MatrixXd expectedRes;
+  expectedRes = Jf*Space.diffInvMap(x.value());
+  Eigen::MatrixXd J(c,repDim);
+  Space.applyDiffInvMap(J, Jf, x.value());
+  BOOST_CHECK(expectedRes.isApprox(J));
+}

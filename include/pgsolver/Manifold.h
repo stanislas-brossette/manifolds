@@ -38,6 +38,7 @@ namespace pgs
     Eigen::MatrixXd diffMap(const ConstRefVec& x) const;
     void applyDiffMap(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
     Eigen::MatrixXd diffInvMap(const ConstRefVec& x) const;
+    void applyDiffInvMap(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
 
     //for internal use
     void lock() const;
@@ -53,6 +54,7 @@ namespace pgs
     virtual Eigen::MatrixXd diffMap_(const ConstRefVec& x) const = 0;
     virtual void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const = 0;
     virtual Eigen::MatrixXd diffInvMap_(const ConstRefVec& x) const = 0;
+    virtual void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const = 0;
 
     void testLock() const;
 
