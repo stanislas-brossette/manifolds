@@ -71,4 +71,9 @@ namespace pgs
   {
     return Eigen::MatrixXd::Identity(representationDim(),dim());
   }
+
+  void RealSpace::applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& ) const
+  {
+    out = in;
+  }
 }

@@ -108,34 +108,54 @@ BOOST_AUTO_TEST_CASE(RealPointDiff)
 
 BOOST_AUTO_TEST_CASE(RealApplyDiff)
 {
-  RealSpace R7(7);
-  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(5,7);
-  Point x = R7.getIdentity();
-  Eigen::MatrixXd expectedRes;
-  expectedRes = Jf*R7.diffMap(x.value());
-  Eigen::MatrixXd J(5,7);
-  R7.applyDiffMap(J, Jf, x.value());
-  BOOST_CHECK(expectedRes.isApprox(J));
-}
-
-BOOST_AUTO_TEST_CASE(RealApplyDiffGuaranteedResultTest)
-{
-  Index c = 3;
+  int c = 5;
   RealSpace Space(7);
   Index dim = Space.dim();
   Index repDim = Space.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
-  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
   Point x = Space.getIdentity();
-  Space.applyDiffMap(Jres, Jf, x.value());
+  x.increment(Eigen::VectorXd::Random(dim));
+  Eigen::MatrixXd expectedRes;
+  expectedRes = Jf*Space.diffMap(x.value());
+  Eigen::MatrixXd J(c,dim);
+  Space.applyDiffMap(J, Jf, x.value());
+  BOOST_CHECK(expectedRes.isApprox(J));
+}
 
-  for (int i = 0; i<dim+1; ++i)
-  {
-    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+dim);
-    G.middleCols(dim,repDim) = Jf;
-    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
-    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
-    Space.applyDiffMap(Gres,Gf,x.value());
-    BOOST_CHECK(Jres.isApprox(Gres));
-  }
+//BOOST_AUTO_TEST_CASE(RealApplyDiffGuaranteedResultTest)
+//{
+//  Index c = 3;
+//  RealSpace Space(7);
+//  Index dim = Space.dim();
+//  Index repDim = Space.representationDim();
+//  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
+//  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
+//  Point x = Space.getIdentity();
+//  Space.applyDiffMap(Jres, Jf, x.value());
+//
+//  for (int i = 0; i<dim+1; ++i)
+//  {
+//    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+dim);
+//    G.middleCols(dim,repDim) = Jf;
+//    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
+//    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
+//    Space.applyDiffMap(Gres,Gf,x.value());
+//    BOOST_CHECK(Jres.isApprox(Gres));
+//  }
+//}
+
+BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
+{
+  int c = 5;
+  RealSpace Space(7);
+  Index dim = Space.dim();
+  Index repDim = Space.representationDim();
+  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,dim);
+  Point x = Space.getIdentity();
+  x.increment(Eigen::VectorXd::Random(dim));
+  Eigen::MatrixXd expectedRes;
+  expectedRes = Jf*Space.diffInvMap(x.value());
+  Eigen::MatrixXd J(c,repDim);
+  Space.applyDiffInvMap(J, Jf, x.value());
+  BOOST_CHECK(expectedRes.isApprox(J));
 }

@@ -18,11 +18,9 @@ namespace pgs
     static void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y);
     static void setIdentity_(RefVec out);
     static Eigen::MatrixXd diffMap_(const ConstRefVec& x);
-    static void applyDiffMap_(
-        RefMat out, const ConstRefMat& in, const ConstRefVec& x);
-    static void applyDiffMapNoAssert_(
-        RefMat out, const ConstRefMat& in, const ConstRefVec& x);
+    static void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x);
     static Eigen::MatrixXd diffInvMap_(const ConstRefVec& x);
+    static void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x);
   };
 }
 
