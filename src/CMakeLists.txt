@@ -19,16 +19,23 @@ set(HEADERS
   ../include/pgsolver/SO3.h
 )
 
-add_library(PGSolver SHARED ${SOURCES} ${HEADERS})
-
-set_target_properties(PGSolver PROPERTIES
-  VERSION ${PROJECT_VERSION}
-  SOVERSION 0.1
+set(LIBRARIES
+  PGSolver
+  PGSolverTest
 )
+foreach(lib ${LIBRARIES})
+  add_library(${lib} SHARED ${SOURCES} ${HEADERS})
+  set_target_properties(${lib} PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION 0.1
+  )
+  target_link_libraries(${lib})
+endforeach()
 
-target_link_libraries(PGSolver)
+target_compile_definitions(PGSolverTest PRIVATE "-D_PGS_ASSERT_THROW_")
 
 install(TARGETS PGSolver
   DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
+
 add_executable(PGSolverExe main.cpp)
 target_link_libraries(PGSolverExe PGSolver)

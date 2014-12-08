@@ -1,4 +1,3 @@
-#define _PGS_ASSERT_THROW_
 #include <iostream>
 #include <Eigen/Dense>
 #include <pgsolver/defs.h>
