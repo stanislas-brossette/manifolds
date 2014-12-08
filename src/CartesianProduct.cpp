@@ -131,5 +131,21 @@ namespace pgs
                                       x.segment(startRi, repDimi));
     }
   }
+  
+  Eigen::MatrixXd CartesianProduct::diffInvMap_(const ConstRefVec& x) const
+  {
+    Eigen::MatrixXd J(dim(),representationDim());
+    J.setZero();
+    for (size_t i = 0; i < submanifolds_.size(); ++i)
+    {
+      J.block(startIndexT_[i],
+              startIndexR_[i],
+              submanifolds_[i]->dim(),
+              submanifolds_[i]->representationDim()) 
+        = submanifolds_[i]->diffInvMap(x.segment(startIndexR_[i], 
+                                  submanifolds_[i]->representationDim()));
+    }
+    return J;
+  }
 }
 

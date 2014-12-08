@@ -97,6 +97,12 @@ namespace pgs
     applyDiffMap_(out, in, x);
   }
 
+  Eigen::MatrixXd Manifold::diffInvMap(const ConstRefVec& x) const
+  {
+    assert(x.size() == representationDim_);
+    return diffInvMap_(x);
+  }
+
   void Manifold::setDimension(Index d)
   {
     assert(d>0 && "Negative dimension not accepted");

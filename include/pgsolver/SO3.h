@@ -24,6 +24,7 @@ namespace pgs
     virtual void setIdentity_(RefVec out) const;
     virtual Eigen::MatrixXd diffMap_(const ConstRefVec& x) const;
     virtual void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
+    virtual Eigen::MatrixXd diffInvMap_(const ConstRefVec& x) const;
   };
 
   //Implementations of the methods
@@ -106,6 +107,11 @@ namespace pgs
     Map::applyDiffMap_(out, in, x);
   }
 
+  template<typename Map>
+  inline Eigen::MatrixXd SO3<Map>::diffInvMap_(const ConstRefVec& x) const
+  {
+    return Map::diffInvMap_(x);
+  }
 }
 #endif //_PGS_SO3_H_
 

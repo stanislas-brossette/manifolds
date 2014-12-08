@@ -35,35 +35,18 @@ int main()
   //  std::cout << "JacF = " << JacF << std::endl;
   //}
   {
-    Index c = 5;
     SO3<ExpMapMatrix> RotSpace;
-    Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,9);
-    Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,3);
+    Eigen::Vector3d v ;//= Eigen::Vector3d::Random();
+    v << 0.680375, -0.211234,  0.566198;
     Point x = RotSpace.getIdentity();
-    RotSpace.applyDiffMap(Jres, Jf, x.value());
-    std::cout << "Jf=" << std::endl << Jf << std::endl;
-    std::cout << "Jres=" << std::endl << Jres << std::endl;
-    
-    bool worked = true;
+    x = x+v;
+    std::cout << "v = "<< v.transpose() << std::endl;
+    std::cout << "x = "<< x << std::endl;
+    Eigen::MatrixXd Jinv = RotSpace.diffInvMap(x.value());
+    std::cout << "Jinv = " << std::endl << Jinv << std::endl;
+    Eigen::MatrixXd J = RotSpace.diffMap(x.value());
+    std::cout << "J = " << std::endl << J << std::endl;
 
-    for (int i = 0; i<13; ++i)
-    {
-      Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,15);
-      G.middleCols(3,9) = Jf;
-      Eigen::Map<Eigen::MatrixXd> Gf(G.data()+3*c,c,9);
-      Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,3);
-      try
-      {
-        RotSpace.applyDiffMap(Gres,Gf,x.value());
-      }
-      catch (pgs_exception &e)
-      {
-        std::cout << "At iteration " << i << ", exception caught" << std::endl;
-        continue;
-      }
-      worked = worked && Jres.isApprox(Gres);
-      std::cout << "At iteration " << i << ": Gres-Jres=" << std::endl << Gres-Jres << std::endl;
-    }
   }
   
   //{
