@@ -15,6 +15,8 @@ namespace pgs
     virtual const Manifold& operator()(size_t i) const;
     virtual Segment getValue(RefVec val, size_t i) const;
     virtual ConstSegment getValueConst(const ConstRefVec& val, size_t i) const;
+    virtual Segment getValueTangent(RefVec val, size_t i) const;
+    virtual ConstSegment getValueTangentConst(const ConstRefVec& val, size_t i) const;
     virtual std::string toString(const ConstRefVec& val, std::string& prefix) const;
   protected:
     //map operations
@@ -57,6 +59,7 @@ namespace pgs
   template<typename Map>
   inline Segment SO3<Map>::getValue(RefVec val, size_t i) const
   {
+    assert(val.size() == representationDim());
     assert(i < 1 && "invalid index");
     return val.segment(0, static_cast<long> (representationDim()));
   }
@@ -64,8 +67,25 @@ namespace pgs
   template<typename Map>
   inline ConstSegment SO3<Map>::getValueConst(const ConstRefVec& val, size_t i) const
   {
+    assert(val.size() == representationDim());
     assert(i < 1 && "invalid index");
     return val.segment(0,static_cast<long> (representationDim()));
+  }
+
+  template<typename Map>
+  inline Segment SO3<Map>::getValueTangent(RefVec val, size_t i) const
+  {
+    assert(val.size() == dim());
+    assert(i < 1 && "invalid index");
+    return val.segment(0, static_cast<long> (dim()));
+  }
+
+  template<typename Map>
+  inline ConstSegment SO3<Map>::getValueTangentConst(const ConstRefVec& val, size_t i) const
+  {
+    assert(val.size() == dim());
+    assert(i < 1 && "invalid index");
+    return val.segment(0,static_cast<long> (dim()));
   }
    
   template<typename Map>

@@ -27,6 +27,8 @@ namespace pgs
 
     virtual Segment getValue(RefVec val, size_t i) const = 0;
     virtual ConstSegment getValueConst(const ConstRefVec& val, size_t i) const = 0;
+    virtual Segment getValueTangent(RefVec val, size_t i) const = 0;
+    virtual ConstSegment getValueTangentConst(const ConstRefVec& val, size_t i) const = 0;
 
     virtual std::string toString(const ConstRefVec& val, std::string& prefix) const = 0;
 
