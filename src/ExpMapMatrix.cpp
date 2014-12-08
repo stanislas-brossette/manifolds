@@ -106,49 +106,32 @@ namespace pgs
   Eigen::MatrixXd ExpMapMatrix::diffMap_(const ConstRefVec& x)
   {
     Eigen::MatrixXd J(9,3);
-    J << 0   , -x(6), x(3),  
-         0   , -x(7), x(4),
-         0   , -x(8), x(5),
+    J << 0   , -x(6), x(3) ,  
+         0   , -x(7), x(4) ,
+         0   , -x(8), x(5) ,
          x(6),  0   , -x(0),
          x(7),  0   , -x(1),
          x(8),  0   , -x(2),
-        -x(3),  x(0), 0,
-        -x(4),  x(1), 0,
-        -x(5),  x(2), 0;
+        -x(3),  x(0), 0    ,
+        -x(4),  x(1), 0    ,
+        -x(5),  x(2), 0    ;
     return J;
   }
 
   void ExpMapMatrix::applyDiffMap_(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x)
   {
-    //out.col(0) is used as a buffer to avoid aliasing in case where in and out
-    //are the same memory array.
-
-    std::string message("memory overlapping");
-    pgs_assert(!utility::areOverlappingData(out.col(0), in.col(1)), message);
-    pgs_assert(!utility::areOverlappingData(out.col(0), in.col(3)), message);
-    pgs_assert(!utility::areOverlappingData(out.col(0), in.col(5)), message);
-    pgs_assert(!utility::areOverlappingData(out.col(0), in.col(6)), message);
-    pgs_assert(!utility::areOverlappingData(out.col(0), in.col(7)), message);
-    pgs_assert(!utility::areOverlappingData(out.col(2), out.col(0)), message);
-    pgs_assert(!utility::areOverlappingData(out.col(2), in.col(6)), message);
-    pgs_assert(!utility::areOverlappingData(out.col(2), in.col(5)), message);
-    pgs_assert(!utility::areOverlappingData(out.col(2), in.col(7)), message);
-    pgs_assert(!utility::areOverlappingData(out.col(1), in.col(5)), message);
-    pgs_assert(!utility::areOverlappingData(out.col(1), in.col(7)), message);
-
+    assert(in.cols() == OutputDim_ && "Dimensions mismatch" );
     applyDiffMapNoAssert_(out, in, x);
   }
 
   void ExpMapMatrix::applyDiffMapNoAssert_(
-      RefMat out, const ConstRefMat& in, const ConstRefVec&)
+      RefMat out, const ConstRefMat& in, const ConstRefVec& x)
   {
-
-    out.col(0) = in.col(2);
-    out.col(2) =  in.col(1) - in.col(3);
-    out.col(1) = -out.col(0) + in.col(6);
-    out.col(0) =  in.col(5) - in.col(7);
+    // For now we use this very basic implementation. Needs to be improved
+    out = in*diffMap_(x);
   }
+
   Eigen::MatrixXd ExpMapMatrix::diffInvMap_(const ConstRefVec& R)
   {
     Eigen::MatrixXd J(3,9);

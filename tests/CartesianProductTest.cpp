@@ -217,25 +217,7 @@ BOOST_AUTO_TEST_CASE(CardProdDiff)
 
 BOOST_AUTO_TEST_CASE(CardProdApplyDiff)
 {
-  RealSpace R2(2);
-  RealSpace R3(3);
-  SO3<ExpMapMatrix> RotSpace;
-  CartesianProduct R2R3R2(R2, R3);
-  R2R3R2.multiply(R2);
-  CartesianProduct SO3R2R3R2(RotSpace, R2R3R2);
-  CartesianProduct SO3R2R3R2SO3(SO3R2R3R2, RotSpace);
-  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(5,25);
-  Point x = SO3R2R3R2SO3.getIdentity();
-  Eigen::MatrixXd expectedRes;
-  expectedRes = Jf*SO3R2R3R2SO3.diffMap(x.value());
-  Eigen::MatrixXd J(5,13);
-  SO3R2R3R2SO3.applyDiffMap(J, Jf, x.value());
-  BOOST_CHECK(expectedRes.isApprox(J));
-}
-
-BOOST_AUTO_TEST_CASE(CardProdApplyDiffGuaranteedResultTest)
-{
-  Index c = 5;
+  int c = 5;
   RealSpace R2(2);
   RealSpace R3(3);
   SO3<ExpMapMatrix> RotSpace;
@@ -246,20 +228,42 @@ BOOST_AUTO_TEST_CASE(CardProdApplyDiffGuaranteedResultTest)
   Index dim = Space.dim();
   Index repDim = Space.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
-  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
   Point x = Space.getIdentity();
-  Space.applyDiffMap(Jres, Jf, x.value());
-
-  for (int i = 0; i<dim+1; ++i)
-  {
-    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+dim);
-    G.middleCols(dim,repDim) = Jf;
-    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
-    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
-    Space.applyDiffMap(Gres,Gf,x.value());
-    BOOST_CHECK(Jres.isApprox(Gres));
-  }
+  x.increment(Eigen::VectorXd::Random(dim));
+  Eigen::MatrixXd expectedRes;
+  expectedRes = Jf*Space.diffMap(x.value());
+  Eigen::MatrixXd J(c,dim);
+  Space.applyDiffMap(J, Jf, x.value());
+  BOOST_CHECK(expectedRes.isApprox(J));
 }
+
+//BOOST_AUTO_TEST_CASE(CardProdApplyDiffGuaranteedResultTest)
+//{
+//  Index c = 5;
+//  RealSpace R2(2);
+//  RealSpace R3(3);
+//  SO3<ExpMapMatrix> RotSpace;
+//  CartesianProduct R2R3R2(R2, R3);
+//  R2R3R2.multiply(R2);
+//  CartesianProduct SO3R2R3R2(RotSpace, R2R3R2);
+//  CartesianProduct Space(SO3R2R3R2, RotSpace);
+//  Index dim = Space.dim();
+//  Index repDim = Space.representationDim();
+//  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
+//  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
+//  Point x = Space.getIdentity();
+//  Space.applyDiffMap(Jres, Jf, x.value());
+//
+//  for (int i = 0; i<dim+1; ++i)
+//  {
+//    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+dim);
+//    G.middleCols(dim,repDim) = Jf;
+//    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
+//    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
+//    Space.applyDiffMap(Gres,Gf,x.value());
+//    BOOST_CHECK(Jres.isApprox(Gres));
+//  }
+//}
 
 BOOST_AUTO_TEST_CASE(CardProdDiffInv)
 {

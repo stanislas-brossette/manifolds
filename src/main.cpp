@@ -47,6 +47,13 @@ int main()
     std::cout << "Jinv = " << std::endl << Jinv << std::endl;
     Eigen::MatrixXd J = RotSpace.diffMap(x.value());
     std::cout << "J = " << std::endl << J << std::endl;
+    Eigen::Matrix<double, 2, 3> out;
+    Eigen::Matrix<double, 2, 9> in = Eigen::Matrix<double, 2, 9>::Random();
+    in << 1,2,3,4,5,6,7,8,9,
+    9,8,7,6,5,4,3,2,1;
+    RotSpace.applyDiffMap(out,in,x.value());
+    std::cout << "in = "  << std::endl << in << std::endl;
+    std::cout << "out = "  << std::endl << out << std::endl;
 
   }
   

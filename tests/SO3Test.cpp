@@ -136,68 +136,72 @@ BOOST_AUTO_TEST_CASE(SO3Diff)
 
 BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
 {
-  SO3<ExpMapMatrix> RotSpace;
-  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(5,9);
-  Point x = RotSpace.getIdentity();
+  int c = 5;
+  SO3<ExpMapMatrix> Space;
+  Index dim = Space.dim();
+  Index repDim = Space.representationDim();
+  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
+  Point x = Space.getIdentity();
+  x.increment(Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
-  expectedRes = Jf*RotSpace.diffMap(x.value());
-  Eigen::MatrixXd J(5,3);
-  RotSpace.applyDiffMap(J, Jf, x.value());
+  expectedRes = Jf*Space.diffMap(x.value());
+  Eigen::MatrixXd J(c,dim);
+  Space.applyDiffMap(J, Jf, x.value());
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
-BOOST_AUTO_TEST_CASE(SO3ApplyDiffMemoryTest)
-{
-  Index c = 6;
-  SO3<ExpMapMatrix> Space;
-  Index dim = Space.dim();
-  Index repDim = Space.representationDim();
-  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
-  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
-  Point x = Space.getIdentity();
-  Space.applyDiffMap(Jres, Jf, x.value());
-  
-  for (int i = 0; i<dim+repDim; ++i)
-  {
-    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+2*dim);
-    G.middleCols(dim,repDim) = Jf;
-    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
-    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
-    try
-    {
-      Space.applyDiffMap(Gres,Gf,x.value());
-    }
-    catch (pgs_exception&)
-    {
-      ExpMapMatrix::applyDiffMapNoAssert_(Gres,Gf,x.value());
-      BOOST_CHECK(!Jres.isApprox(Gres));
-      continue;
-    }
-    BOOST_CHECK(Jres.isApprox(Gres));
-  }
-}
-
-BOOST_AUTO_TEST_CASE(SO3ApplyDiffGuaranteedResultTest)
-{
-  Index c = 5;
-  SO3<ExpMapMatrix> Space;
-  Index dim = Space.dim();
-  Index repDim = Space.representationDim();
-  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
-  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
-  Point x = Space.getIdentity();
-  Space.applyDiffMap(Jres, Jf, x.value());
-  
-  for (int i = 0; i<dim+1; ++i)
-  {
-    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+dim);
-    G.middleCols(dim,repDim) = Jf;
-    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
-    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
-    Space.applyDiffMap(Gres,Gf,x.value());
-    BOOST_CHECK(Jres.isApprox(Gres));
-  }
-}
+//BOOST_AUTO_TEST_CASE(SO3ApplyDiffMemoryTest)
+//{
+//  Index c = 6;
+//  SO3<ExpMapMatrix> Space;
+//  Index dim = Space.dim();
+//  Index repDim = Space.representationDim();
+//  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
+//  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
+//  Point x = Space.getIdentity();
+//  Space.applyDiffMap(Jres, Jf, x.value());
+//  
+//  for (int i = 0; i<dim+repDim; ++i)
+//  {
+//    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+2*dim);
+//    G.middleCols(dim,repDim) = Jf;
+//    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
+//    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
+//    try
+//    {
+//      Space.applyDiffMap(Gres,Gf,x.value());
+//    }
+//    catch (pgs_exception&)
+//    {
+//      ExpMapMatrix::applyDiffMapNoAssert_(Gres,Gf,x.value());
+//      BOOST_CHECK(!Jres.isApprox(Gres));
+//      continue;
+//    }
+//    BOOST_CHECK(Jres.isApprox(Gres));
+//  }
+//}
+//
+//BOOST_AUTO_TEST_CASE(SO3ApplyDiffGuaranteedResultTest)
+//{
+//  Index c = 5;
+//  SO3<ExpMapMatrix> Space;
+//  Index dim = Space.dim();
+//  Index repDim = Space.representationDim();
+//  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
+//  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
+//  Point x = Space.getIdentity();
+//  Space.applyDiffMap(Jres, Jf, x.value());
+//  
+//  for (int i = 0; i<dim+1; ++i)
+//  {
+//    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+dim);
+//    G.middleCols(dim,repDim) = Jf;
+//    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
+//    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
+//    Space.applyDiffMap(Gres,Gf,x.value());
+//    BOOST_CHECK(Jres.isApprox(Gres));
+//  }
+//}
 
 BOOST_AUTO_TEST_CASE(SO3invDiff)
 {
