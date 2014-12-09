@@ -17,6 +17,11 @@ set(CUSTOM_HEADER_DIR PGSolver)
 set(HEADERS )
 
 setup_project()
+if(CMAKE_BUILD_TYPE MATCHES Rel)
+  if(NOT WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter")
+  endif()
+endif()
 
 # Add main library to pkg-config file.
 PKG_CONFIG_APPEND_LIBS(PGSolver)
