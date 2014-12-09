@@ -18,7 +18,7 @@ namespace pgs
     //virtual ConstSegment getValueConst(const ConstRefVec& val, size_t i) const;
     //virtual Segment getValueTangent(RefVec val, size_t i) const;
     //virtual ConstSegment getValueTangentConst(const ConstRefVec& val, size_t i) const;
-    virtual std::string toString(const ConstRefVec& val, std::string& prefix) const;
+    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
   protected:
     //map operations
     virtual bool isValidInit_(const Eigen::VectorXd& val) const;
@@ -92,12 +92,12 @@ namespace pgs
   //}
    
   template<typename Map>
-  inline std::string SO3<Map>::toString(const ConstRefVec& val, std::string& prefix) const
+  inline std::string SO3<Map>::toString(const ConstRefVec& val, const std::string& prefix) const
   {
     std::string matPrefix = prefix + '[';
     Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", matPrefix, "]");
     std::stringstream ss;
-    ss << (Eigen::Map<const typename Map::DisplayType>(val.data())).format(CleanFmt) << std::endl;
+    ss << (Eigen::Map<const typename Map::DisplayType>(val.data())).format(CleanFmt);
     return ss.str();
   }
 

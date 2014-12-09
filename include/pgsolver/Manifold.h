@@ -55,7 +55,7 @@ namespace pgs
     template<int Dr, int Dc> typename ViewReturnType<Dr, Dc>::Type getView(RefMat val, size_t ir, size_t ic) const;
     template<int Dr, int Dc> typename ConstViewReturnType<Dr, Dc>::Type getConstView(const ConstRefMat& val, size_t ir, size_t ic) const;
 
-    virtual std::string toString(const ConstRefVec& val, std::string& prefix) const = 0;
+    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const = 0;
 
     //map operations
     void setIdentity(RefVec out) const;

@@ -51,10 +51,12 @@ namespace pgs
   //  return val.segment(0,static_cast<long> (dim()));
   //}
 
-  std::string RealSpace::toString(const ConstRefVec& val, std::string& prefix) const
+  std::string RealSpace::toString(const ConstRefVec& val, const std::string& prefix) const
   {
+    std::string matPrefix = prefix + '[';
+    Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", matPrefix, "]");
     std::stringstream ss;
-    ss << prefix << val.transpose() << std::endl;
+    ss << val.transpose().format(CleanFmt);
     return ss.str();
   }
 
