@@ -47,6 +47,7 @@ BOOST_AUTO_TEST_CASE(RealSpaceIdentity)
 
 BOOST_AUTO_TEST_CASE(RealPointIncrement)
 {
+  //[XXX] shouldn't this test be in PointTest? Here we want to test plus(z,x,y);
   RealSpace R3(3);
   Point x = R3.getIdentity();
   Eigen::Vector3d vy;
@@ -61,6 +62,7 @@ BOOST_AUTO_TEST_CASE(RealPointIncrement)
 
 BOOST_AUTO_TEST_CASE(RealPointAddition)
 {
+  //[XXX] shouldn't this test be in PointTest?
   RealSpace R3(3);
   Point y = R3.getIdentity();
   Eigen::Vector3d vy;
@@ -74,6 +76,7 @@ BOOST_AUTO_TEST_CASE(RealPointAddition)
 
 BOOST_AUTO_TEST_CASE(RealPointSubstraction)
 {
+  //[XXX] shouldn't this test be in PointTest? Here we want to test plus(z,x,y);
   RealSpace R3(3);
   Point x = R3.getIdentity();
   Eigen::Vector3d vy;
@@ -160,8 +163,11 @@ BOOST_AUTO_TEST_CASE(RealApplyInvDiff)
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
-BOOST_AUTO_TEST_CASE(RealNoAllocationBasic)
+BOOST_AUTO_TEST_CASE(RealNoAllocation)
 {
+  //We only test here that the operations on the manifold do not create
+  //temporary. Passing arguments that are not recognize by the Eigen::Ref will
+  //create temporaries, but this is the user's fault.
   RealSpace R(4);
   Eigen::VectorXd x = Eigen::VectorXd::Random(4);
   Eigen::VectorXd y = Eigen::VectorXd::Random(4);
