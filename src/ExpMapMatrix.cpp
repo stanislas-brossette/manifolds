@@ -131,24 +131,29 @@ namespace pgs
   {
     Eigen::Matrix<double, 3, 9> J;
     J.setZero();
-    Eigen::Vector3d v(R(7), R(6), -R(3));  //Valid approximation of the log when v<<1
+    //Valid approximation of the log when v<<1
+    Eigen::Vector3d v((R(5)-R(7))/2, (R(6)-R(2))/2, (R(1)-R(3))/2);      
+
     double trR = R(0)+R(4)+R(8); //Trace of R;
     double trRm1o2 = (trR-1) / 2;
     double s2 = 1 - trRm1o2*trRm1o2;
     double f = 1/boost::math::sinc_pi(acos(trRm1o2)); //=acos(trRm1o2)/sin(acos(trRm1o2));
     double hf = f/2;
+    double df;
     if (v.squaredNorm()<1e-10) //Probably should not use this switch value here
     {
       //TODO: I do not know how to test that. Verification with finite
       //differences proved unefficient. Need to get back to it later.
-      double df = -1/6+1/15*(trR-3);
-      J.col(0) = df*v;
+      //
+      //Here we use the Taylor approximation of the diff of the log
+      double x = trR-3;
+      df = trR/15 - (3*(x*x))/140 + (2*(x*x*x))/315 - (5*(x*x*x*x))/2772 - 11/30;
     }
     else
     {
-      double hdf = (trRm1o2*f-1) / (4 * s2);
-      J.col(0) = hdf * Eigen::Vector3d(R(5)-R(7), R(6)-R(2), R(1)-R(3));
+      df = (trRm1o2*f-1) / (2 * s2);
     }
+    J.col(0) = df * v;
     J.col(1) = Eigen::Vector3d( 0 , 0 , hf);
     J.col(2) = Eigen::Vector3d( 0 ,-hf, 0 );
     J.col(3) = Eigen::Vector3d( 0 , 0 ,-hf);
