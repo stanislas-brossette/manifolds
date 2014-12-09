@@ -122,11 +122,12 @@ namespace pgs
     J.setZero();
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      J.block(startIndexR_[i],
-              startIndexT_[i],
-              submanifolds_[i]->representationDim(),
-              submanifolds_[i]->dim()) 
-        = submanifolds_[i]->diffMap(getValueConst(x, i));
+      //J.block(startIndexR_[i],
+      //        startIndexT_[i],
+      //        submanifolds_[i]->representationDim(),
+      //        submanifolds_[i]->dim()) 
+      //  = submanifolds_[i]->diffMap(getValueConst(x, i));
+      getView<R, T>(J, i) = submanifolds_[i]->diffMap(getValueConst(x, i));
     }
     return J;
   }
@@ -135,11 +136,8 @@ namespace pgs
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      Index startTi = startIndexT_[i];
-      Index dimi = submanifolds_[i]->dim();
-      submanifolds_[i]->applyDiffMap( out.middleCols(startTi, dimi),
-                                      //in.middleCols(startRi, repDimi),
-                                      getView<F, R>(in,i),
+      submanifolds_[i]->applyDiffMap( getView<F, T>(out, i),
+                                      getConstView<F, R>(in,i),
                                       getValueConst(x,i));
     }
   }
@@ -150,11 +148,12 @@ namespace pgs
     J.setZero();
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      J.block(startIndexT_[i],
-              startIndexR_[i],
-              submanifolds_[i]->dim(),
-              submanifolds_[i]->representationDim()) 
-        = submanifolds_[i]->diffInvMap(getValueConst(x,i));
+      //J.block(startIndexT_[i],
+      //        startIndexR_[i],
+      //        submanifolds_[i]->dim(),
+      //        submanifolds_[i]->representationDim()) 
+      //  = submanifolds_[i]->diffInvMap(getValueConst(x,i));
+      getView<T, R>(J, i) = submanifolds_[i]->diffInvMap(getValueConst(x, i));
     }
     return J;
   }
@@ -163,11 +162,9 @@ namespace pgs
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      Index startRi = startIndexR_[i];
-      Index repDimi = submanifolds_[i]->representationDim();
-      submanifolds_[i]->applyDiffInvMap( out.middleCols(startRi, repDimi),
-                                      getView<F, T>(in,i),
-                                      getValueConst(x,i));
+      submanifolds_[i]->applyDiffInvMap(getView<F,R>(out, i),
+                                        getConstView<F, T>(in,i),
+                                        getValueConst(x,i));
     }
   }
 }

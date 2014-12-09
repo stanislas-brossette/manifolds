@@ -16,6 +16,14 @@ namespace pgs
     F,  //full space
   };
 
+  template<int Dr, int Dc> struct ViewReturnType {typedef Eigen::Block<RefMat> Type;};
+  template<int Dr, int Dc> struct ConstViewReturnType {typedef const Eigen::Block<ConstRefMat> Type;};
+  template<int Dc> struct ViewReturnType<F, Dc> {typedef RefMat::ColsBlockXpr Type;};
+  template<int Dc> struct ConstViewReturnType<F, Dc> { typedef ConstRefMat::ConstColsBlockXpr Type; };
+  template<int Dr> struct ViewReturnType<Dr, F> {typedef RefMat::RowsBlockXpr Type;};
+  template<int Dr> struct ConstViewReturnType<Dr, F> {typedef ConstRefMat::ConstRowsBlockXpr Type;};
+  template<> struct ViewReturnType<F, F> {typedef RefMat Type;};
+  template<> struct ConstViewReturnType<F, F> {typedef ConstRefMat Type;};
 
   class Manifold : public RefCounter
   {
@@ -42,10 +50,10 @@ namespace pgs
     template<int D> Segment getView(RefVec val, size_t i) const;
     template<int D> ConstSegment getView(const ConstRefVec& val, size_t i) const;
 
-    template<int Dr, int Dc> Eigen::MatrixXd getView(RefMat val, size_t i) const;
-    template<int Dr, int Dc> Eigen::MatrixXd getView(const ConstRefMat& val, size_t i) const;
-    template<int Dr, int Dc> Eigen::MatrixXd getView(RefMat val, size_t ir, size_t ic) const;
-    template<int Dr, int Dc> Eigen::MatrixXd getView(const ConstRefMat& val, size_t ir, size_t ic) const;
+    template<int Dr, int Dc> typename ViewReturnType<Dr, Dc>::Type getView(RefMat val, size_t i) const;
+    template<int Dr, int Dc> typename ConstViewReturnType<Dr, Dc>::Type getConstView(const ConstRefMat& val, size_t i) const;
+    template<int Dr, int Dc> typename ViewReturnType<Dr, Dc>::Type getView(RefMat val, size_t ir, size_t ic) const;
+    template<int Dr, int Dc> typename ConstViewReturnType<Dr, Dc>::Type getConstView(const ConstRefMat& val, size_t ir, size_t ic) const;
 
     virtual std::string toString(const ConstRefVec& val, std::string& prefix) const = 0;
 
@@ -138,14 +146,14 @@ namespace pgs
   inline Index Manifold::getDim<R>(size_t i) const
   {
     assert(i < numberOfSubmanifolds() && "invalid index");
-    return operator()(i).representationDim();
+    return this->operator()(i).representationDim();
   }
 
   template<>
   inline Index Manifold::getDim<T>(size_t i) const
   {
     assert(i < numberOfSubmanifolds() && "invalid index");
-    return operator()(i).dim();
+    return this->operator()(i).dim();
   }
 
   inline Index Manifold::startR(size_t i) const
@@ -162,91 +170,91 @@ namespace pgs
 
 
   template<int Dr, int Dc>
-  inline Eigen::MatrixXd Manifold::getView(RefMat val, size_t i) const
+  inline typename ViewReturnType<Dr, Dc>::Type Manifold::getView(RefMat val, size_t i) const
   {
     return getView<Dr, Dc>(val, i, i);
   }
 
   template<int Dr, int Dc>
-  inline Eigen::MatrixXd Manifold::getView(const ConstRefMat& val, size_t i) const
+  inline typename ConstViewReturnType<Dr, Dc>::Type Manifold::getConstView(const ConstRefMat& val, size_t i) const
   {
-    return getView<Dr, Dc>(val, i, i);
+    return getConstView<Dr, Dc>(val, i, i);
   }
 
   template<int Dr, int Dc>
-  inline Eigen::MatrixXd Manifold::getView(RefMat val, size_t ir, size_t ic) const
+  inline typename ViewReturnType<Dr, Dc>::Type Manifold::getView(RefMat val, size_t ir, size_t ic) const
   {
     return val.block(getStart<Dr>(ir),
-      getStart<Dc>(ic),
-      getDim<Dr>(ir),
-      getDim<Dc>(ir));
+                     getStart<Dc>(ic),
+                     getDim<Dr>(ir),
+                     getDim<Dc>(ir));
   }
 
   template<int Dr, int Dc>
-  inline Eigen::MatrixXd Manifold::getView(const ConstRefMat& val, size_t ir, size_t ic) const
+  inline typename ConstViewReturnType<Dr, Dc>::Type Manifold::getConstView(const ConstRefMat& val, size_t ir, size_t ic) const
   {
     return val.block(getStart<Dr>(ir),
-      getStart<Dc>(ic),
-      getDim<Dr>(ir),
-      getDim<Dc>(ir));
+                     getStart<Dc>(ic),
+                     getDim<Dr>(ir),
+                     getDim<Dc>(ir));
   }
 
   template<>
-  inline Eigen::MatrixXd Manifold::getView<F, R>(RefMat val, size_t, size_t ic) const
+  inline typename ViewReturnType<F, R>::Type Manifold::getView<F, R>(RefMat val, size_t, size_t ic) const
   {
     return val.middleCols(getStart<R>(ic), getDim<R>(ic));
   }
 
   template<>
-  inline Eigen::MatrixXd Manifold::getView<F, R>(const ConstRefMat& val, size_t, size_t ic) const
+  inline typename ConstViewReturnType<F, R>::Type Manifold::getConstView<F, R>(const ConstRefMat& val, size_t, size_t ic) const
   {
     return val.middleCols(getStart<R>(ic), getDim<R>(ic));
   }
 
   template<>
-  inline Eigen::MatrixXd Manifold::getView<F, T>(RefMat val, size_t, size_t ic) const
+  inline typename ViewReturnType<F, T>::Type Manifold::getView<F, T>(RefMat val, size_t, size_t ic) const
   {
     return val.middleCols(getStart<T>(ic), getDim<T>(ic));
   }
 
   template<>
-  inline Eigen::MatrixXd Manifold::getView<F, T>(const ConstRefMat& val, size_t, size_t ic) const
+  inline typename ConstViewReturnType<F, T>::Type Manifold::getConstView<F, T>(const ConstRefMat& val, size_t, size_t ic) const
   {
     return val.middleCols(getStart<T>(ic), getDim<T>(ic));
   }
 
   template<>
-  inline Eigen::MatrixXd Manifold::getView<R, F>(RefMat val, size_t ir, size_t) const
+  inline typename ViewReturnType<R, F>::Type Manifold::getView<R, F>(RefMat val, size_t ir, size_t) const
   {
     return val.middleRows(getStart<R>(ir), getDim<R>(ir));
   }
 
   template<>
-  inline Eigen::MatrixXd Manifold::getView<R, F>(const ConstRefMat& val, size_t ir, size_t) const
+  inline typename ConstViewReturnType<R, F>::Type Manifold::getConstView<R, F>(const ConstRefMat& val, size_t ir, size_t) const
   {
     return val.middleRows(getStart<R>(ir), getDim<R>(ir));
   }
 
   template<>
-  inline Eigen::MatrixXd Manifold::getView<T, F>(RefMat val, size_t ir, size_t) const
+  inline typename ViewReturnType<T, F>::Type Manifold::getView<T, F>(RefMat val, size_t ir, size_t) const
   {
     return val.middleRows(getStart<T>(ir), getDim<T>(ir));
   }
 
   template<>
-  inline Eigen::MatrixXd Manifold::getView<T, F>(const ConstRefMat& val, size_t ir, size_t) const
+  inline typename ConstViewReturnType<T, F>::Type Manifold::getConstView<T, F>(const ConstRefMat& val, size_t ir, size_t) const
   {
     return val.middleRows(getStart<T>(ir), getDim<T>(ir));
   }
 
   template<>
-  inline Eigen::MatrixXd Manifold::getView<F, F>(RefMat val, size_t, size_t) const
+  inline typename ViewReturnType<F, F>::Type Manifold::getView<F, F>(RefMat val, size_t, size_t) const
   {
     return val;
   }
 
   template<>
-  inline Eigen::MatrixXd Manifold::getView<F, F>(const ConstRefMat& val, size_t, size_t) const
+  inline typename ConstViewReturnType<F, F>::Type Manifold::getConstView<F, F>(const ConstRefMat& val, size_t, size_t) const
   {
     return val;
   }
