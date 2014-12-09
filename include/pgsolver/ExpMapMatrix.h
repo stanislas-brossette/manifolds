@@ -21,11 +21,13 @@ namespace pgs
     static void setIdentity_(RefVec out);
 
     static void logarithm(RefVec out, const DisplayType& M);
+    static void exponential(DisplayType& out, const ConstRefVec& v);
 
     static Eigen::Matrix<double, 9, 3> diffMap_(const ConstRefVec& x);
     static void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);
     static Eigen::Matrix<double, 3, 9> diffInvMap_(const ConstRefVec& x);
     static void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);
+    static void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x);
   };
 }
 

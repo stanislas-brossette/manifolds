@@ -176,5 +176,16 @@ namespace pgs
                                         getValueConst(x,i));
     }
   }
+
+  void CartesianProduct::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  {
+    for (size_t i = 0; i < submanifolds_.size(); ++i)
+    {
+      std::cout << "manifold(" << i << ").getView = " << std::endl<< getConstView<T, F>(in,i) << std::endl;
+      submanifolds_[i]->applyTransport( getView<T, F>(out, i),
+                                      getConstView<T, F>(in,i),
+                                      getValueTangentConst(x,i));
+    }
+  }
 }
 

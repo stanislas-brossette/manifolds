@@ -37,6 +37,13 @@ namespace pgs
  
   void ExpMapMatrix::plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v)
   {
+    DisplayType E;
+    exponential(E,v);
+    Eigen::Map<DisplayType>(out.data()) = (Eigen::Map<const DisplayType>(x.data()))*E;
+  }
+
+  void ExpMapMatrix::exponential(DisplayType& E, const ConstRefVec& v)
+  {
     assert(v.size() == 3 && "Increment for expMap must be of size 3");
     double n = v.squaredNorm();
     assert(sqrt(n) < M_PI && "Increment for expMap must be of norm at most pi");
@@ -52,7 +59,6 @@ namespace pgs
       c = (1 - cos(t)) / n;
       s = sin(t) / t;
     }
-    DisplayType E;
     E <<  1 - c*(v.y()*v.y() + v.z()*v.z()), 
           -s*v.z() + c * v.x()*v.y(), 
           s*v.y() + c * v.x()*v.z(),
@@ -62,8 +68,6 @@ namespace pgs
           -s*v.y() + c*v.x()*v.z(), 
           s*v.x() + c*v.y()*v.z(), 
           1 - c*(v.x()*v.x() + v.y()*v.y());
-                                                                                                                                                 
-    Eigen::Map<DisplayType>(out.data()) = (Eigen::Map<const DisplayType>(x.data()))*E;
   }
 
   void ExpMapMatrix::minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y)
@@ -184,6 +188,14 @@ namespace pgs
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),9);
     a.noalias() = in*diffInvMap_(x);
     out = a;
+  }
+
+  void ExpMapMatrix::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& v)
+  {
+    DisplayType E;
+    exponential(E,v);
+    std::cout << "E = " << E << std::endl;
+    out = E*in; 
   }
 }
 
