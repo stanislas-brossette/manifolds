@@ -50,33 +50,33 @@ namespace pgs
     return *submanifolds_[i];
   }
 
-  Segment CartesianProduct::getValue(RefVec val, size_t i) const
-  {
-    assert(val.size() == representationDim());
-    assert(i < submanifolds_.size() && "invalid index");
-    return val.segment(startIndexR_[i], submanifolds_[i]->representationDim());
-  }
+  //Segment CartesianProduct::getValue(RefVec val, size_t i) const
+  //{
+  //  assert(val.size() == representationDim());
+  //  assert(i < submanifolds_.size() && "invalid index");
+  //  return val.segment(startIndexR_[i], submanifolds_[i]->representationDim());
+  //}
 
-  ConstSegment CartesianProduct::getValueConst(const ConstRefVec& val, size_t i) const
-  {
-    assert(val.size() == representationDim());
-    assert(i < submanifolds_.size() && "invalid index");
-    return val.segment(startIndexR_[i], submanifolds_[i]->representationDim());
-  }
+  //ConstSegment CartesianProduct::getValueConst(const ConstRefVec& val, size_t i) const
+  //{
+  //  assert(val.size() == representationDim());
+  //  assert(i < submanifolds_.size() && "invalid index");
+  //  return val.segment(startIndexR_[i], submanifolds_[i]->representationDim());
+  //}
 
-  Segment CartesianProduct::getValueTangent(RefVec val, size_t i) const
-  {
-    assert(val.size() == dim());
-    assert(i < submanifolds_.size() && "invalid index");
-    return val.segment(startIndexT_[i], submanifolds_[i]->dim());
-  }
+  //Segment CartesianProduct::getValueTangent(RefVec val, size_t i) const
+  //{
+  //  assert(val.size() == dim());
+  //  assert(i < submanifolds_.size() && "invalid index");
+  //  return val.segment(startIndexT_[i], submanifolds_[i]->dim());
+  //}
 
-  ConstSegment CartesianProduct::getValueTangentConst(const ConstRefVec& val, size_t i) const
-  {
-    assert(val.size() == dim());
-    assert(i < submanifolds_.size() && "invalid index");
-    return val.segment(startIndexT_[i], submanifolds_[i]->dim());
-  }
+  //ConstSegment CartesianProduct::getValueTangentConst(const ConstRefVec& val, size_t i) const
+  //{
+  //  assert(val.size() == dim());
+  //  assert(i < submanifolds_.size() && "invalid index");
+  //  return val.segment(startIndexT_[i], submanifolds_[i]->dim());
+  //}
 
   std::string CartesianProduct::toString(const ConstRefVec& val, std::string& prefix) const
   {
@@ -104,8 +104,7 @@ namespace pgs
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      submanifolds_[i]->minus(out.segment(startIndexT_[i], 
-                              submanifolds_[i]->dim()), 
+      submanifolds_[i]->minus(getValueTangent(out,i),
                               getValueConst(x, i), 
                               getValueConst(y, i));
     }
@@ -137,11 +136,10 @@ namespace pgs
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
       Index startTi = startIndexT_[i];
-      Index startRi = startIndexR_[i];
-      Index repDimi = submanifolds_[i]->representationDim();
       Index dimi = submanifolds_[i]->dim();
       submanifolds_[i]->applyDiffMap( out.middleCols(startTi, dimi),
-                                      in.middleCols(startRi, repDimi),
+                                      //in.middleCols(startRi, repDimi),
+                                      getView<F, R>(in,i),
                                       getValueConst(x,i));
     }
   }
@@ -165,12 +163,10 @@ namespace pgs
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      Index startTi = startIndexT_[i];
       Index startRi = startIndexR_[i];
       Index repDimi = submanifolds_[i]->representationDim();
-      Index dimi = submanifolds_[i]->dim();
       submanifolds_[i]->applyDiffInvMap( out.middleCols(startRi, repDimi),
-                                      in.middleCols(startTi, dimi),
+                                      getView<F, T>(in,i),
                                       getValueConst(x,i));
     }
   }
