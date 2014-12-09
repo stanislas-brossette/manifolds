@@ -135,7 +135,7 @@ namespace pgs
   {
     assert(in.cols() == OutputDim_ && "Dimensions mismatch" );
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),3);
-    a = in*diffMap_(x);
+    a.noalias() = in*diffMap_(x);
     out = a;
   }
 
@@ -182,7 +182,7 @@ namespace pgs
   {
     assert(in.cols() == InputDim_ && "Dimensions mismatch" );
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),9);
-    a = in*diffInvMap_(x);
+    a.noalias() = in*diffInvMap_(x);
     out = a;
   }
 }

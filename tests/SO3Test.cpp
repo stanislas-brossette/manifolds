@@ -251,3 +251,39 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
   Space.applyDiffInvMap(J, Jf, x.value());
   BOOST_CHECK(expectedRes.isApprox(J));
 }
+
+BOOST_AUTO_TEST_CASE(SO3NoAllocation)
+{
+  //We only test here that the operations on the manifold do not create
+  //temporary. Passing arguments that are not recognize by the Eigen::Ref will
+  //create temporaries, but this is the user's fault.
+  const int r = 100;
+  SO3<ExpMapMatrix> S;
+  Index dim = S.dim();
+  Index repDim = S.representationDim();
+  Eigen::VectorXd x = Eigen::VectorXd::Random(repDim);
+  Eigen::VectorXd p = Eigen::VectorXd::Random(dim);
+  Eigen::VectorXd y = Eigen::VectorXd::Random(repDim);
+  Eigen::VectorXd z(repDim);
+  Eigen::VectorXd d(dim);
+  Eigen::MatrixXd J0 = Eigen::MatrixXd::Random(r, repDim);
+  Eigen::MatrixXd J1(r, dim);
+  Eigen::MatrixXd J2(r, repDim);
+
+  //The first call to the following methods might trigger a memory allocation
+  //depending on the size of the Ji and the initial buffer size inside S.
+  //However, subsequent calls should not require any allocation, what we check
+  //after.
+  S.applyDiffMap(J1, J0, x);
+  S.applyDiffInvMap(J2, J1, x);
+
+  Eigen::internal::set_is_malloc_allowed(false);
+  {
+    S.plus(z, x, p);
+    S.minus(d, x, y);
+    //S.invMap(d, x);
+    S.applyDiffMap(J1, J0, x);
+    S.applyDiffInvMap(J2, J1, x);
+  }
+  Eigen::internal::set_is_malloc_allowed(true);
+}
