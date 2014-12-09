@@ -159,3 +159,24 @@ BOOST_AUTO_TEST_CASE(RealApplyInvDiff)
   Space.applyDiffInvMap(J, Jf, x.value());
   BOOST_CHECK(expectedRes.isApprox(J));
 }
+
+BOOST_AUTO_TEST_CASE(RealNoAllocationBasic)
+{
+  RealSpace R(4);
+  Eigen::VectorXd x = Eigen::VectorXd::Random(4);
+  Eigen::VectorXd y = Eigen::VectorXd::Random(4);
+  Eigen::VectorXd z(4);
+  Eigen::MatrixXd J0 = Eigen::MatrixXd::Random(3, 4);
+  Eigen::MatrixXd J1(3, 4);
+  Eigen::MatrixXd J2(3, 4);
+
+  Eigen::internal::set_is_malloc_allowed(false);
+  {
+    R.plus(z, x, y);
+    R.minus(z, x, y);
+    //R.invMap(z, x);
+    R.applyDiffMap(J1, J0, x);
+    R.applyDiffInvMap(J2, J0, x);
+  }
+  Eigen::internal::set_is_malloc_allowed(true);
+}

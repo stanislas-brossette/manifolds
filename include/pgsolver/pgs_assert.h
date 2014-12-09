@@ -15,7 +15,7 @@ namespace pgs
     if(!value)
     {
       //std::cerr << "PGS ASSERT error is " << message << std::endl;
-#ifdef _PGS_ASSERT_THROW_
+#ifdef PGS_ASSERT_THROW
       throw pgs_exception(); 
 #else
       assert(value);
