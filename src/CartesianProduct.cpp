@@ -110,6 +110,15 @@ namespace pgs
     }
   }
 
+  void CartesianProduct::invMap_(RefVec out, const ConstRefVec& x) const
+  {
+    for (size_t i = 0; i < submanifolds_.size(); ++i)
+    {
+      submanifolds_[i]->invMap(getValueTangent(out,i),
+                              getValueConst(x, i));
+    }
+  }
+
   void CartesianProduct::setIdentity_(RefVec out) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)

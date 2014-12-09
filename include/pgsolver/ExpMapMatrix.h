@@ -17,7 +17,10 @@ namespace pgs
     static bool isValidInit_(const Eigen::VectorXd& val);
     static void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v);
     static void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y);
+    static void invMap_(RefVec out, const ConstRefVec& x);
     static void setIdentity_(RefVec out);
+
+    static void logarithm(RefVec out, const DisplayType& M);
 
     static Eigen::Matrix<double, 9, 3> diffMap_(const ConstRefVec& x);
     static void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);

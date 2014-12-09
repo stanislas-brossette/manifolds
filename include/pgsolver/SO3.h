@@ -24,6 +24,7 @@ namespace pgs
     virtual bool isValidInit_(const Eigen::VectorXd& val) const;
     void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
+    virtual void invMap_(RefVec out, const ConstRefVec& x) const;
     virtual void setIdentity_(RefVec out) const;
     virtual Eigen::MatrixXd diffMap_(const ConstRefVec& x) const;
     virtual void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
@@ -111,6 +112,12 @@ namespace pgs
   inline void SO3<Map>::minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   {
     Map::minus_( out, x, y);
+  }
+
+  template<typename Map>
+  inline void SO3<Map>::invMap_(RefVec out, const ConstRefVec& x) const
+  {
+    Map::invMap_( out, x);
   }
   
   template<typename Map>

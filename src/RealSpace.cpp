@@ -70,6 +70,11 @@ namespace pgs
     out = x - y;
   }
 
+  void RealSpace::invMap_(RefVec out, const ConstRefVec& x) const
+  {
+    out = x;
+  }
+
   void RealSpace::setIdentity_(RefVec out) const
   {
     out.setZero();

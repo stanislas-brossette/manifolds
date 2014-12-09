@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(RealNoAllocationBasic)
   {
     R.plus(z, x, y);
     R.minus(z, x, y);
-    //R.invMap(z, x);
+    R.invMap(z, x);
     R.applyDiffMap(J1, J0, x);
     R.applyDiffInvMap(J2, J0, x);
   }

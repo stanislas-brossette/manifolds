@@ -70,19 +70,31 @@ namespace pgs
   {
     typedef Eigen::Map<const Eigen::Matrix3d> ConstMapMat3;
     DisplayType R(((ConstMapMat3(y.data())).transpose())*(ConstMapMat3(x.data())));
+    logarithm(out,R);
+  }
+
+  void ExpMapMatrix::invMap_(RefVec out, const ConstRefVec& x)
+  {
+    typedef Eigen::Map<const Eigen::Matrix3d> ConstMapMat3;
+    DisplayType R(ConstMapMat3(x.data()));
+    logarithm(out,R);
+  }
+  
+  void ExpMapMatrix::logarithm(RefVec out, const DisplayType& R)
+  {
     Eigen::Vector3d v(-R(1,2), R(0,2), -R(0,1)); 
     double acosTr = std::acos((R.trace()-1)/2);
     if (v.norm() < prec)
       out = v;
     else 
-      {
-        DisplayType diff(R-R.transpose());
-        R = acosTr/(2*std::sin(acosTr))*(diff);
-        v(0)=R(2,1);
-        v(1)=R(0,2);
-        v(2)=R(1,0);
-        out = v;
-      }
+    {
+      DisplayType diff(R-R.transpose());
+      double coeff = acosTr/(2*std::sin(acosTr));
+      v(0)=diff(2,1)*coeff;
+      v(1)=diff(0,2)*coeff;
+      v(2)=diff(1,0)*coeff;
+      out = v;
+    }
   }
 
   void ExpMapMatrix::setIdentity_(RefVec out)
