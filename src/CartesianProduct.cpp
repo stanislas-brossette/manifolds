@@ -78,15 +78,15 @@ namespace pgs
   //  return val.segment(startIndexT_[i], submanifolds_[i]->dim());
   //}
 
-  std::string CartesianProduct::toString(const ConstRefVec& val, std::string& prefix) const
+  std::string CartesianProduct::toString(const ConstRefVec& val, const std::string& prefix) const
   {
     std::stringstream ss;
-    std::string SubManPrefix("  ");
-    for (std::size_t i = 0; i<numberOfSubmanifolds(); ++i)
+    size_t n = numberOfSubmanifolds();
+    for (std::size_t i = 0; i<n-1; ++i)
     {
-      ss << prefix << submanifolds_[i]->toString(
-                          getValueConst(val, i), SubManPrefix);
+      ss << submanifolds_[i]->toString(getValueConst(val, i), prefix + "  ") << std::endl;;
     }
+    ss << submanifolds_.back()->toString(getValueConst(val, n - 1), prefix + "  ");
     return ss.str();
   }
 

@@ -32,7 +32,7 @@ foreach(lib ${LIBRARIES})
   target_link_libraries(${lib})
 endforeach()
 
-target_compile_definitions(PGSolverTest PRIVATE "-D_PGS_ASSERT_THROW_")
+target_compile_definitions(PGSolverTest PRIVATE "-DPGS_ASSERT_THROW -DEIGEN_RUNTIME_NO_MALLOC")
 
 install(TARGETS PGSolver
   DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

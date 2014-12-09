@@ -18,7 +18,7 @@ namespace pgs
     //virtual ConstSegment getValueConst(const ConstRefVec& val, size_t i) const;
     //virtual Segment getValueTangent(RefVec val, size_t i) const;
     //virtual ConstSegment getValueTangentConst(const ConstRefVec& val, size_t i) const;
-    virtual std::string toString(const ConstRefVec& val, std::string& prefix) const;
+    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
   
   protected:
     //map operations
