@@ -3,28 +3,13 @@
 
 #include <iostream>
 #include <Eigen/Core>
-#include <pgsolver/Point.h>
 #include <pgsolver/defs.h>
+#include <pgsolver/view.h>
 #include <pgsolver/RefCounter.h>
+#include <pgsolver/Point.h>
 
 namespace pgs
 {
-  enum eDimension
-  {
-    R,  //representation space
-    T,  //tangent space
-    F,  //full space
-  };
-
-  template<int Dr, int Dc> struct ViewReturnType {typedef Eigen::Block<RefMat> Type;};
-  template<int Dr, int Dc> struct ConstViewReturnType {typedef const Eigen::Block<ConstRefMat> Type;};
-  template<int Dc> struct ViewReturnType<F, Dc> {typedef RefMat::ColsBlockXpr Type;};
-  template<int Dc> struct ConstViewReturnType<F, Dc> { typedef ConstRefMat::ConstColsBlockXpr Type; };
-  template<int Dr> struct ViewReturnType<Dr, F> {typedef RefMat::RowsBlockXpr Type;};
-  template<int Dr> struct ConstViewReturnType<Dr, F> {typedef ConstRefMat::ConstRowsBlockXpr Type;};
-  template<> struct ViewReturnType<F, F> {typedef RefMat Type;};
-  template<> struct ConstViewReturnType<F, F> {typedef ConstRefMat Type;};
-
   class Manifold : public RefCounter
   {
   public:
@@ -43,12 +28,12 @@ namespace pgs
 
     //view
     Segment getValue(RefVec val, size_t i) const { return getView<R>(val, i); }
-    ConstSegment getValueConst(const ConstRefVec& val, size_t i) const { return getView<R>(val, i); }
+    ConstSegment getValueConst(const ConstRefVec& val, size_t i) const { return getConstView<R>(val, i); }
     Segment getValueTangent(RefVec val, size_t i) const { return getView<T>(val, i); }
-    ConstSegment getValueTangentConst(const ConstRefVec& val, size_t i) const { return getView<T>(val, i); }
+    ConstSegment getValueTangentConst(const ConstRefVec& val, size_t i) const { return getConstView<T>(val, i); }
 
     template<int D> Segment getView(RefVec val, size_t i) const;
-    template<int D> ConstSegment getView(const ConstRefVec& val, size_t i) const;
+    template<int D> ConstSegment getConstView(const ConstRefVec& val, size_t i) const;
 
     template<int Dr, int Dc> typename ViewReturnType<Dr, Dc>::Type getView(RefMat val, size_t i) const;
     template<int Dr, int Dc> typename ConstViewReturnType<Dr, Dc>::Type getConstView(const ConstRefMat& val, size_t i) const;
@@ -114,7 +99,7 @@ namespace pgs
   }
   
   template<int D>
-  inline ConstSegment Manifold::getView(const ConstRefVec& val, size_t i) const
+  inline ConstSegment Manifold::getConstView(const ConstRefVec& val, size_t i) const
   {
     assert(i < numberOfSubmanifolds() && "invalid index");
     assert(val.size() == getDim<D>());

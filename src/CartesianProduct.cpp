@@ -50,34 +50,6 @@ namespace pgs
     return *submanifolds_[i];
   }
 
-  //Segment CartesianProduct::getValue(RefVec val, size_t i) const
-  //{
-  //  assert(val.size() == representationDim());
-  //  assert(i < submanifolds_.size() && "invalid index");
-  //  return val.segment(startIndexR_[i], submanifolds_[i]->representationDim());
-  //}
-
-  //ConstSegment CartesianProduct::getValueConst(const ConstRefVec& val, size_t i) const
-  //{
-  //  assert(val.size() == representationDim());
-  //  assert(i < submanifolds_.size() && "invalid index");
-  //  return val.segment(startIndexR_[i], submanifolds_[i]->representationDim());
-  //}
-
-  //Segment CartesianProduct::getValueTangent(RefVec val, size_t i) const
-  //{
-  //  assert(val.size() == dim());
-  //  assert(i < submanifolds_.size() && "invalid index");
-  //  return val.segment(startIndexT_[i], submanifolds_[i]->dim());
-  //}
-
-  //ConstSegment CartesianProduct::getValueTangentConst(const ConstRefVec& val, size_t i) const
-  //{
-  //  assert(val.size() == dim());
-  //  assert(i < submanifolds_.size() && "invalid index");
-  //  return val.segment(startIndexT_[i], submanifolds_[i]->dim());
-  //}
-
   std::string CartesianProduct::toString(const ConstRefVec& val, const std::string& prefix) const
   {
     std::stringstream ss;

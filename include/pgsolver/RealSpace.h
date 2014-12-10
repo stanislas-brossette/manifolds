@@ -14,10 +14,6 @@ namespace pgs
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
 
-    //virtual Segment getValue(RefVec val, size_t i) const;
-    //virtual ConstSegment getValueConst(const ConstRefVec& val, size_t i) const;
-    //virtual Segment getValueTangent(RefVec val, size_t i) const;
-    //virtual ConstSegment getValueTangentConst(const ConstRefVec& val, size_t i) const;
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
   
   protected:

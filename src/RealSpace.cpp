@@ -23,34 +23,6 @@ namespace pgs
     return *this;
   }
 
-  //Segment RealSpace::getValue(RefVec val, size_t i) const
-  //{
-  //  assert(val.size() == representationDim());
-  //  assert(i < 1 && "invalid index");
-  //  return val.segment(0, static_cast<long> (representationDim()));
-  //}
-
-  //ConstSegment RealSpace::getValueConst(const ConstRefVec& val, size_t i) const
-  //{
-  //  assert(val.size() == representationDim());
-  //  assert(i < 1 && "invalid index");
-  //  return val.segment(0,static_cast<long> (representationDim()));
-  //}
-
-  //Segment RealSpace::getValueTangent(RefVec val, size_t i) const
-  //{
-  //  assert(val.size() == dim());
-  //  assert(i < 1 && "invalid index");
-  //  return val.segment(0, static_cast<long> (dim()));
-  //}
-
-  //ConstSegment RealSpace::getValueTangentConst(const ConstRefVec& val, size_t i) const
-  //{
-  //  assert(val.size() == dim());
-  //  assert(i < 1 && "invalid index");
-  //  return val.segment(0,static_cast<long> (dim()));
-  //}
-
   std::string RealSpace::toString(const ConstRefVec& val, const std::string& prefix) const
   {
     std::string matPrefix = prefix + '[';
