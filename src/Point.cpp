@@ -46,7 +46,7 @@ namespace pgs
 
   Point Point::operator()(size_t i) const
   {
-    return Point(manifold_(i), manifold_.getValueConst(value_, i));
+    return Point(manifold_(i), manifold_.getConstView<R>(value_, i));
   }
 
   const Eigen::VectorXd& Point::value() const
@@ -56,12 +56,12 @@ namespace pgs
 
   ConstSegment Point::operator[](size_t i) const
   {
-    return manifold_.getValueConst(value_, i);
+    return manifold_.getConstView<R>(value_, i);
   }
 
   Segment Point::operator[](size_t i)
   {
-    return manifold_.getValue(value_, i);
+    return manifold_.getView<R>(value_, i);
   }
   
   const Manifold& Point::getManifold() const

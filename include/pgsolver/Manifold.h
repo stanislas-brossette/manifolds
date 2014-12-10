@@ -27,11 +27,6 @@ namespace pgs
     virtual const Manifold& operator()(size_t i) const = 0;
 
     //view
-    Segment getValue(RefVec val, size_t i) const { return getView<R>(val, i); }
-    ConstSegment getValueConst(const ConstRefVec& val, size_t i) const { return getConstView<R>(val, i); }
-    Segment getValueTangent(RefVec val, size_t i) const { return getView<T>(val, i); }
-    ConstSegment getValueTangentConst(const ConstRefVec& val, size_t i) const { return getConstView<T>(val, i); }
-
     template<int D> Segment getView(RefVec val, size_t i) const;
     template<int D> ConstSegment getConstView(const ConstRefVec& val, size_t i) const;
 
