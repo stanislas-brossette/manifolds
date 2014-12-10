@@ -155,13 +155,13 @@ namespace pgs
   template<typename Map>
   inline void SO3<Map>::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
-    Map::applyTransport_(out, in, x, v);
+    Map::applyTransport_(out, in, x, v, bufferMap_);
   }
 
   template<typename Map>
   inline void SO3<Map>::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
-    Map::applyInvTransport_(out, in, x, v);
+    Map::applyInvTransport_(out, in, x, v, bufferMap_);
   }
 }
 #endif //_PGS_SO3_H_

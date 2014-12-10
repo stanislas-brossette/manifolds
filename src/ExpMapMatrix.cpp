@@ -190,18 +190,22 @@ namespace pgs
     out = a;
   }
 
-  void ExpMapMatrix::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v)
+  void ExpMapMatrix::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
   {
     DisplayType E;
     exponential(E,v);
-    out = E*in; 
+    Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(InputDim_, in.cols());
+    a.noalias() = E*in; 
+    out = a;
   }
 
-  void ExpMapMatrix::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v)
+  void ExpMapMatrix::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
   {
     DisplayType E;
     exponential(E,v);
-    out = in*(E.transpose()); 
+    Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(), InputDim_);
+    a.noalias() = in*(E.transpose()); 
+    out = a;
   }
 }
 
