@@ -237,34 +237,6 @@ BOOST_AUTO_TEST_CASE(CardProdApplyDiff)
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
-//BOOST_AUTO_TEST_CASE(CardProdApplyDiffGuaranteedResultTest)
-//{
-//  Index c = 5;
-//  RealSpace R2(2);
-//  RealSpace R3(3);
-//  SO3<ExpMapMatrix> RotSpace;
-//  CartesianProduct R2R3R2(R2, R3);
-//  R2R3R2.multiply(R2);
-//  CartesianProduct SO3R2R3R2(RotSpace, R2R3R2);
-//  CartesianProduct Space(SO3R2R3R2, RotSpace);
-//  Index dim = Space.dim();
-//  Index repDim = Space.representationDim();
-//  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
-//  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
-//  Point x = Space.getIdentity();
-//  Space.applyDiffMap(Jres, Jf, x.value());
-//
-//  for (int i = 0; i<dim+1; ++i)
-//  {
-//    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+dim);
-//    G.middleCols(dim,repDim) = Jf;
-//    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
-//    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
-//    Space.applyDiffMap(Gres,Gf,x.value());
-//    BOOST_CHECK(Jres.isApprox(Gres));
-//  }
-//}
-
 BOOST_AUTO_TEST_CASE(CardProdDiffInv)
 {
   RealSpace R2(2);
@@ -312,6 +284,96 @@ BOOST_AUTO_TEST_CASE(CardProdApplyInvDiff)
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
+BOOST_AUTO_TEST_CASE(CardProdTransport)
+{
+  std::cout << "CardProdTransport" << std::endl;
+  int c = 4;
+  SO3<ExpMapMatrix> S;
+  RealSpace R3(3);
+  RealSpace R2(2);
+  CartesianProduct Space(R3, S);
+  Space.multiply(R2);
+  Index dim = Space.dim();
+  std::cout << "dim = " << dim<< std::endl;
+  Eigen::MatrixXd H(dim,c);
+  H <<   1, 2, 3, 4,
+         5, 6, 7, 8,
+         9,10,11,12,
+        13,14,15,16,
+        17,18,19,20,
+        21,22,23,24,
+        25,26,27,28,
+        29,30,31,32;
+  std::cout << "H = " << H << std::endl;
+  Eigen::MatrixXd Hout(dim,c);
+  Eigen::VectorXd v(dim);
+  v <<  0.141886338627215,
+        0.421761282626275,
+        0.915735525189067,
+        0.287150084472884,
+        0.145612694616852,
+        0.240084140666640,
+        0.792207329559554,
+        0.959492426392903;
+  Point x = Space.getIdentity();
+  x.increment(Eigen::VectorXd::Random(8));
+  Eigen::MatrixXd expectedRes(dim,c);
+  expectedRes <<   1, 2, 3, 4,
+                   5, 6, 7, 8,
+                   9,10,11,12,
+                  12.562951305087033, 13.486740548139206, 14.410529791191379, 15.334319034243553,
+                  13.623940511618414, 14.546891198380022, 15.469841885141630, 16.392792571903236,
+                  23.570330914984936, 24.708212923027673, 25.846094931070407, 26.983976939113141,
+                  25,26,27,28,
+                  29,30,31,32;
+                 
+  std::cout << "expectedRes = " << expectedRes << std::endl;
+  Space.applyTransport(Hout, H, x.value(), v);
+  std::cout << "Hout = " << Hout << std::endl;
+  BOOST_CHECK(expectedRes.isApprox(Hout));
+}
+
+BOOST_AUTO_TEST_CASE(CardProdInvTransport)
+{
+  std::cout << "SO3InvTransport" << std::endl;
+  int r = 4;
+  SO3<ExpMapMatrix> S;
+  RealSpace R3(3);
+  RealSpace R2(2);
+  CartesianProduct Space(R3, S);
+  Space.multiply(R2);
+  Index dim = Space.dim();
+  Eigen::MatrixXd H(r,dim);
+  H <<  1, 2, 3, 4, 5, 6, 7, 8,
+        9,10,11,12,13,14,15,16,
+       17,18,19,20,21,22,23,24,
+       25,26,27,28,29,30,31,32;
+  std::cout << "H = " << H << std::endl;
+  Eigen::MatrixXd Hout(r,dim);
+  Eigen::VectorXd v(dim);
+  v <<  0.013851417189346,
+        0.029139534370754,
+        0.247037348498188,
+        0.208448586892745,
+        0.095129844018258,
+        0.285066614651506,
+        0.010333824150873,
+        0.131623307896919;
+
+  Point x = Space.getIdentity();
+  x.increment(Eigen::VectorXd::Random(8));
+  Eigen::MatrixXd expectedRes(r,dim);
+
+  expectedRes <<   1, 2, 3, 3.211060456124126,  4.703367298475802,  6.675883971635843, 7, 8,
+                   9,10,11, 9.681461929634750, 12.995126625170094, 15.697005411887588,15,16,
+                  17,18,19,16.151863403145374, 21.286885951864392, 24.718126852139335,23,24,
+                  25,26,27,22.622264876655997, 29.578645278558682, 33.739248292391082,31,32;
+  std::cout << "expectedRes = " << expectedRes << std::endl;
+  Space.applyInvTransport(Hout, H, x.value(), v);
+  std::cout << "Hout = " << Hout << std::endl;
+  BOOST_CHECK(expectedRes.isApprox(Hout));
+}
+
 #if   EIGEN_WORLD_VERSION > 3 \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && EIGEN_MINOR_VERSION > 0)
@@ -338,6 +400,9 @@ BOOST_AUTO_TEST_CASE(CardProdNoAllocation)
   Eigen::MatrixXd J0 = Eigen::MatrixXd::Random(r, repDim);
   Eigen::MatrixXd J1(r, dim);
   Eigen::MatrixXd J2(r, repDim);
+  Eigen::MatrixXd H0 = Eigen::MatrixXd::Random(S.dim(), S.dim());
+  Eigen::MatrixXd H1 = Eigen::MatrixXd::Random(S.dim(), S.dim());
+  Eigen::MatrixXd H2 = Eigen::MatrixXd::Random(S.dim(), S.dim());
 
   //The first call to the following methods might trigger a memory allocation
   //depending on the size of the Ji and the initial buffer size inside S.
@@ -350,9 +415,11 @@ BOOST_AUTO_TEST_CASE(CardProdNoAllocation)
   {
     S.plus(z, x, p);
     S.minus(d, x, y);
-    //S.invMap(d, x);
+    S.invMap(d, x);
     S.applyDiffMap(J1, J0, x);
     S.applyDiffInvMap(J2, J1, x);
+    S.applyTransport(H1, H0, x, p);
+    S.applyInvTransport(H2, H0, x, p);
   }
   Eigen::internal::set_is_malloc_allowed(true);
 }

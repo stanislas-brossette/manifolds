@@ -201,7 +201,6 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
 
 BOOST_AUTO_TEST_CASE(SO3Transport)
 {
-  std::cout << "SO3Transport" << std::endl;
   int c = 4;
   SO3<ExpMapMatrix> Space;
   Index dim = Space.dim();
@@ -209,7 +208,6 @@ BOOST_AUTO_TEST_CASE(SO3Transport)
   H <<  1, 2, 3, 4,
         5, 6, 7, 8,
         9,10,11,12;
-  std::cout << "H = " << H << std::endl;
   Eigen::MatrixXd Hout(dim,c);
   Eigen::VectorXd v(dim);
   v <<  0.083549465660115, 0.164064455761495, 0.287252050630289;
@@ -219,15 +217,12 @@ BOOST_AUTO_TEST_CASE(SO3Transport)
   expectedRes << 1.126248257109656, 1.969921592423433, 2.813594927737210, 3.657268263050987,
                  4.539510349826134, 5.725092676723538, 6.910675003620942, 8.096257330518345,
                  9.226289104899047, 10.165762281434207, 11.105235457969370, 12.044708634504529;
-  std::cout << "expectedRes = " << expectedRes << std::endl;
   Space.applyTransport(Hout, H, x.value(), v);
-  std::cout << "Hout = " << Hout << std::endl;
   BOOST_CHECK(expectedRes.isApprox(Hout));
 }
 
 BOOST_AUTO_TEST_CASE(SO3InvTransport)
 {
-  std::cout << "SO3InvTransport" << std::endl;
   int r = 4;
   SO3<ExpMapMatrix> Space;
   Index dim = Space.dim();
@@ -236,7 +231,6 @@ BOOST_AUTO_TEST_CASE(SO3InvTransport)
         4, 5, 6,
         7, 8, 9,
         10, 11, 12;
-  std::cout << "H = " << H << std::endl;
   Eigen::MatrixXd Hout(r,dim);
   Eigen::VectorXd v(dim);
   v << 0.289466560559783, 0.047283924503264, 0.291177834528185;
@@ -247,9 +241,7 @@ BOOST_AUTO_TEST_CASE(SO3InvTransport)
                   2.972337006917136, 4.096292499301232,  7.168375023495865,
                   5.277505059137337, 6.892597010813567, 10.892201191554610,
                   7.582673111357540, 9.688901522325903, 14.616027359613355;
-  std::cout << "expectedRes = " << expectedRes << std::endl;
   Space.applyInvTransport(Hout, H, x.value(), v);
-  std::cout << "Hout = " << Hout << std::endl;
   BOOST_CHECK(expectedRes.isApprox(Hout));
 }
 
@@ -286,13 +278,21 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
 
   Eigen::internal::set_is_malloc_allowed(false);
   {
+    std::cout << "Memory allocation tests:" << std::endl;
     S.plus(z, x, p);
+    std::cout << "- method 'plus' passed" << std::endl;
     S.minus(d, x, y);
+    std::cout << "- method 'minus' passed" << std::endl;
     S.invMap(d, x);
+    std::cout << "- method 'invMap' passed" << std::endl;
     S.applyDiffMap(J1, J0, x);
+    std::cout << "- method 'applyDiffMap' passed" << std::endl;
     S.applyDiffInvMap(J2, J1, x);
+    std::cout << "- method 'applyDiffInvMap' passed" << std::endl;
     S.applyTransport(H1, H0, x, p);
+    std::cout << "- method 'applyTransport' passed" << std::endl;
     S.applyInvTransport(H2, H0, x, p);
+    std::cout << "- method 'applyInvTransport' passed" << std::endl;
   }
   Eigen::internal::set_is_malloc_allowed(true);
 }
