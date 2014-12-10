@@ -28,6 +28,7 @@ namespace pgs
     static Eigen::Matrix<double, 3, 9> diffInvMap_(const ConstRefVec& x);
     static void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);
     static void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x);
+    static void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x);
   };
 }
 

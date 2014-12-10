@@ -122,6 +122,16 @@ namespace pgs
     assert(x.size() == dim());
     applyTransport_(out, in, x);
   }
+  
+  void Manifold::applyInvTransport(
+      RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  {
+    assert(in.cols() == dimension_);
+    assert(out.cols() == dimension_);
+    assert(in.rows() == out.rows());
+    assert(x.size() == dim());
+    applyInvTransport_(out, in, x);
+  }
 
   void Manifold::setDimension(Index d)
   {

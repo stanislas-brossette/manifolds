@@ -185,7 +185,7 @@ namespace pgs
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m)
   {
     assert(in.cols() == InputDim_ && "Dimensions mismatch" );
-    Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),9);
+    Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),OutputDim_);
     a.noalias() = in*diffInvMap_(x);
     out = a;
   }
@@ -196,6 +196,14 @@ namespace pgs
     exponential(E,v);
     std::cout << "E = " << E << std::endl;
     out = E*in; 
+  }
+
+  void ExpMapMatrix::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& v)
+  {
+    DisplayType E;
+    exponential(E,v);
+    std::cout << "E = " << E << std::endl;
+    out = in*(E.transpose()); 
   }
 }
 

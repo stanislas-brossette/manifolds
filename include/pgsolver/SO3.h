@@ -31,6 +31,7 @@ namespace pgs
     virtual Eigen::MatrixXd diffInvMap_(const ConstRefVec& x) const;
     virtual void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
     virtual void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
+    virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
 
     mutable ReusableTemporaryMap bufferMap_;
   };
@@ -155,6 +156,12 @@ namespace pgs
   inline void SO3<Map>::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
     Map::applyTransport_(out, in, x);
+  }
+
+  template<typename Map>
+  inline void SO3<Map>::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  {
+    Map::applyInvTransport_(out, in, x);
   }
 }
 #endif //_PGS_SO3_H_

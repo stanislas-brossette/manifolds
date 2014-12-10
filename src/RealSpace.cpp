@@ -104,4 +104,9 @@ namespace pgs
   {
     out = in;
   }
+
+  void RealSpace::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& ) const
+  {
+    out = in;
+  }
 }
