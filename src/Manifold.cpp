@@ -114,23 +114,25 @@ namespace pgs
   }
 
   void Manifold::applyTransport(
-      RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+      RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
     assert(in.rows() == dimension_);
     assert(out.rows() == dimension_);
     assert(in.cols() == out.cols());
-    assert(x.size() == dim());
-    applyTransport_(out, in, x);
+    assert(x.size() == representationDim());
+    assert(v.size() == dim());
+    applyTransport_(out, in, x, v);
   }
   
   void Manifold::applyInvTransport(
-      RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+      RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
     assert(in.cols() == dimension_);
     assert(out.cols() == dimension_);
     assert(in.rows() == out.rows());
-    assert(x.size() == dim());
-    applyInvTransport_(out, in, x);
+    assert(x.size() == representationDim());
+    assert(v.size() == dim());
+    applyInvTransport_(out, in, x, v);
   }
 
   void Manifold::setDimension(Index d)

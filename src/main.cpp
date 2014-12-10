@@ -34,7 +34,7 @@ int main()
     Eigen::MatrixXd MTrans(3,4);
     v << 1,2,3;
     Point x = R3.createPoint(v);
-    R3.applyTransport(MTrans, M, v);
+    R3.applyTransport(MTrans, M, x.value(), v);
     std::cout << "v = " << std::endl<< v << std::endl;
     std::cout << "M = " << std::endl<< M << std::endl;
     std::cout << "R3.applyTransport(MTrans, M, v) = "<< std::endl<< MTrans << std::endl;
@@ -48,7 +48,7 @@ int main()
     v << 0,0,0;
     Point x = RotSpace.getIdentity();
     x.increment(v);
-    RotSpace.applyTransport(MTrans, M, v);
+    RotSpace.applyTransport(MTrans, M, x.value(), v);
     std::cout << "v = " << std::endl<< v << std::endl;
     std::cout << "M = " << std::endl<< M << std::endl;
     std::cout << "RotSpace.applyTransport(MTrans, M, v) = " << std::endl << MTrans << std::endl;
@@ -72,9 +72,9 @@ int main()
     v << 1,2,3,0,M_PI/2,0,4,5,6,M_PI/2,0,0;
     Point x = R3SO3R3SO3.getIdentity();
     x.increment(v);
-    R3SO3R3SO3.applyTransport(MTrans, M, v);
-    R3SO3R3SO3.applyInvTransport(MInvTrans, M, v);
-    R3SO3R3SO3.applyInvTransport(MDoubleTrans, MTrans, v);
+    R3SO3R3SO3.applyTransport(MTrans, M, x.value(), v);
+    R3SO3R3SO3.applyInvTransport(MInvTrans, M, x.value(), v);
+    R3SO3R3SO3.applyInvTransport(MDoubleTrans, MTrans, x.value(), v);
     std::cout << "v = " << std::endl << v << std::endl;
     std::cout << "M = "<< std::endl << M << std::endl;
     std::cout << "MTrans = "<< std::endl << MTrans << std::endl;

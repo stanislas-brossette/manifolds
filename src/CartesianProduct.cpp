@@ -177,23 +177,25 @@ namespace pgs
     }
   }
 
-  void CartesianProduct::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  void CartesianProduct::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
       submanifolds_[i]->applyTransport( getView<T, F>(out, i),
                                       getConstView<T, F>(in,i),
-                                      getValueTangentConst(x,i));
+                                      getValueConst(x,i),
+                                      getValueTangentConst(v,i));
     }
   }
 
-  void CartesianProduct::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  void CartesianProduct::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
       submanifolds_[i]->applyInvTransport( getView<F, T>(out, i),
                                       getConstView<F, T>(in,i),
-                                      getValueTangentConst(x,i));
+                                      getValueConst(x,i),
+                                      getValueTangentConst(v,i));
     }
   }
 }
