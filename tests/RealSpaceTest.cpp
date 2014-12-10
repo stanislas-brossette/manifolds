@@ -199,6 +199,9 @@ BOOST_AUTO_TEST_CASE(RealInvTransport)
   BOOST_CHECK(expectedRes.isApprox(Hout));
 }
 
+#if   EIGEN_WORLD_VERSION > 3 \
+  || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) \
+  || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && EIGEN_MINOR_VERSION > 0)
 BOOST_AUTO_TEST_CASE(RealNoAllocation)
 {
   //We only test here that the operations on the manifold do not create
@@ -229,3 +232,4 @@ BOOST_AUTO_TEST_CASE(RealNoAllocation)
   }
   Eigen::internal::set_is_malloc_allowed(true);
 }
+#endif

@@ -27,6 +27,9 @@ endif()
 PKG_CONFIG_APPEND_LIBS(PGSolver)
 #
 #search_for_boost()
+
+# Require Eigen >= 3.2.1 for Eigen::Ref
+SET(Eigen_REQUIRED "eigen3 >= 3.2.1")
 search_for_eigen()
 
 include_directories(include)
