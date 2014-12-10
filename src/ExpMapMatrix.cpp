@@ -194,7 +194,6 @@ namespace pgs
   {
     DisplayType E;
     exponential(E,v);
-    std::cout << "E = " << E << std::endl;
     out = E*in; 
   }
 
@@ -202,7 +201,6 @@ namespace pgs
   {
     DisplayType E;
     exponential(E,v);
-    std::cout << "E = " << E << std::endl;
     out = in*(E.transpose()); 
   }
 }
