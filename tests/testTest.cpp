@@ -1,3 +1,4 @@
+#include <iostream>
 #include <boost/test/unit_test.hpp>
 #include <Eigen/Core>
 #include <pgsolver/defs.h>
