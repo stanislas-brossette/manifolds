@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include <boost/test/unit_test.hpp>
 #include <Eigen/Core>
 #include <pgsolver/defs.h>
@@ -17,7 +18,7 @@ void foo3(RefVec out, ConstRefVec in, ConstRefVec p)
 {
   out = in + p;
 }
-void foo4(RefVec out, const ConstRefVec in, const ConstRefVec p)
+void foo4(RefVec out, const ConstRefVec& in, const ConstRefVec& p)
 {
   out = in + p;
 }
