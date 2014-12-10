@@ -14,15 +14,12 @@ namespace pgs
     SO3();
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
-    //virtual Segment getValue(RefVec val, size_t i) const;
-    //virtual ConstSegment getValueConst(const ConstRefVec& val, size_t i) const;
-    //virtual Segment getValueTangent(RefVec val, size_t i) const;
-    //virtual ConstSegment getValueTangentConst(const ConstRefVec& val, size_t i) const;
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
+  
   protected:
     //map operations
     virtual bool isValidInit_(const Eigen::VectorXd& val) const;
-    void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
+    virtual void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void invMap_(RefVec out, const ConstRefVec& x) const;
     virtual void setIdentity_(RefVec out) const;
@@ -61,38 +58,6 @@ namespace pgs
     assert(i < 1 && "invalid index");
     return *this;
   }
-
-  //template<typename Map>
-  //inline Segment SO3<Map>::getValue(RefVec val, size_t i) const
-  //{
-  //  assert(val.size() == representationDim());
-  //  assert(i < 1 && "invalid index");
-  //  return val.segment(0, static_cast<long> (representationDim()));
-  //}
-
-  //template<typename Map>
-  //inline ConstSegment SO3<Map>::getValueConst(const ConstRefVec& val, size_t i) const
-  //{
-  //  assert(val.size() == representationDim());
-  //  assert(i < 1 && "invalid index");
-  //  return val.segment(0,static_cast<long> (representationDim()));
-  //}
-
-  //template<typename Map>
-  //inline Segment SO3<Map>::getValueTangent(RefVec val, size_t i) const
-  //{
-  //  assert(val.size() == dim());
-  //  assert(i < 1 && "invalid index");
-  //  return val.segment(0, static_cast<long> (dim()));
-  //}
-
-  //template<typename Map>
-  //inline ConstSegment SO3<Map>::getValueTangentConst(const ConstRefVec& val, size_t i) const
-  //{
-  //  assert(val.size() == dim());
-  //  assert(i < 1 && "invalid index");
-  //  return val.segment(0,static_cast<long> (dim()));
-  //}
    
   template<typename Map>
   inline std::string SO3<Map>::toString(const ConstRefVec& val, const std::string& prefix) const

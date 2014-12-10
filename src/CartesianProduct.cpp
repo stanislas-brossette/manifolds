@@ -23,7 +23,7 @@ namespace pgs
     bool out = true;
     for (std::size_t i = 0; i<numberOfSubmanifolds(); ++i)
     {
-      out = out && submanifolds_[i]->isValidInit(getValueConst(val, i)); 
+      out = out && submanifolds_[i]->isValidInit(getConstView<R>(val, i)); 
     }
     return out;
   }
@@ -50,43 +50,15 @@ namespace pgs
     return *submanifolds_[i];
   }
 
-  //Segment CartesianProduct::getValue(RefVec val, size_t i) const
-  //{
-  //  assert(val.size() == representationDim());
-  //  assert(i < submanifolds_.size() && "invalid index");
-  //  return val.segment(startIndexR_[i], submanifolds_[i]->representationDim());
-  //}
-
-  //ConstSegment CartesianProduct::getValueConst(const ConstRefVec& val, size_t i) const
-  //{
-  //  assert(val.size() == representationDim());
-  //  assert(i < submanifolds_.size() && "invalid index");
-  //  return val.segment(startIndexR_[i], submanifolds_[i]->representationDim());
-  //}
-
-  //Segment CartesianProduct::getValueTangent(RefVec val, size_t i) const
-  //{
-  //  assert(val.size() == dim());
-  //  assert(i < submanifolds_.size() && "invalid index");
-  //  return val.segment(startIndexT_[i], submanifolds_[i]->dim());
-  //}
-
-  //ConstSegment CartesianProduct::getValueTangentConst(const ConstRefVec& val, size_t i) const
-  //{
-  //  assert(val.size() == dim());
-  //  assert(i < submanifolds_.size() && "invalid index");
-  //  return val.segment(startIndexT_[i], submanifolds_[i]->dim());
-  //}
-
   std::string CartesianProduct::toString(const ConstRefVec& val, const std::string& prefix) const
   {
     std::stringstream ss;
     size_t n = numberOfSubmanifolds();
     for (std::size_t i = 0; i<n-1; ++i)
     {
-      ss << submanifolds_[i]->toString(getValueConst(val, i), prefix + "  ") << std::endl;;
+      ss << submanifolds_[i]->toString(getConstView<R>(val, i), prefix + "  ") << std::endl;;
     }
-    ss << submanifolds_.back()->toString(getValueConst(val, n - 1), prefix + "  ");
+    ss << submanifolds_.back()->toString(getConstView<R>(val, n - 1), prefix + "  ");
     return ss.str();
   }
 
@@ -94,9 +66,9 @@ namespace pgs
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      submanifolds_[i]->plus(getValue(out, i), 
-                              getValueConst(x, i), 
-                              getValueTangentConst(v, i));
+      submanifolds_[i]->plus(getView<R>(out, i), 
+                              getConstView<R>(x, i), 
+                              getConstView<T>(v, i));
     }
   }
 
@@ -104,9 +76,9 @@ namespace pgs
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      submanifolds_[i]->minus(getValueTangent(out,i),
-                              getValueConst(x, i), 
-                              getValueConst(y, i));
+      submanifolds_[i]->minus(getView<T>(out,i),
+                              getConstView<R>(x, i), 
+                              getConstView<R>(y, i));
     }
   }
 
@@ -114,15 +86,15 @@ namespace pgs
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      submanifolds_[i]->invMap(getValueTangent(out,i),
-                              getValueConst(x, i));
+      submanifolds_[i]->invMap(getView<T>(out,i),
+                               getConstView<R>(x, i));
     }
   }
 
   void CartesianProduct::setIdentity_(RefVec out) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
-      submanifolds_[i]->setIdentity(getValue(out, i));
+      submanifolds_[i]->setIdentity(getView<R>(out, i));
   }
 
   Eigen::MatrixXd CartesianProduct::diffMap_(const ConstRefVec& x ) const
@@ -131,12 +103,7 @@ namespace pgs
     J.setZero();
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      //J.block(startIndexR_[i],
-      //        startIndexT_[i],
-      //        submanifolds_[i]->representationDim(),
-      //        submanifolds_[i]->dim()) 
-      //  = submanifolds_[i]->diffMap(getValueConst(x, i));
-      getView<R, T>(J, i) = submanifolds_[i]->diffMap(getValueConst(x, i));
+      getView<R, T>(J, i) = submanifolds_[i]->diffMap(getConstView<R>(x, i));
     }
     return J;
   }
@@ -146,8 +113,8 @@ namespace pgs
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
       submanifolds_[i]->applyDiffMap( getView<F, T>(out, i),
-                                      getConstView<F, R>(in,i),
-                                      getValueConst(x,i));
+                                      getConstView<F, R>(in, i),
+                                      getConstView<R>(x, i));
     }
   }
   
@@ -157,12 +124,7 @@ namespace pgs
     J.setZero();
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      //J.block(startIndexT_[i],
-      //        startIndexR_[i],
-      //        submanifolds_[i]->dim(),
-      //        submanifolds_[i]->representationDim()) 
-      //  = submanifolds_[i]->diffInvMap(getValueConst(x,i));
-      getView<T, R>(J, i) = submanifolds_[i]->diffInvMap(getValueConst(x, i));
+      getView<T, R>(J, i) = submanifolds_[i]->diffInvMap(getConstView<R>(x, i));
     }
     return J;
   }
@@ -172,8 +134,8 @@ namespace pgs
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
       submanifolds_[i]->applyDiffInvMap(getView<F,R>(out, i),
-                                        getConstView<F, T>(in,i),
-                                        getValueConst(x,i));
+                                        getConstView<F, T>(in, i),
+                                        getConstView<R>(x, i));
     }
   }
 
@@ -181,10 +143,10 @@ namespace pgs
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      submanifolds_[i]->applyTransport( getView<T, F>(out, i),
-                                      getConstView<T, F>(in,i),
-                                      getValueConst(x,i),
-                                      getValueTangentConst(v,i));
+      submanifolds_[i]->applyTransport(getView<T, F>(out, i),
+                                       getConstView<T, F>(in, i),
+                                       getConstView<R>(x, i),
+                                       getConstView<T>(v, i));
     }
   }
 
@@ -192,10 +154,10 @@ namespace pgs
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      submanifolds_[i]->applyInvTransport( getView<F, T>(out, i),
-                                      getConstView<F, T>(in,i),
-                                      getValueConst(x,i),
-                                      getValueTangentConst(v,i));
+      submanifolds_[i]->applyInvTransport(getView<F, T>(out, i),
+                                          getConstView<F, T>(in, i),
+                                          getConstView<R>(x, i),
+                                          getConstView<T>(v, i));
     }
   }
 }
