@@ -190,19 +190,17 @@ namespace pgs
     out = a;
   }
 
-  void ExpMapMatrix::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& v)
+  void ExpMapMatrix::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v)
   {
     DisplayType E;
     exponential(E,v);
-    std::cout << "E = " << E << std::endl;
     out = E*in; 
   }
 
-  void ExpMapMatrix::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& v)
+  void ExpMapMatrix::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v)
   {
     DisplayType E;
     exponential(E,v);
-    std::cout << "E = " << E << std::endl;
     out = in*(E.transpose()); 
   }
 }

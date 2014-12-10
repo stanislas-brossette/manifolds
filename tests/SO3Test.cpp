@@ -150,59 +150,6 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
-//BOOST_AUTO_TEST_CASE(SO3ApplyDiffMemoryTest)
-//{
-//  Index c = 6;
-//  SO3<ExpMapMatrix> Space;
-//  Index dim = Space.dim();
-//  Index repDim = Space.representationDim();
-//  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
-//  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
-//  Point x = Space.getIdentity();
-//  Space.applyDiffMap(Jres, Jf, x.value());
-//  
-//  for (int i = 0; i<dim+repDim; ++i)
-//  {
-//    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+2*dim);
-//    G.middleCols(dim,repDim) = Jf;
-//    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
-//    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
-//    try
-//    {
-//      Space.applyDiffMap(Gres,Gf,x.value());
-//    }
-//    catch (pgs_exception&)
-//    {
-//      ExpMapMatrix::applyDiffMapNoAssert_(Gres,Gf,x.value());
-//      BOOST_CHECK(!Jres.isApprox(Gres));
-//      continue;
-//    }
-//    BOOST_CHECK(Jres.isApprox(Gres));
-//  }
-//}
-//
-//BOOST_AUTO_TEST_CASE(SO3ApplyDiffGuaranteedResultTest)
-//{
-//  Index c = 5;
-//  SO3<ExpMapMatrix> Space;
-//  Index dim = Space.dim();
-//  Index repDim = Space.representationDim();
-//  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
-//  Eigen::MatrixXd Jres = Eigen::MatrixXd::Random(c,dim);
-//  Point x = Space.getIdentity();
-//  Space.applyDiffMap(Jres, Jf, x.value());
-//  
-//  for (int i = 0; i<dim+1; ++i)
-//  {
-//    Eigen::MatrixXd G = Eigen::MatrixXd::Zero(c,repDim+dim);
-//    G.middleCols(dim,repDim) = Jf;
-//    Eigen::Map<Eigen::MatrixXd> Gf(G.data()+dim*c,c,repDim);
-//    Eigen::Map<Eigen::MatrixXd> Gres(G.data()+i*c,c,dim);
-//    Space.applyDiffMap(Gres,Gf,x.value());
-//    BOOST_CHECK(Jres.isApprox(Gres));
-//  }
-//}
-
 BOOST_AUTO_TEST_CASE(SO3invDiff)
 {
   SO3<ExpMapMatrix> RotSpace;
@@ -252,6 +199,60 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
+BOOST_AUTO_TEST_CASE(SO3Transport)
+{
+  std::cout << "SO3Transport" << std::endl;
+  int c = 4;
+  SO3<ExpMapMatrix> Space;
+  Index dim = Space.dim();
+  Eigen::MatrixXd H(dim,c);
+  H <<  1, 2, 3, 4,
+        5, 6, 7, 8,
+        9,10,11,12;
+  std::cout << "H = " << H << std::endl;
+  Eigen::MatrixXd Hout(dim,c);
+  Eigen::VectorXd v(dim);
+  v <<  0.083549465660115, 0.164064455761495, 0.287252050630289;
+  Point x = Space.getIdentity();
+  x.increment(Eigen::VectorXd::Random(3));
+  Eigen::MatrixXd expectedRes(dim,c);
+  expectedRes << 1.126248257109656, 1.969921592423433, 2.813594927737210, 3.657268263050987,
+                 4.539510349826134, 5.725092676723538, 6.910675003620942, 8.096257330518345,
+                 9.226289104899047, 10.165762281434207, 11.105235457969370, 12.044708634504529;
+  std::cout << "expectedRes = " << expectedRes << std::endl;
+  Space.applyTransport(Hout, H, x.value(), v);
+  std::cout << "Hout = " << Hout << std::endl;
+  BOOST_CHECK(expectedRes.isApprox(Hout));
+}
+
+BOOST_AUTO_TEST_CASE(SO3InvTransport)
+{
+  std::cout << "SO3InvTransport" << std::endl;
+  int r = 4;
+  SO3<ExpMapMatrix> Space;
+  Index dim = Space.dim();
+  Eigen::MatrixXd H(r,dim);
+  H <<  1, 2, 3,
+        4, 5, 6,
+        7, 8, 9,
+        10, 11, 12;
+  std::cout << "H = " << H << std::endl;
+  Eigen::MatrixXd Hout(r,dim);
+  Eigen::VectorXd v(dim);
+  v << 0.289466560559783, 0.047283924503264, 0.291177834528185;
+  Point x = Space.getIdentity();
+  x.increment(Eigen::VectorXd::Random(3));
+  Eigen::MatrixXd expectedRes(r,dim);
+  expectedRes <<  0.667168954696934, 1.299987987788895,  3.444548855437121,
+                  2.972337006917136, 4.096292499301232,  7.168375023495865,
+                  5.277505059137337, 6.892597010813567, 10.892201191554610,
+                  7.582673111357540, 9.688901522325903, 14.616027359613355;
+  std::cout << "expectedRes = " << expectedRes << std::endl;
+  Space.applyInvTransport(Hout, H, x.value(), v);
+  std::cout << "Hout = " << Hout << std::endl;
+  BOOST_CHECK(expectedRes.isApprox(Hout));
+}
+
 #if   EIGEN_WORLD_VERSION > 3 \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && EIGEN_MINOR_VERSION > 0)
@@ -272,6 +273,9 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
   Eigen::MatrixXd J0 = Eigen::MatrixXd::Random(r, repDim);
   Eigen::MatrixXd J1(r, dim);
   Eigen::MatrixXd J2(r, repDim);
+  Eigen::MatrixXd H0 = Eigen::MatrixXd::Random(S.dim(), S.dim());
+  Eigen::MatrixXd H1 = Eigen::MatrixXd::Random(S.dim(), S.dim());
+  Eigen::MatrixXd H2 = Eigen::MatrixXd::Random(S.dim(), S.dim());
 
   //The first call to the following methods might trigger a memory allocation
   //depending on the size of the Ji and the initial buffer size inside S.
@@ -284,9 +288,11 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
   {
     S.plus(z, x, p);
     S.minus(d, x, y);
-    //S.invMap(d, x);
+    S.invMap(d, x);
     S.applyDiffMap(J1, J0, x);
     S.applyDiffInvMap(J2, J1, x);
+    S.applyTransport(H1, H0, x, p);
+    S.applyInvTransport(H2, H0, x, p);
   }
   Eigen::internal::set_is_malloc_allowed(true);
 }

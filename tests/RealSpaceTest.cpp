@@ -163,6 +163,42 @@ BOOST_AUTO_TEST_CASE(RealApplyInvDiff)
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
+BOOST_AUTO_TEST_CASE(RealTransport)
+{
+  int c = 5;
+  RealSpace Space(7);
+  Index dim = Space.dim();
+  Eigen::MatrixXd H = Eigen::MatrixXd::Random(dim,c);
+  std::cout << "H = " << H << std::endl;
+  Eigen::MatrixXd Hout(dim,c);
+  Eigen::VectorXd v = Eigen::VectorXd::Random(dim);
+  std::cout << "v = " << v << std::endl;
+  Point x = Space.getIdentity();
+  x.increment(v);
+  Eigen::MatrixXd expectedRes = H;
+  Space.applyTransport(Hout, H, x.value(), v);
+  std::cout << "Hout = " << Hout << std::endl;
+  BOOST_CHECK(expectedRes.isApprox(Hout));
+}
+
+BOOST_AUTO_TEST_CASE(RealInvTransport)
+{
+  int c = 3;
+  RealSpace Space(9);
+  Index dim = Space.dim();
+  Eigen::MatrixXd H = Eigen::MatrixXd::Random(c,dim);
+  std::cout << "H = " << H << std::endl;
+  Eigen::MatrixXd Hout(c,dim);
+  Eigen::VectorXd v = Eigen::VectorXd::Random(dim);
+  std::cout << "v = " << v << std::endl;
+  Point x = Space.getIdentity();
+  x.increment(v);
+  Eigen::MatrixXd expectedRes = H;
+  Space.applyInvTransport(Hout, H, x.value(), v);
+  std::cout << "Hout = " << Hout << std::endl;
+  BOOST_CHECK(expectedRes.isApprox(Hout));
+}
+
 #if   EIGEN_WORLD_VERSION > 3 \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && EIGEN_MINOR_VERSION > 0)
@@ -172,20 +208,27 @@ BOOST_AUTO_TEST_CASE(RealNoAllocation)
   //temporary. Passing arguments that are not recognize by the Eigen::Ref will
   //create temporaries, but this is the user's fault.
   RealSpace R(4);
-  Eigen::VectorXd x = Eigen::VectorXd::Random(4);
-  Eigen::VectorXd y = Eigen::VectorXd::Random(4);
-  Eigen::VectorXd z(4);
-  Eigen::MatrixXd J0 = Eigen::MatrixXd::Random(3, 4);
-  Eigen::MatrixXd J1(3, 4);
-  Eigen::MatrixXd J2(3, 4);
+  Index c = 3;
+  Eigen::VectorXd x = Eigen::VectorXd::Random(R.representationDim());
+  Eigen::VectorXd y = Eigen::VectorXd::Random(R.representationDim());
+  Eigen::VectorXd v = Eigen::VectorXd::Random(R.dim());
+  Eigen::VectorXd z(R.representationDim());
+  Eigen::MatrixXd J0 = Eigen::MatrixXd::Random(c, R.representationDim());
+  Eigen::MatrixXd J1(c, R.representationDim());
+  Eigen::MatrixXd J2(c, R.representationDim());
+  Eigen::MatrixXd H0 = Eigen::MatrixXd::Random(R.dim(), R.dim());
+  Eigen::MatrixXd H1 = Eigen::MatrixXd::Random(R.dim(), R.dim());
+  Eigen::MatrixXd H2 = Eigen::MatrixXd::Random(R.dim(), R.dim());
 
   Eigen::internal::set_is_malloc_allowed(false);
   {
-    R.plus(z, x, y);
+    R.plus(z, x, v);
     R.minus(z, x, y);
     R.invMap(z, x);
     R.applyDiffMap(J1, J0, x);
     R.applyDiffInvMap(J2, J0, x);
+    R.applyTransport(H1, H0, x, v);
+    R.applyInvTransport(H2, H0, x, v);
   }
   Eigen::internal::set_is_malloc_allowed(true);
 }

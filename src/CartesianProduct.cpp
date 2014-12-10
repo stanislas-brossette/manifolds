@@ -113,8 +113,8 @@ namespace pgs
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
       submanifolds_[i]->applyDiffMap( getView<F, T>(out, i),
-                                      getConstView<F, R>(in,i),
-                                      getConstView<R>(x,i));
+                                      getConstView<F, R>(in, i),
+                                      getConstView<R>(x, i));
     }
   }
   
@@ -134,27 +134,31 @@ namespace pgs
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
       submanifolds_[i]->applyDiffInvMap(getView<F,R>(out, i),
-                                        getConstView<F, T>(in,i),
-                                        getConstView<R>(x,i));
+                                        getConstView<F, T>(in, i),
+                                        getConstView<R>(x, i));
     }
   }
 
-  void CartesianProduct::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  void CartesianProduct::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
       submanifolds_[i]->applyTransport(getView<T, F>(out, i),
-                                       getConstView<T, F>(in,i),
-                                       getConstView<T>(x,i));
+                                       getConstView<T, F>(in, i),
+                                       getConstView<R>(x, i),
+                                       getConstView<T>(v, i));
     }
   }
 
-  void CartesianProduct::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  void CartesianProduct::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
+    {
       submanifolds_[i]->applyInvTransport(getView<F, T>(out, i),
-                                          getConstView<F, T>(in,i),
-                                          getConstView<T>(x,i));
+                                          getConstView<F, T>(in, i),
+                                          getConstView<R>(x, i),
+                                          getConstView<T>(v, i));
+    }
   }
 }
 

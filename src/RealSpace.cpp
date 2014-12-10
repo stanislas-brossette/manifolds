@@ -72,12 +72,12 @@ namespace pgs
     out = in;
   }
 
-  void RealSpace::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& ) const
+  void RealSpace::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& ) const
   {
     out = in;
   }
 
-  void RealSpace::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& ) const
+  void RealSpace::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& ) const
   {
     out = in;
   }
