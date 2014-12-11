@@ -372,6 +372,38 @@ BOOST_AUTO_TEST_CASE(CardProdInvTransport)
   BOOST_CHECK(expectedRes.isApprox(Hout));
 }
 
+BOOST_AUTO_TEST_CASE(CardProdGetView)
+{
+  RealSpace R2(2);
+  RealSpace R3(3);
+  SO3<ExpMapMatrix> RotSpace;
+  CartesianProduct S(R3, RotSpace);
+  S.multiply(R2);
+  Eigen::VectorXd x(14);
+  x << 1, 2, 3,
+       4, 5, 6, 7, 8, 9,10,11,12,
+      13,14;
+  Eigen::VectorXd xT(8);
+  xT << 1, 2, 3,
+       6, 7, 8,
+       13, 14;
+  Eigen::Vector3d xR3;
+  Eigen::VectorXd xSO3(9);
+  Eigen::VectorXd xSO3T(3);
+  Eigen::Vector2d xR2;
+  xR3 <<  1, 2, 3;
+  xSO3 << 4, 5, 6, 7, 8, 9,10,11,12;
+  xSO3T << 6, 7, 8;
+  xR2 <<  13, 14;
+  
+  BOOST_CHECK(xR3.isApprox(S.getView<R>(x,0)));
+  BOOST_CHECK(xSO3.isApprox(S.getView<R>(x,1)));
+  BOOST_CHECK(xR2.isApprox(S.getView<R>(x,2)));
+  BOOST_CHECK(xR3.isApprox(S.getView<T>(xT,0)));
+  BOOST_CHECK(xSO3T.isApprox(S.getView<T>(xT,1)));
+  BOOST_CHECK(xR2.isApprox(S.getView<T>(xT,2)));
+}
+
 #if   EIGEN_WORLD_VERSION > 3 \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && EIGEN_MINOR_VERSION > 0)
