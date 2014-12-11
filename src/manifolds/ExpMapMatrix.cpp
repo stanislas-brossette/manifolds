@@ -1,9 +1,9 @@
 #include <iostream>
 #include <boost/math/special_functions/sinc.hpp>
 #include <Eigen/Dense>
-#include <pgsolver/defs.h>
-#include <pgsolver/ExpMapMatrix.h>
-#include <pgsolver/pgs_assert.h>
+#include <pgsolver/manifolds/defs.h>
+#include <pgsolver/manifolds/ExpMapMatrix.h>
+#include <pgsolver/manifolds/pgs_assert.h>
 
 namespace utility
 {

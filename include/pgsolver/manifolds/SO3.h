@@ -1,9 +1,9 @@
 #ifndef _PGS_SO3_H_
 #define _PGS_SO3_H_
 
-#include <pgsolver/defs.h>
-#include <pgsolver/Manifold.h>
-#include <pgsolver/ReusableTemporaryMap.h>
+#include <pgsolver/manifolds/defs.h>
+#include <pgsolver/manifolds/Manifold.h>
+#include <pgsolver/manifolds/ReusableTemporaryMap.h>
 
 namespace pgs
 {

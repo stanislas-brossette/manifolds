@@ -3,10 +3,10 @@
 
 #include <iostream>
 #include <Eigen/Core>
-#include <pgsolver/defs.h>
-#include <pgsolver/view.h>
-#include <pgsolver/RefCounter.h>
-#include <pgsolver/Point.h>
+#include <pgsolver/manifolds/defs.h>
+#include <pgsolver/manifolds/view.h>
+#include <pgsolver/manifolds/RefCounter.h>
+#include <pgsolver/manifolds/Point.h>
 
 
 namespace pgs

@@ -1,22 +1,22 @@
 set(SOURCES 
   main.cpp 
-  CartesianProduct.cpp 
-  ExpMapMatrix.cpp 
-  Manifold.cpp 
-  Point.cpp 
-  RealSpace.cpp
-  ReusableTemporaryMap.cpp
+  manifolds/CartesianProduct.cpp 
+  manifolds/ExpMapMatrix.cpp 
+  manifolds/Manifold.cpp 
+  manifolds/Point.cpp 
+  manifolds/RealSpace.cpp
+  manifolds/ReusableTemporaryMap.cpp
   )
 set(HEADERS
-  ../include/pgsolver/CartesianProduct.h
-  ../include/pgsolver/defs.h
-  ../include/pgsolver/ExpMapMatrix.h
-  ../include/pgsolver/Manifold.h
-  ../include/pgsolver/pgs_assert.h
-  ../include/pgsolver/Point.h
-  ../include/pgsolver/RealSpace.h
-  ../include/pgsolver/ReusableTemporaryMap.h
-  ../include/pgsolver/SO3.h
+  ../include/pgsolver/manifolds/CartesianProduct.h
+  ../include/pgsolver/manifolds/defs.h
+  ../include/pgsolver/manifolds/ExpMapMatrix.h
+  ../include/pgsolver/manifolds/Manifold.h
+  ../include/pgsolver/manifolds/pgs_assert.h
+  ../include/pgsolver/manifolds/Point.h
+  ../include/pgsolver/manifolds/RealSpace.h
+  ../include/pgsolver/manifolds/ReusableTemporaryMap.h
+  ../include/pgsolver/manifolds/SO3.h
 )
 
 set(LIBRARIES

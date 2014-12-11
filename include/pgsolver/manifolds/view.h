@@ -2,7 +2,7 @@
 #define _PGS_VIEW_H_
 
 #include <Eigen/Core>
-#include <pgsolver/defs.h>
+#include <pgsolver/manifolds/defs.h>
 
 namespace pgs
 {

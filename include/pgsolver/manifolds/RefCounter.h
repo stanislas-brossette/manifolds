@@ -2,7 +2,7 @@
 #define _PGS_REF_COUNTER_H_
 
 #include <cassert>
-#include <pgsolver/Point.h>
+#include <pgsolver/manifolds/Point.h>
 
 #define DEBUG
 

@@ -1,7 +1,7 @@
 #ifndef _PGS_POINT_H_
 #define _PGS_POINT_H_
 
-#include <pgsolver/defs.h>
+#include <pgsolver/manifolds/defs.h>
 
 namespace pgs
 {

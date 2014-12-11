@@ -5,13 +5,13 @@
 
 #include <Eigen/Core>
 
-#include <pgsolver/pgs_assert.h>
-#include <pgsolver/RealSpace.h>
-#include <pgsolver/SO3.h>
-#include <pgsolver/CartesianProduct.h>
-#include <pgsolver/Point.h>
-#include <pgsolver/ExpMapMatrix.h>
-#include <pgsolver/ReusableTemporaryMap.h>
+#include <pgsolver/manifolds/pgs_assert.h>
+#include <pgsolver/manifolds/RealSpace.h>
+#include <pgsolver/manifolds/SO3.h>
+#include <pgsolver/manifolds/CartesianProduct.h>
+#include <pgsolver/manifolds/Point.h>
+#include <pgsolver/manifolds/ExpMapMatrix.h>
+#include <pgsolver/manifolds/ReusableTemporaryMap.h>
 
 using namespace pgs;
 

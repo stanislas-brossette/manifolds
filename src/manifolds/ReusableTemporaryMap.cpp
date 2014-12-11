@@ -1,4 +1,4 @@
-#include <pgsolver/ReusableTemporaryMap.h>
+#include <pgsolver/manifolds/ReusableTemporaryMap.h>
 
 namespace pgs
 {

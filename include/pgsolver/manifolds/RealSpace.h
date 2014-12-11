@@ -2,7 +2,7 @@
 #define _PGS_REAL_SPACE_H_
 
 #include <iostream>
-#include <pgsolver/Manifold.h>
+#include <pgsolver/manifolds/Manifold.h>
 
 namespace pgs
 {

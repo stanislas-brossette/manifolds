@@ -1,11 +1,11 @@
 #include <iostream>
 #include <stdexcept>
 
-#include <pgsolver/SO3.h>
-#include <pgsolver/RealSpace.h>
-#include <pgsolver/CartesianProduct.h>
-#include <pgsolver/Point.h>
-#include <pgsolver/ExpMapMatrix.h>
+#include <pgsolver/manifolds/SO3.h>
+#include <pgsolver/manifolds/RealSpace.h>
+#include <pgsolver/manifolds/CartesianProduct.h>
+#include <pgsolver/manifolds/Point.h>
+#include <pgsolver/manifolds/ExpMapMatrix.h>
 
 #ifndef _WIN32
 #define BOOST_TEST_MODULE PGSolver 

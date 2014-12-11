@@ -2,7 +2,7 @@
 #define _PGS_CARTESIAN_PRODUCT_H_
 
 #include <vector>
-#include <pgsolver/Manifold.h>
+#include <pgsolver/manifolds/Manifold.h>
 
 namespace pgs
 {

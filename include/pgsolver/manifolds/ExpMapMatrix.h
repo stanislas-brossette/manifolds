@@ -2,8 +2,8 @@
 #define _PGS_EXPMAPMATRIX_H_
 
 #include <Eigen/Core>
-#include <pgsolver/defs.h>
-#include <pgsolver/ReusableTemporaryMap.h>
+#include <pgsolver/manifolds/defs.h>
+#include <pgsolver/manifolds/ReusableTemporaryMap.h>
 
 namespace pgs
 {

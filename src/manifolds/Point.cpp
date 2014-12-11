@@ -1,7 +1,7 @@
-#include <pgsolver/Point.h>
-#include <pgsolver/Manifold.h>
 #include <assert.h>
 #include <iostream>
+#include <pgsolver/manifolds/Point.h>
+#include <pgsolver/manifolds/Manifold.h>
 
 namespace pgs
 {
