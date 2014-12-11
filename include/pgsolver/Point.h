@@ -17,7 +17,6 @@ namespace pgs
     Point(const Point& other);
     ~Point();
     Point& increment(const Eigen::VectorXd& v);
-    Eigen::VectorXd invMap() const; //Computes a vector that is the inverse of Point through its Map
 
     //get a sub point
     Point operator()(size_t i) const;
@@ -33,9 +32,10 @@ namespace pgs
 
     Point & operator=(const Point& x);
     friend inline std::ostream& operator<< (std::ostream& os, const Point& x);
+    void registerPoint();
+    void unregisterPoint();
     
   private:
-    
 
   private:
     const Manifold& manifold_;

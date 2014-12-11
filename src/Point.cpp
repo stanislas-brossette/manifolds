@@ -9,6 +9,7 @@ namespace pgs
     : manifold_(M)
     , value_(M.representationDim())
   {
+    registerPoint();
   }
 
   Point::Point(const Manifold& M, const Eigen::VectorXd& val)
@@ -16,18 +17,19 @@ namespace pgs
     , value_(val)
   {
     assert(M.representationDim() == val.size());
+    registerPoint();
   }
 
   Point::Point(const Point& other)
     : manifold_(other.manifold_)
     , value_(other.value_)
   {
-    other.manifold_.incrementRefCounter();
+    registerPoint();
   }
 
   Point::~Point()
   {
-    manifold_.decrementRefCounter();
+    unregisterPoint();
   }
 
   
@@ -37,13 +39,6 @@ namespace pgs
     return *this;
   }
   
-  Eigen::VectorXd Point::invMap() const
-  {
-    Eigen::VectorXd res(manifold_.dim());
-    manifold_.minus(res,value_,manifold_.getIdentity().value());
-    return res;
-  }
-
   Point Point::operator()(size_t i) const
   {
     return Point(manifold_(i), manifold_.getConstView<R>(value_, i));
@@ -92,5 +87,15 @@ namespace pgs
   std::string Point::toString(std::string& prefix) const
   {
     return manifold_.toString(value_, prefix);
+  }
+
+  void Point::registerPoint()
+  {
+    this->manifold_.incrementRefCounter();
+  }
+
+  void Point::unregisterPoint()
+  {
+    this->manifold_.decrementRefCounter();
   }
 }

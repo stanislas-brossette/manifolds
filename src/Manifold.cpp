@@ -15,7 +15,6 @@ namespace pgs
   Point Manifold::createPoint() const
   {
     lock();
-    incrementRefCounter();
     return Point(*this);
   }
 
@@ -24,7 +23,6 @@ namespace pgs
     if(isValidInit(val))
     {
       lock();
-      incrementRefCounter();
       return Point(*this, val);
     }
     else
@@ -42,7 +40,6 @@ namespace pgs
   Point Manifold::getIdentity() const
   {
     lock();
-    incrementRefCounter();
     Eigen::VectorXd id(representationDim_);
     setIdentity(id);
     return Point(*this, id);

@@ -13,7 +13,7 @@ namespace pgs
     public:
       RefCounter()
 #ifdef DEBUG
-        :count(0)
+        :count_(0)
 #endif
       {
       }
@@ -21,7 +21,7 @@ namespace pgs
       ~RefCounter()
       {
 #ifdef DEBUG
-        assert(count == 0 && "You cannot destroy this manifold because some points still depend on it");
+        assert(count_ == 0 && "You cannot destroy this manifold because some points still depend on it");
 #endif
       }
 
@@ -29,23 +29,23 @@ namespace pgs
       void incrementRefCounter() const
       {
 #ifdef DEBUG
-        count++;
+        count_++;
 #endif
       }
       void decrementRefCounter() const
       {
 #ifdef DEBUG
-        assert(count>0 && "You cannot decrement when no point exist");
-        count--;
+        assert(count_>0 && "You cannot decrement when no point exist");
+        count_--;
 #endif
       }
 
     private:
 #ifdef DEBUG
-      mutable int count;
+      mutable int count_;
 #endif
-      friend Point::Point(const Point&);
-      friend Point::~Point();
+      friend void Point::registerPoint();
+      friend void Point::unregisterPoint();
   };
 }
 
