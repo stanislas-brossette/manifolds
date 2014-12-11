@@ -8,6 +8,8 @@
 
 namespace pgs
 {
+  /// \brief object containing a counter and that cannot be destroyed if the
+  /// counter is not at 0.
   class RefCounter
   {
     public:

@@ -7,10 +7,17 @@
 
 namespace pgs
 {
+  /// \brief Structure representing the exponential map going from
+  /// \f$ \mathbb{R}^3 \f$ to SO(3) represented in \f$ \mathbb{R}^{3\times3} \f$
   struct ExpMapMatrix
   {
+    /// \brief precision constant
     static const double prec;
+
+    /// \brief dimension of \f$ \mathbb{R}^{3\times3}=9 \f$ 
     static const int OutputDim_ = 9;
+
+    /// \brief dimension of \f$ \mathbb{R}^3=3 \f$ 
     static const int InputDim_ = 3;
     typedef Eigen::Matrix3d DisplayType;
     typedef Eigen::Matrix<double, 9, 1> OutputType;

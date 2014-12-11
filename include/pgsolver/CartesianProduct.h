@@ -6,12 +6,18 @@
 
 namespace pgs
 {
+  /// \brief Manifold representing the cartesian product of several submanifolds
   class CartesianProduct : public Manifold
   {
   public:
+    /// \brief Default constructor
     CartesianProduct();
+    
+    /// \brief Constructor of the manifold composed of \f$ m1\times m2\f$
     CartesianProduct(const Manifold& m1, const Manifold& m2);
 
+    /// \brief Adds manifold m to the current composed manifold\n
+    /// This method cannot be executed if the manifold is locked
     CartesianProduct& multiply(const Manifold& m);
 
     virtual size_t numberOfSubmanifolds() const;
@@ -39,8 +45,15 @@ namespace pgs
     virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
 
   private:
+    /// \brief List of pointers on all the manifolds in the cartesian product
     std::vector<const Manifold* > submanifolds_;
+
+    /// \brief List of start index of submanifolds in a vector of the
+    /// tangent space
     std::vector<Index> startIndexT_;
+
+    /// \brief List of start index of submanifolds in a vector of the
+    /// representation space
     std::vector<Index> startIndexR_;
   };
 

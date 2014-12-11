@@ -6,9 +6,13 @@
 
 namespace pgs
 {
+  /// \brief Manifold representing the space of real numbers of dimension n
+  /// \f$\mathbb{R}^n\f$
   class RealSpace: public Manifold
   {
   public:
+    /// \brief Constructor
+    /// \param n the dimension of the realspace \f$\mathbb{R}^n\f$
     RealSpace(Index n);
 
     virtual size_t numberOfSubmanifolds() const;

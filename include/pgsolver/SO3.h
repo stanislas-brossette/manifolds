@@ -7,6 +7,8 @@
 
 namespace pgs
 {
+  /// \brief Manifold representing the space of 3-dimensional rotations, also
+  /// known as SO(3). It is templated by its map
   template<typename Map>
   class SO3: public Manifold
   {
