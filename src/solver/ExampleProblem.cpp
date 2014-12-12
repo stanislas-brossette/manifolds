@@ -3,44 +3,47 @@
 namespace pgs
 {
       
-  ExampleProblem::ExampleProblem(const Manifold& M)
+  ExampleProblem::ExampleProblem(Manifold& M)
     : Problem(M)
   {
   }
-
-
-  void ExampleProblem::getUB(RefVec)
-  {
-  }
-  void ExampleProblem::getLB(RefVec)
+  ExampleProblem::ExampleProblem(Manifold& M, const Point& x)
+    : Problem(M, x)
   {
   }
 
-  void ExampleProblem::getCstrLB(RefVec)
+  void ExampleProblem::getUB(RefVec) const
   {
   }
-  void ExampleProblem::getCstrUB(RefVec)
-  {
-  }
-
-  void ExampleProblem::evalObj(RefVec)
-  {
-  }
-  void ExampleProblem::evalObjGrad(RefVec)
+  void ExampleProblem::getLB(RefVec) const
   {
   }
 
-  void ExampleProblem::evalLinCstr(RefVec, Index)
+  void ExampleProblem::getCstrLB(RefVec, size_t) const
   {
   }
-  void ExampleProblem::evalLinCstrGrad(RefVec, Index)
+  void ExampleProblem::getCstrUB(RefVec, size_t) const
   {
   }
 
-  void ExampleProblem::evalNonLinCstr(RefVec, Index)
+  void ExampleProblem::evalObj(RefVec) const
   {
   }
-  void ExampleProblem::evalNonLinCstrGrad(RefVec, Index)
+  void ExampleProblem::evalObjGrad(RefVec) const
+  {
+  }
+
+  void ExampleProblem::evalLinCstr(RefVec, size_t) const
+  {
+  }
+  void ExampleProblem::evalLinCstrGrad(RefVec, size_t) const
+  {
+  }
+
+  void ExampleProblem::evalNonLinCstr(RefVec, size_t) const
+  {
+  }
+  void ExampleProblem::evalNonLinCstrGrad(RefVec, size_t) const
   {
   }
 }

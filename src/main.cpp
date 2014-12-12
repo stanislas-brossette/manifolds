@@ -28,11 +28,23 @@ int main()
   R2R3R2.multiply(R2);
   CartesianProduct SO3R2R3R2(RotSpace, R2R3R2);
   CartesianProduct SO3R2R3R2SO3(SO3R2R3R2, RotSpace);
+  CartesianProduct R3SO3(R3, RotSpace);
   CartesianProduct R3SO3R3SO3(R3, RotSpace);
   R3SO3R3SO3.multiply(R3);
   R3SO3R3SO3.multiply(RotSpace);
   {
-    ExampleProblem myProb(R3SO3R3SO3);
+    ExampleProblem myProb(R3SO3);
+    Eigen::VectorXd v0(12);
+    v0 << 3,4,5,1,0,0,0,1,0,0,0,1;
+    Eigen::VectorXd v1(6);
+    v1 << 3,4,5,1,0,0;
+    Point x0 = R3SO3.createPoint(v0);
+    myProb.setX(x0);
+    std::cout << myProb.x()<<std::endl;
+    myProb.setZ(v1);
+    x0 = x0+v1;
+    myProb.setX(x0);
+    std::cout << myProb.x()<<std::endl;
   }
 #ifdef _WIN32
   system("pause");

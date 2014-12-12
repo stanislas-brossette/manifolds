@@ -12,21 +12,22 @@ namespace pgs
   class ExampleProblem : public Problem
   {
     public:
-      ExampleProblem(const Manifold& M);
-      virtual void getUB(RefVec out);
-      virtual void getLB(RefVec out);
+      ExampleProblem(Manifold& M);
+      ExampleProblem(Manifold& M, const Point& x);
+      virtual void getUB(RefVec out) const;
+      virtual void getLB(RefVec out) const;
 
-      virtual void getCstrLB(RefVec out);
-      virtual void getCstrUB(RefVec out);
+      virtual void getCstrLB(RefVec out, size_t i) const;
+      virtual void getCstrUB(RefVec out, size_t i) const;
 
-      virtual void evalObj(RefVec out);
-      virtual void evalObjGrad(RefVec out);
+      virtual void evalObj(RefVec out) const;
+      virtual void evalObjGrad(RefVec out) const;
 
-      virtual void evalLinCstr(RefVec out, Index i);
-      virtual void evalLinCstrGrad(RefVec out, Index i);
+      virtual void evalLinCstr(RefVec out, size_t i) const;
+      virtual void evalLinCstrGrad(RefVec out, size_t i) const;
 
-      virtual void evalNonLinCstr(RefVec out, Index i);
-      virtual void evalNonLinCstrGrad(RefVec out, Index i);
+      virtual void evalNonLinCstr(RefVec out, size_t i) const;
+      virtual void evalNonLinCstrGrad(RefVec out, size_t i) const;
   };
 }
 
