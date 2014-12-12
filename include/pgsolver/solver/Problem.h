@@ -47,13 +47,11 @@ namespace pgs
       //\f$x\f$
       virtual void evalNonLinCstrGrad(RefVec out, Index i) = 0;
 
-    protected:
+    private:
       /// \brief Manifold on which the problem is defined
       const Manifold& M_;
-
       /// \brief Current zero point of the map
       Point x_;
-
       /// \brief Current increment
       Eigen::VectorXd p_;
   };
