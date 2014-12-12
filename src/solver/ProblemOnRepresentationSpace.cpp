@@ -26,10 +26,10 @@ namespace pgs
   {
   }
 
-  void ProblemOnRepresentationSpace::evalObj(RefVec) const
+  void ProblemOnRepresentationSpace::evalObj(double&) const
   {
   }
-  void ProblemOnRepresentationSpace::evalObjGrad(RefVec) const
+  void ProblemOnRepresentationSpace::evalObjGrad(RefMat) const
   {
   }
 

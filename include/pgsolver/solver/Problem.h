@@ -13,8 +13,6 @@ namespace pgs
   class Problem
   {
     public:
-      /// \brief Default Constructor
-      Problem();
       /// \brief Constructor taking a manifold a setting x and z to zero
       Problem(Manifold& manifold);
       /// \brief Constructor that sets x
@@ -41,10 +39,10 @@ namespace pgs
 
       /// \brief Evaluate Objective Function at point
       //\f$\phi_x^{\mathcal{M}}(z)\f$
-      virtual void evalObj(RefVec out) const = 0;
+      virtual void evalObj(double& out) const = 0;
       /// \brief Evaluate Gradient of Objective Function at point
       //\f$x\f$
-      virtual void evalObjGrad(RefVec out) const = 0;
+      virtual void evalObjGrad(RefMat out) const = 0;
 
       /// \brief Evaluate Linear Constraints Index i at point
       /// \f$\phi_x^{\mathcal{M}}(z)\f$

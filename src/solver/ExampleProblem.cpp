@@ -19,10 +19,10 @@ namespace pgs
   {
   }
 
-  void ExampleProblem::evalObj(RefVec) const
+  void ExampleProblem::evalObj(double&) const
   {
   }
-  void ExampleProblem::evalObjGrad(RefVec) const
+  void ExampleProblem::evalObjGrad(RefMat) const
   {
   }
 

@@ -7,7 +7,7 @@ set(SOURCES
   manifolds/RealSpace.cpp
   manifolds/ReusableTemporaryMap.cpp
   solver/ExampleGeometricProblem.cpp
-  solver/ExampleProblem.cpp
+  #solver/ExampleProblem.cpp
   solver/Problem.cpp
   )
 set(HEADERS
@@ -21,7 +21,7 @@ set(HEADERS
   ../include/pgsolver/manifolds/ReusableTemporaryMap.h
   ../include/pgsolver/manifolds/SO3.h
   ../include/pgsolver/solver/ExampleGeometricProblem.h
-  ../include/pgsolver/solver/ExampleProblem.h
+  #../include/pgsolver/solver/ExampleProblem.h
   ../include/pgsolver/solver/Problem.h
 )
 

@@ -2,13 +2,11 @@
 
 namespace pgs
 {
-      
+  RealSpace ExampleGeometricProblem::R3 = RealSpace(3);   
+
   ExampleGeometricProblem::ExampleGeometricProblem()
-    : Problem(*new RealSpace(3))      
+    : Problem(R3)
   {
-    std::cout << "Creating Example Geometric Problem" << std::endl;
-    std::cout << "z =" << z() << std::endl;
-    std::cout << "x =" << x() << std::endl;
   }
 
   void ExampleGeometricProblem::getTangentLB(RefVec) const
@@ -18,11 +16,21 @@ namespace pgs
   {
   }
 
-  void ExampleGeometricProblem::evalObj(RefVec) const
+  void ExampleGeometricProblem::evalObj(double& out) const
   {
+    // x = [x1, x2, x3];
+    // f(x) = x1^2+x2^2+x3^2;
+    Eigen::Vector3d v = (x()+z()).value();
+    out = v.squaredNorm();
   }
-  void ExampleGeometricProblem::evalObjGrad(RefVec) const
+  void ExampleGeometricProblem::evalObjGrad(RefMat out) const
   {
+    // x = [x1, x2, x3];
+    // f(x) = x1^2+x2^2+x3^2;
+    // df/dx(x) = [2.x1, 2.x2, 2.x3]^T;
+    Eigen::Matrix<double,1,3> v = (x()+z()).value();
+    out << 2*v[0], 2*v[1], 2*v[2]; 
+    M().applyDiffMap(out, out, x().value());
   }
 
   void ExampleGeometricProblem::evalLinCstr(RefVec, size_t) const

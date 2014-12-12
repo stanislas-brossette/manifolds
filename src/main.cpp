@@ -35,17 +35,23 @@ int main()
   R3SO3R3SO3.multiply(RotSpace);
   {
     ExampleGeometricProblem myProb;
-    Eigen::VectorXd v0(3);
-    v0 << 3,4,5;
-    Eigen::VectorXd v1(3);
-    v1 << 3,4,5;
-    Point x0 = myProb.M().createPoint(v0);
-    myProb.setX(x0);
-    std::cout << myProb.x()<<std::endl;
-    myProb.setZ(v1);
-    x0 = x0+v1;
-    myProb.setX(x0);
-    std::cout << myProb.x()<<std::endl;
+    Eigen::VectorXd x0(3);
+    x0 << 1,2,3;
+    Eigen::VectorXd z0(3);
+    z0 << 3,4,5;
+    myProb.setX(myProb.M().createPoint(x0));
+    myProb.setZ(z0);
+    double obj = 0.0;
+    Eigen::Matrix<double,1,3> objGrad;
+
+    std::cout << "Evaluation of the problem" << std::endl;
+    std::cout << "Given x=" << myProb.x() << std::endl;
+    std::cout << "And z=" << myProb.z().transpose() << std::endl;
+    std::cout << "x + z = " << myProb.x()+myProb.z() << std::endl;
+    myProb.evalObj(obj);
+    std::cout << "f(phi_x(z))=" << obj << std::endl;
+    myProb.evalObjGrad(objGrad);
+    std::cout << "grad_z(f(phi_x(z))=" << objGrad << std::endl;
   }
 #ifdef _WIN32
   system("pause");
