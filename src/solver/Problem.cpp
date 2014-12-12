@@ -7,9 +7,10 @@ namespace pgs
 {
   Problem::Problem(Manifold& manifold)
     :M_(manifold),
-     x_(M_.getIdentity()),
+     x_(manifold.getIdentity()),
      z_(Eigen::VectorXd::Zero(manifold.dim()))
   {
+    std::cout << "Problem constructor"<< std::endl;
   }
 
   Problem::Problem(Manifold& manifold, const Point& x)
@@ -42,6 +43,11 @@ namespace pgs
   const Eigen::VectorXd& Problem::z() const
   {
     return z_;
+  }
+
+  const Manifold& Problem::M() const
+  {
+    return M_;
   }
 
   void Problem::broadcastXIsNew()

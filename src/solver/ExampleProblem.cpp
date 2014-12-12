@@ -12,17 +12,10 @@ namespace pgs
   {
   }
 
-  void ExampleProblem::getUB(RefVec) const
+  void ExampleProblem::getTangentLB(RefVec) const
   {
   }
-  void ExampleProblem::getLB(RefVec) const
-  {
-  }
-
-  void ExampleProblem::getCstrLB(RefVec, size_t) const
-  {
-  }
-  void ExampleProblem::getCstrUB(RefVec, size_t) const
+  void ExampleProblem::getTangentUB(RefVec) const
   {
   }
 
@@ -39,11 +32,24 @@ namespace pgs
   void ExampleProblem::evalLinCstrGrad(RefVec, size_t) const
   {
   }
+  void ExampleProblem::getLinCstrLB(RefVec, size_t) const
+  {
+  }
+  void ExampleProblem::getLinCstrUB(RefVec, size_t) const
+  {
+  }
+
 
   void ExampleProblem::evalNonLinCstr(RefVec, size_t) const
   {
   }
   void ExampleProblem::evalNonLinCstrGrad(RefVec, size_t) const
+  {
+  }
+  void ExampleProblem::getNonLinCstrLB(RefVec, size_t) const
+  {
+  }
+  void ExampleProblem::getNonLinCstrUB(RefVec, size_t) const
   {
   }
 }

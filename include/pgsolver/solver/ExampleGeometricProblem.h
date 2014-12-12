@@ -1,19 +1,20 @@
-#ifndef _PGS_EXAMPLE_PROBLEM_H_
-#define _PGS_EXAMPLE_PROBLEM_H_
+#ifndef _PGS_EXAMPLE_GEOMETRIC_PROBLEM_H_
+#define _PGS_EXAMPLE_GEOMETRIC_PROBLEM_H_
 
 #include <iostream>
 #include <Eigen/Core>
 
 #include <pgsolver/manifolds/defs.h>
 #include <pgsolver/solver/Problem.h>
+#include <pgsolver/manifolds/RealSpace.h>
 
 namespace pgs
 {
-  class ExampleProblem : public Problem
+  class ExampleGeometricProblem : public Problem
   {
     public:
-      ExampleProblem(Manifold& M);
-      ExampleProblem(Manifold& M, const Point& x);
+      ExampleGeometricProblem();
+
       virtual void getTangentLB(RefVec out) const;
       virtual void getTangentUB(RefVec out) const;
 
@@ -32,4 +33,4 @@ namespace pgs
   };
 }
 
-#endif //_PGS_EXAMPLE_PROBLEM_H_
+#endif //_PGS_EXAMPLE_GEOMETRIC_PROBLEM_H_

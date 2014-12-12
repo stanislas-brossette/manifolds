@@ -15,6 +15,7 @@
 
 #include <pgsolver/solver/Problem.h>
 #include <pgsolver/solver/ExampleProblem.h>
+#include <pgsolver/solver/ExampleGeometricProblem.h>
 
 using namespace pgs;
 
@@ -33,12 +34,12 @@ int main()
   R3SO3R3SO3.multiply(R3);
   R3SO3R3SO3.multiply(RotSpace);
   {
-    ExampleProblem myProb(R3SO3);
-    Eigen::VectorXd v0(12);
-    v0 << 3,4,5,1,0,0,0,1,0,0,0,1;
-    Eigen::VectorXd v1(6);
-    v1 << 3,4,5,1,0,0;
-    Point x0 = R3SO3.createPoint(v0);
+    ExampleGeometricProblem myProb;
+    Eigen::VectorXd v0(3);
+    v0 << 3,4,5;
+    Eigen::VectorXd v1(3);
+    v1 << 3,4,5;
+    Point x0 = myProb.M().createPoint(v0);
     myProb.setX(x0);
     std::cout << myProb.x()<<std::endl;
     myProb.setZ(v1);

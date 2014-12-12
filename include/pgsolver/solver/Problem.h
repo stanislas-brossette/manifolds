@@ -14,6 +14,8 @@ namespace pgs
   {
     public:
       /// \brief Default Constructor
+      Problem();
+      /// \brief Constructor taking a manifold a setting x and z to zero
       Problem(Manifold& manifold);
       /// \brief Constructor that sets x
       Problem(Manifold& manifold, const Point& x);
@@ -27,16 +29,15 @@ namespace pgs
       const Point& x() const;
       /// \brief Gets current z_ value
       const Eigen::VectorXd& z() const;
+      /// \brief Gets current manifold M_ value
+      const Manifold& M() const;
       
+      /// \brief Get Lower Bounds on the variable\n
+      /// Correspond to the bounds on z for a given x.
+      virtual void getTangentLB(RefVec out) const = 0;
       /// \brief Get Upper Bounds on the variable
-      virtual void getUB(RefVec out) const = 0;
-      /// \brief Get Lower Bounds on the variable
-      virtual void getLB(RefVec out) const = 0;
-
-      /// \brief Get Constraints Lower Bounds
-      virtual void getCstrLB(RefVec out, size_t i) const = 0;
-      /// \brief Get Constraints Upper Bounds
-      virtual void getCstrUB(RefVec out, size_t i) const = 0;
+      /// Correspond to the bounds on z for a given x.
+      virtual void getTangentUB(RefVec out) const = 0;
 
       /// \brief Evaluate Objective Function at point
       //\f$\phi_x^{\mathcal{M}}(z)\f$
@@ -46,18 +47,25 @@ namespace pgs
       virtual void evalObjGrad(RefVec out) const = 0;
 
       /// \brief Evaluate Linear Constraints Index i at point
-      //\f$\phi_x^{\mathcal{M}}(z)\f$
+      /// \f$\phi_x^{\mathcal{M}}(z)\f$
       virtual void evalLinCstr(RefVec out, size_t i) const = 0;
       /// \brief Evaluate Gradient of Linear Constraints Index i\n
       /// They are constants
       virtual void evalLinCstrGrad(RefVec out, size_t i) const = 0;
+      /// \brief Get Constraints Lower Bounds
+      virtual void getLinCstrLB(RefVec out, size_t i) const = 0;
+      /// \brief Get Constraints Upper Bounds
+      virtual void getLinCstrUB(RefVec out, size_t i) const = 0;
 
       /// \brief Evaluate NonLinear Constraints Index i at point
       //\f$\phi_x^{\mathcal{M}}(z)\f$
       virtual void evalNonLinCstr(RefVec out, size_t i) const = 0;
-      /// \brief Evaluate Gradient of NonLinear Constraints Index i at point
-      //\f$x\f$
+      /// \brief Evaluate Gradient of NonLinear Constraints Index i at point x
       virtual void evalNonLinCstrGrad(RefVec out, size_t i) const = 0;
+      /// \brief Get Constraints Lower Bounds
+      virtual void getNonLinCstrLB(RefVec out, size_t i) const = 0;
+      /// \brief Get Constraints Upper Bounds
+      virtual void getNonLinCstrUB(RefVec out, size_t i) const = 0;
 
     protected:
       /// \brief Updates the problem for a new value of X
