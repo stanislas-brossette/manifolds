@@ -29,6 +29,8 @@ namespace pgs
       const Eigen::VectorXd& z() const;
       /// \brief Gets current manifold M_ value
       const Manifold& M() const;
+      /// \brief Gets current value of \f$\phi_x(z)
+      const Point& phi_x_z() const;
       
       /// \brief Get Lower Bounds on the variable\n
       /// Correspond to the bounds on z for a given x.
@@ -80,6 +82,8 @@ namespace pgs
       Point x_;
       /// \brief Current tangent vector \f$ z \in T_x\mathcal{M}\f$
       Eigen::VectorXd z_;
+      /// \brief Current Point x+z
+      Point phi_x_z_;
   };
 }
 

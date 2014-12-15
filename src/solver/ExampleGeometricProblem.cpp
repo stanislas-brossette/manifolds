@@ -20,7 +20,7 @@ namespace pgs
   {
     assert(out.size() == 3 && "wrong size");
     Eigen::Vector3d AbsoluteLB(-10, -10, -10);
-    out = AbsoluteLB - x().value(); // I think we should use smth like getview here. 
+    out = AbsoluteLB - x().value(); // I think we should use smth like getview here. Or at least a better accessor for the values of x. Maybe an implementation of Point::GetView
   }
   void ExampleGeometricProblem::getTangentUB(RefVec out) const
   {
@@ -34,8 +34,7 @@ namespace pgs
     // Minimize the norm of the optim variable
     // x = [x1, x2, x3];
     // f(x) = x1^2+x2^2+x3^2;
-    Eigen::Vector3d v = (x()+z()).value();
-    out = v.squaredNorm();
+    out = phi_x_z()[0].squaredNorm();
   }
   void ExampleGeometricProblem::evalObjGrad(RefMat out) const
   {
@@ -44,7 +43,7 @@ namespace pgs
     // x = [x1, x2, x3];
     // f(x) = x1^2+x2^2+x3^2;
     // df/dx(x) = [2.x1, 2.x2, 2.x3]^T;
-    Eigen::Matrix<double,1,3> v = (x()+z()).value();
+    Eigen::Matrix<double,1,3> v = phi_x_z()[0];
     out << 2*v[0], 2*v[1], 2*v[2]; 
     M().applyDiffMap(out, out, x().value());
   }
@@ -53,7 +52,7 @@ namespace pgs
   {
     assert(out.size() == 1 && "wrong size");
     // Point on plan of equation a.x1+b.x2+c.x3+d=0
-    Eigen::Vector3d v = (x()+z()).value();
+    Eigen::Vector3d v = phi_x_z().value();
     out << a*v[0] + b*v[1] + c*v[2] + d;
   }
   void ExampleGeometricProblem::evalLinCstrGrad(RefMat out, size_t) const
@@ -83,7 +82,7 @@ namespace pgs
     assert(out.size() == 1 && "wrong size");
     // Point between spheres of radius R1 and R2
     // R1 < x1^2 + x2^2 + x3^2 < R2
-    Eigen::Vector3d v = (x()+z()).value();
+    Eigen::Vector3d v = phi_x_z().value();
     out << v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
   }
   void ExampleGeometricProblem::evalNonLinCstrGrad(RefMat out, size_t) const
@@ -93,7 +92,7 @@ namespace pgs
     // x = [x1, x2, x3];
     // f(x) = x1^2 + x2^2 + x3^2;
     // df/dx(x) = [2.x1, 2.x2, 2.x3]^T;
-    Eigen::Vector3d v = (x()+z()).value();
+    Eigen::Vector3d v = phi_x_z().value();
     out << 2*v[0], 2*v[1], 2*v[2]; 
     M().applyDiffMap(out, out, x().value());
   }
