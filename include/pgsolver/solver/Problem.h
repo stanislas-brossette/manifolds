@@ -49,17 +49,17 @@ namespace pgs
       virtual void evalLinCstr(RefVec out, size_t i) const = 0;
       /// \brief Evaluate Gradient of Linear Constraints Index i\n
       /// They are constants
-      virtual void evalLinCstrGrad(RefVec out, size_t i) const = 0;
+      virtual void evalLinCstrGrad(RefMat out, size_t i) const = 0;
       /// \brief Get Constraints Lower Bounds
       virtual void getLinCstrLB(RefVec out, size_t i) const = 0;
       /// \brief Get Constraints Upper Bounds
-      virtual void getLinCstrUB(RefVec out, size_t i) const = 0;
+      virtual void getLinCstrUB(RefMat out, size_t i) const = 0;
 
       /// \brief Evaluate NonLinear Constraints Index i at point
       //\f$\phi_x^{\mathcal{M}}(z)\f$
       virtual void evalNonLinCstr(RefVec out, size_t i) const = 0;
       /// \brief Evaluate Gradient of NonLinear Constraints Index i at point x
-      virtual void evalNonLinCstrGrad(RefVec out, size_t i) const = 0;
+      virtual void evalNonLinCstrGrad(RefMat out, size_t i) const = 0;
       /// \brief Get Constraints Lower Bounds
       virtual void getNonLinCstrLB(RefVec out, size_t i) const = 0;
       /// \brief Get Constraints Upper Bounds

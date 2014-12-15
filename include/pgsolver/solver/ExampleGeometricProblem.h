@@ -22,16 +22,20 @@ namespace pgs
       virtual void evalObjGrad(RefMat out) const;
 
       virtual void evalLinCstr(RefVec out, size_t i) const;
-      virtual void evalLinCstrGrad(RefVec out, size_t i) const;
+      virtual void evalLinCstrGrad(RefMat out, size_t i) const;
       virtual void getLinCstrLB(RefVec out, size_t i) const;
-      virtual void getLinCstrUB(RefVec out, size_t i) const;
+      virtual void getLinCstrUB(RefMat out, size_t i) const;
 
       virtual void evalNonLinCstr(RefVec out, size_t i) const;
-      virtual void evalNonLinCstrGrad(RefVec out, size_t i) const;
+      virtual void evalNonLinCstrGrad(RefMat out, size_t i) const;
       virtual void getNonLinCstrLB(RefVec out, size_t i) const;
       virtual void getNonLinCstrUB(RefVec out, size_t i) const;
     private:
       static RealSpace R3;
+
+      double a, b, c, d; //Coefficient of the plan for the linear cstr
+      double R1, R2; //Inner and outer radiusesof the spheric envelope
+
   };
 }
 
