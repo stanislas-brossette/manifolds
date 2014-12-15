@@ -67,8 +67,39 @@ namespace pgs
       /// \brief Get Constraints Upper Bounds
       virtual void getNonLinCstrUB(RefVec out, size_t i) const = 0;
 
+      /// \brief Evaluate All Linear Constraints at point
+      /// \f$\phi_x^{\mathcal{M}}(z)\f$
+      virtual void evalLinCstr(RefVec out) const;
+      /// \brief Evaluate All Gradient of Linear Constraints\n
+      /// They are constants
+      virtual void evalLinCstrGrad(RefMat out) const;
+      /// \brief Get All Constraints Lower Bounds
+      virtual void getLinCstrLB(RefVec out) const;
+      /// \brief Get All Constraints Upper Bounds
+      virtual void getLinCstrUB(RefVec out) const;
+
+      /// \brief Evaluate All NonLinear Constraints at point
+      //\f$\phi_x^{\mathcal{M}}(z)\f$
+      virtual void evalNonLinCstr(RefVec out) const;
+      /// \brief Evaluate Gradient of All NonLinear Constraints at point x
+      virtual void evalNonLinCstrGrad(RefMat out) const;
+      /// \brief Get All Constraints Lower Bounds
+      virtual void getNonLinCstrLB(RefVec out) const;
+      /// \brief Get All Constraints Upper Bounds
+      virtual void getNonLinCstrUB(RefVec out) const;
+
       /// \brief Function displaying the current state of the problem
       virtual void printState() const;
+      /// \brief Total Number of Consraints
+      virtual size_t numberOfCstr() const = 0;
+      /// \brief Dimension of linear part of Consraints i
+      virtual Index linCstrDim(size_t i) const = 0;
+      /// \brief Computes the sum of Dimension of linear part of all Consraints
+      virtual Index linCstrDim() const;
+      /// \brief Dimension of nonlinear part of Consraints i
+      virtual Index nonLinCstrDim(size_t i) const = 0;
+      /// \brief Computes the sum of Dimension of nonlinear part of all Consraints
+      virtual Index nonLinCstrDim() const;
 
     protected:
       /// \brief Updates the problem for a new value of X
@@ -79,10 +110,6 @@ namespace pgs
     protected:
       /// \brief Manifold on which the problem is defined
       Manifold& M_;
-      /// \brief Number of linear constraint
-      int nbLin = 0;
-      /// \brief Number of non-linear constraint
-      int nbNonLin = 0;
 
     private:
       /// \brief Current zero point of the map

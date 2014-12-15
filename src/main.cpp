@@ -38,9 +38,12 @@ int main()
     x0 << 1,2,3;
     Eigen::VectorXd z0(3);
     z0 << 3,4,5;
+
     myProb.setX(myProb.M().createPoint(x0));
     myProb.setZ(z0);
+    myProb.printState();
 
+    myProb.setZ(2*z0);
     myProb.printState();
 
   }

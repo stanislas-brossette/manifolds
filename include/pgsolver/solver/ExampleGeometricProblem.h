@@ -30,6 +30,11 @@ namespace pgs
       virtual void evalNonLinCstrGrad(RefMat out, size_t i) const;
       virtual void getNonLinCstrLB(RefVec out, size_t i) const;
       virtual void getNonLinCstrUB(RefVec out, size_t i) const;
+
+      virtual size_t numberOfCstr() const;
+      virtual Index linCstrDim(size_t i) const;
+      virtual Index nonLinCstrDim(size_t i) const;
+
     private:
       static RealSpace R3;
 
