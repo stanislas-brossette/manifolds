@@ -13,6 +13,8 @@ namespace pgs
       R1(0.5),
       R2(1.0)
   {
+    nbLin = 1;
+    nbNonLin = 1;
     assert( R1<=R2 && "Must have R1<=R2");
   }
 

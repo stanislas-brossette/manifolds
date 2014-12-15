@@ -67,6 +67,9 @@ namespace pgs
       /// \brief Get Constraints Upper Bounds
       virtual void getNonLinCstrUB(RefVec out, size_t i) const = 0;
 
+      /// \brief Function displaying the current state of the problem
+      virtual void printState() const;
+
     protected:
       /// \brief Updates the problem for a new value of X
       virtual void broadcastXIsNew();
@@ -76,6 +79,10 @@ namespace pgs
     protected:
       /// \brief Manifold on which the problem is defined
       Manifold& M_;
+      /// \brief Number of linear constraint
+      int nbLin = 0;
+      /// \brief Number of non-linear constraint
+      int nbNonLin = 0;
 
     private:
       /// \brief Current zero point of the map
