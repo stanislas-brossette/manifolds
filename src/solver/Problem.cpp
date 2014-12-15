@@ -11,7 +11,6 @@ namespace pgs
      z_(Eigen::VectorXd::Zero(manifold.dim())),
      phi_x_z_(x_+z_)
   {
-    std::cout << "Problem constructor"<< std::endl;
   }
 
   Problem::Problem(Manifold& manifold, const Point& x)

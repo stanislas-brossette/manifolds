@@ -82,7 +82,7 @@ namespace pgs
       Point x_;
       /// \brief Current tangent vector \f$ z \in T_x\mathcal{M}\f$
       Eigen::VectorXd z_;
-      /// \brief Current Point x+z
+      /// \brief Current Point \f$ x \oplus z = \phi_x(z) \f$ 
       Point phi_x_z_;
   };
 }

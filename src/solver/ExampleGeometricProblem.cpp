@@ -18,15 +18,15 @@ namespace pgs
 
   void ExampleGeometricProblem::getTangentLB(RefVec out) const
   {
-    assert(out.size() == 3 && "wrong size");
+    assert(out.size() == M().dim() && "wrong size");
     Eigen::Vector3d AbsoluteLB(-10, -10, -10);
-    out = AbsoluteLB - x().value(); // I think we should use smth like getview here. Or at least a better accessor for the values of x. Maybe an implementation of Point::GetView
+    out = AbsoluteLB - M().getConstView<T>(x().value(), 0); // I think we should use a better accessor for the values of x. Maybe an implementation of Point::GetView
   }
   void ExampleGeometricProblem::getTangentUB(RefVec out) const
   {
-    assert(out.size() == 3 && "wrong size");
+    assert(out.size() == M().dim() && "wrong size");
     Eigen::Vector3d AbsoluteUB(10, 10, 10);
-    out = AbsoluteUB - x().value(); // I think we should use smth like getview here. 
+    out = AbsoluteUB - M().getConstView<T>(x().value(), 0); // I think we should use smth like getview here. 
   }
 
   void ExampleGeometricProblem::evalObj(double& out) const
@@ -34,18 +34,20 @@ namespace pgs
     // Minimize the norm of the optim variable
     // x = [x1, x2, x3];
     // f(x) = x1^2+x2^2+x3^2;
-    out = phi_x_z()[0].squaredNorm();
+    Eigen::Vector3d v = phi_x_z().value();
+    out = v.squaredNorm();
   }
   void ExampleGeometricProblem::evalObjGrad(RefMat out) const
   {
     assert(out.rows() == 1 && "wrong rows size");
-    assert(out.cols() == 3 && "wrong cols size");
+    assert(out.cols() == M().dim() && "wrong cols size");
     // x = [x1, x2, x3];
     // f(x) = x1^2+x2^2+x3^2;
     // df/dx(x) = [2.x1, 2.x2, 2.x3]^T;
-    Eigen::Matrix<double,1,3> v = phi_x_z()[0];
+
+    Eigen::Vector3d v = x().value();
     out << 2*v[0], 2*v[1], 2*v[2]; 
-    M().applyDiffMap(out, out, x().value());
+    M().applyDiffMap(out, out, x()[0]);
   }
 
   void ExampleGeometricProblem::evalLinCstr(RefVec out, size_t) const
@@ -57,13 +59,13 @@ namespace pgs
   }
   void ExampleGeometricProblem::evalLinCstrGrad(RefMat out, size_t) const
   {
-    assert(out.rows() == 1 && "wrong rows size");
-    assert(out.cols() == 3 && "wrong cols size");
+    assert(out.rows() == 1 && "Wrong rows size");
+    assert(out.cols() == M().dim() && "Wrong cols size");
     // x = [x1, x2, x3];
     // f(x) = a.x1+b.x2+c.x3+d;
     // df/dx(x) = [a, b, c]^T;
     out << a, b, c; 
-    M().applyDiffMap(out, out, x().value());
+    M().applyDiffMap(out, out, x()[0]);
   }
   void ExampleGeometricProblem::getLinCstrLB(RefVec out, size_t) const
   {
@@ -79,7 +81,7 @@ namespace pgs
 
   void ExampleGeometricProblem::evalNonLinCstr(RefVec out, size_t) const
   {
-    assert(out.size() == 1 && "wrong size");
+    assert(out.size() == 1 && "Wrong size");
     // Point between spheres of radius R1 and R2
     // R1 < x1^2 + x2^2 + x3^2 < R2
     Eigen::Vector3d v = phi_x_z().value();
@@ -87,12 +89,12 @@ namespace pgs
   }
   void ExampleGeometricProblem::evalNonLinCstrGrad(RefMat out, size_t) const
   {
-    assert(out.rows() == 1 && "wrong rows size");
-    assert(out.cols() == 3 && "wrong cols size");
+    assert(out.rows() == 1 && "Wrong rows size");
+    assert(out.cols() == M().dim() && "Wrong cols size");
     // x = [x1, x2, x3];
     // f(x) = x1^2 + x2^2 + x3^2;
     // df/dx(x) = [2.x1, 2.x2, 2.x3]^T;
-    Eigen::Vector3d v = phi_x_z().value();
+    Eigen::Vector3d v = x().value();
     out << 2*v[0], 2*v[1], 2*v[2]; 
     M().applyDiffMap(out, out, x().value());
   }
