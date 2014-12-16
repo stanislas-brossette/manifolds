@@ -4,16 +4,23 @@
 #include <iostream>
 #include <Eigen/Core>
 
-#include <pgsolver/manifolds/Problem.h>
+#include <pgsolver/solver/Problem.h>
 #include <pgsolver/manifolds/Point.h>
 
 namespace pgs
 {
+  struct Results
+  {
+
+  };
+
   class Solver
   {
     public:
-      solve(Problem& problem, Point& x0)
-  }
+      Solver();
+
+      Results solve(Problem& problem, Point& x0);
+  };
 }
 
 #endif //_PGS_SOLVER_H_
