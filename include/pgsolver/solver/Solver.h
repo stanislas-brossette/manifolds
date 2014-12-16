@@ -9,10 +9,17 @@
 
 namespace pgs
 {
+  struct Results
+  {
+
+  };
+
   class Solver
   {
     public:
-      void solve(Problem& problem, Point& x0);
+      Solver();
+
+      Results solve(Problem& problem, Point& x0);
   };
 }
 

@@ -2,10 +2,18 @@
 
 namespace pgs
 {
-  void Solver::solve(Problem& problem, Point& x0)
+  Solver::Solver()
+  {
+    std::cout << "New Solver" << std::endl;
+  }
+
+  Results Solver::solve(Problem& problem, Point& x0)
   {
     problem.setX(x0);
     problem.printState();
+
+    Results r;
+    return r;
   }
 
 }
