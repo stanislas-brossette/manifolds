@@ -1,0 +1,116 @@
+#include <pgsolver/solver/Filter.h>
+//#include "lex_assert.h"
+
+using namespace Eigen;
+
+Filter::Filter(double gamma, Filter::eOption opt)
+  : gamma(gamma)
+  , option(opt)
+{
+}
+
+bool Filter::accepts(const VectorXd& p) const
+{
+  Entry e = std::make_pair(p,p.norm());
+  for (std::list<Entry>::const_iterator it = filter.begin(); it!= filter.end(); ++it)
+  {
+    if (!accepts(*it,e))
+      return false;
+  }
+  return true;
+}
+
+bool Filter::dominates(const VectorXd& p) const
+{
+  return !accepts(p);
+}
+
+void Filter::add(const VectorXd& p)
+{
+  //lex_assert(accepts(p));
+  assert(accepts(p));
+  Entry e = std::make_pair(p,p.norm());
+  for (std::list<Entry>::iterator it = filter.begin(); it!= filter.end();)
+  {
+    if (isStronglyDominated(*it, e))
+      it = filter.erase(it);
+    else
+      ++it;
+  }
+  filter.push_back(e);
+}
+
+double Filter::getGamma() const
+{
+  return gamma;
+}
+
+Filter::eOption Filter::getOption() const
+{
+  return option;
+}
+
+size_t Filter::size() const
+{
+  return filter.size();
+}
+
+const VectorXd& Filter::get(size_t i) const
+{
+  std::list<Entry>::const_iterator it = filter.begin();
+  advance(it,i);
+  return it->first;
+}
+
+
+bool Filter::accepts(const Entry& i, const Entry& p) const
+{
+  double viol;
+  if (option ==SEPARATE)
+    return (p.first.array()<(1-gamma)*i.first.array()).any();
+
+  switch(option)
+  {
+    case EXISTING:  viol = i.second;                    break;
+    case TRIAL:     viol = p.second;                    break;
+    case MIN:       viol = std::min(i.second,p.second); break;
+  }
+
+  return ((i.first - p.first).array()>gamma*viol).any();  // eq. (2.1)
+}
+
+bool Filter::isStronglyDominated(const Entry& i, const Entry& p) const
+{
+  if (option ==SEPARATE)
+    return (i.first.array()>=p.first.array()).all();
+  //implements eq. (2.5)
+  double a;
+  switch(option)
+  {
+    case EXISTING:  a = gamma * (i.second-p.second);  break;
+    case TRIAL:     a = 0;                            break;
+    case MIN:       a = gamma * i.second;             break;
+  }
+  return ((i.first - p.first).array() >= a).all();
+}
+
+
+void testFilter01()
+{
+  Filter f(1e-5, Filter::EXISTING);
+  Vector2d v1(1, 1);
+  Vector2d v2(1.1, 1);
+  Vector2d v3(1.4, 0.5);
+  Vector2d v4(0.8, 1.2);
+  Vector2d v5(0.9, 0.9);
+  Vector2d v6(0.7, 0.6);
+
+  f.accepts(v1);
+  f.add(v1);
+  f.accepts(v2);
+  f.accepts(v3);
+  f.add(v3);
+  f.add(v4);
+  f.add(v5);
+  f.add(v6);
+}
