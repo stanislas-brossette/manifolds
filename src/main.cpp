@@ -17,9 +17,9 @@
 #include <pgsolver/solver/Problem.h>
 #include <pgsolver/solver/Solver.h>
 
-#include <EigenQP/QLD.h>
-#include <EigenQP/QuadProg.h>
-#include <EigenQP/LSSOL.h>
+//#include <EigenQP/QLD.h>
+//#include <EigenQP/QuadProg.h>
+//#include <EigenQP/LSSOL.h>
 
 using namespace pgs;
 
