@@ -7,6 +7,8 @@
 #include <pgsolver/solver/Problem.h>
 #include <pgsolver/solver/Results.h>
 #include <pgsolver/manifolds/Point.h>
+#include <pgsolver/solver/TempData.h>
+#include <pgsolver/solver/ConstraintManager.h>
 
 namespace pgs
 {
@@ -14,8 +16,15 @@ namespace pgs
   {
     public:
       Solver();
-
       Results solve(Problem& problem, Point& x0);
+
+    private:
+      void initSolver(Problem& problem, Point& x0);
+
+    private:
+      ProblemEvaluation probEval_;
+      SolverOption opt_;
+      ConstraintManager cstrMngr_;
   };
 }
 
