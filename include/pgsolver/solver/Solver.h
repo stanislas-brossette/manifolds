@@ -5,15 +5,11 @@
 #include <Eigen/Core>
 
 #include <pgsolver/solver/Problem.h>
+#include <pgsolver/solver/Results.h>
 #include <pgsolver/manifolds/Point.h>
 
 namespace pgs
 {
-  struct Results
-  {
-
-  };
-
   class Solver
   {
     public:

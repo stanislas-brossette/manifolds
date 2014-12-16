@@ -191,17 +191,13 @@ namespace pgs
 
   Index ExampleGeometricProblem::linCstrDim(Index i) const
   {
-    std::vector<Index> linDim(2);
-    linDim[0] = 1;
-    linDim[1] = 0;
+    Index linDim[] = { 1, 0 };
     return linDim[static_cast<size_t>(i)];
   }
 
   Index ExampleGeometricProblem::nonLinCstrDim(Index i) const
   {
-    std::vector<Index> nonLinDim(2);
-    nonLinDim[0] = 0;
-    nonLinDim[1] = 1;
+    Index nonLinDim[] = { 0, 1 };
     return nonLinDim[static_cast<size_t>(i)];
   }
 }

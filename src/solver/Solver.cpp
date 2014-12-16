@@ -1,4 +1,4 @@
-#include <pgsolver/solver/Solver.cpp>
+#include <pgsolver/solver/Solver.h>
 
 namespace pgs
 {
@@ -6,10 +6,12 @@ namespace pgs
   {
   }
 
-  void Solver::solve(Problem& problem, Point& x0)
+  Results Solver::solve(Problem& problem, Point& x0)
   {
     problem.setX(x0);
     problem.printState();
+
+    return Results({ x0, CONVERGE, {} });
   }
 
 }
