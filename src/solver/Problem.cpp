@@ -71,7 +71,7 @@ namespace pgs
   Index Problem::linCstrDim() const
   {
     Index tot = 0;
-    for(Index i = 0; i < numberOfCstr(); ++i)
+    for(size_t i = 0; i < numberOfCstr(); ++i)
       tot += nonLinCstrDim(i);
     return tot;
   }
@@ -79,7 +79,7 @@ namespace pgs
   Index Problem::nonLinCstrDim() const
   {
     Index tot = 0;
-    for(Index i = 0; i < numberOfCstr(); ++i)
+    for(size_t i = 0; i < numberOfCstr(); ++i)
       tot += nonLinCstrDim(i);
     return tot;
   }
@@ -89,7 +89,7 @@ namespace pgs
     Index totLinDim = linCstrDim();
     assert(out.size() == totLinDim && "wrong total size for linear cstr");
     Index startIndex = 0;
-    for(Index i = 0; i < numberOfCstr(); ++i)
+    for(size_t i = 0; i < numberOfCstr(); ++i)
     {
       evalLinCstr(out.segment(startIndex,linCstrDim(i)), i);
       startIndex += linCstrDim(i);
@@ -100,7 +100,7 @@ namespace pgs
     assert(out.rows() == linCstrDim() && "wrong total size for linear cstr");
     assert(out.cols() == M().dim() && "Wrong cols size");
     Index startIndex = 0;
-    for(Index i = 0; i < numberOfCstr(); ++i)
+    for(size_t i = 0; i < numberOfCstr(); ++i)
     {
       evalLinCstrGrad(out.middleRows(startIndex,linCstrDim(i)), i);
       startIndex += linCstrDim(i);
@@ -111,7 +111,7 @@ namespace pgs
     Index totLinDim = linCstrDim();
     assert(out.size() == totLinDim && "wrong total size for linear cstr");
     Index startIndex = 0;
-    for(Index i = 0; i < numberOfCstr(); ++i)
+    for(size_t i = 0; i < numberOfCstr(); ++i)
     {
       getLinCstrLB(out.segment(startIndex,linCstrDim(i)), i);
       startIndex += linCstrDim(i);
@@ -122,7 +122,7 @@ namespace pgs
     Index totLinDim = linCstrDim();
     assert(out.size() == totLinDim && "wrong total size for linear cstr");
     Index startIndex = 0;
-    for(Index i = 0; i < numberOfCstr(); ++i)
+    for(size_t i = 0; i < numberOfCstr(); ++i)
     {
       getLinCstrUB(out.segment(startIndex,linCstrDim(i)), i);
       startIndex += linCstrDim(i);
@@ -134,7 +134,7 @@ namespace pgs
     Index totNonLinDim = nonLinCstrDim();
     assert(out.size() == totNonLinDim && "wrong total size for Nonlinear cstr");
     Index startIndex = 0;
-    for(Index i = 0; i < numberOfCstr(); ++i)
+    for(size_t i = 0; i < numberOfCstr(); ++i)
     {
       evalNonLinCstr(out.segment(startIndex,nonLinCstrDim(i)), i);
       startIndex += nonLinCstrDim(i);
@@ -145,7 +145,7 @@ namespace pgs
     assert(out.rows() == nonLinCstrDim() && "wrong total size for Nonlinear cstr");
     assert(out.cols() == M().dim() && "Wrong cols size");
     Index startIndex = 0;
-    for(Index i = 0; i < numberOfCstr(); ++i)
+    for(size_t i = 0; i < numberOfCstr(); ++i)
     {
       evalNonLinCstrGrad(out.middleRows(startIndex,nonLinCstrDim(i)), i);
       startIndex += nonLinCstrDim(i);
@@ -156,7 +156,7 @@ namespace pgs
     Index totNonLinDim = nonLinCstrDim();
     assert(out.size() == totNonLinDim && "wrong total size for nonlinear cstr");
     Index startIndex = 0;
-    for(Index i = 0; i < numberOfCstr(); ++i)
+    for(size_t i = 0; i < numberOfCstr(); ++i)
     {
       getNonLinCstrLB(out.segment(startIndex,nonLinCstrDim(i)), i);
       startIndex += nonLinCstrDim(i);
@@ -167,7 +167,7 @@ namespace pgs
     Index totNonLinDim = nonLinCstrDim();
     assert(out.size() == totNonLinDim && "wrong total size for nonlinear cstr");
     Index startIndex = 0;
-    for(Index i = 0; i < numberOfCstr(); ++i)
+    for(size_t i = 0; i < numberOfCstr(); ++i)
     {
       getNonLinCstrUB(out.segment(startIndex,nonLinCstrDim(i)), i);
       startIndex += nonLinCstrDim(i);

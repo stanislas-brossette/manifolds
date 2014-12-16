@@ -21,19 +21,19 @@ namespace pgs
       virtual void evalObj(double& out) const;
       virtual void evalObjGrad(RefMat out) const;
 
-      virtual void evalLinCstr(RefVec out, Index i) const;
-      virtual void evalLinCstrGrad(RefMat out, Index i) const;
-      virtual void getLinCstrLB(RefVec out, Index i) const;
-      virtual void getLinCstrUB(RefMat out, Index i) const;
+      virtual void evalLinCstr(RefVec out, size_t i) const;
+      virtual void evalLinCstrGrad(RefMat out, size_t i) const;
+      virtual void getLinCstrLB(RefVec out, size_t i) const;
+      virtual void getLinCstrUB(RefMat out, size_t i) const;
 
-      virtual void evalNonLinCstr(RefVec out, Index i) const;
-      virtual void evalNonLinCstrGrad(RefMat out, Index i) const;
-      virtual void getNonLinCstrLB(RefVec out, Index i) const;
-      virtual void getNonLinCstrUB(RefVec out, Index i) const;
+      virtual void evalNonLinCstr(RefVec out, size_t i) const;
+      virtual void evalNonLinCstrGrad(RefMat out, size_t i) const;
+      virtual void getNonLinCstrLB(RefVec out, size_t i) const;
+      virtual void getNonLinCstrUB(RefVec out, size_t i) const;
 
-      virtual Index numberOfCstr() const;
-      virtual Index linCstrDim(Index i) const;
-      virtual Index nonLinCstrDim(Index i) const;
+      virtual size_t numberOfCstr() const;
+      virtual Index linCstrDim(size_t i) const;
+      virtual Index nonLinCstrDim(size_t i) const;
 
     private:
       static RealSpace R3;
