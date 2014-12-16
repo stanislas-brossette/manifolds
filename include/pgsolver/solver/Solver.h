@@ -4,7 +4,7 @@
 #include <iostream>
 #include <Eigen/Core>
 
-#include <pgsolver/manifolds/Problem.h>
+#include <pgsolver/solver/Problem.h>
 #include <pgsolver/manifolds/Point.h>
 
 namespace pgs
@@ -12,8 +12,8 @@ namespace pgs
   class Solver
   {
     public:
-      solve(Problem& problem, Point& x0)
-  }
+      void solve(Problem& problem, Point& x0);
+  };
 }
 
 #endif //_PGS_SOLVER_H_

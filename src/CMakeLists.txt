@@ -9,6 +9,7 @@ set(SOURCES
   solver/ExampleGeometricProblem.cpp
   #solver/ExampleProblem.cpp
   solver/Problem.cpp
+  solver/Solver.cpp
   )
 set(HEADERS
   ../include/pgsolver/manifolds/CartesianProduct.h
@@ -23,6 +24,7 @@ set(HEADERS
   ../include/pgsolver/solver/ExampleGeometricProblem.h
   #../include/pgsolver/solver/ExampleProblem.h
   ../include/pgsolver/solver/Problem.h
+  ../include/pgsolver/solver/Solver.h
 )
 
 set(LIBRARIES
@@ -35,6 +37,7 @@ foreach(lib ${LIBRARIES})
     VERSION ${PROJECT_VERSION}
     SOVERSION 0.1
   )
+  PKG_CONFIG_USE_DEPENDENCY(${lib} EigenQP)
   target_link_libraries(${lib})
 endforeach()
 

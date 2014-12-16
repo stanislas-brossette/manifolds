@@ -31,7 +31,7 @@ PKG_CONFIG_APPEND_LIBS(PGSolver)
 # Require Eigen >= 3.2.1 for Eigen::Ref
 SET(Eigen_REQUIRED "eigen3 >= 3.2.1")
 search_for_eigen()
-
+ADD_REQUIRED_DEPENDENCY(EigenQP)
 include_directories(include)
 
 # add_subdirectory(bin)

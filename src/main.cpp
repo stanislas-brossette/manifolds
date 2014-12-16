@@ -13,8 +13,13 @@
 #include <pgsolver/manifolds/ExpMapMatrix.h>
 #include <pgsolver/manifolds/ReusableTemporaryMap.h>
 
-#include <pgsolver/solver/Problem.h>
 #include <pgsolver/solver/ExampleGeometricProblem.h>
+#include <pgsolver/solver/Problem.h>
+#include <pgsolver/solver/Solver.h>
+
+#include <EigenQP/QLD.h>
+#include <EigenQP/QuadProg.h>
+#include <EigenQP/LSSOL.h>
 
 using namespace pgs;
 
@@ -34,17 +39,13 @@ int main()
   R3SO3R3SO3.multiply(RotSpace);
   {
     ExampleGeometricProblem myProb;
-    Eigen::VectorXd x0(3);
-    x0 << 1,2,3;
-    Eigen::VectorXd z0(3);
-    z0 << 3,4,5;
-
-    myProb.setX(myProb.M().createPoint(x0));
-    myProb.setZ(z0);
-    myProb.printState();
-
-    myProb.setZ(2*z0);
-    myProb.printState();
+    Solver mySolver;
+    Eigen::VectorXd v0(3);
+    v0 << 1,2,3;
+    Point x0 = myProb.M().createPoint(v0);
+    mySolver.solve(myProb, x0);
+  }
+  {
 
   }
 #ifdef _WIN32

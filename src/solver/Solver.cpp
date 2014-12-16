@@ -1,11 +1,7 @@
-#include <pgsolver/solver/Solver.cpp>
+#include <pgsolver/solver/Solver.h>
 
 namespace pgs
 {
-  Solver::Solver()
-  {
-  }
-
   void Solver::solve(Problem& problem, Point& x0)
   {
     problem.setX(x0);
