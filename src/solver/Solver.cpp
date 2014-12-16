@@ -4,6 +4,7 @@ namespace pgs
 {
   Solver::Solver()
   {
+    std::cout << "New Solver" << std::endl;
   }
 
   Results Solver::solve(Problem& problem, Point& x0)

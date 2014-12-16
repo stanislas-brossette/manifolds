@@ -40,7 +40,6 @@ namespace pgs
 
       double a, b, c, d; //Coefficient of the plan for the linear cstr
       double R1, R2; //Inner and outer radiusesof the spheric envelope
-
   };
 }
 
