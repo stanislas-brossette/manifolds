@@ -12,32 +12,51 @@ namespace pgs
   void ConstraintManager::init(Problem& p)
   {
     size_t nbCstr = p.numberOfCstr();
-    std::cout << "nbCstr = " << nbCstr << std::endl;
-    startLin.resize(nbCstr);
-    dimLin.resize(nbCstr);
-    startNonLin.resize(nbCstr);
-    dimNonLin.resize(nbCstr);
-
+    startLin_.resize(nbCstr);
+    dimLin_.resize(nbCstr);
+    startNonLin_.resize(nbCstr);
+    dimNonLin_.resize(nbCstr);
     Index startIndex = 0;
     for (size_t i = 0; i<nbCstr; ++i)
     {
-      dimLin[i] = p.linCstrDim(i);
-      dimNonLin[i] = p.nonLinCstrDim(i);
-      startLin[i] = startIndex;
-      startIndex += dimLin[i];
+      dimLin_[i] = p.linCstrDim(i);
+      dimNonLin_[i] = p.nonLinCstrDim(i);
+      startLin_[i] = startIndex;
+      startIndex += dimLin_[i];
     }
+    totalDimLin_ = startIndex;
     for (size_t i = 0; i<nbCstr; ++i)
     {
-      startNonLin[i] = startIndex;
-      startIndex += dimNonLin[i];
+      startNonLin_[i] = startIndex;
+      startIndex += dimNonLin_[i];
     }
+    totalDimNonLin_ = startIndex - totalDimLin_;
   }
+
   RefMat ConstraintManager::getViewLin(RefMat J, size_t i)
   {
-    return J.middleRows(startLin[i],dimLin[i]);
+    return J.middleRows(startLin_[i],dimLin_[i]);
   }
+  const ConstRefMat ConstraintManager::getViewLin(const ConstRefMat J, size_t i) const
+  {
+    return J.middleRows(startLin_[i],dimLin_[i]);
+  }
+
   RefMat ConstraintManager::getViewNonLin(RefMat J, size_t i)
   {
-    return J.middleRows(startNonLin[i],dimNonLin[i]);
+    return J.middleRows(startNonLin_[i],dimNonLin_[i]);
+  }
+  const ConstRefMat ConstraintManager::getViewNonLin(const ConstRefMat J, size_t i) const
+  {
+    return J.middleRows(startNonLin_[i],dimNonLin_[i]);
+  }
+
+  const Index& ConstraintManager::totalDimLin() const
+  {
+    return totalDimLin_;
+  }
+  const Index& ConstraintManager::totalDimNonLin() const
+  {
+    return totalDimNonLin_;
   }
 }
