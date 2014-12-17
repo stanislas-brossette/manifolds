@@ -19,6 +19,8 @@ namespace pgs
     Eigen::MatrixXd diffNonLinCstr;       // Value of the differential of the NonLinear constraints
     Eigen::VectorXd nonLinCstrLB;         // Lower Bounds on the NonLinear Constraints 
     Eigen::VectorXd nonLinCstrUB;         // Upper Bounds on the NonLinear Constraints
+    
+    Eigen::MatrixXd Hessian;              // Hessian of the Lagrangian
   };
   struct SolverOption
   {

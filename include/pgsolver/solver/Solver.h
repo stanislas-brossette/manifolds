@@ -16,15 +16,27 @@ namespace pgs
   {
     public:
       Solver();
-      Results solve(Problem& problem, Point& x0);
+      /// \brief Solves the optimization problem described in p starting from the initial guess x0
+      Results solve(Problem& p, Point& x0);   
 
     private:
-      void initSolver(Problem& problem, Point& x0);
+      /// \brief Initializes the solver, makes all the memory allocations
+      void initSolver(Problem& problem, Point& x0); 
 
     private:
-      ProblemEvaluation probEval_;
-      SolverOption opt_;
-      ConstraintManager cstrMngr_;
+      /// \brief The Lagrange Multiplier for Linear Constraints
+      Eigen::VectorXd lagMultLin_;    
+      /// \brief The Lagrange Multiplier for Non Linear Constraints
+      Eigen::VectorXd lagMultNonLin_; 
+      /// \brief Vector that contains the step data
+      Eigen::VectorXd z_;             
+
+      /// \brief Set of vector and matrices reprenenting the State of the problem
+      ProblemEvaluation probEval_;    
+      /// \brief Option for the solver
+      SolverOption opt_;              
+      /// \brief Objet that knows and manages the memory location for all the constraints of the problem
+      ConstraintManager cstrMngr_;    
   };
 }
 
