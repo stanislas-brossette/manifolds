@@ -86,8 +86,7 @@ namespace pgs
 
   void Problem::evalLinCstr(RefVec out) const
   {
-    Index totLinDim = linCstrDim();
-    assert(out.size() == totLinDim && "wrong total size for linear cstr");
+    assert(out.size() == linCstrDim() && "wrong total size for linear cstr");
     Index startIndex = 0;
     for(size_t i = 0; i < numberOfCstr(); ++i)
     {
@@ -108,8 +107,7 @@ namespace pgs
   }
   void Problem::getLinCstrLB(RefVec out) const
   {
-    Index totLinDim = linCstrDim();
-    assert(out.size() == totLinDim && "wrong total size for linear cstr");
+    assert(out.size() == linCstrDim() && "wrong total size for linear cstr");
     Index startIndex = 0;
     for(size_t i = 0; i < numberOfCstr(); ++i)
     {
@@ -119,8 +117,7 @@ namespace pgs
   }
   void Problem::getLinCstrUB(RefVec out) const
   {
-    Index totLinDim = linCstrDim();
-    assert(out.size() == totLinDim && "wrong total size for linear cstr");
+    assert(out.size() == linCstrDim() && "wrong total size for linear cstr");
     Index startIndex = 0;
     for(size_t i = 0; i < numberOfCstr(); ++i)
     {
@@ -131,8 +128,7 @@ namespace pgs
 
   void Problem::evalNonLinCstr(RefVec out) const
   {
-    Index totNonLinDim = nonLinCstrDim();
-    assert(out.size() == totNonLinDim && "wrong total size for Nonlinear cstr");
+    assert(out.size() == nonLinCstrDim() && "wrong total size for Nonlinear cstr");
     Index startIndex = 0;
     for(size_t i = 0; i < numberOfCstr(); ++i)
     {
@@ -153,8 +149,7 @@ namespace pgs
   }
   void Problem::getNonLinCstrLB(RefVec out) const
   {
-    Index totNonLinDim = nonLinCstrDim();
-    assert(out.size() == totNonLinDim && "wrong total size for nonlinear cstr");
+    assert(out.size() == nonLinCstrDim() && "wrong total size for nonlinear cstr");
     Index startIndex = 0;
     for(size_t i = 0; i < numberOfCstr(); ++i)
     {
@@ -164,8 +159,7 @@ namespace pgs
   }
   void Problem::getNonLinCstrUB(RefVec out) const
   {
-    Index totNonLinDim = nonLinCstrDim();
-    assert(out.size() == totNonLinDim && "wrong total size for nonlinear cstr");
+    assert(out.size() == nonLinCstrDim() && "wrong total size for nonlinear cstr");
     Index startIndex = 0;
     for(size_t i = 0; i < numberOfCstr(); ++i)
     {
