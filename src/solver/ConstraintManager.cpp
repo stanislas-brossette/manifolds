@@ -29,7 +29,7 @@ namespace pgs
     }
   }
 
-  RefMat ConstraintManager::getViewLin(RefMat J, size_t i)
+  RefMat ConstraintManager::getViewLin(RefMat J, size_t i) const
   {
     assert(J.rows() == totalDimLin_ && "Wrong nunmber of lines");
     return J.middleRows(startLin_[i],dimLin_[i]);
@@ -40,7 +40,7 @@ namespace pgs
     return J.middleRows(startLin_[i],dimLin_[i]);
   }
 
-  RefMat ConstraintManager::getViewNonLin(RefMat J, size_t i)
+  RefMat ConstraintManager::getViewNonLin(RefMat J, size_t i) const
   {
     assert(J.rows() == totalDimNonLin_ && "Wrong nunmber of lines");
     return J.middleRows(startNonLin_[i],dimNonLin_[i]);

@@ -1,6 +1,8 @@
 #ifndef _PGS_CONSTRAINTMANAGER_H_
 #define _PGS_CONSTRAINTMANAGER_H_
 
+#include <vector>
+
 #include <Eigen/Core>
 #include <pgsolver/manifolds/defs.h>
 #include <pgsolver/solver/Problem.h>
@@ -15,12 +17,12 @@ namespace pgs
       /// \brief returns the part of J corresponding to the Linear Part of
       /// constraint J with the assumption that J contains only linear parts of
       /// constraints
-      RefMat getViewLin(RefMat J, size_t i);
+      RefMat getViewLin(RefMat J, size_t i) const;
       const ConstRefMat getViewLin(const ConstRefMat J, size_t i) const;
       /// \brief returns the part of J corresponding to the NonLinear Part of
       /// constraint J with the assumption that J contains only Nonlinear parts of
       /// constraints
-      RefMat getViewNonLin(RefMat J, size_t i);
+      RefMat getViewNonLin(RefMat J, size_t i) const;
       const ConstRefMat getViewNonLin(const ConstRefMat J, size_t i) const;
 
       const Index& totalDimLin() const;
