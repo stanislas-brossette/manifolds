@@ -18,6 +18,7 @@ namespace pgs
       Solver();
       /// \brief Solves the optimization problem described in p starting from the initial guess x0
       Results solve(Problem& p, Point& x0);
+      /// \brief Displays the current evaluation of the problem that is considered by the solver
       void printStatus();
 
     private:
@@ -38,7 +39,10 @@ namespace pgs
       /// \brief Option for the solver
       SolverOption opt_;              
       /// \brief Objet that knows and manages the memory location for all the constraints of the problem
-      ConstraintManager cstrMngr_;    
+      ConstraintManager cstrMngr_;
+
+      /// \brief pointer on the problem considered
+      Problem* problem_;
   };
 }
 

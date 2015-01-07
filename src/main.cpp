@@ -45,6 +45,9 @@ int main()
     v0 << 1,2,3;
     Point x0 = myProb.M().createPoint(v0);
     mySolver.solve(myProb, x0);
+    v0 << 2,3,4;
+    x0 = myProb.M().createPoint(v0);
+    mySolver.solve(myProb, x0);
   }
   {
   }

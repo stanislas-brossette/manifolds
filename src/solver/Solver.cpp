@@ -33,12 +33,16 @@ namespace pgs
   void Solver::printStatus()
   {
     std::cout << "================================================================="<< std::endl;
+    Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", "[", "]");
+    std::cout << "current x = " << problem_->x() << std::endl;
+    std::cout << "current z = " << z_.transpose().format(CleanFmt) << std::endl;
     probEval_.print();
     std::cout << "================================================================="<< std::endl;
   }
 
   void Solver::initSolver(Problem& problem)
   {
+    problem_ = &problem;
     opt_.maxIter = 10000;
     opt_.epsilon_P = 1e-6;
     opt_.epsilon_D = 1e-2;
