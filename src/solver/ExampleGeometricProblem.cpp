@@ -37,7 +37,7 @@ namespace pgs
     Eigen::Vector3d v = phi_x_z().value();
     out = v.squaredNorm();
   }
-  void ExampleGeometricProblem::evalObjGrad(RefMat out) const
+  void ExampleGeometricProblem::evalObjDiff(RefMat out) const
   {
     assert(out.rows() == 1 && "wrong rows size");
     assert(out.cols() == M().dim() && "wrong cols size");
@@ -50,7 +50,7 @@ namespace pgs
     M().applyDiffMap(out, out, x()[0]);
   }
 
-  void ExampleGeometricProblem::evalLinCstr(RefVec out, size_t i) const
+  void ExampleGeometricProblem::evalLinCstr(RefMat out, size_t i) const
   {
     assert( i<numberOfCstr() && "This constraint index is out of bounds");
     assert(out.size() == linCstrDim(i) && "wrong size");
@@ -67,7 +67,7 @@ namespace pgs
       // This constraint does not have a linear part
     }
   }
-  void ExampleGeometricProblem::evalLinCstrGrad(RefMat out, size_t i) const
+  void ExampleGeometricProblem::evalLinCstrDiff(RefMat out, size_t i) const
   {
     assert( i<numberOfCstr() && "This constraint index is out of bounds");
     assert(out.rows() == linCstrDim(i) && "Wrong rows size");
@@ -90,7 +90,7 @@ namespace pgs
     }
 
   }
-  void ExampleGeometricProblem::getLinCstrLB(RefVec out, size_t i) const
+  void ExampleGeometricProblem::getLinCstrLB(RefMat out, size_t i) const
   {
     assert( i<numberOfCstr() && "This constraint index is out of bounds");
     assert(out.size() == linCstrDim(i) && "wrong size");
@@ -116,7 +116,7 @@ namespace pgs
   }
 
 
-  void ExampleGeometricProblem::evalNonLinCstr(RefVec out, size_t i) const
+  void ExampleGeometricProblem::evalNonLinCstr(RefMat out, size_t i) const
   {
     assert( i<numberOfCstr() && "This constraint index is out of bounds");
     assert(out.size() == nonLinCstrDim(i) && "wrong size");
@@ -134,7 +134,7 @@ namespace pgs
       out << v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
     }
   }
-  void ExampleGeometricProblem::evalNonLinCstrGrad(RefMat out, size_t i) const
+  void ExampleGeometricProblem::evalNonLinCstrDiff(RefMat out, size_t i) const
   {
     assert( i<numberOfCstr() && "This constraint index is out of bounds");
     assert(out.rows() == nonLinCstrDim(i) && "wrong row size");
@@ -154,7 +154,7 @@ namespace pgs
       M().applyDiffMap(out, out, x().value());
     }
   }
-  void ExampleGeometricProblem::getNonLinCstrLB(RefVec out, size_t i) const
+  void ExampleGeometricProblem::getNonLinCstrLB(RefMat out, size_t i) const
   {
     assert( i<numberOfCstr() && "This constraint index is out of bounds");
     assert(out.size() == nonLinCstrDim(i) && "wrong size");
@@ -168,7 +168,7 @@ namespace pgs
       out << R1*R1;
     }
   }
-  void ExampleGeometricProblem::getNonLinCstrUB(RefVec out, size_t i) const
+  void ExampleGeometricProblem::getNonLinCstrUB(RefMat out, size_t i) const
   {
     assert( i<numberOfCstr() && "This constraint index is out of bounds");
     assert(out.size() == nonLinCstrDim(i) && "wrong size");

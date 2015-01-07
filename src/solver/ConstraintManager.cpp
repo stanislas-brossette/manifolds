@@ -16,38 +16,38 @@ namespace pgs
     dimLin_.resize(nbCstr);
     startNonLin_.resize(nbCstr);
     dimNonLin_.resize(nbCstr);
-    Index startIndex = 0;
+    totalDimLin_ = 0;
+    totalDimNonLin_ = 0;
     for (size_t i = 0; i<nbCstr; ++i)
     {
       dimLin_[i] = p.linCstrDim(i);
       dimNonLin_[i] = p.nonLinCstrDim(i);
-      startLin_[i] = startIndex;
-      startIndex += dimLin_[i];
+      startLin_[i] = totalDimLin_;
+      startNonLin_[i] = totalDimNonLin_;
+      totalDimLin_ += dimLin_[i];
+      totalDimNonLin_ += dimNonLin_[i];
     }
-    totalDimLin_ = startIndex;
-    for (size_t i = 0; i<nbCstr; ++i)
-    {
-      startNonLin_[i] = startIndex;
-      startIndex += dimNonLin_[i];
-    }
-    totalDimNonLin_ = startIndex - totalDimLin_;
   }
 
   RefMat ConstraintManager::getViewLin(RefMat J, size_t i)
   {
+    assert(J.rows() == totalDimLin_ && "Wrong nunmber of lines");
     return J.middleRows(startLin_[i],dimLin_[i]);
   }
   const ConstRefMat ConstraintManager::getViewLin(const ConstRefMat J, size_t i) const
   {
+    assert(J.rows() == totalDimLin_ && "Wrong nunmber of lines");
     return J.middleRows(startLin_[i],dimLin_[i]);
   }
 
   RefMat ConstraintManager::getViewNonLin(RefMat J, size_t i)
   {
+    assert(J.rows() == totalDimNonLin_ && "Wrong nunmber of lines");
     return J.middleRows(startNonLin_[i],dimNonLin_[i]);
   }
   const ConstRefMat ConstraintManager::getViewNonLin(const ConstRefMat J, size_t i) const
   {
+    assert(J.rows() == totalDimNonLin_ && "Wrong nunmber of lines");
     return J.middleRows(startNonLin_[i],dimNonLin_[i]);
   }
 

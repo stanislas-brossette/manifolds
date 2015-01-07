@@ -17,11 +17,13 @@ namespace pgs
     public:
       Solver();
       /// \brief Solves the optimization problem described in p starting from the initial guess x0
-      Results solve(Problem& p, Point& x0);   
+      Results solve(Problem& p, Point& x0);
+      void printStatus();
 
     private:
       /// \brief Initializes the solver, makes all the memory allocations
-      void initSolver(Problem& problem, Point& x0); 
+      void initSolver(Problem& p); 
+      void updateAllProblemData(Problem& p);
 
     private:
       /// \brief The Lagrange Multiplier for Linear Constraints
@@ -31,7 +33,7 @@ namespace pgs
       /// \brief Vector that contains the step data
       Eigen::VectorXd z_;             
 
-      /// \brief Set of vector and matrices reprenenting the State of the problem
+      /// \brief Set of vector and matrices representing the State of the problem
       ProblemEvaluation probEval_;    
       /// \brief Option for the solver
       SolverOption opt_;              

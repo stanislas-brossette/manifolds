@@ -10,30 +10,39 @@ namespace pgs
 
   Results Solver::solve(Problem& problem, Point& x0)
   {
+    problem.setX(x0);
     cstrMngr_.init(problem);
+    initSolver(problem);
     std::cout << "Problem with Linear cstr of Dim: " << cstrMngr_.totalDimLin()<< std::endl;
     std::cout << "And NonLinear cstr of Dim: " << cstrMngr_.totalDimNonLin()<< std::endl;
-    initSolver(problem, x0);
-    problem.printState();
+    updateAllProblemData(problem);
+    printStatus();
+
+    Eigen::Vector3d z1(1,1,1);
+    problem.setX(x0+z1);
+    updateAllProblemData(problem);
+    printStatus();
     //int iter = 0;
     //int maxIter = 1000;
     //double epsilon_P = 1e-6;
     //double epsilon_D = 1e-6;
 
-    //Setup the matrix to hold the 
-
-    std::cout << opt_.epsilon_P << std::endl;
-
     return Results({ x0, CONVERGE, {} });
   }
 
-  void Solver::initSolver(Problem& problem, Point& x0)
+  void Solver::printStatus()
   {
-    problem.setX(x0);
+    std::cout << "================================================================="<< std::endl;
+    probEval_.print();
+    std::cout << "================================================================="<< std::endl;
+  }
+
+  void Solver::initSolver(Problem& problem)
+  {
     opt_.maxIter = 10000;
     opt_.epsilon_P = 1e-6;
     opt_.epsilon_D = 1e-2;
-    probEval_.diffObj.resize(problem.M().dim());
+    probEval_.diffObj.resize(1, problem.M().dim());
     probEval_.tangentLB.resize(problem.M().dim());
     probEval_.tangentUB.resize(problem.M().dim());
 
@@ -54,4 +63,23 @@ namespace pgs
     lagMultNonLin_.resize(cstrMngr_.totalDimNonLin());
   }
 
+  void Solver::updateAllProblemData(Problem& p)
+  {
+    p.evalObj(probEval_.obj); 
+    p.evalObjDiff(probEval_.diffObj); 
+    p.getTangentLB(probEval_.tangentLB);
+    p.getTangentUB(probEval_.tangentUB);
+
+    for (size_t i = 0; i<p.numberOfCstr(); ++i)
+    {
+      // for each constraint we fill the correct lines of the matrices using
+      // getView
+      p.evalLinCstr(cstrMngr_.getViewLin(probEval_.linCstr,i),i);
+      p.evalLinCstrDiff(cstrMngr_.getViewLin(probEval_.diffLinCstr,i),i);
+      p.getLinCstrLB(cstrMngr_.getViewLin(probEval_.linCstrLB,i),i);
+
+      p.evalNonLinCstr(cstrMngr_.getViewNonLin(probEval_.nonLinCstr,i),i);
+      p.evalNonLinCstrDiff(cstrMngr_.getViewNonLin(probEval_.diffNonLinCstr,i),i);
+    }
+  }
 }

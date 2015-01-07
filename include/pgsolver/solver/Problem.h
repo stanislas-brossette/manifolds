@@ -42,37 +42,37 @@ namespace pgs
       /// \brief Evaluate Objective Function at point
       //\f$\phi_x^{\mathcal{M}}(z)\f$
       virtual void evalObj(double& out) const = 0;
-      /// \brief Evaluate Gradient of Objective Function at point
+      /// \brief Evaluate Jacobian of Objective Function at point
       //\f$x\f$
-      virtual void evalObjGrad(RefMat out) const = 0;
+      virtual void evalObjDiff(RefMat out) const = 0;
 
       /// \brief Evaluate Linear Constraints Index i at point
       /// \f$\phi_x^{\mathcal{M}}(z)\f$
-      virtual void evalLinCstr(RefVec out, size_t i) const = 0;
-      /// \brief Evaluate Gradient of Linear Constraints Index i\n
+      virtual void evalLinCstr(RefMat out, size_t i) const = 0;
+      /// \brief Evaluate Jacobian of Linear Constraints Index i\n
       /// They are constants
-      virtual void evalLinCstrGrad(RefMat out, size_t i) const = 0;
+      virtual void evalLinCstrDiff(RefMat out, size_t i) const = 0;
       /// \brief Get Constraints Lower Bounds
-      virtual void getLinCstrLB(RefVec out, size_t i) const = 0;
+      virtual void getLinCstrLB(RefMat out, size_t i) const = 0;
       /// \brief Get Constraints Upper Bounds
       virtual void getLinCstrUB(RefMat out, size_t i) const = 0;
 
       /// \brief Evaluate NonLinear Constraints Index i at point
       //\f$\phi_x^{\mathcal{M}}(z)\f$
-      virtual void evalNonLinCstr(RefVec out, size_t i) const = 0;
-      /// \brief Evaluate Gradient of NonLinear Constraints Index i at point x
-      virtual void evalNonLinCstrGrad(RefMat out, size_t i) const = 0;
+      virtual void evalNonLinCstr(RefMat out, size_t i) const = 0;
+      /// \brief Evaluate Jacobian of NonLinear Constraints Index i at point x
+      virtual void evalNonLinCstrDiff(RefMat out, size_t i) const = 0;
       /// \brief Get Constraints Lower Bounds
-      virtual void getNonLinCstrLB(RefVec out, size_t i) const = 0;
+      virtual void getNonLinCstrLB(RefMat out, size_t i) const = 0;
       /// \brief Get Constraints Upper Bounds
-      virtual void getNonLinCstrUB(RefVec out, size_t i) const = 0;
+      virtual void getNonLinCstrUB(RefMat out, size_t i) const = 0;
 
       /// \brief Evaluate All Linear Constraints at point
       /// \f$\phi_x^{\mathcal{M}}(z)\f$
       virtual void evalLinCstr(RefVec out) const;
-      /// \brief Evaluate All Gradient of Linear Constraints\n
+      /// \brief Evaluate All Jacobian of Linear Constraints\n
       /// They are constants
-      virtual void evalLinCstrGrad(RefMat out) const;
+      virtual void evalLinCstrDiff(RefMat out) const;
       /// \brief Get All Constraints Lower Bounds
       virtual void getLinCstrLB(RefVec out) const;
       /// \brief Get All Constraints Upper Bounds
@@ -81,8 +81,8 @@ namespace pgs
       /// \brief Evaluate All NonLinear Constraints at point
       //\f$\phi_x^{\mathcal{M}}(z)\f$
       virtual void evalNonLinCstr(RefVec out) const;
-      /// \brief Evaluate Gradient of All NonLinear Constraints at point x
-      virtual void evalNonLinCstrGrad(RefMat out) const;
+      /// \brief Evaluate Jacobian of All NonLinear Constraints at point x
+      virtual void evalNonLinCstrDiff(RefMat out) const;
       /// \brief Get All Constraints Lower Bounds
       virtual void getNonLinCstrLB(RefVec out) const;
       /// \brief Get All Constraints Upper Bounds

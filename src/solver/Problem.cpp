@@ -95,14 +95,14 @@ namespace pgs
       startIndex += linCstrDim(i);
     }
   }
-  void Problem::evalLinCstrGrad(RefMat out) const
+  void Problem::evalLinCstrDiff(RefMat out) const
   {
     assert(out.rows() == linCstrDim() && "wrong total size for linear cstr");
     assert(out.cols() == M().dim() && "Wrong cols size");
     Index startIndex = 0;
     for(size_t i = 0; i < numberOfCstr(); ++i)
     {
-      evalLinCstrGrad(out.middleRows(startIndex,linCstrDim(i)), i);
+      evalLinCstrDiff(out.middleRows(startIndex,linCstrDim(i)), i);
       startIndex += linCstrDim(i);
     }
   }
@@ -140,14 +140,14 @@ namespace pgs
       startIndex += nonLinCstrDim(i);
     }
   }
-  void Problem::evalNonLinCstrGrad(RefMat out) const
+  void Problem::evalNonLinCstrDiff(RefMat out) const
   {
     assert(out.rows() == nonLinCstrDim() && "wrong total size for Nonlinear cstr");
     assert(out.cols() == M().dim() && "Wrong cols size");
     Index startIndex = 0;
     for(size_t i = 0; i < numberOfCstr(); ++i)
     {
-      evalNonLinCstrGrad(out.middleRows(startIndex,nonLinCstrDim(i)), i);
+      evalNonLinCstrDiff(out.middleRows(startIndex,nonLinCstrDim(i)), i);
       startIndex += nonLinCstrDim(i);
     }
   }
@@ -177,19 +177,19 @@ namespace pgs
   void Problem::printState() const
   {
     double obj = 0.0;
-    Eigen::MatrixXd objGrad(1,M().dim());
+    Eigen::MatrixXd objDiff(1,M().dim());
     Eigen::VectorXd tangentLB(M().dim());
     Eigen::VectorXd tangentUB(M().dim());
 
     Index dimLin = linCstrDim();
     Eigen::VectorXd linCstr(dimLin);
-    Eigen::MatrixXd linCstrDiff(dimLin,M().dim());
+    Eigen::MatrixXd linCstrDiff(dimLin, M().dim());
     Eigen::VectorXd linCstrLB(dimLin);
     Eigen::VectorXd linCstrUB(dimLin);
 
     Index dimNonLin = nonLinCstrDim();
     Eigen::VectorXd NonLinCstr(dimNonLin);
-    Eigen::MatrixXd NonLinCstrDiff(dimNonLin,M().dim());
+    Eigen::MatrixXd NonLinCstrDiff(dimNonLin, M().dim());
     Eigen::VectorXd NonLinCstrLB(dimNonLin);
     Eigen::VectorXd NonLinCstrUB(dimNonLin);
 
@@ -200,9 +200,9 @@ namespace pgs
 
     std::cout << std::endl << "Objective Function:" << std::endl;
     evalObj(obj);
-    evalObjGrad(objGrad);
+    evalObjDiff(objDiff);
     std::cout << "f(phi_x(z))=" << obj << std::endl;
-    std::cout << "grad_z(f(phi_x(z))=" << objGrad << std::endl;
+    std::cout << "Diff_z(f(phi_x(z))=" << objDiff.transpose() << std::endl;
 
     std::cout << std::endl << "Bounds:" << std::endl;
     getTangentLB(tangentLB);
@@ -211,18 +211,18 @@ namespace pgs
 
     std::cout << std::endl << "Linear Constraints:" << std::endl;
     evalLinCstr(linCstr);
-    evalLinCstrGrad(linCstrDiff);
+    evalLinCstrDiff(linCstrDiff);
     getLinCstrLB(linCstrLB);
     getLinCstrUB(linCstrUB);
     std::cout << linCstrLB << " < linCstr = " << linCstr << " < " << linCstrUB << std::endl;
-    std::cout << "gradlinCstr = " << linCstrDiff << std::endl;
+    std::cout << "gradlinCstr = " << linCstrDiff.transpose() << std::endl;
 
     std::cout << std::endl << "NonLinear Constraints:" << std::endl;
     evalNonLinCstr(NonLinCstr);
-    evalNonLinCstrGrad(NonLinCstrDiff);
+    evalNonLinCstrDiff(NonLinCstrDiff);
     getNonLinCstrLB(NonLinCstrLB);
     getNonLinCstrUB(NonLinCstrUB);
     std::cout << NonLinCstrLB << " < NonLinCstr = " << NonLinCstr << " < " << NonLinCstrUB << std::endl;
-    std::cout << "gradNonLinCstr = " << NonLinCstrDiff << std::endl;
+    std::cout << "gradNonLinCstr = " << NonLinCstrDiff.transpose() << std::endl;
   }
 }

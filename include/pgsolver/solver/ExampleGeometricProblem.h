@@ -19,17 +19,17 @@ namespace pgs
       virtual void getTangentUB(RefVec out) const;
 
       virtual void evalObj(double& out) const;
-      virtual void evalObjGrad(RefMat out) const;
+      virtual void evalObjDiff(RefMat out) const;
 
-      virtual void evalLinCstr(RefVec out, size_t i) const;
-      virtual void evalLinCstrGrad(RefMat out, size_t i) const;
-      virtual void getLinCstrLB(RefVec out, size_t i) const;
+      virtual void evalLinCstr(RefMat out, size_t i) const;
+      virtual void evalLinCstrDiff(RefMat out, size_t i) const;
+      virtual void getLinCstrLB(RefMat out, size_t i) const;
       virtual void getLinCstrUB(RefMat out, size_t i) const;
 
-      virtual void evalNonLinCstr(RefVec out, size_t i) const;
-      virtual void evalNonLinCstrGrad(RefMat out, size_t i) const;
-      virtual void getNonLinCstrLB(RefVec out, size_t i) const;
-      virtual void getNonLinCstrUB(RefVec out, size_t i) const;
+      virtual void evalNonLinCstr(RefMat out, size_t i) const;
+      virtual void evalNonLinCstrDiff(RefMat out, size_t i) const;
+      virtual void getNonLinCstrLB(RefMat out, size_t i) const;
+      virtual void getNonLinCstrUB(RefMat out, size_t i) const;
 
       virtual size_t numberOfCstr() const;
       virtual Index linCstrDim(size_t i) const;
