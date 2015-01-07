@@ -24,10 +24,13 @@ namespace pgs
     
     Eigen::MatrixXd Hessian;              // Hessian of the Lagrangian
 
+    double lag;                           // Lagrangian
+    Eigen::MatrixXd diffLag;              // Differential of the Lagrangian
+
     void print()
     {
       Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", "[", "]");
-      std::cout << "Current status of the problem evaluation" << std::endl;
+      std::cout << std::endl << "Problem evaluation" << std::endl;
 
       std::cout << std::endl << "Objective Function:" << std::endl;
       std::cout << "f(phi_x(z))=" << obj << std::endl;
@@ -43,6 +46,10 @@ namespace pgs
       std::cout << std::endl << "NonLinear Constraints:" << std::endl;
       std::cout << nonLinCstrLB.format(CleanFmt) << " <= NonLinCstr = " << nonLinCstr.format(CleanFmt) << " <= " << nonLinCstrUB.format(CleanFmt) << std::endl;
       std::cout << "gradNonLinCstr = " << diffNonLinCstr.transpose().format(CleanFmt) << std::endl;
+
+      std::cout << std::endl << "Lagrangian:" << std::endl;
+      std::cout << "Lag(phi_x(z))=" << lag << std::endl;
+      std::cout << "grad_z(Lag(phi_x(z))=" << diffLag.transpose().format(CleanFmt) << std::endl;
     }
   };
   struct SolverOption

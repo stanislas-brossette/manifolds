@@ -19,12 +19,17 @@ namespace pgs
       /// \brief Solves the optimization problem described in p starting from the initial guess x0
       Results solve(Problem& p, Point& x0);
       /// \brief Displays the current evaluation of the problem that is considered by the solver
+      // TODO: Add a security to this method so that it can't be called before
+      // solver is initialized
       void printStatus();
 
     private:
       /// \brief Initializes the solver, makes all the memory allocations
       void initSolver(Problem& p); 
       void updateAllProblemData(Problem& p);
+
+      double computeLagrangian();
+      Eigen::MatrixXd computeDiffLagrangian();
 
     private:
       /// \brief The Lagrange Multiplier for Linear Constraints
