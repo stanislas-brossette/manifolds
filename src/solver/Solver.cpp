@@ -26,6 +26,7 @@ namespace pgs
     //int maxIter = 1000;
     //double epsilon_P = 1e-6;
     //double epsilon_D = 1e-6;
+     
 
     return Results({ x0, CONVERGE, {} });
   }
@@ -95,37 +96,25 @@ namespace pgs
 
   double Solver::computeLagrangian()
   {
-    //TODO Dirty, need something cleaner
-    double res = probEval_.obj;
-    for (size_t i = 0; i<problem_->numberOfCstr(); ++i)
-    {
-      Eigen::VectorXd linMult = cstrMngr_.getViewLin(lagMultLin_,i).col(0);
-      Eigen::VectorXd linPart = cstrMngr_.getViewLin(probEval_.linCstr,i).col(0);
-      Eigen::VectorXd nonLinMult = cstrMngr_.getViewNonLin(lagMultNonLin_,i).col(0);
-      Eigen::VectorXd nonLinPart = cstrMngr_.getViewNonLin(probEval_.nonLinCstr,i).col(0);
-      double linProd = linMult.dot(linPart);
-      double nonLinProd = nonLinMult.dot(nonLinPart);
-      res += linProd;
-      res += nonLinProd;
-    }
+    double res = probEval_.obj 
+                  + lagMultLin_.dot(probEval_.linCstr)
+                  + lagMultNonLin_.dot(probEval_.nonLinCstr);
     return res;
   }
 
   Eigen::MatrixXd Solver::computeDiffLagrangian()
   {
-    //TODO Dirty, need something cleaner
-    Eigen::MatrixXd res = probEval_.diffObj;
-    for (size_t i = 0; i<problem_->numberOfCstr(); ++i)
-    {
-      Eigen::VectorXd linMult = cstrMngr_.getViewLin(lagMultLin_,i).col(0);
-      Eigen::MatrixXd linPart = cstrMngr_.getViewLin(probEval_.diffLinCstr,i);
-      Eigen::VectorXd nonLinMult = cstrMngr_.getViewNonLin(lagMultNonLin_,i).col(0);
-      Eigen::MatrixXd nonLinPart = cstrMngr_.getViewNonLin(probEval_.diffNonLinCstr,i);
-      for (Index j = 0; j<linMult.size(); ++j)
-        res = res + linMult[j]*(linPart.row(j));
-      for (Index j = 0; j<nonLinMult.size(); ++j)
-        res = res + nonLinMult[j]*(nonLinPart.row(j));
-    }
+    Eigen::MatrixXd res(1, problem_->M().dim());
+    res = probEval_.diffObj 
+            + lagMultLin_.transpose()*probEval_.diffLinCstr
+            + lagMultNonLin_.transpose()*probEval_.diffNonLinCstr;
     return res;
   }
+
+  //bool Solver::convergence(double tau_P, double tau_D) const
+  //{
+  //  //test = problem_->x()
+  //  //tau_x = tau_P*(1)
+  //  return true;
+  //}
 }
