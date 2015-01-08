@@ -40,10 +40,10 @@ namespace pgs
       virtual void getTangentUB(RefVec out) const = 0;
 
       /// \brief Evaluate Objective Function at point
-      //\f$\phi_x^{\mathcal{M}}(z)\f$
+      /// \f$\phi_x^{\mathcal{M}}(z)\f$
       virtual void evalObj(double& out) const = 0;
       /// \brief Evaluate Jacobian of Objective Function at point
-      //\f$x\f$
+      /// \f$x\f$
       virtual void evalObjDiff(RefMat out) const = 0;
 
       /// \brief Evaluate Linear Constraints Index i at point

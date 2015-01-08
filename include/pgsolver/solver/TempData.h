@@ -7,25 +7,53 @@ namespace pgs
 {
   struct ProblemEvaluation
   {
-    double obj;                           // Value of the costFunction
-    Eigen::MatrixXd diffObj;              // Value ot the differential of the costFunction  
-    Eigen::VectorXd tangentLB;            // Tangent Lower Bound
-    Eigen::VectorXd tangentUB;            // Tangent Upper Bound
+    /// \brief Value of the costFunction
+    double obj;                           
+    /// \brief Value ot the differential of the costFunction  
+    Eigen::MatrixXd diffObj;              
+    /// \brief Tangent Lower Bound
+    Eigen::VectorXd tangentLB;            
+    /// \brief Tangent Upper Bound
+    Eigen::VectorXd tangentUB;            
 
-    Eigen::VectorXd linCstr;              // Value of the Linear Constraints
-    Eigen::MatrixXd diffLinCstr;          // Value of the differential of the Linear constraints
-    Eigen::VectorXd linCstrLB;            // Lower Bounds on the Linear Constraints 
-    Eigen::VectorXd linCstrUB;            // Upper Bounds on the Linear Constraints
+    /// \brief Value of the Linear Constraints
+    Eigen::VectorXd linCstr;              
+    /// \brief Value of the differential of the Linear constraints
+    Eigen::MatrixXd diffLinCstr;          
+    /// \brief Lower Bounds on the Linear Constraints 
+    Eigen::VectorXd linCstrLB;            
+    /// \brief Upper Bounds on the Linear Constraints
+    Eigen::VectorXd linCstrUB;            
 
-    Eigen::VectorXd nonLinCstr;           // Value of the NonLinear Constraints
-    Eigen::MatrixXd diffNonLinCstr;       // Value of the differential of the NonLinear constraints
-    Eigen::VectorXd nonLinCstrLB;         // Lower Bounds on the NonLinear Constraints 
-    Eigen::VectorXd nonLinCstrUB;         // Upper Bounds on the NonLinear Constraints
+    /// \brief Value of the NonLinear Constraints
+    Eigen::VectorXd nonLinCstr;           
+    /// \brief Value of the differential of the NonLinear constraints
+    Eigen::MatrixXd diffNonLinCstr;       
+    /// \brief Lower Bounds on the NonLinear Constraints 
+    Eigen::VectorXd nonLinCstrLB;         
+    /// \brief Upper Bounds on the NonLinear Constraints
+    Eigen::VectorXd nonLinCstrUB;         
     
-    Eigen::MatrixXd Hessian;              // Hessian of the Lagrangian
+    /// \brief Hessian of the Lagrangian
+    Eigen::MatrixXd Hessian;              
 
-    double lag;                           // Lagrangian
-    Eigen::MatrixXd diffLag;              // Differential of the Lagrangian
+    /// \brief Lagrangian
+    double lag;                           
+    /// \brief Differential of the Lagrangian
+    Eigen::MatrixXd diffLag;              
+
+    /// \brief linearized inf bound of linear constraints
+    /// LinConstraint - infBound
+    Eigen::VectorXd linearizedInfBndLinCstr;
+    /// \brief linearized inf bound of nonlinear constraints 
+    /// nonLinConstraint - infBound
+    Eigen::VectorXd linearizedInfBndNonLinCstr;
+    /// \brief linearized sup bound of linear constraints (supBound -
+    /// LinConstraint - supBound
+    Eigen::VectorXd linearizedSupBndLinCstr;
+    /// \brief linearized sup bound of nonlinear constraints (supBound -
+    /// nonLinConstraint - supBound
+    Eigen::VectorXd linearizedSupBndNonLinCstr;
 
     void print()
     {

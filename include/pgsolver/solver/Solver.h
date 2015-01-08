@@ -27,7 +27,11 @@ namespace pgs
       /// \brief Initializes the solver, makes all the memory allocations
       void initSolver(Problem& p); 
       void updateAllProblemData(Problem& p);
+      /// \brief Tests the convergence of the solver based on the criterion
+      /// presented in SNOPT paper page 108
+      //bool convergence() const;
 
+      /// \brief Computes the value of the Lagrangian of the problem
       double computeLagrangian();
       Eigen::MatrixXd computeDiffLagrangian();
 

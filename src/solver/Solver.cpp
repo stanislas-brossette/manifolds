@@ -67,6 +67,11 @@ namespace pgs
     
     probEval_.diffLag.resize(1, problem.M().dim());
 
+    probEval_.linearizedInfBndLinCstr.resize(cstrMngr_.totalDimLin());
+    probEval_.linearizedInfBndLinCstr.resize(cstrMngr_.totalDimLin());
+    probEval_.linearizedSupBndNonLinCstr.resize(cstrMngr_.totalDimNonLin());
+    probEval_.linearizedSupBndNonLinCstr.resize(cstrMngr_.totalDimNonLin());
+
     z_.resize(problem.M().dim());
     lagMultLin_.resize(cstrMngr_.totalDimLin());
     lagMultNonLin_.resize(cstrMngr_.totalDimNonLin());
@@ -83,22 +88,45 @@ namespace pgs
     {
       // for each constraint we fill the correct lines of the matrices using
       // getView
+      // TODO this does not seem very efficient
       p.evalLinCstr(cstrMngr_.getViewLin(probEval_.linCstr,i),i);
       p.evalLinCstrDiff(cstrMngr_.getViewLin(probEval_.diffLinCstr,i),i);
       p.getLinCstrLB(cstrMngr_.getViewLin(probEval_.linCstrLB,i),i);
+      p.getLinCstrUB(cstrMngr_.getViewLin(probEval_.linCstrUB,i),i);
 
       p.evalNonLinCstr(cstrMngr_.getViewNonLin(probEval_.nonLinCstr,i),i);
       p.evalNonLinCstrDiff(cstrMngr_.getViewNonLin(probEval_.diffNonLinCstr,i),i);
+      p.getNonLinCstrLB(cstrMngr_.getViewNonLin(probEval_.nonLinCstrLB,i),i);
+      p.getNonLinCstrUB(cstrMngr_.getViewNonLin(probEval_.nonLinCstrUB,i),i);
     }
+    probEval_.linearizedInfBndLinCstr = probEval_.linCstr - probEval_.linCstrLB;
+    probEval_.linearizedSupBndLinCstr = probEval_.linCstr - probEval_.linCstrUB;
+    probEval_.linearizedInfBndNonLinCstr = probEval_.nonLinCstr - probEval_.nonLinCstrLB;
+    probEval_.linearizedSupBndNonLinCstr = probEval_.nonLinCstr - probEval_.nonLinCstrUB;
+
     probEval_.lag = computeLagrangian();
     probEval_.diffLag = computeDiffLagrangian();
   }
 
   double Solver::computeLagrangian()
   {
-    double res = probEval_.obj 
-                  + lagMultLin_.dot(probEval_.linCstr)
-                  + lagMultNonLin_.dot(probEval_.nonLinCstr);
+    double res = probEval_.obj; 
+    for( Index i = 0; i<cstrMngr_.totalDimLin(); ++i)
+    {
+      //only the constraints that are violated appear in the lagrangian. The
+      //valid ones have a Lagrange multiplier of value 0. Cf Note on
+      //implementation details
+      res = res + lagMultLin_[i]*(fmin(probEval_.linearizedInfBndLinCstr[i],0)
+             + fmax(probEval_.linearizedSupBndLinCstr[i], 0)); 
+    }
+    for( Index i = 0; i<cstrMngr_.totalDimNonLin(); ++i)
+    {
+      //only the constraints that are violated appear in the lagrangian. The
+      //valid ones have a Lagrange multiplier of value 0. Cf Note on
+      //implementation details
+      res = res + lagMultNonLin_[i]*(fmin(probEval_.linearizedInfBndNonLinCstr[i],0)
+             + fmax(probEval_.linearizedSupBndNonLinCstr[i], 0)); 
+    }
     return res;
   }
 
