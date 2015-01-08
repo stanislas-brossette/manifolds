@@ -31,23 +31,23 @@ namespace pgs
 
   RefMat ConstraintManager::getViewLin(RefMat J, size_t i) const
   {
-    assert(J.rows() == totalDimLin_ && "Wrong nunmber of lines");
+    assert(J.rows() == totalDimLin_ && "Wrong number of lines");
     return J.middleRows(startLin_[i],dimLin_[i]);
   }
   const ConstRefMat ConstraintManager::getConstViewLin(const ConstRefMat J, size_t i) const
   {
-    assert(J.rows() == totalDimLin_ && "Wrong nunmber of lines");
+    assert(J.rows() == totalDimLin_ && "Wrong number of lines");
     return J.middleRows(startLin_[i],dimLin_[i]);
   }
 
   RefMat ConstraintManager::getViewNonLin(RefMat J, size_t i) const
   {
-    assert(J.rows() == totalDimNonLin_ && "Wrong nunmber of lines");
+    assert(J.rows() == totalDimNonLin_ && "Wrong number of lines");
     return J.middleRows(startNonLin_[i],dimNonLin_[i]);
   }
   const ConstRefMat ConstraintManager::getConstViewNonLin(const ConstRefMat J, size_t i) const
   {
-    assert(J.rows() == totalDimNonLin_ && "Wrong nunmber of lines");
+    assert(J.rows() == totalDimNonLin_ && "Wrong number of lines");
     return J.middleRows(startNonLin_[i],dimNonLin_[i]);
   }
 

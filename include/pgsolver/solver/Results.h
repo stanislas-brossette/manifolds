@@ -24,6 +24,9 @@ namespace pgs
 
   struct Results
   {
+    Results(Point x, eStatus s, LagrangeMultipliers l)
+    : x_star(x), status(s), lambda(l) {}
+
     Point               x_star;
     eStatus             status;
     LagrangeMultipliers lambda;
