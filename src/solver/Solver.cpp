@@ -89,9 +89,6 @@ namespace pgs
       p.evalNonLinCstr(cstrMngr_.getViewNonLin(probEval_.nonLinCstr,i),i);
       p.evalNonLinCstrDiff(cstrMngr_.getViewNonLin(probEval_.diffNonLinCstr,i),i);
     }
-    lagMultLin_[0]=2;
-    lagMultLin_[1]=-1;
-    lagMultNonLin_[0]=10;
     probEval_.lag = computeLagrangian();
     probEval_.diffLag = computeDiffLagrangian();
   }

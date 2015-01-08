@@ -34,22 +34,28 @@ namespace pgs
 
       std::cout << std::endl << "Objective Function:" << std::endl;
       std::cout << "f(phi_x(z))=" << obj << std::endl;
-      std::cout << "grad_z(f(phi_x(z))=" << diffObj.transpose().format(CleanFmt) << std::endl;
+      std::cout << "grad_z(f(phi_x(z)):" << std::endl << diffObj.transpose().format(CleanFmt) << std::endl;
 
       std::cout << std::endl << "Bounds:" << std::endl;
       std::cout << tangentLB.transpose().format(CleanFmt) << " <= z <= " << tangentUB.transpose().format(CleanFmt) << std::endl;
 
       std::cout << std::endl << "Linear Constraints:" << std::endl;
-      std::cout << linCstrLB.format(CleanFmt) << " <= linCstr = " << linCstr.format(CleanFmt) << " <= " << linCstrUB.format(CleanFmt) << std::endl;
-      std::cout << "gradlinCstr = " << diffLinCstr.transpose().format(CleanFmt) << std::endl;
+      for(Index i = 0; i<linCstr.size(); ++i)
+      {
+        std::cout << "linCstr" << i << " : " << linCstrLB[i] << " <= " << linCstr[i] << " <= " << linCstrUB[i] << std::endl;
+      }
+      std::cout << "gradlinCstr: " << std::endl << diffLinCstr.transpose().format(CleanFmt) << std::endl;
 
       std::cout << std::endl << "NonLinear Constraints:" << std::endl;
-      std::cout << nonLinCstrLB.format(CleanFmt) << " <= NonLinCstr = " << nonLinCstr.format(CleanFmt) << " <= " << nonLinCstrUB.format(CleanFmt) << std::endl;
-      std::cout << "gradNonLinCstr = " << diffNonLinCstr.transpose().format(CleanFmt) << std::endl;
+      for(Index i = 0; i<nonLinCstr.size(); ++i)
+      {
+        std::cout << "nonLinCstr" << i << " : " << nonLinCstrLB[i] << " <= " << nonLinCstr[i] << " <= " << nonLinCstrUB[i] << std::endl;
+      }
+      std::cout << "gradNonLinCstr: " << std::endl << diffNonLinCstr.transpose().format(CleanFmt) << std::endl;
 
       std::cout << std::endl << "Lagrangian:" << std::endl;
       std::cout << "Lag(phi_x(z))=" << lag << std::endl;
-      std::cout << "grad_z(Lag(phi_x(z))=" << diffLag.transpose().format(CleanFmt) << std::endl;
+      std::cout << "grad_z(Lag(phi_x(z)):" << std::endl << diffLag.transpose().format(CleanFmt) << std::endl;
     }
   };
   struct SolverOption
