@@ -44,30 +44,39 @@ namespace pgs
 
     /// \brief linearized inf bound of bound constraints
     /// z - infBound
-    Eigen::VectorXd linearizedInfBndCstr;
+    Eigen::VectorXd infBndCstr;
     /// \brief linearized sup bound of bound constraints
     /// z - supBound
-    Eigen::VectorXd linearizedSupBndCstr;
+    Eigen::VectorXd supBndCstr;
     /// \brief linearized inf bound of linear constraints
     /// LinConstraint - infBound
-    Eigen::VectorXd linearizedInfBndLinCstr;
+    Eigen::VectorXd infLinCstr;
     /// \brief linearized inf bound of nonlinear constraints 
     /// nonLinConstraint - infBound
-    Eigen::VectorXd linearizedInfBndNonLinCstr;
+    Eigen::VectorXd infNonLinCstr;
     /// \brief linearized sup bound of linear constraints (supBound -
     /// LinConstraint - supBound
-    Eigen::VectorXd linearizedSupBndLinCstr;
+    Eigen::VectorXd supLinCstr;
     /// \brief linearized sup bound of nonlinear constraints (supBound -
     /// nonLinConstraint - supBound
-    Eigen::VectorXd linearizedSupBndNonLinCstr;
+    Eigen::VectorXd supNonLinCstr;
+
+    /// \brief Concatenation of infBndCstr,infLinCstr 
+    /// and infNonLinCstr 
+    Eigen::VectorXd allInfCstr;
+    /// \brief Concatenation of supBndCstr,supLinCstr 
+    /// and supBndNonLinCstr 
+    Eigen::VectorXd allSupCstr;
 
     /// \brief Concatenation of linear and nonLinear constraints
+    // TODO: Haven't decided yet if this vector should contain the bounds
+    // constraints.
+    // But the QP solver will take them separately
     Eigen::VectorXd allCstr; 
 
     void print()
     {
       Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", "[", "]");
-      std::cout << std::endl << "Problem evaluation" << std::endl;
 
       std::cout << std::endl << "Objective Function:" << std::endl;
       std::cout << "f(phi_x(z))=" << obj << std::endl;
@@ -90,7 +99,7 @@ namespace pgs
       }
       std::cout << "gradNonLinCstr: " << std::endl << diffNonLinCstr.transpose().format(CleanFmt) << std::endl;
 
-      std::cout << "AllCstr:" << std::endl << allCstr << std::endl;
+      //std::cout << "AllCstr:" << std::endl << allCstr << std::endl;
       std::cout << std::endl << "Lagrangian:" << std::endl;
       std::cout << "Lag(phi_x(z))=" << lag << std::endl;
       std::cout << "grad_z(Lag(phi_x(z)):" << std::endl << diffLag.transpose().format(CleanFmt) << std::endl;
@@ -136,8 +145,8 @@ namespace pgs
       std::cout << linear.format(CleanFmt)<< std::endl;
       std::cout << "Lagrange Multipliers NonLinear Cstr" << std::endl;
       std::cout << nonLinear.format(CleanFmt)<< std::endl;
-      std::cout << "Lagrange Multipliers All Cstr" << std::endl;
-      std::cout << all.format(CleanFmt)<< std::endl;
+      //std::cout << "Lagrange Multipliers All Cstr" << std::endl;
+      //std::cout << all.format(CleanFmt)<< std::endl;
     }
   };
 

@@ -18,7 +18,6 @@ namespace pgs
 
     z_.setZero();
     lagMult_.initOnes();
-    lagMult_.print();
     updateAllProblemData(problem);
     printStatus();
 
@@ -27,7 +26,7 @@ namespace pgs
     //double epsilon_P = 1e-6;
     //double epsilon_D = 1e-6;
     bool converged = convergence(opt_.epsilon_P , opt_.epsilon_P, 
-        x0, lagMult_.all, probEval_.allCstr, probEval_.diffLag);
+        x0, lagMult_.all, probEval_.allInfCstr, probEval_.allSupCstr, probEval_.diffLag);
     std::cout << converged << std::endl;
      
 
@@ -48,7 +47,7 @@ namespace pgs
   void Solver::initSolver(Problem& problem)
   {
     problem_ = &problem;
-    opt_.maxIter = 10000;
+    opt_.maxIter = 100;
     opt_.epsilon_P = 1e-6;
     opt_.epsilon_D = 1e-2;
     probEval_.diffObj.resize(1, problem.M().dim());
@@ -69,12 +68,20 @@ namespace pgs
     
     probEval_.diffLag.resize(1, problem.M().dim());
 
-    probEval_.linearizedInfBndCstr.resize(problem.M().dim());
-    probEval_.linearizedSupBndCstr.resize(problem.M().dim());
-    probEval_.linearizedInfBndLinCstr.resize(cstrMngr_.totalDimLin());
-    probEval_.linearizedSupBndLinCstr.resize(cstrMngr_.totalDimLin());
-    probEval_.linearizedInfBndNonLinCstr.resize(cstrMngr_.totalDimNonLin());
-    probEval_.linearizedSupBndNonLinCstr.resize(cstrMngr_.totalDimNonLin());
+    probEval_.infBndCstr.resize(problem.M().dim());
+    probEval_.supBndCstr.resize(problem.M().dim());
+    probEval_.infLinCstr.resize(cstrMngr_.totalDimLin());
+    probEval_.supLinCstr.resize(cstrMngr_.totalDimLin());
+    probEval_.infNonLinCstr.resize(cstrMngr_.totalDimNonLin());
+    probEval_.supNonLinCstr.resize(cstrMngr_.totalDimNonLin());
+    
+    probEval_.allInfCstr.resize(problem.M().dim() 
+                                + cstrMngr_.totalDimNonLin() 
+                                + cstrMngr_.totalDimLin());
+    probEval_.allSupCstr.resize(problem.M().dim() 
+                                + cstrMngr_.totalDimNonLin() 
+                                + cstrMngr_.totalDimLin());
+    
 
     z_.resize(problem.M().dim());
     lagMult_.bounds.resize(problem.M().dim());
@@ -110,12 +117,23 @@ namespace pgs
     probEval_.allCstr.head(cstrMngr_.totalDimLin()) = probEval_.linCstr;
     probEval_.allCstr.tail(cstrMngr_.totalDimNonLin()) = probEval_.nonLinCstr;
 
-    probEval_.linearizedInfBndCstr =  z_ - probEval_.tangentLB;
-    probEval_.linearizedSupBndCstr =  z_ - probEval_.tangentUB;
-    probEval_.linearizedInfBndLinCstr = probEval_.linCstr - probEval_.linCstrLB;
-    probEval_.linearizedSupBndLinCstr = probEval_.linCstr - probEval_.linCstrUB;
-    probEval_.linearizedInfBndNonLinCstr = probEval_.nonLinCstr - probEval_.nonLinCstrLB;
-    probEval_.linearizedSupBndNonLinCstr = probEval_.nonLinCstr - probEval_.nonLinCstrUB;
+    probEval_.infBndCstr =  z_ - probEval_.tangentLB;
+    probEval_.supBndCstr =  z_ - probEval_.tangentUB;
+    probEval_.infLinCstr = probEval_.linCstr - probEval_.linCstrLB;
+    probEval_.supLinCstr = probEval_.linCstr - probEval_.linCstrUB;
+    probEval_.infNonLinCstr = probEval_.nonLinCstr - probEval_.nonLinCstrLB;
+    probEval_.supNonLinCstr = probEval_.nonLinCstr - probEval_.nonLinCstrUB;
+
+    probEval_.allInfCstr.head(problem_->M().dim()) = probEval_.infBndCstr;
+    probEval_.allInfCstr.segment(problem_->M().dim(), cstrMngr_.totalDimLin())= probEval_.infLinCstr ;
+    probEval_.allInfCstr.tail(cstrMngr_.totalDimNonLin()) = probEval_.infNonLinCstr ;
+
+    probEval_.allSupCstr.head(problem_->M().dim()) = probEval_.supBndCstr;
+    probEval_.allSupCstr.segment(problem_->M().dim(), cstrMngr_.totalDimLin())= probEval_.supLinCstr ;
+    probEval_.allSupCstr.tail(cstrMngr_.totalDimNonLin()) = probEval_.supNonLinCstr ;
+
+    probEval_.allCstr.head(cstrMngr_.totalDimLin()) = probEval_.linCstr;
+    probEval_.allCstr.tail(cstrMngr_.totalDimNonLin()) = probEval_.nonLinCstr;
 
     probEval_.lag = computeLagrangian();
     probEval_.diffLag = computeDiffLagrangian();
@@ -129,24 +147,24 @@ namespace pgs
       //only the constraints that are violated appear in the lagrangian. The
       //valid ones have a Lagrange multiplier of value 0. Cf Note on
       //implementation details
-      res = res + lagMult_.bounds[i]*(fmin(probEval_.linearizedInfBndCstr[i],0)
-             + fmax(probEval_.linearizedSupBndCstr[i], 0)); 
+      res = res + lagMult_.bounds[i]*(fmin(probEval_.infBndCstr[i],0)
+             + fmax(probEval_.supBndCstr[i], 0)); 
     }
     for( Index i = 0; i<cstrMngr_.totalDimLin(); ++i)
     {
       //only the constraints that are violated appear in the lagrangian. The
       //valid ones have a Lagrange multiplier of value 0. Cf Note on
       //implementation details
-      res = res + lagMult_.linear[i]*(fmin(probEval_.linearizedInfBndLinCstr[i],0)
-             + fmax(probEval_.linearizedSupBndLinCstr[i], 0)); 
+      res = res + lagMult_.linear[i]*(fmin(probEval_.infLinCstr[i],0)
+             + fmax(probEval_.supLinCstr[i], 0)); 
     }
     for( Index i = 0; i<cstrMngr_.totalDimNonLin(); ++i)
     {
       //only the constraints that are violated appear in the lagrangian. The
       //valid ones have a Lagrange multiplier of value 0. Cf Note on
       //implementation details
-      res = res + lagMult_.nonLinear[i]*(fmin(probEval_.linearizedInfBndNonLinCstr[i],0)
-             + fmax(probEval_.linearizedSupBndNonLinCstr[i], 0)); 
+      res = res + lagMult_.nonLinear[i]*(fmin(probEval_.infNonLinCstr[i],0)
+             + fmax(probEval_.supNonLinCstr[i], 0)); 
     }
     return res;
   }
@@ -163,15 +181,47 @@ namespace pgs
 
   bool Solver::convergence(
       double tau_P, double tau_D, const Point& x, 
-      const Eigen::VectorXd& lagMult, const Eigen::VectorXd& cstr, 
+      const Eigen::VectorXd& lagMult, 
+      const Eigen::VectorXd& infCstr, 
+      const Eigen::VectorXd& supCstr, 
       const Eigen::MatrixXd& diffLag) const
   {
-    std::cout << tau_P << std::endl;
-    std::cout << tau_D << std::endl;
-    std::cout << x << std::endl;
-    std::cout << lagMult << std::endl;
-    std::cout << cstr << std::endl;
-    std::cout << diffLag << std::endl;
-    return true;
+    std::cout << "-----------------Convergence test---------------" << std::endl;
+    std::cout << "tau_P: " << tau_P << std::endl;
+    std::cout << "tau_D: " << tau_D << std::endl;
+    std::cout << "x: " << x << std::endl;
+    std::cout << "lagMult: " << lagMult.transpose() << std::endl;
+    std::cout << "infCstr: " << infCstr.transpose() << std::endl;
+    std::cout << "supCstr: " << supCstr.transpose() << std::endl;
+    std::cout << "diffLag: " << diffLag << std::endl;
+
+    Eigen::VectorXd invMapX(problem_->M().dim());
+    problem_->M().invMap(invMapX, x.value());
+    std::cout << "invMap(x) = " << invMapX.transpose() << std::endl;
+    double tau_x = tau_P*(1+invMapX.lpNorm<Eigen::Infinity>());
+    double tau_l = tau_D*(1+lagMult.lpNorm<Eigen::Infinity>());
+
+    std::cout << "tau_x: " << tau_x << std::endl;
+    std::cout << "tau_l: " << tau_l << std::endl;
+
+    bool converged = true;
+    if(!(diffLag.array().abs() <= tau_l).all())
+      converged = false;
+    for(Index i = 0; i<lagMult.size(); ++i)
+    {
+      if(!((lagMult[i]<-tau_l && fabs(infCstr(i))<tau_x)
+          || (fabs(lagMult[i])>tau_l && infCstr(i)>=-tau_x && supCstr(i)<=tau_x)
+          || (lagMult[i]>tau_l && fabs(supCstr(i))<tau_x)))
+      {
+        std::cout << "Cstr " << i << " failure" << std::endl;
+        converged = false;
+      }
+      else
+      {
+        std::cout << "Cstr " << i << " success" << std::endl;
+      }
+    }
+    std::cout << "------------------------------------------------" << std::endl;
+    return converged;
   }
 }

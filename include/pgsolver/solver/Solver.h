@@ -40,7 +40,9 @@ namespace pgs
       /// \param diffLag Derivative of the Lagrangian (Jacobian. Should be a line-vector)
       bool convergence(
         double tau_P, double tau_D, const Point& x, 
-        const Eigen::VectorXd& lagMult, const Eigen::VectorXd& cstr, 
+        const Eigen::VectorXd& lagMult, 
+        const Eigen::VectorXd& infCstr, 
+        const Eigen::VectorXd& supCstr, 
         const Eigen::MatrixXd& diffLag) const;
 
       /// \brief Computes the value of the Lagrangian of the problem
