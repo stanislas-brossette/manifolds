@@ -55,6 +55,9 @@ namespace pgs
     /// nonLinConstraint - supBound
     Eigen::VectorXd linearizedSupBndNonLinCstr;
 
+    /// \brief Concatenation of linear and nonLinear constraints
+    Eigen::VectorXd allCstr; 
+
     void print()
     {
       Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", "[", "]");
@@ -81,16 +84,47 @@ namespace pgs
       }
       std::cout << "gradNonLinCstr: " << std::endl << diffNonLinCstr.transpose().format(CleanFmt) << std::endl;
 
+      std::cout << "AllCstr:" << std::endl << allCstr << std::endl;
       std::cout << std::endl << "Lagrangian:" << std::endl;
       std::cout << "Lag(phi_x(z))=" << lag << std::endl;
       std::cout << "grad_z(Lag(phi_x(z)):" << std::endl << diffLag.transpose().format(CleanFmt) << std::endl;
     }
   };
+
+  struct LagrangeMultipliers
+  {
+    Eigen::VectorXd linear;
+    Eigen::VectorXd nonLinear;
+    Eigen::VectorXd all;
+
+    void update(const Eigen::VectorXd& lin, 
+                const Eigen::VectorXd& nonLin)
+    {
+      assert(lin.size() == linear.size());
+      assert(nonLin.size() == nonLinear.size());
+
+      linear = lin;
+      nonLinear = nonLin;
+      all.head(linear.size()) = lin;
+      all.tail(nonLinear.size()) = nonLin;
+    }
+    void print()
+    {
+      Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", "[", "]");
+      std::cout << "Linear Lagrange Multipliers" << std::endl;
+      std::cout << linear.format(CleanFmt)<< std::endl;
+      std::cout << "NonLinear Lagrange Multipliers" << std::endl;
+      std::cout << nonLinear.format(CleanFmt)<< std::endl;
+      //std::cout << "All Lagrange Multipliers" << std::endl;
+      //std::cout << all.format(CleanFmt)<< std::endl;
+    }
+  };
+
   struct SolverOption
   {
     int maxIter = 1000;
-    double epsilon_P;
-    double epsilon_D;
+    double epsilon_P = 1e-6;
+    double epsilon_D = 1e-6;
   };
 }
 #endif //_PGS_TEMPDATA_H_

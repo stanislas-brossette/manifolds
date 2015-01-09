@@ -17,16 +17,15 @@ namespace pgs
     ERROR
   };
 
-  struct LagrangeMultipliers
+  struct LagrangeMult
   {
-
   };
 
   struct Results
   {
     Point               x_star;
     eStatus             status;
-    LagrangeMultipliers lambda;
+    LagrangeMult        lambda;
   };
 }
 

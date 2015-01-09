@@ -23,23 +23,33 @@ namespace pgs
       // solver is initialized
       void printStatus();
 
-    private:
+    protected:
       /// \brief Initializes the solver, makes all the memory allocations
       void initSolver(Problem& p); 
       void updateAllProblemData(Problem& p);
       /// \brief Tests the convergence of the solver based on the criterion
       /// presented in SNOPT paper page 108
-      //bool convergence() const;
+      /// \param tau_P Primal problem convergence criterion
+      /// \param tau_D Dual problem convergence criterion
+      /// \param x point where the convergence is tested
+      /// \param lagMult Concatenation of all the Lagrange Multiplier with on
+      /// top the ones associated with linear constraints, followed by the ones
+      /// associated with non-linear constraints
+      /// \param cstr Concatenation of all the constraints with on
+      /// top the linear constraints, followed by the non-linear constraints
+      /// \param diffLag Derivative of the Lagrangian (Jacobian. Should be a line-vector)
+      bool convergence(
+        double tau_P, double tau_D, const Point& x, 
+        const Eigen::VectorXd& lagMult, const Eigen::VectorXd& cstr, 
+        const Eigen::MatrixXd& diffLag) const;
 
       /// \brief Computes the value of the Lagrangian of the problem
       double computeLagrangian();
       Eigen::MatrixXd computeDiffLagrangian();
 
     private:
-      /// \brief The Lagrange Multiplier for Linear Constraints
-      Eigen::VectorXd lagMultLin_;    
-      /// \brief The Lagrange Multiplier for Non Linear Constraints
-      Eigen::VectorXd lagMultNonLin_; 
+      /// \brief Structure containing The Lagrange Multiplier for Linear and nonLinear Constraints
+      LagrangeMultipliers lagMult_;    
       /// \brief Vector that contains the step data
       Eigen::VectorXd z_;             
 
