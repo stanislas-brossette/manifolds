@@ -42,6 +42,12 @@ namespace pgs
     /// \brief Differential of the Lagrangian
     Eigen::MatrixXd diffLag;              
 
+    /// \brief linearized inf bound of bound constraints
+    /// z - infBound
+    Eigen::VectorXd linearizedInfBndCstr;
+    /// \brief linearized sup bound of bound constraints
+    /// z - supBound
+    Eigen::VectorXd linearizedSupBndCstr;
     /// \brief linearized inf bound of linear constraints
     /// LinConstraint - infBound
     Eigen::VectorXd linearizedInfBndLinCstr;
@@ -93,30 +99,45 @@ namespace pgs
 
   struct LagrangeMultipliers
   {
+    Eigen::VectorXd bounds;
     Eigen::VectorXd linear;
     Eigen::VectorXd nonLinear;
     Eigen::VectorXd all;
 
-    void update(const Eigen::VectorXd& lin, 
+    void initOnes()
+    {
+      bounds.setOnes();
+      linear.setOnes();
+      nonLinear.setOnes();
+      all.setZero();
+      update(bounds, linear, nonLinear);
+    }
+    void update(const Eigen::VectorXd& bnd,
+                const Eigen::VectorXd& lin, 
                 const Eigen::VectorXd& nonLin)
     {
+      assert(bnd.size() == bounds.size());
       assert(lin.size() == linear.size());
       assert(nonLin.size() == nonLinear.size());
 
+      bounds = bnd;
       linear = lin;
       nonLinear = nonLin;
-      all.head(linear.size()) = lin;
+      all.head(bounds.size()) = bnd;
+      all.segment(bounds.size(), linear.size()) = lin;
       all.tail(nonLinear.size()) = nonLin;
     }
     void print()
     {
       Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", "[", "]");
-      std::cout << "Linear Lagrange Multipliers" << std::endl;
+      std::cout << "Lagrange Multipliers Bounds Cstr" << std::endl;
+      std::cout << bounds.format(CleanFmt)<< std::endl;
+      std::cout << "Lagrange Multipliers Linear Cstr" << std::endl;
       std::cout << linear.format(CleanFmt)<< std::endl;
-      std::cout << "NonLinear Lagrange Multipliers" << std::endl;
+      std::cout << "Lagrange Multipliers NonLinear Cstr" << std::endl;
       std::cout << nonLinear.format(CleanFmt)<< std::endl;
-      //std::cout << "All Lagrange Multipliers" << std::endl;
-      //std::cout << all.format(CleanFmt)<< std::endl;
+      std::cout << "Lagrange Multipliers All Cstr" << std::endl;
+      std::cout << all.format(CleanFmt)<< std::endl;
     }
   };
 

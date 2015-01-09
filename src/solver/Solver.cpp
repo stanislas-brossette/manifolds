@@ -17,9 +17,7 @@ namespace pgs
     std::cout << "And NonLinear cstr of Dim: " << cstrMngr_.totalDimNonLin()<< std::endl;
 
     z_.setZero();
-    lagMult_.linear.setOnes();
-    lagMult_.nonLinear.setOnes();
-    lagMult_.update(lagMult_.linear, lagMult_.nonLinear);
+    lagMult_.initOnes();
     lagMult_.print();
     updateAllProblemData(problem);
     printStatus();
@@ -42,8 +40,7 @@ namespace pgs
     Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", "[", "]");
     std::cout << "current x = " << problem_->x() << std::endl;
     std::cout << "current z = " << z_.transpose().format(CleanFmt) << std::endl;
-    std::cout << "current Lagrange mult for Lin Cstr: " << lagMult_.linear.transpose().format(CleanFmt) << std::endl;
-    std::cout << "current Lagrange mult for nonLin Cstr: " << lagMult_.nonLinear.transpose().format(CleanFmt) << std::endl;
+    lagMult_.print();
     probEval_.print();
     std::cout << "================================================================="<< std::endl;
   }
@@ -72,17 +69,20 @@ namespace pgs
     
     probEval_.diffLag.resize(1, problem.M().dim());
 
+    probEval_.linearizedInfBndCstr.resize(problem.M().dim());
+    probEval_.linearizedSupBndCstr.resize(problem.M().dim());
     probEval_.linearizedInfBndLinCstr.resize(cstrMngr_.totalDimLin());
-    probEval_.linearizedInfBndLinCstr.resize(cstrMngr_.totalDimLin());
-    probEval_.linearizedSupBndNonLinCstr.resize(cstrMngr_.totalDimNonLin());
+    probEval_.linearizedSupBndLinCstr.resize(cstrMngr_.totalDimLin());
+    probEval_.linearizedInfBndNonLinCstr.resize(cstrMngr_.totalDimNonLin());
     probEval_.linearizedSupBndNonLinCstr.resize(cstrMngr_.totalDimNonLin());
 
     z_.resize(problem.M().dim());
+    lagMult_.bounds.resize(problem.M().dim());
     lagMult_.linear.resize(cstrMngr_.totalDimLin());
     lagMult_.nonLinear.resize(cstrMngr_.totalDimNonLin());
 
     probEval_.allCstr.resize(cstrMngr_.totalDimNonLin()+cstrMngr_.totalDimLin());
-    lagMult_.all.resize(cstrMngr_.totalDimNonLin()+cstrMngr_.totalDimLin());
+    lagMult_.all.resize(problem.M().dim() + cstrMngr_.totalDimNonLin() + cstrMngr_.totalDimLin());
   }
 
   void Solver::updateAllProblemData(Problem& p)
@@ -110,6 +110,8 @@ namespace pgs
     probEval_.allCstr.head(cstrMngr_.totalDimLin()) = probEval_.linCstr;
     probEval_.allCstr.tail(cstrMngr_.totalDimNonLin()) = probEval_.nonLinCstr;
 
+    probEval_.linearizedInfBndCstr =  z_ - probEval_.tangentLB;
+    probEval_.linearizedSupBndCstr =  z_ - probEval_.tangentUB;
     probEval_.linearizedInfBndLinCstr = probEval_.linCstr - probEval_.linCstrLB;
     probEval_.linearizedSupBndLinCstr = probEval_.linCstr - probEval_.linCstrUB;
     probEval_.linearizedInfBndNonLinCstr = probEval_.nonLinCstr - probEval_.nonLinCstrLB;
@@ -122,6 +124,14 @@ namespace pgs
   double Solver::computeLagrangian()
   {
     double res = probEval_.obj; 
+    for( Index i = 0; i<problem_->M().dim(); ++i)
+    {
+      //only the constraints that are violated appear in the lagrangian. The
+      //valid ones have a Lagrange multiplier of value 0. Cf Note on
+      //implementation details
+      res = res + lagMult_.bounds[i]*(fmin(probEval_.linearizedInfBndCstr[i],0)
+             + fmax(probEval_.linearizedSupBndCstr[i], 0)); 
+    }
     for( Index i = 0; i<cstrMngr_.totalDimLin(); ++i)
     {
       //only the constraints that are violated appear in the lagrangian. The
@@ -145,6 +155,7 @@ namespace pgs
   {
     Eigen::MatrixXd res(1, problem_->M().dim());
     res = probEval_.diffObj 
+            + lagMult_.bounds.transpose()
             + lagMult_.linear.transpose()*probEval_.diffLinCstr
             + lagMult_.nonLinear.transpose()*probEval_.diffNonLinCstr;
     return res;
