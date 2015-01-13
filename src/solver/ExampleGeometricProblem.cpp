@@ -59,8 +59,7 @@ namespace pgs
       // Constraint 0
       // Point on plan of equation a.x1+b.x2+c.x3+d=0
       Eigen::Vector3d v = phi_x_z().value();
-      out << a*v[0] + b*v[1] + c*v[2] + d, 
-             v[1]-0.75;
+      out << a*v[0] + b*v[1] + c*v[2] + d; 
     }
     else if(i==1)
     {
@@ -81,8 +80,7 @@ namespace pgs
       // x = [x1, x2, x3];
       // f(x) = a.x1+b.x2+c.x3+d;
       // df/dx(x) = [a, b, c]^T;
-      out << a, b, c, 
-             0, 1, 0;
+      out << a, b, c; 
       M().applyDiffMap(out, out, x()[0]);
     }
     else if(i==1)
@@ -98,7 +96,7 @@ namespace pgs
     assert(out.size() == linCstrDim(i) && "wrong size");
     if(i == 0)
     {
-      out << 0,0;
+      out << 0;
     }
     else if(i==1)
     {
@@ -110,7 +108,7 @@ namespace pgs
     assert(out.size() == linCstrDim(i) && "wrong size");
     if(i == 0)
     {
-      out << 0,0;
+      out << 0;
     }
     else if(i==1)
     {
@@ -193,7 +191,7 @@ namespace pgs
 
   Index ExampleGeometricProblem::linCstrDim(size_t i) const
   {
-    Index linDim[] = { 2, 0 };
+    Index linDim[] = { 1, 0 };
     return linDim[static_cast<size_t>(i)];
   }
 
