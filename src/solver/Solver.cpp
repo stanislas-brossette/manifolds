@@ -21,14 +21,47 @@ namespace pgs
     updateAllProblemData(problem);
     printStatus();
 
-    //int iter = 0;
-    //int maxIter = 1000;
-    //double epsilon_P = 1e-6;
-    //double epsilon_D = 1e-6;
-    bool converged = convergence(opt_.epsilon_P , opt_.epsilon_P, 
-        x0, lagMult_.all, probEval_.allInfCstr, probEval_.allSupCstr, probEval_.diffLag);
-    std::cout << converged << std::endl;
-     
+    int iter = 0;
+    int maxIter = 100;
+
+    while(!convergence(opt_.epsilon_P , opt_.epsilon_P, problem_->x(), 
+                        lagMult_.bounds, 
+                        probEval_.infBndCstr, 
+                        probEval_.supBndCstr, 
+                        lagMult_.linear, 
+                        probEval_.infLinCstr, 
+                        probEval_.supLinCstr, 
+                        lagMult_.nonLinear, 
+                        probEval_.infNonLinCstr, 
+                        probEval_.supNonLinCstr, 
+                        probEval_.diffLag) 
+                        && iter < maxIter)
+    {
+      iter++;
+      std::cout << "Iteration " << iter << std::endl;
+      std::cout << "QP to solve:"<< std::endl; 
+      std::cout << "Q" << std::endl << probEval_.Hessian << std::endl; 
+      std::cout << "C" << std::endl << probEval_.diffLag << std::endl;
+      std::cout << "A" << std::endl << probEval_.allDiffCstr << std::endl; 
+      std::cout << "nrRowA" << std::endl << static_cast<int>(probEval_.allDiffCstr.rows()) << std::endl; 
+      std::cout << "AL" << std::endl << -probEval_.allInfCstr << std::endl; 
+      std::cout << "AU" << std::endl << -probEval_.allSupCstr << std::endl; 
+      std::cout << "XL" << std::endl << -probEval_.infBndCstr << std::endl; 
+      std::cout << "XU" << std::endl << -probEval_.supBndCstr << std::endl;
+      QPSolver_.solve(
+          probEval_.Hessian, 
+          probEval_.diffLag.transpose(),
+          probEval_.allDiffCstr, 
+          static_cast<int>(probEval_.allDiffCstr.rows()), 
+          -probEval_.allInfCstr, 
+          -probEval_.allSupCstr, 
+          -probEval_.infBndCstr, 
+          -probEval_.supBndCstr);
+      z_ = QPSolver_.result();
+      std::cout << "Result QP:" << std::endl << z_ << std::endl;
+      problem_->setX(problem_->x() + z_);
+      updateAllProblemData(problem);
+    }
 
     return Results({ x0, CONVERGE, {} });
   }
@@ -75,11 +108,9 @@ namespace pgs
     probEval_.infNonLinCstr.resize(cstrMngr_.totalDimNonLin());
     probEval_.supNonLinCstr.resize(cstrMngr_.totalDimNonLin());
     
-    probEval_.allInfCstr.resize(problem.M().dim() 
-                                + cstrMngr_.totalDimNonLin() 
+    probEval_.allInfCstr.resize(cstrMngr_.totalDimNonLin() 
                                 + cstrMngr_.totalDimLin());
-    probEval_.allSupCstr.resize(problem.M().dim() 
-                                + cstrMngr_.totalDimNonLin() 
+    probEval_.allSupCstr.resize(cstrMngr_.totalDimNonLin() 
                                 + cstrMngr_.totalDimLin());
     
 
@@ -89,7 +120,14 @@ namespace pgs
     lagMult_.nonLinear.resize(cstrMngr_.totalDimNonLin());
 
     probEval_.allCstr.resize(cstrMngr_.totalDimNonLin()+cstrMngr_.totalDimLin());
+    std::cout << "test" << std::endl;
+    probEval_.allDiffCstr.resize(cstrMngr_.totalDimNonLin()+cstrMngr_.totalDimLin(), problem.M().dim());
+    std::cout << "test" << std::endl;
+
     lagMult_.all.resize(problem.M().dim() + cstrMngr_.totalDimNonLin() + cstrMngr_.totalDimLin());
+
+    QPSolver_ = Eigen::LSSOL(int(problem.M().dim()), int(cstrMngr_.totalDimNonLin() + cstrMngr_.totalDimLin()));
+
   }
 
   void Solver::updateAllProblemData(Problem& p)
@@ -124,19 +162,21 @@ namespace pgs
     probEval_.infNonLinCstr = probEval_.nonLinCstr - probEval_.nonLinCstrLB;
     probEval_.supNonLinCstr = probEval_.nonLinCstr - probEval_.nonLinCstrUB;
 
-    probEval_.allInfCstr.head(problem_->M().dim()) = probEval_.infBndCstr;
-    probEval_.allInfCstr.segment(problem_->M().dim(), cstrMngr_.totalDimLin())= probEval_.infLinCstr ;
+    probEval_.allInfCstr.head(cstrMngr_.totalDimLin())= probEval_.infLinCstr ;
     probEval_.allInfCstr.tail(cstrMngr_.totalDimNonLin()) = probEval_.infNonLinCstr ;
 
-    probEval_.allSupCstr.head(problem_->M().dim()) = probEval_.supBndCstr;
-    probEval_.allSupCstr.segment(problem_->M().dim(), cstrMngr_.totalDimLin())= probEval_.supLinCstr ;
+    probEval_.allSupCstr.head(cstrMngr_.totalDimLin())= probEval_.supLinCstr ;
     probEval_.allSupCstr.tail(cstrMngr_.totalDimNonLin()) = probEval_.supNonLinCstr ;
 
     probEval_.allCstr.head(cstrMngr_.totalDimLin()) = probEval_.linCstr;
     probEval_.allCstr.tail(cstrMngr_.totalDimNonLin()) = probEval_.nonLinCstr;
 
+    probEval_.allDiffCstr.block(0,0, cstrMngr_.totalDimLin(), problem_->M().dim()) = probEval_.diffLinCstr;
+    probEval_.allDiffCstr.block(cstrMngr_.totalDimLin(), 0, cstrMngr_.totalDimNonLin(), problem_->M().dim()) = probEval_.diffNonLinCstr;
+
     probEval_.lag = computeLagrangian();
     probEval_.diffLag = computeDiffLagrangian();
+    probEval_.Hessian.setIdentity();
   }
 
   double Solver::computeLagrangian()
@@ -181,32 +221,63 @@ namespace pgs
 
   bool Solver::convergence(
       double tau_P, double tau_D, const Point& x, 
-      const Eigen::VectorXd& lagMult, 
-      const Eigen::VectorXd& infCstr, 
-      const Eigen::VectorXd& supCstr, 
+      const Eigen::VectorXd& lagMultBnd, 
+      const Eigen::VectorXd& infCstrBnd, 
+      const Eigen::VectorXd& supCstrBnd, 
+      const Eigen::VectorXd& lagMultLin, 
+      const Eigen::VectorXd& infCstrLin, 
+      const Eigen::VectorXd& supCstrLin, 
+      const Eigen::VectorXd& lagMultNonLin, 
+      const Eigen::VectorXd& infCstrNonLin, 
+      const Eigen::VectorXd& supCstrNonLin, 
       const Eigen::MatrixXd& diffLag) const
   {
     std::cout << "-----------------Convergence test---------------" << std::endl;
     std::cout << "tau_P: " << tau_P << std::endl;
     std::cout << "tau_D: " << tau_D << std::endl;
     std::cout << "x: " << x << std::endl;
-    std::cout << "lagMult: " << lagMult.transpose() << std::endl;
-    std::cout << "infCstr: " << infCstr.transpose() << std::endl;
-    std::cout << "supCstr: " << supCstr.transpose() << std::endl;
+    std::cout << "lagMultBnd: " << lagMultBnd.transpose() << std::endl;
+    std::cout << "infCstrBnd: " << infCstrBnd.transpose() << std::endl;
+    std::cout << "supCstrBnd: " << supCstrBnd.transpose() << std::endl;
+    std::cout << "lagMultLin: " << lagMultLin.transpose() << std::endl;
+    std::cout << "infCstrLin: " << infCstrLin.transpose() << std::endl;
+    std::cout << "supCstrLin: " << supCstrLin.transpose() << std::endl;
+    std::cout << "lagMultNonLin: " << lagMultNonLin.transpose() << std::endl;
+    std::cout << "infCstrNonLin: " << infCstrNonLin.transpose() << std::endl;
+    std::cout << "supCstrNonLin: " << supCstrNonLin.transpose() << std::endl;
     std::cout << "diffLag: " << diffLag << std::endl;
 
     Eigen::VectorXd invMapX(problem_->M().dim());
     problem_->M().invMap(invMapX, x.value());
     std::cout << "invMap(x) = " << invMapX.transpose() << std::endl;
     double tau_x = tau_P*(1+invMapX.lpNorm<Eigen::Infinity>());
-    double tau_l = tau_D*(1+lagMult.lpNorm<Eigen::Infinity>());
+    double tau_l = tau_D*(1+fmax(fmax(lagMultBnd.lpNorm<Eigen::Infinity>(),lagMultLin.lpNorm<Eigen::Infinity>()),lagMultNonLin.lpNorm<Eigen::Infinity>()));
 
     std::cout << "tau_x: " << tau_x << std::endl;
     std::cout << "tau_l: " << tau_l << std::endl;
 
+    //Test Lagrangian's derivative
+    bool convergedLag = (diffLag.array().abs() <= tau_l).all();
+    //Test bounds cstr
+    bool convergedBounds = KKTTestCstr(tau_l, tau_x, lagMultBnd, infCstrBnd, supCstrBnd); 
+    //Test Linear cstr
+    bool convergedLin = KKTTestCstr(tau_l, tau_x, lagMultLin, infCstrLin, supCstrLin); 
+    //Test NonLinear cstr
+    bool convergedNonLin = KKTTestCstr(tau_l, tau_x, lagMultNonLin, infCstrNonLin, supCstrNonLin); 
+
+    bool converged = convergedLag && convergedBounds && convergedLin && convergedNonLin;
+
+    std::cout << "------------------------------------------------" << std::endl;
+    return converged;
+  }
+
+  bool Solver::KKTTestCstr(
+      double tau_l, double tau_x, 
+      const Eigen::VectorXd& lagMult, 
+      const Eigen::VectorXd& infCstr, 
+      const Eigen::VectorXd& supCstr) const
+  {
     bool converged = true;
-    if(!(diffLag.array().abs() <= tau_l).all())
-      converged = false;
     for(Index i = 0; i<lagMult.size(); ++i)
     {
       if(!((lagMult[i]<-tau_l && fabs(infCstr(i))<tau_x)
@@ -221,7 +292,6 @@ namespace pgs
         std::cout << "Cstr " << i << " success" << std::endl;
       }
     }
-    std::cout << "------------------------------------------------" << std::endl;
     return converged;
   }
 }

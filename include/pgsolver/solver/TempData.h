@@ -61,18 +61,15 @@ namespace pgs
     /// nonLinConstraint - supBound
     Eigen::VectorXd supNonLinCstr;
 
-    /// \brief Concatenation of infBndCstr,infLinCstr 
-    /// and infNonLinCstr 
+    /// \brief Concatenation of infLinCstr and infNonLinCstr 
     Eigen::VectorXd allInfCstr;
-    /// \brief Concatenation of supBndCstr,supLinCstr 
-    /// and supBndNonLinCstr 
+    /// \brief Concatenation of supLinCstr and supNonLinCstr 
     Eigen::VectorXd allSupCstr;
 
     /// \brief Concatenation of linear and nonLinear constraints
-    // TODO: Haven't decided yet if this vector should contain the bounds
-    // constraints.
-    // But the QP solver will take them separately
     Eigen::VectorXd allCstr; 
+    /// \brief Concatenation of linear and nonLinear diffConstraints
+    Eigen::MatrixXd allDiffCstr; 
 
     void print()
     {
@@ -121,6 +118,7 @@ namespace pgs
       all.setZero();
       update(bounds, linear, nonLinear);
     }
+
     void update(const Eigen::VectorXd& bnd,
                 const Eigen::VectorXd& lin, 
                 const Eigen::VectorXd& nonLin)
@@ -156,5 +154,6 @@ namespace pgs
     double epsilon_P = 1e-6;
     double epsilon_D = 1e-6;
   };
+
 }
 #endif //_PGS_TEMPDATA_H_

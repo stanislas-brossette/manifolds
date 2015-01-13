@@ -10,6 +10,8 @@
 #include <pgsolver/solver/TempData.h>
 #include <pgsolver/solver/ConstraintManager.h>
 
+#include <EigenQP/LSSOL.h>
+
 namespace pgs
 {
   class Solver
@@ -40,10 +42,21 @@ namespace pgs
       /// \param diffLag Derivative of the Lagrangian (Jacobian. Should be a line-vector)
       bool convergence(
         double tau_P, double tau_D, const Point& x, 
+        const Eigen::VectorXd& lagMultBnd, 
+        const Eigen::VectorXd& infCstrBnd, 
+        const Eigen::VectorXd& supCstrBnd, 
+        const Eigen::VectorXd& lagMultLin, 
+        const Eigen::VectorXd& infCstrLin, 
+        const Eigen::VectorXd& supCstrLin, 
+        const Eigen::VectorXd& lagMultNonLin, 
+        const Eigen::VectorXd& infCstrNonLin, 
+        const Eigen::VectorXd& supCstrNonLin, 
+        const Eigen::MatrixXd& diffLag) const;
+      bool KKTTestCstr(
+        double tau_l, double tau_x, 
         const Eigen::VectorXd& lagMult, 
         const Eigen::VectorXd& infCstr, 
-        const Eigen::VectorXd& supCstr, 
-        const Eigen::MatrixXd& diffLag) const;
+        const Eigen::VectorXd& supCstr) const;
 
       /// \brief Computes the value of the Lagrangian of the problem
       double computeLagrangian();
@@ -64,6 +77,9 @@ namespace pgs
 
       /// \brief pointer on the problem considered
       Problem* problem_;
+
+      /// \brief QP solver
+      Eigen::LSSOL QPSolver_;
   };
 }
 
