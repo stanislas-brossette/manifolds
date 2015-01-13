@@ -43,8 +43,8 @@ namespace pgs
       bool convergence(
         double tau_P, double tau_D, const Point& x, 
         const Eigen::VectorXd& lagMultBnd, 
-        const Eigen::VectorXd& infCstrBnd, 
-        const Eigen::VectorXd& supCstrBnd, 
+        const Eigen::VectorXd& tangentLB, 
+        const Eigen::VectorXd& tangentUB, 
         const Eigen::VectorXd& lagMultLin, 
         const Eigen::VectorXd& infCstrLin, 
         const Eigen::VectorXd& supCstrLin, 

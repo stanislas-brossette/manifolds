@@ -42,12 +42,12 @@ namespace pgs
     /// \brief Differential of the Lagrangian
     Eigen::MatrixXd diffLag;              
 
-    /// \brief linearized inf bound of bound constraints
-    /// z - infBound
-    Eigen::VectorXd infBndCstr;
-    /// \brief linearized sup bound of bound constraints
-    /// z - supBound
-    Eigen::VectorXd supBndCstr;
+    ///// \brief linearized inf bound of bound constraints
+    ///// z - infBound
+    //Eigen::VectorXd infBndCstr;
+    ///// \brief linearized sup bound of bound constraints
+    ///// z - supBound
+    //Eigen::VectorXd supBndCstr;
     /// \brief linearized inf bound of linear constraints
     /// LinConstraint - infBound
     Eigen::VectorXd infLinCstr;
