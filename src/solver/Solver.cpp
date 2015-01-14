@@ -66,7 +66,10 @@ namespace pgs
       lagMult_.nonLinear = -QPSolver_.clambda().tail(lagMult_.nonLinear.size());
       problem_->setX(problem_->x() + z_);
       updateAllProblemData(problem);
-      //printStatus();
+      
+      hessianUpdate(probEval_.Hessian, problem_->x(), 1, z_, 
+                      probEval_.prevDiffLag, probEval_.diffLag);
+      printStatus();
     }
     std::cout << "=============== Solution at iteration " << iter << " ========================="<< std::endl;
     printStatus();
@@ -106,8 +109,12 @@ namespace pgs
     probEval_.nonLinCstrUB.resize(cstrMngr_.totalDimNonLin());
 
     probEval_.Hessian.resize(problem.M().dim(), problem.M().dim());
+    probEval_.Hessian.setIdentity();
     
     probEval_.diffLag.resize(1, problem.M().dim());
+    probEval_.prevDiffLag.resize(1, problem.M().dim());
+    probEval_.diffLag.setZero();
+    probEval_.prevDiffLag.setZero();
 
     probEval_.infLinCstr.resize(cstrMngr_.totalDimLin());
     probEval_.supLinCstr.resize(cstrMngr_.totalDimLin());
@@ -159,8 +166,6 @@ namespace pgs
     probEval_.allCstr.head(cstrMngr_.totalDimLin()) = probEval_.linCstr;
     probEval_.allCstr.tail(cstrMngr_.totalDimNonLin()) = probEval_.nonLinCstr;
 
-    //probEval_.infBndCstr =  probEval_.tangentLB;
-    //probEval_.supBndCstr =  probEval_.tangentUB;
     probEval_.infLinCstr = probEval_.linCstr - probEval_.linCstrLB;
     probEval_.supLinCstr = probEval_.linCstr - probEval_.linCstrUB;
     probEval_.infNonLinCstr = probEval_.nonLinCstr - probEval_.nonLinCstrLB;
@@ -179,8 +184,8 @@ namespace pgs
     probEval_.allDiffCstr.block(cstrMngr_.totalDimLin(), 0, cstrMngr_.totalDimNonLin(), problem_->M().dim()) = probEval_.diffNonLinCstr;
 
     probEval_.lag = computeLagrangian();
+    probEval_.prevDiffLag = probEval_.diffLag;
     probEval_.diffLag = computeDiffLagrangian();
-    probEval_.Hessian.setIdentity();
   }
 
   double Solver::computeLagrangian()
@@ -304,5 +309,48 @@ namespace pgs
       }
     }
     return converged;
+  }
+  
+  void Solver::hessianUpdate(RefMat H, const Point& x, const double alpha, 
+          const ConstRefVec step, const ConstRefMat prevDiffLag, 
+          const ConstRefMat diffLag)
+  {
+    Eigen::VectorXd sk(problem_->M().dim());
+    Eigen::VectorXd yk(problem_->M().dim());
+    x.getManifold().applyTransport(sk, alpha*step, x.value(), alpha*step); 
+    x.getManifold().applyTransport(yk, prevDiffLag.transpose(), x.value(), alpha*step);
+    yk = diffLag.transpose() - yk;
+    x.getManifold().applyTransport(H, H, x.value(), alpha*step);
+    x.getManifold().applyInvTransport(H, H, x.value(), alpha*step);
+
+    computeBFGS(H, sk, yk);
+    //computeSR1(H, sk, yk);
+  }
+
+  void Solver::computeBFGS(RefMat B, const ConstRefVec s,const ConstRefVec y)
+  {
+    Eigen::VectorXd Bs = B*s;
+    double sBs = s.transpose()*B*s;
+    double theta;
+    if(s.transpose()*y >= 0.2*sBs)
+      theta = 1;
+    else
+      theta = (0.8*sBs)/(sBs-s.transpose()*y);
+
+    Eigen::VectorXd r = theta*y + (1-theta)*Bs;
+
+    B = B - (Bs*Bs.transpose())/sBs + (r*r.transpose())/(s.transpose()*r);
+
+    //TODO Implement EigenValue control (LDL)
+  }
+
+  void Solver::computeSR1(RefMat B, const ConstRefVec s,const ConstRefVec y)
+  {
+    double r = 1e-8;
+    Eigen::VectorXd Bs = B*s;
+    Eigen::VectorXd ymBs = y - Bs;
+    if(fabs(s.transpose()*ymBs)>=r*s.lpNorm<1>()*ymBs.lpNorm<1>())
+      B = B + (ymBs*ymBs.transpose())/(ymBs.transpose()*s);
+    //else B = B
   }
 }

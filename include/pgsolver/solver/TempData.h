@@ -41,6 +41,8 @@ namespace pgs
     double lag;                           
     /// \brief Differential of the Lagrangian
     Eigen::MatrixXd diffLag;              
+    /// \brief Differential of the Lagrangian at the previous iteration
+    Eigen::MatrixXd prevDiffLag;
 
     ///// \brief linearized inf bound of bound constraints
     ///// z - infBound
@@ -100,6 +102,7 @@ namespace pgs
       std::cout << std::endl << "Lagrangian:" << std::endl;
       std::cout << "Lag(phi_x(z))=" << lag << std::endl;
       std::cout << "grad_z(Lag(phi_x(z)):" << std::endl << diffLag.transpose().format(CleanFmt) << std::endl;
+      std::cout << "Hessian: " << std::endl << Hessian.format(CleanFmt) << std::endl;
     }
   };
 

@@ -62,6 +62,15 @@ namespace pgs
       double computeLagrangian();
       Eigen::MatrixXd computeDiffLagrangian();
 
+      void hessianUpdate(RefMat H, const Point& x, const double alpha, 
+          const ConstRefVec step, const ConstRefMat prevDiffLag, 
+          const ConstRefMat diffLag);
+      
+      /// \brief Performs a BFGS update on B
+      void computeBFGS(RefMat B, const ConstRefVec s,const ConstRefVec y);
+      /// \brief Performs a SR1 update on B
+      void computeSR1(RefMat B, const ConstRefVec s,const ConstRefVec y);
+
     private:
       /// \brief Structure containing The Lagrange Multiplier for Linear and nonLinear Constraints
       LagrangeMultipliers lagMult_;    
