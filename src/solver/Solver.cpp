@@ -13,12 +13,13 @@ namespace pgs
     problem.setX(x0);
     cstrMngr_.init(problem);
     initSolver(problem);
-    std::cout << "Problem with Linear cstr of Dim: " << cstrMngr_.totalDimLin()<< std::endl;
-    std::cout << "And NonLinear cstr of Dim: " << cstrMngr_.totalDimNonLin()<< std::endl;
+    std::cout << "Problem with " << cstrMngr_.totalDimLin() << " Linear cstr" << std::endl;
+    std::cout << "And " << cstrMngr_.totalDimNonLin() << " NonLinear cstr" << std::endl;
 
     z_.setZero();
     lagMult_.initOnes();
     updateAllProblemData(problem);
+    std::cout << "================== Initial Conditions ==========================="<< std::endl;
     printStatus();
 
     int iter = 0;
@@ -38,19 +39,19 @@ namespace pgs
                         && iter < maxIter)
     {
       iter++;
-      std::cout << "Iteration " << iter << std::endl;
-      std::cout << "QP to solve:"<< std::endl; 
-      std::cout << "Q" << std::endl << probEval_.Hessian << std::endl; 
-      std::cout << "C" << std::endl << probEval_.diffLag << std::endl;
-      std::cout << "A" << std::endl << probEval_.allDiffCstr << std::endl; 
-      std::cout << "nrRowA" << std::endl << static_cast<int>(probEval_.allDiffCstr.rows()) << std::endl; 
-      std::cout << "AL" << std::endl << -probEval_.allInfCstr << std::endl; 
-      std::cout << "AU" << std::endl << -probEval_.allSupCstr << std::endl; 
-      std::cout << "XL" << std::endl << probEval_.tangentLB << std::endl; 
-      std::cout << "XU" << std::endl << probEval_.tangentUB << std::endl;
+      //std::cout << "Iteration " << iter << std::endl;
+      //std::cout << "QP to solve:"<< std::endl; 
+      //std::cout << "Q" << std::endl << probEval_.Hessian << std::endl; 
+      //std::cout << "C" << std::endl << probEval_.diffObj << std::endl;
+      //std::cout << "A" << std::endl << probEval_.allDiffCstr << std::endl; 
+      //std::cout << "nrRowA" << std::endl << static_cast<int>(probEval_.allDiffCstr.rows()) << std::endl; 
+      //std::cout << "AL" << std::endl << -probEval_.allInfCstr << std::endl; 
+      //std::cout << "AU" << std::endl << -probEval_.allSupCstr << std::endl; 
+      //std::cout << "XL" << std::endl << probEval_.tangentLB << std::endl; 
+      //std::cout << "XU" << std::endl << probEval_.tangentUB << std::endl;
       QPSolver_.solve(
           probEval_.Hessian, 
-          probEval_.diffLag.transpose(),
+          probEval_.diffObj.transpose(),
           probEval_.allDiffCstr, 
           static_cast<int>(probEval_.allDiffCstr.rows()), 
           -probEval_.allInfCstr, 
@@ -58,14 +59,17 @@ namespace pgs
           probEval_.tangentLB, 
           probEval_.tangentUB);
       z_ = QPSolver_.result();
-      std::cout << "Result QP:" << std::endl << z_ << std::endl;
-      std::cout << "lambda QP:" << std::endl << QPSolver_.clambda() << std::endl;
-      lagMult_.bounds = QPSolver_.clambda().head(lagMult_.bounds.size());
-      lagMult_.linear = QPSolver_.clambda().segment(lagMult_.bounds.size(), lagMult_.linear.size());
-      lagMult_.nonLinear = QPSolver_.clambda().tail(lagMult_.nonLinear.size());
+      //std::cout << "Result QP:" << std::endl << z_ << std::endl;
+      //std::cout << "lambda QP:" << std::endl << QPSolver_.clambda() << std::endl;
+      lagMult_.bounds = -QPSolver_.clambda().head(lagMult_.bounds.size());
+      lagMult_.linear = -QPSolver_.clambda().segment(lagMult_.bounds.size(), lagMult_.linear.size());
+      lagMult_.nonLinear = -QPSolver_.clambda().tail(lagMult_.nonLinear.size());
       problem_->setX(problem_->x() + z_);
       updateAllProblemData(problem);
+      //printStatus();
     }
+    std::cout << "=============== Solution at iteration " << iter << " ========================="<< std::endl;
+    printStatus();
 
     return Results({ x0, CONVERGE, {} });
   }
@@ -75,7 +79,7 @@ namespace pgs
     std::cout << "================================================================="<< std::endl;
     Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", "[", "]");
     std::cout << "current x = " << problem_->x() << std::endl;
-    std::cout << "current z = " << z_.transpose().format(CleanFmt) << std::endl;
+    std::cout << "previous z = " << z_.transpose().format(CleanFmt) << "(value that was used to get to this x)"<< std::endl;
     lagMult_.print();
     probEval_.print();
     std::cout << "================================================================="<< std::endl;
@@ -105,8 +109,6 @@ namespace pgs
     
     probEval_.diffLag.resize(1, problem.M().dim());
 
-    //probEval_.infBndCstr.resize(problem.M().dim());
-    //probEval_.supBndCstr.resize(problem.M().dim());
     probEval_.infLinCstr.resize(cstrMngr_.totalDimLin());
     probEval_.supLinCstr.resize(cstrMngr_.totalDimLin());
     probEval_.infNonLinCstr.resize(cstrMngr_.totalDimNonLin());
@@ -124,9 +126,7 @@ namespace pgs
     lagMult_.nonLinear.resize(cstrMngr_.totalDimNonLin());
 
     probEval_.allCstr.resize(cstrMngr_.totalDimNonLin()+cstrMngr_.totalDimLin());
-    std::cout << "test" << std::endl;
     probEval_.allDiffCstr.resize(cstrMngr_.totalDimNonLin()+cstrMngr_.totalDimLin(), problem.M().dim());
-    std::cout << "test" << std::endl;
 
     lagMult_.all.resize(problem.M().dim() + cstrMngr_.totalDimNonLin() + cstrMngr_.totalDimLin());
 
@@ -236,47 +236,47 @@ namespace pgs
       const Eigen::VectorXd& supCstrNonLin, 
       const Eigen::MatrixXd& diffLag) const
   {
-    std::cout << "-----------------Convergence test---------------" << std::endl;
-    std::cout << "tau_P: " << tau_P << std::endl;
-    std::cout << "tau_D: " << tau_D << std::endl;
-    std::cout << "x: " << x << std::endl;
-    std::cout << "lagMultBnd: " << lagMultBnd.transpose() << std::endl;
-    std::cout << "tangentLB: " << tangentLB.transpose() << std::endl;
-    std::cout << "tangentUB: " << tangentUB.transpose() << std::endl;
-    std::cout << "lagMultLin: " << lagMultLin.transpose() << std::endl;
-    std::cout << "infCstrLin: " << infCstrLin.transpose() << std::endl;
-    std::cout << "supCstrLin: " << supCstrLin.transpose() << std::endl;
-    std::cout << "lagMultNonLin: " << lagMultNonLin.transpose() << std::endl;
-    std::cout << "infCstrNonLin: " << infCstrNonLin.transpose() << std::endl;
-    std::cout << "supCstrNonLin: " << supCstrNonLin.transpose() << std::endl;
-    std::cout << "diffLag: " << diffLag << std::endl;
+    //std::cout << "-----------------Convergence test---------------" << std::endl;
+    //std::cout << "tau_P: " << tau_P << std::endl;
+    //std::cout << "tau_D: " << tau_D << std::endl;
+    //std::cout << "x: " << x << std::endl;
+    //std::cout << "lagMultBnd: " << lagMultBnd.transpose() << std::endl;
+    //std::cout << "tangentLB: " << tangentLB.transpose() << std::endl;
+    //std::cout << "tangentUB: " << tangentUB.transpose() << std::endl;
+    //std::cout << "lagMultLin: " << lagMultLin.transpose() << std::endl;
+    //std::cout << "infCstrLin: " << infCstrLin.transpose() << std::endl;
+    //std::cout << "supCstrLin: " << supCstrLin.transpose() << std::endl;
+    //std::cout << "lagMultNonLin: " << lagMultNonLin.transpose() << std::endl;
+    //std::cout << "infCstrNonLin: " << infCstrNonLin.transpose() << std::endl;
+    //std::cout << "supCstrNonLin: " << supCstrNonLin.transpose() << std::endl;
+    //std::cout << "diffLag: " << diffLag << std::endl;
 
     Eigen::VectorXd invMapX(problem_->M().dim());
     problem_->M().invMap(invMapX, x.value());
-    std::cout << "invMap(x) = " << invMapX.transpose() << std::endl;
+    //std::cout << "invMap(x) = " << invMapX.transpose() << std::endl;
     double tau_x = tau_P*(1+invMapX.lpNorm<Eigen::Infinity>());
     double tau_l = tau_D*(1+fmax(fmax(lagMultBnd.lpNorm<Eigen::Infinity>(),lagMultLin.lpNorm<Eigen::Infinity>()),lagMultNonLin.lpNorm<Eigen::Infinity>()));
 
-    std::cout << "tau_x: " << tau_x << std::endl;
-    std::cout << "tau_l: " << tau_l << std::endl;
+    //std::cout << "tau_x: " << tau_x << std::endl;
+    //std::cout << "tau_l: " << tau_l << std::endl;
 
     //Test Lagrangian's derivative
-    std::cout << "Test KKT diff Lagrangian: " << std::endl;
+    //std::cout << "Test KKT diff Lagrangian: " << std::endl;
     bool convergedLag = (diffLag.array().abs() <= tau_l).all();
-    std::cout << "convergedLag = " << convergedLag << std::endl;
+    //std::cout << "convergedLag = " << convergedLag << std::endl;
     //Test bounds cstr
-    std::cout << "Test KKT Bound Cstr " << std::endl;
+    //std::cout << "Test KKT Bound Cstr " << std::endl;
     bool convergedBounds = KKTTestCstr(tau_l, tau_x, lagMultBnd, -tangentLB, -tangentUB); 
     //Test Linear cstr
-    std::cout << "Test KKT Linear Cstr " << std::endl;
+    //std::cout << "Test KKT Linear Cstr " << std::endl;
     bool convergedLin = KKTTestCstr(tau_l, tau_x, lagMultLin, infCstrLin, supCstrLin); 
     //Test NonLinear cstr
-    std::cout << "Test KKT NonLinear Cstr " << std::endl;
+    //std::cout << "Test KKT NonLinear Cstr " << std::endl;
     bool convergedNonLin = KKTTestCstr(tau_l, tau_x, lagMultNonLin, infCstrNonLin, supCstrNonLin); 
 
     bool converged = convergedLag && convergedBounds && convergedLin && convergedNonLin;
 
-    std::cout << "------------------------------------------------" << std::endl;
+    //std::cout << "------------------------------------------------" << std::endl;
     return converged;
   }
 
@@ -293,14 +293,14 @@ namespace pgs
           || (fabs(lagMult[i])<=tau_l && infCstr(i)>=-tau_x && supCstr(i)<=tau_x)
           || (lagMult[i]>tau_l && fabs(supCstr(i))<tau_x)))
       {
-        std::cout << "Cstr " << i << " failure" << std::endl;
-        std::cout << "!((lagMult[i]<-tau_l && fabs(infCstr(i))<tau_x) || (fabs(lagMult[i])>tau_l && infCstr(i)>=-tau_x && supCstr(i)<=tau_x) || (lagMult[i]>tau_l && fabs(supCstr(i))<tau_x)))"<< std::endl;
-        std::cout << "!((" << lagMult[i] << " < " << -tau_l << " && " << fabs(infCstr(i)) << " < " << tau_x << ") || ( " << fabs(lagMult[i]) << " > " << tau_l << " && " << infCstr(i)<< " >= " << -tau_x << " && " << supCstr(i) << " <= " << tau_x << ") || (" << lagMult[i] << " > " << tau_l << " && " << fabs(supCstr(i)) << " < " << tau_x << "))" << std::endl;
+        //std::cout << "Cstr " << i << " failure" << std::endl;
+        //std::cout << "!((lagMult[i]<-tau_l && fabs(infCstr(i))<tau_x) || (fabs(lagMult[i])>tau_l && infCstr(i)>=-tau_x && supCstr(i)<=tau_x) || (lagMult[i]>tau_l && fabs(supCstr(i))<tau_x)))"<< std::endl;
+        //std::cout << "!((" << lagMult[i] << " < " << -tau_l << " && " << fabs(infCstr(i)) << " < " << tau_x << ") || ( " << fabs(lagMult[i]) << " > " << tau_l << " && " << infCstr(i)<< " >= " << -tau_x << " && " << supCstr(i) << " <= " << tau_x << ") || (" << lagMult[i] << " > " << tau_l << " && " << fabs(supCstr(i)) << " < " << tau_x << "))" << std::endl;
         converged = false;
       }
       else
       {
-        std::cout << "Cstr " << i << " success" << std::endl;
+        //std::cout << "Cstr " << i << " success" << std::endl;
       }
     }
     return converged;
