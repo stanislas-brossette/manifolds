@@ -2,6 +2,9 @@
 #include <stdexcept>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include <Eigen/Core>
 
@@ -25,6 +28,7 @@ using namespace pgs;
 
 int main()
 {
+  srand((unsigned)time(NULL));
   std::cout << "Using: Eigen" << EIGEN_WORLD_VERSION << "." << EIGEN_MAJOR_VERSION <<"." << EIGEN_MINOR_VERSION<< std::endl;
   RealSpace R2(2);
   RealSpace R3(3);
