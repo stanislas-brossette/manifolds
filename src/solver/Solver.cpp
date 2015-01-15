@@ -15,6 +15,13 @@ namespace pgs
     initSolver(problem);
     std::cout << "Problem with " << cstrMngr_.totalDimLin() << " Linear cstr" << std::endl;
     std::cout << "And " << cstrMngr_.totalDimNonLin() << " NonLinear cstr" << std::endl;
+    std::cout << "Hessian update method is: ";
+    
+    switch(optimOptions_.hessianUpdateMethod){
+      case BFGS: std::cout << "BFGS" << std::endl; break;
+      case SR1: std::cout << "SR1" << std::endl; break;
+      case EXACT: std::cout << "EXACT" << std::endl; break;
+    }
 
     z_.setZero();
     lagMult_.initOnes();
@@ -69,7 +76,7 @@ namespace pgs
       
       hessianUpdate(probEval_.Hessian, problem_->x(), 1, z_, 
                       probEval_.prevDiffLag, probEval_.diffLag);
-      printStatus();
+      //printStatus();
     }
     std::cout << "=============== Solution at iteration " << iter << " ========================="<< std::endl;
     printStatus();
@@ -311,9 +318,9 @@ namespace pgs
     return converged;
   }
   
-  void Solver::hessianUpdate(RefMat H, const Point& x, const double alpha, 
-          const ConstRefVec step, const ConstRefMat prevDiffLag, 
-          const ConstRefMat diffLag)
+  void Solver::hessianUpdate(Eigen::MatrixXd& H, const Point& x, 
+      const double alpha, const Eigen::VectorXd& step, 
+      const Eigen::MatrixXd& prevDiffLag, const Eigen::MatrixXd& diffLag)
   {
     Eigen::VectorXd sk(problem_->M().dim());
     Eigen::VectorXd yk(problem_->M().dim());
@@ -323,11 +330,21 @@ namespace pgs
     x.getManifold().applyTransport(H, H, x.value(), alpha*step);
     x.getManifold().applyInvTransport(H, H, x.value(), alpha*step);
 
-    computeBFGS(H, sk, yk);
-    //computeSR1(H, sk, yk);
+    if(sk.transpose()*yk<=0)
+    {
+      std::cerr << "Warning: Secant equation not respected... <sk,yk> <= 0 " << std::endl;
+    }
+
+    switch(optimOptions_.hessianUpdateMethod){
+      case BFGS: computeBFGS(H, sk, yk); break;
+      case SR1: computeSR1(H, sk, yk); break;
+      case EXACT: 
+        throw std::runtime_error("EXACT update is not implemented yet"); 
+        break;
+    }
   }
 
-  void Solver::computeBFGS(RefMat B, const ConstRefVec s,const ConstRefVec y)
+  void Solver::computeBFGS(Eigen::MatrixXd& B, const Eigen::VectorXd& s,const Eigen::VectorXd& y)
   {
     Eigen::VectorXd Bs = B*s;
     double sBs = s.transpose()*B*s;
@@ -344,7 +361,7 @@ namespace pgs
     //TODO Implement EigenValue control (LDL)
   }
 
-  void Solver::computeSR1(RefMat B, const ConstRefVec s,const ConstRefVec y)
+  void Solver::computeSR1(Eigen::MatrixXd& B, const Eigen::VectorXd& s,const Eigen::VectorXd& y)
   {
     double r = 1e-8;
     Eigen::VectorXd Bs = B*s;

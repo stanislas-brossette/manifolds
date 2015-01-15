@@ -7,6 +7,7 @@
 #include <pgsolver/solver/Problem.h>
 #include <pgsolver/solver/Results.h>
 #include <pgsolver/manifolds/Point.h>
+#include <pgsolver/solver/OptimOptions.h>
 #include <pgsolver/solver/TempData.h>
 #include <pgsolver/solver/ConstraintManager.h>
 
@@ -24,6 +25,8 @@ namespace pgs
       // TODO: Add a security to this method so that it can't be called before
       // solver is initialized
       void printStatus();
+      
+      OptimOptions optimOptions_;
 
     protected:
       /// \brief Initializes the solver, makes all the memory allocations
@@ -62,14 +65,14 @@ namespace pgs
       double computeLagrangian();
       Eigen::MatrixXd computeDiffLagrangian();
 
-      void hessianUpdate(RefMat H, const Point& x, const double alpha, 
-          const ConstRefVec step, const ConstRefMat prevDiffLag, 
-          const ConstRefMat diffLag);
+      void hessianUpdate(Eigen::MatrixXd& H, const Point& x, const double alpha, 
+          const Eigen::VectorXd& step, const Eigen::MatrixXd& prevDiffLag, 
+          const Eigen::MatrixXd& diffLag);
       
       /// \brief Performs a BFGS update on B
-      void computeBFGS(RefMat B, const ConstRefVec s,const ConstRefVec y);
+      void computeBFGS(Eigen::MatrixXd& B, const Eigen::VectorXd& s,const Eigen::VectorXd& y);
       /// \brief Performs a SR1 update on B
-      void computeSR1(RefMat B, const ConstRefVec s,const ConstRefVec y);
+      void computeSR1(Eigen::MatrixXd& B, const Eigen::VectorXd& s,const Eigen::VectorXd& y);
 
     private:
       /// \brief Structure containing The Lagrange Multiplier for Linear and nonLinear Constraints

@@ -27,6 +27,7 @@ set(HEADERS
   ../include/pgsolver/solver/ExampleGeometricProblem.h
   #../include/pgsolver/solver/ExampleProblem.h
   #../include/pgsolver/solver/Filter.h
+  ../include/pgsolver/solver/OptimOptions.h
   ../include/pgsolver/solver/Problem.h
   ../include/pgsolver/solver/Solver.h
   ../include/pgsolver/solver/TempData.h
