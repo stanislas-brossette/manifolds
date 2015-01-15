@@ -9,7 +9,7 @@ set(SOURCES
   solver/ConstraintManager.cpp
   solver/ExampleGeometricProblem.cpp
   #solver/ExampleProblem.cpp
-  #solver/Filter.cpp
+  solver/Filter.cpp
   solver/HessianUpdater.cpp
   solver/Problem.cpp
   solver/Solver.cpp
@@ -27,11 +27,11 @@ set(HEADERS
   ../include/pgsolver/solver/ConstraintManager.h
   ../include/pgsolver/solver/ExampleGeometricProblem.h
   #../include/pgsolver/solver/ExampleProblem.h
-  #../include/pgsolver/solver/Filter.h
+  ../include/pgsolver/solver/Filter.h
   ../include/pgsolver/solver/HessianUpdater.h
-  ../include/pgsolver/solver/OptimOptions.h
   ../include/pgsolver/solver/Problem.h
   ../include/pgsolver/solver/Solver.h
+  ../include/pgsolver/solver/SolverOptions.h
   ../include/pgsolver/solver/TempData.h
 )
 

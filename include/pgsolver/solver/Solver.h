@@ -7,10 +7,11 @@
 #include <pgsolver/manifolds/Point.h>
 
 #include <pgsolver/solver/ConstraintManager.h>
+#include <pgsolver/solver/Filter.h>
 #include <pgsolver/solver/HessianUpdater.h>
-#include <pgsolver/solver/OptimOptions.h>
 #include <pgsolver/solver/Problem.h>
 #include <pgsolver/solver/Results.h>
+#include <pgsolver/solver/SolverOptions.h>
 #include <pgsolver/solver/TempData.h>
 
 #include <EigenQP/LSSOL.h>
@@ -29,9 +30,9 @@ namespace pgs
       void printStatus();
 
     public:
-      void setHessianBFGS(){optimOptions_.hessianUpdateMethod = BFGS;};
-      void setHessianSR1(){optimOptions_.hessianUpdateMethod = SR1;};
-      void setHessianEXACT(){optimOptions_.hessianUpdateMethod = EXACT;};
+      void setHessianBFGS(){opt_.hessianUpdateMethod = BFGS;};
+      void setHessianSR1(){opt_.hessianUpdateMethod = SR1;};
+      void setHessianEXACT(){opt_.hessianUpdateMethod = EXACT;};
       
 
     protected:
@@ -80,9 +81,12 @@ namespace pgs
       /// \brief Set of vector and matrices representing the State of the problem
       ProblemEvaluation probEval_;    
       /// \brief Option for the solver
-      SolverOption opt_;              
+      SolverOptions opt_;              
       /// \brief Objet that knows and manages the memory location for all the constraints of the problem
       ConstraintManager cstrMngr_;
+
+      /// \brief Filter
+      Filter filter_;
 
       /// \brief pointer on the problem considered
       Problem* problem_;
@@ -90,8 +94,6 @@ namespace pgs
       /// \brief QP solver
       Eigen::LSSOL QPSolver_;
 
-      /// \brief Set of options for the optimization
-      OptimOptions optimOptions_;
   };
 }
 

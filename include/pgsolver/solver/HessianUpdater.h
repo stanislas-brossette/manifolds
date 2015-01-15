@@ -5,7 +5,7 @@
 
 #include <pgsolver/manifolds/Point.h>
 
-#include <pgsolver/solver/OptimOptions.h>
+#include <pgsolver/solver/SolverOptions.h>
 
 namespace pgs
 {
@@ -15,7 +15,7 @@ namespace pgs
       static void hessianUpdate(Eigen::MatrixXd& H, const Point& x, const double alpha, 
           const Eigen::VectorXd& step, const Eigen::MatrixXd& prevDiffLag, 
           const Eigen::MatrixXd& diffLag,
-          const OptimOptions& optimOptions);
+          const SolverOptions& solverOptions);
       /// \brief Performs a BFGS update on B
       static void computeBFGS(Eigen::MatrixXd& B, const Eigen::VectorXd& s,const Eigen::VectorXd& y);
       /// \brief Performs a SR1 update on B

@@ -1,5 +1,6 @@
 #include <pgsolver/solver/ConstraintManager.h>
 #include <pgsolver/solver/HessianUpdater.h>
+#include <pgsolver/solver/Filter.h>
 #include <pgsolver/solver/Solver.h>
 
 namespace pgs
@@ -7,6 +8,7 @@ namespace pgs
   Solver::Solver()
   {
     std::cout << "New Solver" << std::endl;
+    filter_ = Filter();
   }
 
   Results Solver::solve(Problem& problem, Point& x0)
@@ -18,7 +20,7 @@ namespace pgs
     std::cout << "And " << cstrMngr_.totalDimNonLin() << " NonLinear cstr" << std::endl;
     std::cout << "Hessian update method is: ";
     
-    switch(optimOptions_.hessianUpdateMethod){
+    switch(opt_.hessianUpdateMethod){
       case BFGS: std::cout << "BFGS" << std::endl; break;
       case SR1: std::cout << "SR1" << std::endl; break;
       case EXACT: std::cout << "EXACT" << std::endl; break;
@@ -77,7 +79,7 @@ namespace pgs
       
       HessianUpdater::hessianUpdate(probEval_.Hessian, problem_->x(), 1, z_, 
                       probEval_.prevDiffLag, probEval_.diffLag,
-                      optimOptions_);
+                      opt_);
       //printStatus();
     }
     std::cout << "=============== Solution at iteration " << iter << " ========================="<< std::endl;
@@ -103,6 +105,12 @@ namespace pgs
     opt_.maxIter = 100;
     opt_.epsilon_P = 1e-6;
     opt_.epsilon_D = 1e-2;
+    opt_.gammaFilter = 1e-6;
+    opt_.filterOpt = Filter::eOption::EXISTING;
+
+    filter_.setGamma(opt_.gammaFilter);
+    filter_.setOption(opt_.filterOpt);
+
     probEval_.diffObj.resize(1, problem.M().dim());
     probEval_.tangentLB.resize(problem.M().dim());
     probEval_.tangentUB.resize(problem.M().dim());

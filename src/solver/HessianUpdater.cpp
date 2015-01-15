@@ -4,7 +4,7 @@
 #include <pgsolver/manifolds/Manifold.h>
 #include <pgsolver/manifolds/Point.h>
 
-#include <pgsolver/solver/OptimOptions.h>
+#include <pgsolver/solver/SolverOptions.h>
 #include <pgsolver/solver/HessianUpdater.h>
 
 
@@ -13,7 +13,7 @@ namespace pgs
   void HessianUpdater::hessianUpdate(Eigen::MatrixXd& H, const Point& x, 
       const double alpha, const Eigen::VectorXd& step, 
       const Eigen::MatrixXd& prevDiffLag, const Eigen::MatrixXd& diffLag, 
-      const OptimOptions& optimOptions)
+      const SolverOptions& solverOptions)
   {
     Index dim = x.getManifold().dim();
     Eigen::VectorXd sk(dim);
@@ -29,7 +29,7 @@ namespace pgs
       std::cerr << "Warning: Secant equation not respected... <sk,yk> <= 0 " << std::endl;
     }
 
-    switch(optimOptions.hessianUpdateMethod){
+    switch(solverOptions.hessianUpdateMethod){
       case BFGS: computeBFGS(H, sk, yk); break;
       case SR1: computeSR1(H, sk, yk); break;
       case EXACT: 
