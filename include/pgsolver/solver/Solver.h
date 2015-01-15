@@ -10,6 +10,8 @@
 #include <pgsolver/solver/TempData.h>
 #include <pgsolver/solver/ConstraintManager.h>
 
+#include <EigenQP/LSSOL.h>
+
 namespace pgs
 {
   class Solver
@@ -23,19 +25,55 @@ namespace pgs
       // solver is initialized
       void printStatus();
 
-    private:
+    protected:
       /// \brief Initializes the solver, makes all the memory allocations
       void initSolver(Problem& p); 
       void updateAllProblemData(Problem& p);
+      /// \brief Tests the convergence of the solver based on the criterion
+      /// presented in SNOPT paper page 108
+      /// \param tau_P Primal problem convergence criterion
+      /// \param tau_D Dual problem convergence criterion
+      /// \param x point where the convergence is tested
+      /// \param lagMult Concatenation of all the Lagrange Multiplier with on
+      /// top the ones associated with linear constraints, followed by the ones
+      /// associated with non-linear constraints
+      /// \param cstr Concatenation of all the constraints with on
+      /// top the linear constraints, followed by the non-linear constraints
+      /// \param diffLag Derivative of the Lagrangian (Jacobian. Should be a line-vector)
+      bool convergence(
+        double tau_P, double tau_D, const Point& x, 
+        const Eigen::VectorXd& lagMultBnd, 
+        const Eigen::VectorXd& tangentLB, 
+        const Eigen::VectorXd& tangentUB, 
+        const Eigen::VectorXd& lagMultLin, 
+        const Eigen::VectorXd& infCstrLin, 
+        const Eigen::VectorXd& supCstrLin, 
+        const Eigen::VectorXd& lagMultNonLin, 
+        const Eigen::VectorXd& infCstrNonLin, 
+        const Eigen::VectorXd& supCstrNonLin, 
+        const Eigen::MatrixXd& diffLag) const;
+      bool KKTTestCstr(
+        double tau_l, double tau_x, 
+        const Eigen::VectorXd& lagMult, 
+        const Eigen::VectorXd& infCstr, 
+        const Eigen::VectorXd& supCstr) const;
 
+      /// \brief Computes the value of the Lagrangian of the problem
       double computeLagrangian();
       Eigen::MatrixXd computeDiffLagrangian();
 
+      void hessianUpdate(RefMat H, const Point& x, const double alpha, 
+          const ConstRefVec step, const ConstRefMat prevDiffLag, 
+          const ConstRefMat diffLag);
+      
+      /// \brief Performs a BFGS update on B
+      void computeBFGS(RefMat B, const ConstRefVec s,const ConstRefVec y);
+      /// \brief Performs a SR1 update on B
+      void computeSR1(RefMat B, const ConstRefVec s,const ConstRefVec y);
+
     private:
-      /// \brief The Lagrange Multiplier for Linear Constraints
-      Eigen::VectorXd lagMultLin_;    
-      /// \brief The Lagrange Multiplier for Non Linear Constraints
-      Eigen::VectorXd lagMultNonLin_; 
+      /// \brief Structure containing The Lagrange Multiplier for Linear and nonLinear Constraints
+      LagrangeMultipliers lagMult_;    
       /// \brief Vector that contains the step data
       Eigen::VectorXd z_;             
 
@@ -48,6 +86,9 @@ namespace pgs
 
       /// \brief pointer on the problem considered
       Problem* problem_;
+
+      /// \brief QP solver
+      Eigen::LSSOL QPSolver_;
   };
 }
 
