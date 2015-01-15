@@ -346,7 +346,8 @@ namespace pgs
 
   void Solver::computeBFGS(Eigen::MatrixXd& B, const Eigen::VectorXd& s,const Eigen::VectorXd& y)
   {
-    Eigen::VectorXd Bs = B*s;
+    Eigen::VectorXd Bs;
+    Bs.noalias() = B*s;
     double sBs = s.transpose()*B*s;
     double theta;
     if(s.transpose()*y >= 0.2*sBs)
@@ -364,7 +365,8 @@ namespace pgs
   void Solver::computeSR1(Eigen::MatrixXd& B, const Eigen::VectorXd& s,const Eigen::VectorXd& y)
   {
     double r = 1e-8;
-    Eigen::VectorXd Bs = B*s;
+    Eigen::VectorXd Bs;
+    Bs.noalias() = B*s;
     Eigen::VectorXd ymBs = y - Bs;
     if(fabs(s.transpose()*ymBs)>=r*s.lpNorm<1>()*ymBs.lpNorm<1>())
       B = B + (ymBs*ymBs.transpose())/(ymBs.transpose()*s);
