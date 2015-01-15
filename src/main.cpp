@@ -44,6 +44,7 @@ int main()
   {
     ExampleGeometricProblem myProb;
     Solver mySolver;
+    mySolver.setHessianBFGS();
     Eigen::VectorXd v0 = Eigen::VectorXd::Random(3);
     Point x0 = myProb.M().createPoint(v0);
     mySolver.solve(myProb, x0);

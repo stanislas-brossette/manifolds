@@ -4,12 +4,14 @@
 #include <iostream>
 #include <Eigen/Core>
 
+#include <pgsolver/manifolds/Point.h>
+
+#include <pgsolver/solver/ConstraintManager.h>
+#include <pgsolver/solver/HessianUpdater.h>
+#include <pgsolver/solver/OptimOptions.h>
 #include <pgsolver/solver/Problem.h>
 #include <pgsolver/solver/Results.h>
-#include <pgsolver/manifolds/Point.h>
-#include <pgsolver/solver/OptimOptions.h>
 #include <pgsolver/solver/TempData.h>
-#include <pgsolver/solver/ConstraintManager.h>
 
 #include <EigenQP/LSSOL.h>
 
@@ -25,8 +27,12 @@ namespace pgs
       // TODO: Add a security to this method so that it can't be called before
       // solver is initialized
       void printStatus();
+
+    public:
+      void setHessianBFGS(){optimOptions_.hessianUpdateMethod = BFGS;};
+      void setHessianSR1(){optimOptions_.hessianUpdateMethod = SR1;};
+      void setHessianEXACT(){optimOptions_.hessianUpdateMethod = EXACT;};
       
-      OptimOptions optimOptions_;
 
     protected:
       /// \brief Initializes the solver, makes all the memory allocations
@@ -65,15 +71,6 @@ namespace pgs
       double computeLagrangian();
       Eigen::MatrixXd computeDiffLagrangian();
 
-      void hessianUpdate(Eigen::MatrixXd& H, const Point& x, const double alpha, 
-          const Eigen::VectorXd& step, const Eigen::MatrixXd& prevDiffLag, 
-          const Eigen::MatrixXd& diffLag);
-      
-      /// \brief Performs a BFGS update on B
-      void computeBFGS(Eigen::MatrixXd& B, const Eigen::VectorXd& s,const Eigen::VectorXd& y);
-      /// \brief Performs a SR1 update on B
-      void computeSR1(Eigen::MatrixXd& B, const Eigen::VectorXd& s,const Eigen::VectorXd& y);
-
     private:
       /// \brief Structure containing The Lagrange Multiplier for Linear and nonLinear Constraints
       LagrangeMultipliers lagMult_;    
@@ -92,6 +89,9 @@ namespace pgs
 
       /// \brief QP solver
       Eigen::LSSOL QPSolver_;
+
+      /// \brief Set of options for the optimization
+      OptimOptions optimOptions_;
   };
 }
 
