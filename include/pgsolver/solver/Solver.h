@@ -18,7 +18,7 @@
 
 namespace pgs
 {
-  class Solver
+  class PGS_API Solver
   {
     public:
       Solver();

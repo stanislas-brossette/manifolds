@@ -47,14 +47,28 @@ foreach(lib ${LIBRARIES})
     VERSION ${PROJECT_VERSION}
     SOVERSION 0.1
   )
+  IF(PKG_CONFIG_FOUND)
   PKG_CONFIG_USE_DEPENDENCY(${lib} EigenQP)
-  target_link_libraries(${lib})
+  ELSE()
+  target_link_libraries(${lib} EigenQP)
+  ENDIF()
+  target_compile_definitions(${lib} PUBLIC "-DPGS_EXPORT")
 endforeach()
 
 target_compile_definitions(PGSolverTest PUBLIC "-DPGS_ASSERT_THROW -DEIGEN_RUNTIME_NO_MALLOC")
 
 install(TARGETS PGSolver
-  DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
+  RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
+)
+if(WIN32)
+install(TARGETS PGSolverTest
+  RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
+)
+endif()
 
 add_executable(PGSolverExe main.cpp)
 target_link_libraries(PGSolverExe PGSolver)

@@ -14,5 +14,7 @@ namespace pgs
   typedef Eigen::VectorXd::Index Index;
 }
 
+#include <pgsolver/pgs_api.h>
+
 #endif //_PGS_DEFS_H_
 

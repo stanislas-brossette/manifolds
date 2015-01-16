@@ -10,7 +10,7 @@
 
 namespace pgs
 {
-  class ExampleGeometricProblem : public Problem
+  class PGS_API ExampleGeometricProblem : public Problem
   {
     public:
       ExampleGeometricProblem();
