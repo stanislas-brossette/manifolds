@@ -11,6 +11,7 @@ set(SOURCES
   #solver/ExampleProblem.cpp
   solver/Filter.cpp
   solver/HessianUpdater.cpp
+  solver/LineSearcher.cpp
   solver/Problem.cpp
   solver/Solver.cpp
   )
@@ -29,6 +30,7 @@ set(HEADERS
   #../include/pgsolver/solver/ExampleProblem.h
   ../include/pgsolver/solver/Filter.h
   ../include/pgsolver/solver/HessianUpdater.h
+  ../include/pgsolver/solver/LineSearcher.h
   ../include/pgsolver/solver/Problem.h
   ../include/pgsolver/solver/Solver.h
   ../include/pgsolver/solver/SolverOptions.h

@@ -5,7 +5,7 @@
 
 namespace pgs
 {
-  enum eHessianUpdate { EXACT, BFGS, SR1 };
+  enum eHessianUpdateMethod { EXACT, BFGS, SR1 };
   enum eGlobalization { NONE, LINESEARCH, TRUSTREGION };
   enum eLineSearchType { FILTER };
   enum eTrustRegionType { };
@@ -17,7 +17,7 @@ namespace pgs
     double gammaFilter = 1e-6;
     Filter::eOption filterOpt = Filter::EXISTING;
 
-    eHessianUpdate hessianUpdateMethod = BFGS; 
+    eHessianUpdateMethod hessianUpdateMethod = BFGS; 
     eGlobalization globalizationMethod = LINESEARCH;
     eLineSearchType lineSearchMethod = FILTER;
   };

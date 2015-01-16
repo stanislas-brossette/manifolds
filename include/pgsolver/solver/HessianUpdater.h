@@ -24,3 +24,4 @@ namespace pgs
 }
 
 #endif //_PGS_HESSIAN_UPDATER_H_
+
