@@ -69,12 +69,12 @@ namespace pgs
           probEval_.tangentLB, 
           probEval_.tangentUB);
       z_ = QPSolver_.result();
-
+      
       //Globalization
       switch(opt_.globalizationMethod){
         case NONE: alpha = 1; break;
         case LINESEARCH: 
-          alpha = LineSearcher::LineSearch(problem, filter_); 
+          alpha = LineSearcher::LineSearch(*this, problem, filter_, z_); 
           break;
         case TRUSTREGION: 
           std::runtime_error("EXACT update is not implemented yet"); 
@@ -85,7 +85,10 @@ namespace pgs
       lagMult_.bounds = -QPSolver_.clambda().head(lagMult_.bounds.size());
       lagMult_.linear = -QPSolver_.clambda().segment(lagMult_.bounds.size(), lagMult_.linear.size());
       lagMult_.nonLinear = -QPSolver_.clambda().tail(lagMult_.nonLinear.size());
-      problem.setX(problem.x() + z_);
+
+      //Update the value of x before update problem evaluation
+      problem.setX(problem.x() + alpha*z_);
+      problem.setZ(Eigen::VectorXd::Zero(z_.size()));
 
       //Update of the values in problemEval
       updateAllProblemData(problem);
@@ -167,6 +170,9 @@ namespace pgs
     probEval_.allCstr.resize(cstrMngr_.totalDimNonLin()+cstrMngr_.totalDimLin());
     probEval_.allDiffCstr.resize(cstrMngr_.totalDimNonLin()+cstrMngr_.totalDimLin(), problem.M().dim());
 
+    probEval_.violCstr.resize(problem.M().dim() + cstrMngr_.totalDimNonLin()+cstrMngr_.totalDimLin());
+    probEval_.violCstr.setZero();
+
     lagMult_.all.resize(problem.M().dim() + cstrMngr_.totalDimNonLin() + cstrMngr_.totalDimLin());
 
     QPSolver_ = Eigen::LSSOL(int(problem.M().dim()), int(cstrMngr_.totalDimNonLin() + cstrMngr_.totalDimLin()));
@@ -218,6 +224,55 @@ namespace pgs
     probEval_.lag = computeLagrangian();
     probEval_.prevDiffLag = probEval_.diffLag;
     probEval_.diffLag = computeDiffLagrangian();
+  }
+
+  void Solver::updateObj(Problem& p)
+  {
+    p.evalObj(probEval_.obj); 
+  }
+
+  void Solver::updateAllCstr(Problem& p)
+  {
+    p.getTangentLB(probEval_.tangentLB);
+    p.getTangentUB(probEval_.tangentUB);
+
+    for (size_t i = 0; i<p.numberOfCstr(); ++i)
+    {
+      // for each constraint we fill the correct lines of the matrices using
+      // getView
+      // TODO this does not seem very efficient
+      p.evalLinCstr(cstrMngr_.getViewLin(probEval_.linCstr,i),i);
+      p.getLinCstrLB(cstrMngr_.getViewLin(probEval_.linCstrLB,i),i);
+      p.getLinCstrUB(cstrMngr_.getViewLin(probEval_.linCstrUB,i),i);
+
+      p.evalNonLinCstr(cstrMngr_.getViewNonLin(probEval_.nonLinCstr,i),i);
+      p.getNonLinCstrLB(cstrMngr_.getViewNonLin(probEval_.nonLinCstrLB,i),i);
+      p.getNonLinCstrUB(cstrMngr_.getViewNonLin(probEval_.nonLinCstrUB,i),i);
+    }
+  }
+
+  void Solver::updateViolations(Problem& p)
+  {
+    updateAllCstr(p);
+
+    for (Index i = 0; i < p.M().dim(); ++i)
+    {
+      probEval_.violCstr(i) = fmax(
+          fmax(probEval_.tangentLB(i) - p.z()(i), 
+            p.z()(i) - probEval_.tangentUB(i)),0);
+    }
+    for (Index i = 0; i<probEval_.linCstr.size(); ++i)
+    {
+      probEval_.violCstr(i) = fmax(
+          fmax(probEval_.linCstrLB(i) - probEval_.linCstr(i), 
+            probEval_.linCstr(i) - probEval_.linCstrUB(i)),0);
+    }
+    for (Index i = 0; i<probEval_.nonLinCstr.size(); ++i)
+    {
+      probEval_.violCstr(i) = fmax(
+          fmax(probEval_.nonLinCstrLB(i) - probEval_.nonLinCstr(i), 
+            probEval_.nonLinCstr(i) - probEval_.nonLinCstrUB(i)),0);
+    }
   }
 
   double Solver::computeLagrangian()
@@ -341,5 +396,11 @@ namespace pgs
       }
     }
     return converged;
+  }
+
+
+  const ProblemEvaluation& Solver::probEval() const
+  {
+    return probEval_;
   }
 }

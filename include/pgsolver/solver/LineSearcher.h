@@ -4,6 +4,7 @@
 #include <Eigen/Core>
 
 #include <pgsolver/solver/Problem.h>
+#include <pgsolver/solver/Solver.h>
 #include <pgsolver/solver/SolverOptions.h>
 
 namespace pgs
@@ -11,7 +12,7 @@ namespace pgs
   class LineSearcher
   {
     public:
-      static double LineSearch(Problem& p, Filter& filter_);
+      static double LineSearch(Solver& s, Problem& p, Filter& filter_, Eigen::VectorXd& step);
   };
 }
 

@@ -12,9 +12,9 @@ namespace pgs
   struct SolverOptions
   {
     int maxIter = 1000;
-    double epsilon_P = 1e-6;
-    double epsilon_D = 1e-6;
-    double gammaFilter = 1e-6;
+    double epsilon_P = 1e-3;
+    double epsilon_D = 1e-3;
+    double gammaFilter = 1e-12;
     Filter::eOption filterOpt = Filter::EXISTING;
 
     eHessianUpdateMethod hessianUpdateMethod = BFGS; 

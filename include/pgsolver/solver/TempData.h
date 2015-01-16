@@ -5,6 +5,9 @@
 
 namespace pgs
 {
+  /// \brief Structure containing the current evaluation of the problem.
+  /// Its integrity is NOT guarantied. In the sence that all the values are not
+  /// necessarily evaluated at the same point. 
   struct ProblemEvaluation
   {
     /// \brief Value of the costFunction
@@ -62,6 +65,9 @@ namespace pgs
     /// \brief linearized sup bound of nonlinear constraints (supBound -
     /// nonLinConstraint - supBound
     Eigen::VectorXd supNonLinCstr;
+
+    /// \brief Violations of all the constraints
+    Eigen::VectorXd violCstr;
 
     /// \brief Concatenation of infLinCstr and infNonLinCstr 
     Eigen::VectorXd allInfCstr;

@@ -33,12 +33,29 @@ namespace pgs
       void setHessianBFGS(){opt_.hessianUpdateMethod = BFGS;};
       void setHessianSR1(){opt_.hessianUpdateMethod = SR1;};
       void setHessianEXACT(){opt_.hessianUpdateMethod = EXACT;};
+
+      /// \brief Accessor for probEval
+      const ProblemEvaluation& probEval() const;
+
+      /// \brief Updates Everything in probEval
+      void updateAllProblemData(Problem& p);
+
+      /// \brief Updates the Objective
+      void updateObj(Problem& p);
+
+      /// \brief Updates all the Constraints
+      void updateAllCstr(Problem& p);
+
+      /// \brief Updates the cstrViolation vector. This method also updates all
+      /// the constraints
+      void updateViolations(Problem& p);
+
       
 
     protected:
       /// \brief Initializes the solver, makes all the memory allocations
       void initSolver(Problem& p); 
-      void updateAllProblemData(Problem& p);
+
       /// \brief Tests the convergence of the solver based on the criterion
       /// presented in SNOPT paper page 108
       /// \param tau_P Primal problem convergence criterion
