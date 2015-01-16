@@ -6,7 +6,7 @@ namespace pgs
   enum eHessianUpdate { EXACT, BFGS, SR1 };
   struct OptimOptions
   {
-    eHessianUpdate hessianUpdateMethod=BFGS; 
+    eHessianUpdate hessianUpdateMethod=BFGS;
   };
 }
 #endif //_PGS_OPTIM_OPTIONS_H_

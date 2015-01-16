@@ -10,7 +10,7 @@
 
 namespace pgs
 {
-  class Problem
+  class PGS_API Problem
   {
     public:
       /// \brief Constructor taking a manifold a setting x and z to zero

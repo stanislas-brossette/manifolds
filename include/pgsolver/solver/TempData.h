@@ -153,9 +153,10 @@ namespace pgs
 
   struct SolverOption
   {
-    int maxIter = 1000;
-    double epsilon_P = 1e-6;
-    double epsilon_D = 1e-6;
+    SolverOption() : maxIter(1000), epsilon_P(1e-6), epsilon_D(1e-6) {}
+    int maxIter;
+    double epsilon_P;
+    double epsilon_D;
   };
 
 }

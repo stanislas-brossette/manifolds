@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -std=c++0x -pedantic")
+if(UNIX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -std=c++0x -pedantic")
+endif()
 
 enable_testing()
 
@@ -30,9 +32,34 @@ PKG_CONFIG_APPEND_LIBS(PGSolver)
 
 # Require Eigen >= 3.2.1 for Eigen::Ref
 SET(Eigen_REQUIRED "eigen3 >= 3.2.1")
-search_for_eigen()
+IF(PKG_CONFIG_FOUND)
+  SEARCH_FOR_EIGEN()
+ELSE()
+  find_path(Eigen_INCLUDE_DIR NAMES signature_of_eigen3_matrix_library
+    PATHS
+    ${CMAKE_INSTALL_PREFIX}/include
+    PATH_SUFFIXES eigen3 eigen
+  )
+  INCLUDE_DIRECTORIES(SYSTEM ${Eigen_INCLUDE_DIR})
+ENDIF()
+IF(PKG_CONFIG_FOUND)
 ADD_REQUIRED_DEPENDENCY(EigenQP)
+ELSE()
+find_path(EigenQP_INCLUDE_DIR NAMES EigenQP/EigenQPAPI.h
+    PATHS
+    ${CMAKE_INSTALL_PREFIX}/include
+  )
+  INCLUDE_DIRECTORIES(SYSTEM ${EigenQP_INCLUDE_DIR})
+find_path(EigenQP_LIB_DIR NAMES EigenQP.lib libEigenQP.so
+    PATHS
+    ${CMAKE_INSTALL_PREFIX}/library
+    )
+   LINK_DIRECTORIES(${EigenQP_LIB_DIR})
+ENDIF()
 include_directories(include)
+
+FIND_PACKAGE(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
 
 # add_subdirectory(bin)
 # add_subdirectory(share)

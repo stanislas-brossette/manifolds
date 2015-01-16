@@ -206,7 +206,7 @@ namespace pgs
       //valid ones have a Lagrange multiplier of value 0. Cf Note on
       //implementation details
       res = res + lagMult_.bounds[i]*(fmin(-probEval_.tangentLB[i],0)
-             + fmax(-probEval_.tangentUB[i], 0)); 
+             + fmax(-probEval_.tangentUB[i], 0));
     }
     for( Index i = 0; i<cstrMngr_.totalDimLin(); ++i)
     {
@@ -214,15 +214,15 @@ namespace pgs
       //valid ones have a Lagrange multiplier of value 0. Cf Note on
       //implementation details
       res = res + lagMult_.linear[i]*(fmin(probEval_.infLinCstr[i],0)
-             + fmax(probEval_.supLinCstr[i], 0)); 
+             + fmax(probEval_.supLinCstr[i], 0));
     }
     for( Index i = 0; i<cstrMngr_.totalDimNonLin(); ++i)
     {
       //only the constraints that are violated appear in the lagrangian. The
       //valid ones have a Lagrange multiplier of value 0. Cf Note on
       //implementation details
-      res = res + lagMult_.nonLinear[i]*(fmin(probEval_.infNonLinCstr[i],0)
-             + fmax(probEval_.supNonLinCstr[i], 0)); 
+      res = res + lagMult_.nonLinear[i]*(fmin(probEval_.infNonLinCstr[i],0.0)
+             + fmax(probEval_.supNonLinCstr[i], 0.0));
     }
     return res;
   }
