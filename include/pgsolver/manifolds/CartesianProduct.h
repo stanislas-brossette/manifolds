@@ -7,7 +7,7 @@
 namespace pgs
 {
   /// \brief Manifold representing the cartesian product of several submanifolds
-  class CartesianProduct : public Manifold
+  class PGS_API CartesianProduct : public Manifold
   {
   public:
     /// \brief Default constructor

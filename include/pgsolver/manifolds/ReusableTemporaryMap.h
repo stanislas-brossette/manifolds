@@ -3,9 +3,11 @@
 
 #include <Eigen/Core>
 
+#include <pgsolver/pgs_api.h>
+
 namespace pgs
 {
-  class ReusableTemporaryMap
+  class PGS_API ReusableTemporaryMap
   {
   public:
     ReusableTemporaryMap(size_t size = 256);

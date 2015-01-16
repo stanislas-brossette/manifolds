@@ -4,17 +4,21 @@
 #include <iostream>
 #include <Eigen/Core>
 
+#include <pgsolver/manifolds/Point.h>
+
+#include <pgsolver/solver/ConstraintManager.h>
+#include <pgsolver/solver/Filter.h>
+#include <pgsolver/solver/HessianUpdater.h>
 #include <pgsolver/solver/Problem.h>
 #include <pgsolver/solver/Results.h>
-#include <pgsolver/manifolds/Point.h>
+#include <pgsolver/solver/SolverOptions.h>
 #include <pgsolver/solver/TempData.h>
-#include <pgsolver/solver/ConstraintManager.h>
 
 #include <EigenQP/LSSOL.h>
 
 namespace pgs
 {
-  class Solver
+  class PGS_API Solver
   {
     public:
       Solver();
@@ -24,6 +28,12 @@ namespace pgs
       // TODO: Add a security to this method so that it can't be called before
       // solver is initialized
       void printStatus();
+
+    public:
+      void setHessianBFGS(){opt_.hessianUpdateMethod = BFGS;};
+      void setHessianSR1(){opt_.hessianUpdateMethod = SR1;};
+      void setHessianEXACT(){opt_.hessianUpdateMethod = EXACT;};
+      
 
     protected:
       /// \brief Initializes the solver, makes all the memory allocations
@@ -62,15 +72,6 @@ namespace pgs
       double computeLagrangian();
       Eigen::MatrixXd computeDiffLagrangian();
 
-      void hessianUpdate(RefMat H, const Point& x, const double alpha, 
-          const ConstRefVec step, const ConstRefMat prevDiffLag, 
-          const ConstRefMat diffLag);
-      
-      /// \brief Performs a BFGS update on B
-      void computeBFGS(RefMat B, const ConstRefVec s,const ConstRefVec y);
-      /// \brief Performs a SR1 update on B
-      void computeSR1(RefMat B, const ConstRefVec s,const ConstRefVec y);
-
     private:
       /// \brief Structure containing The Lagrange Multiplier for Linear and nonLinear Constraints
       LagrangeMultipliers lagMult_;    
@@ -80,15 +81,19 @@ namespace pgs
       /// \brief Set of vector and matrices representing the State of the problem
       ProblemEvaluation probEval_;    
       /// \brief Option for the solver
-      SolverOption opt_;              
+      SolverOptions opt_;              
       /// \brief Objet that knows and manages the memory location for all the constraints of the problem
       ConstraintManager cstrMngr_;
+
+      /// \brief Filter
+      Filter filter_;
 
       /// \brief pointer on the problem considered
       Problem* problem_;
 
       /// \brief QP solver
       Eigen::LSSOL QPSolver_;
+
   };
 }
 

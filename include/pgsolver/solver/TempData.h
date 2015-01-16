@@ -150,13 +150,5 @@ namespace pgs
       //std::cout << all.format(CleanFmt)<< std::endl;
     }
   };
-
-  struct SolverOption
-  {
-    int maxIter = 1000;
-    double epsilon_P = 1e-6;
-    double epsilon_D = 1e-6;
-  };
-
 }
 #endif //_PGS_TEMPDATA_H_

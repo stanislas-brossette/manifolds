@@ -1,11 +1,15 @@
-#include <pgsolver/solver/Solver.h>
 #include <pgsolver/solver/ConstraintManager.h>
+#include <pgsolver/solver/LineSearcher.h>
+#include <pgsolver/solver/HessianUpdater.h>
+#include <pgsolver/solver/Filter.h>
+#include <pgsolver/solver/Solver.h>
 
 namespace pgs
 {
   Solver::Solver()
   {
     std::cout << "New Solver" << std::endl;
+    filter_ = Filter();
   }
 
   Results Solver::solve(Problem& problem, Point& x0)
@@ -16,6 +20,19 @@ namespace pgs
     std::cout << "Problem with " << cstrMngr_.totalDimLin() << " Linear cstr" << std::endl;
     std::cout << "And " << cstrMngr_.totalDimNonLin() << " NonLinear cstr" << std::endl;
 
+    std::cout << "Hessian update method is: ";
+    switch(opt_.hessianUpdateMethod){
+      case BFGS: std::cout << "BFGS" << std::endl; break;
+      case SR1: std::cout << "SR1" << std::endl; break;
+      case EXACT: std::cout << "EXACT" << std::endl; break;
+    }
+    std::cout << "Globalization method is: ";
+    switch(opt_.globalizationMethod){
+      case NONE: std::cout << "NONE" << std::endl; break;
+      case LINESEARCH: std::cout << "LINESEARCH" << std::endl; break;
+      case TRUSTREGION: std::cout << "TRUSTREGION" << std::endl; break;
+    }
+
     z_.setZero();
     lagMult_.initOnes();
     updateAllProblemData(problem);
@@ -24,8 +41,9 @@ namespace pgs
 
     int iter = 0;
     int maxIter = 100;
+    double alpha = 1;
 
-    while(!convergence(opt_.epsilon_P , opt_.epsilon_P, problem_->x(), 
+    while(!convergence(opt_.epsilon_P , opt_.epsilon_P, problem.x(), 
                         lagMult_.bounds, 
                         probEval_.tangentLB, 
                         probEval_.tangentUB, 
@@ -39,16 +57,8 @@ namespace pgs
                         && iter < maxIter)
     {
       iter++;
-      //std::cout << "Iteration " << iter << std::endl;
-      //std::cout << "QP to solve:"<< std::endl; 
-      //std::cout << "Q" << std::endl << probEval_.Hessian << std::endl; 
-      //std::cout << "C" << std::endl << probEval_.diffObj << std::endl;
-      //std::cout << "A" << std::endl << probEval_.allDiffCstr << std::endl; 
-      //std::cout << "nrRowA" << std::endl << static_cast<int>(probEval_.allDiffCstr.rows()) << std::endl; 
-      //std::cout << "AL" << std::endl << -probEval_.allInfCstr << std::endl; 
-      //std::cout << "AU" << std::endl << -probEval_.allSupCstr << std::endl; 
-      //std::cout << "XL" << std::endl << probEval_.tangentLB << std::endl; 
-      //std::cout << "XU" << std::endl << probEval_.tangentUB << std::endl;
+
+      //Resolution of the quadratic tangent problem 
       QPSolver_.solve(
           probEval_.Hessian, 
           probEval_.diffObj.transpose(),
@@ -59,17 +69,33 @@ namespace pgs
           probEval_.tangentLB, 
           probEval_.tangentUB);
       z_ = QPSolver_.result();
-      //std::cout << "Result QP:" << std::endl << z_ << std::endl;
-      //std::cout << "lambda QP:" << std::endl << QPSolver_.clambda() << std::endl;
+
+      //Globalization
+      switch(opt_.globalizationMethod){
+        case NONE: alpha = 1; break;
+        case LINESEARCH: 
+          alpha = LineSearcher::LineSearch(problem, filter_); 
+          break;
+        case TRUSTREGION: 
+          std::runtime_error("EXACT update is not implemented yet"); 
+          break;
+      }
+      std::cout << "LineSearch gives alpha = " << alpha << std::endl;
+      
       lagMult_.bounds = -QPSolver_.clambda().head(lagMult_.bounds.size());
       lagMult_.linear = -QPSolver_.clambda().segment(lagMult_.bounds.size(), lagMult_.linear.size());
       lagMult_.nonLinear = -QPSolver_.clambda().tail(lagMult_.nonLinear.size());
-      problem_->setX(problem_->x() + z_);
+      problem.setX(problem.x() + z_);
+
+      //Update of the values in problemEval
       updateAllProblemData(problem);
       
-      hessianUpdate(probEval_.Hessian, problem_->x(), 1, z_, 
-                      probEval_.prevDiffLag, probEval_.diffLag);
-      printStatus();
+      //Update of the Hessian
+      HessianUpdater::hessianUpdate(probEval_.Hessian, 
+          problem.x(), 1, z_, 
+          probEval_.prevDiffLag, probEval_.diffLag, opt_);
+
+      //printStatus();
     }
     std::cout << "=============== Solution at iteration " << iter << " ========================="<< std::endl;
     printStatus();
@@ -94,6 +120,12 @@ namespace pgs
     opt_.maxIter = 100;
     opt_.epsilon_P = 1e-6;
     opt_.epsilon_D = 1e-2;
+    opt_.gammaFilter = 1e-6;
+    opt_.filterOpt = Filter::eOption::EXISTING;
+
+    filter_.setGamma(opt_.gammaFilter);
+    filter_.setOption(opt_.filterOpt);
+
     probEval_.diffObj.resize(1, problem.M().dim());
     probEval_.tangentLB.resize(problem.M().dim());
     probEval_.tangentUB.resize(problem.M().dim());
@@ -180,8 +212,8 @@ namespace pgs
     probEval_.allCstr.head(cstrMngr_.totalDimLin()) = probEval_.linCstr;
     probEval_.allCstr.tail(cstrMngr_.totalDimNonLin()) = probEval_.nonLinCstr;
 
-    probEval_.allDiffCstr.block(0,0, cstrMngr_.totalDimLin(), problem_->M().dim()) = probEval_.diffLinCstr;
-    probEval_.allDiffCstr.block(cstrMngr_.totalDimLin(), 0, cstrMngr_.totalDimNonLin(), problem_->M().dim()) = probEval_.diffNonLinCstr;
+    probEval_.allDiffCstr.block(0,0, cstrMngr_.totalDimLin(), p.M().dim()) = probEval_.diffLinCstr;
+    probEval_.allDiffCstr.block(cstrMngr_.totalDimLin(), 0, cstrMngr_.totalDimNonLin(), p.M().dim()) = probEval_.diffNonLinCstr;
 
     probEval_.lag = computeLagrangian();
     probEval_.prevDiffLag = probEval_.diffLag;
@@ -197,7 +229,7 @@ namespace pgs
       //valid ones have a Lagrange multiplier of value 0. Cf Note on
       //implementation details
       res = res + lagMult_.bounds[i]*(fmin(-probEval_.tangentLB[i],0)
-             + fmax(-probEval_.tangentUB[i], 0)); 
+             + fmax(-probEval_.tangentUB[i], 0));
     }
     for( Index i = 0; i<cstrMngr_.totalDimLin(); ++i)
     {
@@ -205,15 +237,15 @@ namespace pgs
       //valid ones have a Lagrange multiplier of value 0. Cf Note on
       //implementation details
       res = res + lagMult_.linear[i]*(fmin(probEval_.infLinCstr[i],0)
-             + fmax(probEval_.supLinCstr[i], 0)); 
+             + fmax(probEval_.supLinCstr[i], 0));
     }
     for( Index i = 0; i<cstrMngr_.totalDimNonLin(); ++i)
     {
       //only the constraints that are violated appear in the lagrangian. The
       //valid ones have a Lagrange multiplier of value 0. Cf Note on
       //implementation details
-      res = res + lagMult_.nonLinear[i]*(fmin(probEval_.infNonLinCstr[i],0)
-             + fmax(probEval_.supNonLinCstr[i], 0)); 
+      res = res + lagMult_.nonLinear[i]*(fmin(probEval_.infNonLinCstr[i],0.0)
+             + fmax(probEval_.supNonLinCstr[i], 0.0));
     }
     return res;
   }
@@ -256,8 +288,8 @@ namespace pgs
     //std::cout << "supCstrNonLin: " << supCstrNonLin.transpose() << std::endl;
     //std::cout << "diffLag: " << diffLag << std::endl;
 
-    Eigen::VectorXd invMapX(problem_->M().dim());
-    problem_->M().invMap(invMapX, x.value());
+    Eigen::VectorXd invMapX(x.getManifold().dim());
+    x.getManifold().invMap(invMapX, x.value());
     //std::cout << "invMap(x) = " << invMapX.transpose() << std::endl;
     double tau_x = tau_P*(1+invMapX.lpNorm<Eigen::Infinity>());
     double tau_l = tau_D*(1+fmax(fmax(lagMultBnd.lpNorm<Eigen::Infinity>(),lagMultLin.lpNorm<Eigen::Infinity>()),lagMultNonLin.lpNorm<Eigen::Infinity>()));
@@ -309,48 +341,5 @@ namespace pgs
       }
     }
     return converged;
-  }
-  
-  void Solver::hessianUpdate(RefMat H, const Point& x, const double alpha, 
-          const ConstRefVec step, const ConstRefMat prevDiffLag, 
-          const ConstRefMat diffLag)
-  {
-    Eigen::VectorXd sk(problem_->M().dim());
-    Eigen::VectorXd yk(problem_->M().dim());
-    x.getManifold().applyTransport(sk, alpha*step, x.value(), alpha*step); 
-    x.getManifold().applyTransport(yk, prevDiffLag.transpose(), x.value(), alpha*step);
-    yk = diffLag.transpose() - yk;
-    x.getManifold().applyTransport(H, H, x.value(), alpha*step);
-    x.getManifold().applyInvTransport(H, H, x.value(), alpha*step);
-
-    computeBFGS(H, sk, yk);
-    //computeSR1(H, sk, yk);
-  }
-
-  void Solver::computeBFGS(RefMat B, const ConstRefVec s,const ConstRefVec y)
-  {
-    Eigen::VectorXd Bs = B*s;
-    double sBs = s.transpose()*B*s;
-    double theta;
-    if(s.transpose()*y >= 0.2*sBs)
-      theta = 1;
-    else
-      theta = (0.8*sBs)/(sBs-s.transpose()*y);
-
-    Eigen::VectorXd r = theta*y + (1-theta)*Bs;
-
-    B = B - (Bs*Bs.transpose())/sBs + (r*r.transpose())/(s.transpose()*r);
-
-    //TODO Implement EigenValue control (LDL)
-  }
-
-  void Solver::computeSR1(RefMat B, const ConstRefVec s,const ConstRefVec y)
-  {
-    double r = 1e-8;
-    Eigen::VectorXd Bs = B*s;
-    Eigen::VectorXd ymBs = y - Bs;
-    if(fabs(s.transpose()*ymBs)>=r*s.lpNorm<1>()*ymBs.lpNorm<1>())
-      B = B + (ymBs*ymBs.transpose())/(ymBs.transpose()*s);
-    //else B = B
   }
 }

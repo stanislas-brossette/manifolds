@@ -26,7 +26,7 @@ namespace pgs
   /// The map function is \f$ \phi:\mathbb{M},T^\mathbb{M}\to\mathbb{M}
   /// \f$ and the map function on a point \f$x\f$ is \f$ \phi_x:T_x^\mathbb{M}\to\mathbb{M}\f$ 
   
-  class Manifold : public RefCounter
+  class PGS_API Manifold : public RefCounter
   {
   public:
     /// \brief Default Constructor that sets the dimensions of the manifold and of its
