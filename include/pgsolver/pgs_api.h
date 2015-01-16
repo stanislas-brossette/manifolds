@@ -1,5 +1,5 @@
 #ifndef _H_PGSAPI_H_
-#define _H_PGSPAPI_H_
+#define _H_PGSAPI_H_
 
 #ifdef WIN32
     #define PGS_DLLIMPORT __declspec(dllimport)
