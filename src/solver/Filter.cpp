@@ -1,3 +1,4 @@
+#include <iostream>
 #include <pgsolver/solver/Filter.h>
 //#include "lex_assert.h"
 
@@ -104,6 +105,14 @@ namespace pgs
       case SEPARATE:  return (i.first.array()>=p.first.array()).all(); break;
     }
     return ((i.first - p.first).array() >= a).all();
+  }
+
+  void Filter::print() const
+  {
+    for (std::list<Entry>::const_iterator it = filter.begin(); it!= filter.end(); ++it)
+    {
+      std::cout << it->first.transpose() << std::endl;
+    }
   }
   
   

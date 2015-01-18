@@ -34,6 +34,7 @@ namespace pgs
     // Minimize the norm of the optim variable
     // x = [x1, x2, x3];
     // f(x) = x1^2+x2^2+x3^2;
+    
     Eigen::Vector3d v = phi_x_z().value();
     out = v.squaredNorm();
   }

@@ -11,10 +11,10 @@ namespace pgs
   enum eTrustRegionType { };
   struct SolverOptions
   {
-    int maxIter = 1000;
+    int maxIter = 100;
     double epsilon_P = 1e-3;
     double epsilon_D = 1e-3;
-    double gammaFilter = 1e-12;
+    double gammaFilter = 1e-16;
     Filter::eOption filterOpt = Filter::EXISTING;
 
     eHessianUpdateMethod hessianUpdateMethod = BFGS; 

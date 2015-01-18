@@ -50,7 +50,8 @@ namespace pgs
       /// the constraints
       void updateViolations(Problem& p);
 
-      
+      /// \brief Option for the solver
+      SolverOptions opt_;              
 
     protected:
       /// \brief Initializes the solver, makes all the memory allocations
@@ -97,8 +98,6 @@ namespace pgs
 
       /// \brief Set of vector and matrices representing the State of the problem
       ProblemEvaluation probEval_;    
-      /// \brief Option for the solver
-      SolverOptions opt_;              
       /// \brief Objet that knows and manages the memory location for all the constraints of the problem
       ConstraintManager cstrMngr_;
 

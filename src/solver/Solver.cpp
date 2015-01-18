@@ -40,7 +40,6 @@ namespace pgs
     printStatus();
 
     int iter = 0;
-    int maxIter = 100;
     double alpha = 1;
 
     while(!convergence(opt_.epsilon_P , opt_.epsilon_P, problem.x(), 
@@ -54,9 +53,10 @@ namespace pgs
                         probEval_.infNonLinCstr, 
                         probEval_.supNonLinCstr, 
                         probEval_.diffLag) 
-                        && iter < maxIter)
+                        && iter < opt_.maxIter)
     {
       iter++;
+      std::cout <<std::endl<< "********************Iteration " << iter <<"*********************"<< std::endl;
 
       //Resolution of the quadratic tangent problem 
       QPSolver_.solve(
@@ -82,9 +82,9 @@ namespace pgs
       }
       std::cout << "LineSearch gives alpha = " << alpha << std::endl;
       
-      lagMult_.bounds = -QPSolver_.clambda().head(lagMult_.bounds.size());
-      lagMult_.linear = -QPSolver_.clambda().segment(lagMult_.bounds.size(), lagMult_.linear.size());
-      lagMult_.nonLinear = -QPSolver_.clambda().tail(lagMult_.nonLinear.size());
+      lagMult_.bounds = (1-alpha)*lagMult_.bounds + alpha*(-QPSolver_.clambda().head(lagMult_.bounds.size()));
+      lagMult_.linear = (1-alpha)*lagMult_.linear + alpha*(-QPSolver_.clambda().segment(lagMult_.bounds.size(), lagMult_.linear.size()));
+      lagMult_.nonLinear = (1-alpha)*lagMult_.nonLinear + alpha*(-QPSolver_.clambda().tail(lagMult_.nonLinear.size()));
 
       //Update the value of x before update problem evaluation
       problem.setX(problem.x() + alpha*z_);
@@ -120,11 +120,6 @@ namespace pgs
   void Solver::initSolver(Problem& problem)
   {
     problem_ = &problem;
-    opt_.maxIter = 100;
-    opt_.epsilon_P = 1e-6;
-    opt_.epsilon_D = 1e-2;
-    opt_.gammaFilter = 1e-6;
-    opt_.filterOpt = Filter::eOption::EXISTING;
 
     filter_.setGamma(opt_.gammaFilter);
     filter_.setOption(opt_.filterOpt);
@@ -353,17 +348,17 @@ namespace pgs
     //std::cout << "tau_l: " << tau_l << std::endl;
 
     //Test Lagrangian's derivative
-    //std::cout << "Test KKT diff Lagrangian: " << std::endl;
+    std::cout << "Test KKT diff Lagrangian: " << std::endl;
     bool convergedLag = (diffLag.array().abs() <= tau_l).all();
-    //std::cout << "convergedLag = " << convergedLag << std::endl;
+    std::cout << "convergedLag = " << convergedLag << std::endl;
     //Test bounds cstr
-    //std::cout << "Test KKT Bound Cstr " << std::endl;
+    std::cout << "Test KKT Bound Cstr " << std::endl;
     bool convergedBounds = KKTTestCstr(tau_l, tau_x, lagMultBnd, -tangentLB, -tangentUB); 
     //Test Linear cstr
-    //std::cout << "Test KKT Linear Cstr " << std::endl;
+    std::cout << "Test KKT Linear Cstr " << std::endl;
     bool convergedLin = KKTTestCstr(tau_l, tau_x, lagMultLin, infCstrLin, supCstrLin); 
     //Test NonLinear cstr
-    //std::cout << "Test KKT NonLinear Cstr " << std::endl;
+    std::cout << "Test KKT NonLinear Cstr " << std::endl;
     bool convergedNonLin = KKTTestCstr(tau_l, tau_x, lagMultNonLin, infCstrNonLin, supCstrNonLin); 
 
     bool converged = convergedLag && convergedBounds && convergedLin && convergedNonLin;
@@ -385,14 +380,14 @@ namespace pgs
           || (fabs(lagMult[i])<=tau_l && infCstr(i)>=-tau_x && supCstr(i)<=tau_x)
           || (lagMult[i]>tau_l && fabs(supCstr(i))<tau_x)))
       {
-        //std::cout << "Cstr " << i << " failure" << std::endl;
+        std::cout << "Cstr " << i << " failure" << std::endl;
         //std::cout << "!((lagMult[i]<-tau_l && fabs(infCstr(i))<tau_x) || (fabs(lagMult[i])>tau_l && infCstr(i)>=-tau_x && supCstr(i)<=tau_x) || (lagMult[i]>tau_l && fabs(supCstr(i))<tau_x)))"<< std::endl;
         //std::cout << "!((" << lagMult[i] << " < " << -tau_l << " && " << fabs(infCstr(i)) << " < " << tau_x << ") || ( " << fabs(lagMult[i]) << " > " << tau_l << " && " << infCstr(i)<< " >= " << -tau_x << " && " << supCstr(i) << " <= " << tau_x << ") || (" << lagMult[i] << " > " << tau_l << " && " << fabs(supCstr(i)) << " < " << tau_x << "))" << std::endl;
         converged = false;
       }
       else
       {
-        //std::cout << "Cstr " << i << " success" << std::endl;
+        std::cout << "Cstr " << i << " success" << std::endl;
       }
     }
     return converged;

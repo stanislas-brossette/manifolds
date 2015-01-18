@@ -15,13 +15,13 @@ namespace pgs
     std::cout << "In line-search"<< std::endl;
     std::cout << "Starting point: "<< p.x() << std::endl;
     std::cout << "Search direction: "<< step.transpose() << std::endl;
-    std::cout << filter_.size() << std::endl;
+    std::cout << "filter.size() = " << filter_.size() << std::endl;
     std::cout << "F = " << s.probEval().obj << std::endl;
     std::cout << "H = " << s.probEval().violCstr.transpose() << std::endl;
 
     Eigen::Vector2d FH;
 
-    while(alpha > 1e-12)
+    while(alpha > 1e-3)
     {
       p.setZ(alpha*step);
       s.updateObj(p);
@@ -35,6 +35,11 @@ namespace pgs
       }
       else
       {
+        std::cout << "Trial with alpha = " << alpha << std::endl;
+        std::cout << "alpha*step = " << p.z() << std::endl;
+        std::cout << "Filter refused: " << FH.transpose() << std::endl;
+        std::cout << "Filter = " << std::endl;
+        filter_.print();
         alpha = alpha*0.9;
       }
     }

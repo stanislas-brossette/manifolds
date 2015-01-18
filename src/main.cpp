@@ -44,6 +44,11 @@ int main()
   {
     ExampleGeometricProblem myProb;
     Solver mySolver;
+    mySolver.opt_.maxIter = 100;
+    mySolver.opt_.epsilon_P = 1e-6;
+    mySolver.opt_.epsilon_D = 1e-2;
+    mySolver.opt_.gammaFilter = 1e-16;
+    mySolver.opt_.filterOpt = Filter::eOption::EXISTING;
     mySolver.setHessianBFGS();
     Eigen::VectorXd v0 = Eigen::VectorXd::Random(3);
     Point x0 = myProb.M().createPoint(v0);

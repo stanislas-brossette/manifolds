@@ -37,6 +37,7 @@ namespace pgs
   
     size_t size() const;
     const Eigen::VectorXd& get(size_t i) const;
+    void print() const;
   
   
   private:
