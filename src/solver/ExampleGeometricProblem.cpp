@@ -9,7 +9,7 @@ namespace pgs
       a(1.0),
       b(0.0),
       c(-2.0),
-      d(0.2),
+      d(0.6),
       R1(0.5),
       R2(1.0)
   {
@@ -60,7 +60,7 @@ namespace pgs
       // Constraint 0
       // Point on plan of equation a.x1+b.x2+c.x3+d=0
       Eigen::Vector3d v = phi_x_z().value();
-      out << a*v[0] + b*v[1] + c*v[2] + d;
+      out << a*v[0] + b*v[1] + c*v[2];
     }
     else if(i==1)
     {
@@ -97,7 +97,7 @@ namespace pgs
     assert(out.size() == linCstrDim(i) && "wrong size");
     if(i == 0)
     {
-      out << 0;
+      out << -d;
     }
     else if(i==1)
     {
@@ -109,7 +109,7 @@ namespace pgs
     assert(out.size() == linCstrDim(i) && "wrong size");
     if(i == 0)
     {
-      out << 0;
+      out << -d;
     }
     else if(i==1)
     {

@@ -86,6 +86,9 @@ namespace pgs
         const Eigen::VectorXd& infCstr,
         const Eigen::VectorXd& supCstr) const;
 
+      /// \brief Method testing the feasibility of a set of constraints
+      bool feasibility(const ProblemEvaluation& probEval, double feasibilityMin);
+
       /// \brief Computes the value of the Lagrangian of the problem
       double computeLagrangian();
       Eigen::MatrixXd computeDiffLagrangian();
@@ -109,6 +112,8 @@ namespace pgs
 
       /// \brief QP solver
       Eigen::LSSOL QPSolver_;
+      /// \brief LP solver
+      Eigen::LSSOL LPSolver_;
 
   };
 }

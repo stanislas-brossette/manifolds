@@ -63,6 +63,10 @@ namespace pgs
       iter++;
       std::cout <<std::endl<< "********************Iteration " << iter <<"*********************"<< std::endl;
 
+      //Test Feasibility
+      bool feasible = feasibility(probEval_, opt_.epsilonFeasibility);
+      std::cout << "Problem Feasibility = " << feasible << std::endl;
+
       //Resolution of the quadratic tangent problem
       QPSolver_.solve(
           probEval_.Hessian,
@@ -142,71 +146,123 @@ namespace pgs
     filter_.setGamma(opt_.gammaFilter);
     filter_.setOption(opt_.filterOpt);
 
-    probEval_.diffObj.resize(1, problem.M().dim());
-    probEval_.prevDiffObj.resize(1, problem.M().dim());
+    probEval_.varDim = problem.M().dim();
+    probEval_.linCstrDim = cstrMngr_.totalDimLin();
+    probEval_.nonLinCstrDim = cstrMngr_.totalDimNonLin();
+
+    probEval_.diffObj.resize(1, probEval_.varDim);
+    probEval_.prevDiffObj.resize(1, probEval_.varDim);
     probEval_.diffObj.setZero();
     probEval_.prevDiffObj.setZero();
-    probEval_.tangentLB.resize(problem.M().dim());
-    probEval_.tangentUB.resize(problem.M().dim());
+    probEval_.tangentLB.resize(probEval_.varDim);
+    probEval_.tangentLB.setZero();
+    probEval_.tangentUB.resize(probEval_.varDim);
+    probEval_.tangentUB.setZero();
 
     probEval_.linCstr.resize(cstrMngr_.totalDimLin());
-    probEval_.diffLinCstr.resize(cstrMngr_.totalDimLin(), problem.M().dim());
+    probEval_.linCstr.setZero();
+    probEval_.diffLinCstr.resize(cstrMngr_.totalDimLin(), probEval_.varDim);
+    probEval_.diffLinCstr.setZero();
     probEval_.linCstrLB.resize(cstrMngr_.totalDimLin());
+    probEval_.linCstrLB.setZero();
     probEval_.linCstrUB.resize(cstrMngr_.totalDimLin());
+    probEval_.linCstrUB.setZero();
 
     probEval_.nonLinCstr.resize(cstrMngr_.totalDimNonLin());
-    probEval_.diffNonLinCstr.resize(cstrMngr_.totalDimNonLin(), problem.M().dim());
+    probEval_.nonLinCstr.setZero();
+    probEval_.diffNonLinCstr.resize(cstrMngr_.totalDimNonLin(), probEval_.varDim);
     probEval_.diffNonLinCstr.setZero();
-    probEval_.prevDiffNonLinCstr.resize(cstrMngr_.totalDimNonLin(), problem.M().dim());
+    probEval_.prevDiffNonLinCstr.resize(cstrMngr_.totalDimNonLin(), probEval_.varDim);
     probEval_.prevDiffNonLinCstr.setZero();
     probEval_.nonLinCstrLB.resize(cstrMngr_.totalDimNonLin());
+    probEval_.nonLinCstrLB.setZero();
     probEval_.nonLinCstrUB.resize(cstrMngr_.totalDimNonLin());
+    probEval_.nonLinCstrUB.setZero();
 
-    probEval_.Hessian.resize(problem.M().dim(), problem.M().dim());
+    probEval_.Hessian.resize(probEval_.varDim, probEval_.varDim);
     probEval_.Hessian.setIdentity();
 
-    probEval_.HessianCost.resize(problem.M().dim(), problem.M().dim());
+    probEval_.HessianCost.resize(probEval_.varDim, probEval_.varDim);
     probEval_.HessianCost.setIdentity();
 
     probEval_.HessiansCstr.resize(static_cast<size_t>(cstrMngr_.totalDimNonLin()));
     for(size_t i =0; i<static_cast<size_t>(cstrMngr_.totalDimNonLin()); ++i)
     {
-      probEval_.HessiansCstr[i].resize(problem.M().dim(), problem.M().dim());
+      probEval_.HessiansCstr[i].resize(probEval_.varDim, probEval_.varDim);
       probEval_.HessiansCstr[i].setIdentity();
     }
 
     probEval_.Hessian.setIdentity();
 
-    probEval_.diffLag.resize(1, problem.M().dim());
-    probEval_.prevDiffLag.resize(1, problem.M().dim());
+    probEval_.diffLag.resize(1, probEval_.varDim);
+    probEval_.prevDiffLag.resize(1, probEval_.varDim);
     probEval_.diffLag.setZero();
     probEval_.prevDiffLag.setZero();
 
     probEval_.infLinCstr.resize(cstrMngr_.totalDimLin());
+    probEval_.infLinCstr.setZero();
     probEval_.supLinCstr.resize(cstrMngr_.totalDimLin());
+    probEval_.supLinCstr.setZero();
     probEval_.infNonLinCstr.resize(cstrMngr_.totalDimNonLin());
+    probEval_.infNonLinCstr.setZero();
     probEval_.supNonLinCstr.resize(cstrMngr_.totalDimNonLin());
+    probEval_.supNonLinCstr.setZero();
 
     probEval_.allInfCstr.resize(cstrMngr_.totalDimNonLin()
                                 + cstrMngr_.totalDimLin());
+    probEval_.allInfCstr.setZero();
     probEval_.allSupCstr.resize(cstrMngr_.totalDimNonLin()
                                 + cstrMngr_.totalDimLin());
+    probEval_.allSupCstr.setZero();
 
 
-    z_.resize(problem.M().dim());
-    lagMult_.bounds.resize(problem.M().dim());
+    z_.resize(probEval_.varDim);
+    lagMult_.bounds.resize(probEval_.varDim);
+    lagMult_.bounds.setZero();
     lagMult_.linear.resize(cstrMngr_.totalDimLin());
+    lagMult_.linear.setZero();
     lagMult_.nonLinear.resize(cstrMngr_.totalDimNonLin());
+    lagMult_.nonLinear.setZero();
 
     probEval_.allCstr.resize(cstrMngr_.totalDimNonLin()+cstrMngr_.totalDimLin());
-    probEval_.allDiffCstr.resize(cstrMngr_.totalDimNonLin()+cstrMngr_.totalDimLin(), problem.M().dim());
+    probEval_.allCstr.setZero();
+    probEval_.allDiffCstr.resize(cstrMngr_.totalDim(), probEval_.varDim);
+    probEval_.allDiffCstr.setZero();
 
-    probEval_.violCstr.resize(problem.M().dim() + cstrMngr_.totalDimNonLin()+cstrMngr_.totalDimLin());
+    probEval_.violCstr.resize(probEval_.varDim + cstrMngr_.totalDim());
     probEval_.violCstr.setZero();
 
-    lagMult_.all.resize(problem.M().dim() + cstrMngr_.totalDimNonLin() + cstrMngr_.totalDimLin());
+    lagMult_.all.resize(probEval_.varDim + cstrMngr_.totalDim());
+    lagMult_.all.setZero();
 
-    QPSolver_ = Eigen::LSSOL(int(problem.M().dim()), int(cstrMngr_.totalDimNonLin() + cstrMngr_.totalDimLin()));
+    Index nFeasCstr = 2*cstrMngr_.totalDim();
+    probEval_.feasibilityCostF.resize(probEval_.varDim + nFeasCstr );
+    probEval_.feasibilityCostF.head(probEval_.varDim) = Eigen::VectorXd::Zero(probEval_.varDim);
+    probEval_.feasibilityCostF.tail( nFeasCstr ) = Eigen::VectorXd::Constant( nFeasCstr, 1);
+    probEval_.feasibilityAllDiffCstr.resize( nFeasCstr, probEval_.varDim + nFeasCstr );
+    probEval_.feasibilityAllDiffCstr.setZero();
+    probEval_.feasibilityAllDiffCstr.block(0,probEval_.varDim, nFeasCstr, nFeasCstr) = Eigen::MatrixXd::Identity(nFeasCstr, nFeasCstr);
+    probEval_.feasibilityLB.resize(probEval_.varDim + nFeasCstr);
+    probEval_.feasibilityLB.setZero();
+    probEval_.feasibilityLB.head(probEval_.varDim) = probEval_.tangentLB;
+    probEval_.feasibilityUB.resize(probEval_.varDim + nFeasCstr);
+    probEval_.feasibilityUB.head(probEval_.varDim) = probEval_.tangentUB;
+    probEval_.feasibilityUB.tail(nFeasCstr) = 
+           Eigen::VectorXd::Constant(nFeasCstr, std::numeric_limits<double>::infinity());
+
+    probEval_.feasibilityInfCstr.resize(nFeasCstr);
+    probEval_.feasibilityInfCstr.setZero();
+    probEval_.feasibilitySupCstr.resize(nFeasCstr);
+    probEval_.feasibilitySupCstr.setZero();
+
+    probEval_.infeasibilityResult.resize(nFeasCstr);
+    probEval_.infeasibilityResult.setZero();
+
+    QPSolver_ = Eigen::LSSOL(int(probEval_.varDim), int(cstrMngr_.totalDim()));
+
+    //TODO: This is WRONG. It should be a LSSOL solver of type LP. Dunno yet how
+    //to make one.
+    LPSolver_ = Eigen::LSSOL(int(probEval_.varDim + nFeasCstr), int(nFeasCstr));
 
   }
 
@@ -223,7 +279,8 @@ namespace pgs
     {
       // for each constraint we fill the correct lines of the matrices using
       // getView
-      // TODO this does not seem very efficient
+      // TODO this does not seem very efficient. Some constant data are
+      // recomputed...
       p.evalLinCstr(cstrMngr_.getViewLin(probEval_.linCstr,i),i);
       p.evalLinCstrDiff(cstrMngr_.getViewLin(probEval_.diffLinCstr,i),i);
       p.getLinCstrLB(cstrMngr_.getViewLin(probEval_.linCstrLB,i),i);
@@ -257,6 +314,24 @@ namespace pgs
     probEval_.lag = computeLagrangian();
     probEval_.prevDiffLag = probEval_.diffLag;
     probEval_.diffLag = computeDiffLagrangian();
+
+
+
+    Index nFeasCstr = 2*cstrMngr_.totalDim();
+    for(Index i = 0; i < cstrMngr_.totalDim(); ++i)
+    {
+      probEval_.feasibilityAllDiffCstr.block(2*i, 0, 1, probEval_.varDim) =
+        probEval_.allDiffCstr.row(i);
+      probEval_.feasibilityAllDiffCstr.block(2*i+1, 0, 1, probEval_.varDim) =
+        - probEval_.allDiffCstr.row(i);
+      probEval_.feasibilityInfCstr(2*i) = -probEval_.allInfCstr(i);
+      probEval_.feasibilityInfCstr(2*i+1) = probEval_.allSupCstr(i);
+    }
+    probEval_.feasibilitySupCstr = Eigen::VectorXd::Constant(nFeasCstr, std::numeric_limits<double>::infinity());
+    probEval_.feasibilityLB.head(probEval_.varDim) = probEval_.tangentLB;
+    probEval_.feasibilityLB.tail(nFeasCstr) = Eigen::VectorXd::Zero(nFeasCstr);
+    probEval_.feasibilityUB.head(probEval_.varDim) = probEval_.tangentUB;
+    probEval_.feasibilityUB.tail(nFeasCstr) = Eigen::VectorXd::Constant(nFeasCstr, std::numeric_limits<double>::infinity());
   }
 
   void Solver::updateObj(Problem& p)
@@ -429,6 +504,42 @@ namespace pgs
       }
     }
     return converged;
+  }
+
+  bool Solver::feasibility(const ProblemEvaluation& probEval, double eps_feasibility)
+  {
+    //TODO Cleanup that method
+    std::cout << "Feasibility Test:"<< std::endl;
+    std::cout << "probEval_.feasibilityAllDiffCstr = \n" << probEval_.feasibilityAllDiffCstr << std::endl;
+    std::cout << "probEval_.feasibilityInfCstr = \n" << probEval_.feasibilityInfCstr << std::endl;
+    std::cout << "probEval_.feasibilitySupCstr = \n" << probEval_.feasibilitySupCstr << std::endl;
+    std::cout << "probEval_.feasibilityLB = \n" << probEval_.feasibilityLB << std::endl;
+    std::cout << "probEval_.feasibilityUB = \n" << probEval_.feasibilityUB << std::endl;
+    Eigen::MatrixXd BigZero(probEval.feasibilityCostF.size(), probEval.feasibilityCostF.size());
+    BigZero = Eigen::MatrixXd::Zero(probEval.feasibilityCostF.size(), probEval.feasibilityCostF.size());
+    LPSolver_.solve(
+        BigZero,
+        probEval.feasibilityCostF,
+        probEval.feasibilityAllDiffCstr,
+        static_cast<int>(probEval.feasibilityAllDiffCstr.rows()),
+        probEval.feasibilityInfCstr,
+        probEval.feasibilitySupCstr,
+        probEval.feasibilityLB,
+        probEval.feasibilityUB);
+    Index nFeasCstr = probEval.infeasibilityResult.size();
+    Eigen::VectorXd LPresult(nFeasCstr);
+    LPresult = LPSolver_.result();
+    std::cout << "Result feasibility test:\n" << LPresult << std::endl;
+    std::cout << "Result feasibility test:\n" << LPSolver_.result().tail(probEval.infeasibilityResult.size()) << std::endl;
+    Eigen::VectorXd infeasibilityResult(2*probEval.linCstrDim + 2*probEval.nonLinCstrDim);
+    for(Index i = 0; i < nFeasCstr; ++i)
+    {
+      infeasibilityResult(i) = LPresult(probEval.varDim + i);
+    }
+    //probEval.infeasibilityResult = result.tail(probEval.infeasibilityResult.size());    
+    std::cout << "infeasibilityResult:\n" << infeasibilityResult << std::endl;
+    bool result = (infeasibilityResult.lpNorm<Eigen::Infinity>() < eps_feasibility);
+    return result;
   }
 
 

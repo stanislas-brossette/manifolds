@@ -10,6 +10,15 @@ namespace pgs
   /// necessarily evaluated at the same point.
   struct ProblemEvaluation
   {
+    /// \brief Dimension of the variable space (Tangent space of
+    /// problems'Manifold
+    Index varDim;
+    /// \brief total dimension of Linear cstr
+    Index linCstrDim;
+    /// \brief total dimension of Non-Linear cstr
+    Index nonLinCstrDim;
+
+
     /// \brief Value of the costFunction
     double obj;
     /// \brief Value ot the differential of the costFunction
@@ -88,6 +97,37 @@ namespace pgs
     Eigen::VectorXd allCstr;
     /// \brief Concatenation of linear and nonLinear diffConstraints
     Eigen::MatrixXd allDiffCstr;
+
+    /// \brief Vector used in the calculation of the cost function of the
+    /// feasibility problem
+    Eigen::VectorXd feasibilityCostF;
+    /// \brief Matrix used for describing linearization of feasibility
+    /// constraints in the following order:
+    /// [ diffLinConstraint 0     ][1               ]
+    /// [-diffLinConstraint 0     ][ 1              ]
+    /// [ diffLinConstraint 1     ][  1             ]
+    /// [-diffLinConstraint 1     ][   1            ]
+    /// [ diffLinConstraint .     ][    1           ]
+    /// [-diffLinConstraint .     ][     1          ]
+    /// [ diffLinConstraint N     ][      1         ]
+    /// [-diffLinConstraint N     ][       1        ]
+    /// [ diffNonLinConstraint 0  ][        1       ]
+    /// [-diffNonLinConstraint 0  ][         1      ]
+    /// [ diffNonLinConstraint 1  ][          1     ]
+    /// [-diffNonLinConstraint 1  ][           1    ]
+    /// [ diffNonLinConstraint .  ][            1   ]
+    /// [-diffNonLinConstraint .  ][             1  ]
+    /// [ diffNonLinConstraint N  ][              1 ]
+    /// [-diffNonLinConstraint N  ][               1]
+    Eigen::MatrixXd feasibilityAllDiffCstr;
+    /// \brief Vector containing the Inf bounds for feasibility Cstr
+    Eigen::VectorXd feasibilityInfCstr;
+    /// \brief Vector containing the Sup bounds for feasibility Cstr
+    Eigen::VectorXd feasibilitySupCstr;
+    Eigen::VectorXd feasibilityLB;
+    Eigen::VectorXd feasibilityUB;
+    Eigen::VectorXd infeasibilityResult;
+
 
     void print()
     {

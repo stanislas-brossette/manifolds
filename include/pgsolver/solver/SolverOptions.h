@@ -16,6 +16,7 @@ namespace pgs
     double epsilon_P = 1e-3;
     double epsilon_D = 1e-3;
     double gammaFilter = 1e-16;
+    double epsilonFeasibility = 1e-3;
     Filter::eOption filterOpt = Filter::EXISTING;
 
     //TODO: make a pair of {hessMeth, hessType}
