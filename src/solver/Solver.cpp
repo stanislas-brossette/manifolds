@@ -26,6 +26,11 @@ namespace pgs
       case SR1: std::cout << "SR1" << std::endl; break;
       case EXACT: std::cout << "EXACT" << std::endl; break;
     }
+    std::cout << "Hessian update Type is: ";
+    switch(opt_.hessianUpdateType){
+      case GROUPED: std::cout << "GROUPED" << std::endl; break;
+      case INDIVIDUAL: std::cout << "INDIVIDUAL" << std::endl; break;
+    }
     std::cout << "Globalization method is: ";
     switch(opt_.globalizationMethod){
       case NONE: std::cout << "NONE" << std::endl; break;
@@ -93,10 +98,23 @@ namespace pgs
       //Update of the values in problemEval
       updateAllProblemData(problem);
       
-      //Update of the Hessian
-      HessianUpdater::hessianUpdate(probEval_.Hessian, 
-          problem.x(), 1, z_, 
-          probEval_.prevDiffLag, probEval_.diffLag, opt_);
+      //Update of the Hessians
+      switch(opt_.hessianUpdateType){
+        case GROUPED: 
+          HessianUpdater::hessianUpdate(
+            probEval_.Hessian, problem.x(), alpha, z_, 
+            probEval_.prevDiffLag, probEval_.diffLag, opt_); 
+          break;
+        case INDIVIDUAL:
+          HessianUpdater::hessianUpdateIndividually(
+            probEval_.Hessian, probEval_.HessianCost, probEval_.HessiansCstr, 
+            lagMult_.nonLinear,
+            problem.x(), alpha, z_, 
+            probEval_.prevDiffObj, probEval_.diffObj, 
+            probEval_.prevDiffNonLinCstr, probEval_.diffNonLinCstr, 
+            opt_); 
+          break;
+      }
 
       //printStatus();
     }
@@ -125,6 +143,9 @@ namespace pgs
     filter_.setOption(opt_.filterOpt);
 
     probEval_.diffObj.resize(1, problem.M().dim());
+    probEval_.prevDiffObj.resize(1, problem.M().dim());
+    probEval_.diffObj.setZero();
+    probEval_.prevDiffObj.setZero();
     probEval_.tangentLB.resize(problem.M().dim());
     probEval_.tangentUB.resize(problem.M().dim());
 
@@ -135,10 +156,25 @@ namespace pgs
 
     probEval_.nonLinCstr.resize(cstrMngr_.totalDimNonLin());
     probEval_.diffNonLinCstr.resize(cstrMngr_.totalDimNonLin(), problem.M().dim());
+    probEval_.diffNonLinCstr.setZero();
+    probEval_.prevDiffNonLinCstr.resize(cstrMngr_.totalDimNonLin(), problem.M().dim());
+    probEval_.prevDiffNonLinCstr.setZero();
     probEval_.nonLinCstrLB.resize(cstrMngr_.totalDimNonLin());
     probEval_.nonLinCstrUB.resize(cstrMngr_.totalDimNonLin());
 
     probEval_.Hessian.resize(problem.M().dim(), problem.M().dim());
+    probEval_.Hessian.setIdentity();
+
+    probEval_.HessianCost.resize(problem.M().dim(), problem.M().dim());
+    probEval_.HessianCost.setIdentity();
+
+    probEval_.HessiansCstr.resize(static_cast<size_t>(cstrMngr_.totalDimNonLin()));
+    for(size_t i =0; i<static_cast<size_t>(cstrMngr_.totalDimNonLin()); ++i)
+    {
+      probEval_.HessiansCstr[i].resize(problem.M().dim(), problem.M().dim());
+      probEval_.HessiansCstr[i].setIdentity();
+    }
+
     probEval_.Hessian.setIdentity();
     
     probEval_.diffLag.resize(1, problem.M().dim());
@@ -176,6 +212,8 @@ namespace pgs
 
   void Solver::updateAllProblemData(Problem& p)
   {
+    probEval_.prevDiffObj = probEval_.diffObj;
+    probEval_.prevDiffNonLinCstr = probEval_.diffNonLinCstr;
     p.evalObj(probEval_.obj); 
     p.evalObjDiff(probEval_.diffObj); 
     p.getTangentLB(probEval_.tangentLB);

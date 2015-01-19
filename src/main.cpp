@@ -49,6 +49,7 @@ int main()
     mySolver.opt_.epsilon_D = 1e-2;
     mySolver.opt_.gammaFilter = 1e-16;
     mySolver.opt_.filterOpt = Filter::eOption::EXISTING;
+    mySolver.opt_.hessianUpdateType = INDIVIDUAL;
     mySolver.setHessianBFGS();
     Eigen::VectorXd v0 = Eigen::VectorXd::Random(3);
     Point x0 = myProb.M().createPoint(v0);

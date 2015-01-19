@@ -14,6 +14,9 @@ namespace pgs
     double obj;                           
     /// \brief Value ot the differential of the costFunction  
     Eigen::MatrixXd diffObj;              
+    /// \brief Value ot the differential of the costFunction at the previous
+    /// iteration 
+    Eigen::MatrixXd prevDiffObj;              
     /// \brief Tangent Lower Bound
     Eigen::VectorXd tangentLB;            
     /// \brief Tangent Upper Bound
@@ -32,6 +35,9 @@ namespace pgs
     Eigen::VectorXd nonLinCstr;           
     /// \brief Value of the differential of the NonLinear constraints
     Eigen::MatrixXd diffNonLinCstr;       
+    /// \brief Value of the differential of the NonLinear constraints at the
+    /// previous iteration
+    Eigen::MatrixXd prevDiffNonLinCstr;       
     /// \brief Lower Bounds on the NonLinear Constraints 
     Eigen::VectorXd nonLinCstrLB;         
     /// \brief Upper Bounds on the NonLinear Constraints
@@ -39,6 +45,10 @@ namespace pgs
     
     /// \brief Hessian of the Lagrangian
     Eigen::MatrixXd Hessian;              
+    /// \brief Hessian of the cost Function
+    Eigen::MatrixXd HessianCost;
+    /// \brief Vector containing all the Hessians of the non-Linear constraints
+    std::vector<Eigen::MatrixXd> HessiansCstr;
 
     /// \brief Lagrangian
     double lag;                           
