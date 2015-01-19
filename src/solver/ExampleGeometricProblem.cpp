@@ -2,7 +2,7 @@
 
 namespace pgs
 {
-  RealSpace ExampleGeometricProblem::R3 = RealSpace(3);   
+  RealSpace ExampleGeometricProblem::R3 = RealSpace(3);
 
   ExampleGeometricProblem::ExampleGeometricProblem()
     : Problem(R3),
@@ -26,7 +26,7 @@ namespace pgs
   {
     assert(out.size() == M().dim() && "wrong size");
     Eigen::Vector3d AbsoluteUB(10, 10, 10);
-    out = AbsoluteUB - M().getConstView<T>(x().value(), 0); // I think we should use smth like getview here. 
+    out = AbsoluteUB - M().getConstView<T>(x().value(), 0); // I think we should use smth like getview here.
   }
 
   void ExampleGeometricProblem::evalObj(double& out) const
@@ -34,7 +34,7 @@ namespace pgs
     // Minimize the norm of the optim variable
     // x = [x1, x2, x3];
     // f(x) = x1^2+x2^2+x3^2;
-    
+
     Eigen::Vector3d v = phi_x_z().value();
     out = v.squaredNorm();
   }
@@ -47,7 +47,7 @@ namespace pgs
     // df/dx(x) = [2.x1, 2.x2, 2.x3]^T;
 
     Eigen::Vector3d v = x().value();
-    out << 2*v[0], 2*v[1], 2*v[2]; 
+    out << 2*v[0], 2*v[1], 2*v[2];
     M().applyDiffMap(out, out, x()[0]);
   }
 
@@ -60,7 +60,7 @@ namespace pgs
       // Constraint 0
       // Point on plan of equation a.x1+b.x2+c.x3+d=0
       Eigen::Vector3d v = phi_x_z().value();
-      out << a*v[0] + b*v[1] + c*v[2] + d; 
+      out << a*v[0] + b*v[1] + c*v[2] + d;
     }
     else if(i==1)
     {
@@ -81,7 +81,7 @@ namespace pgs
       // x = [x1, x2, x3];
       // f(x) = a.x1+b.x2+c.x3+d;
       // df/dx(x) = [a, b, c]^T;
-      out << a, b, c; 
+      out << a, b, c;
       M().applyDiffMap(out, out, x()[0]);
     }
     else if(i==1)
@@ -151,7 +151,7 @@ namespace pgs
       // Point between spheres of radius R1 and R2
       // R1 < x1^2 + x2^2 + x3^2 < R2
       Eigen::Vector3d v = x().value();
-      out << 2*v[0], 2*v[1], 2*v[2]; 
+      out << 2*v[0], 2*v[1], 2*v[2];
       M().applyDiffMap(out, out, x().value());
     }
   }

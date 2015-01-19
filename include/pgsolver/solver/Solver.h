@@ -51,11 +51,11 @@ namespace pgs
       void updateViolations(Problem& p);
 
       /// \brief Option for the solver
-      SolverOptions opt_;              
+      SolverOptions opt_;
 
     protected:
       /// \brief Initializes the solver, makes all the memory allocations
-      void initSolver(Problem& p); 
+      void initSolver(Problem& p);
 
       /// \brief Tests the convergence of the solver based on the criterion
       /// presented in SNOPT paper page 108
@@ -69,21 +69,21 @@ namespace pgs
       /// top the linear constraints, followed by the non-linear constraints
       /// \param diffLag Derivative of the Lagrangian (Jacobian. Should be a line-vector)
       bool convergence(
-        double tau_P, double tau_D, const Point& x, 
-        const Eigen::VectorXd& lagMultBnd, 
-        const Eigen::VectorXd& tangentLB, 
-        const Eigen::VectorXd& tangentUB, 
-        const Eigen::VectorXd& lagMultLin, 
-        const Eigen::VectorXd& infCstrLin, 
-        const Eigen::VectorXd& supCstrLin, 
-        const Eigen::VectorXd& lagMultNonLin, 
-        const Eigen::VectorXd& infCstrNonLin, 
-        const Eigen::VectorXd& supCstrNonLin, 
+        double tau_P, double tau_D, const Point& x,
+        const Eigen::VectorXd& lagMultBnd,
+        const Eigen::VectorXd& tangentLB,
+        const Eigen::VectorXd& tangentUB,
+        const Eigen::VectorXd& lagMultLin,
+        const Eigen::VectorXd& infCstrLin,
+        const Eigen::VectorXd& supCstrLin,
+        const Eigen::VectorXd& lagMultNonLin,
+        const Eigen::VectorXd& infCstrNonLin,
+        const Eigen::VectorXd& supCstrNonLin,
         const Eigen::MatrixXd& diffLag) const;
       bool KKTTestCstr(
-        double tau_l, double tau_x, 
-        const Eigen::VectorXd& lagMult, 
-        const Eigen::VectorXd& infCstr, 
+        double tau_l, double tau_x,
+        const Eigen::VectorXd& lagMult,
+        const Eigen::VectorXd& infCstr,
         const Eigen::VectorXd& supCstr) const;
 
       /// \brief Computes the value of the Lagrangian of the problem
@@ -92,12 +92,12 @@ namespace pgs
 
     private:
       /// \brief Structure containing The Lagrange Multiplier for Linear and nonLinear Constraints
-      LagrangeMultipliers lagMult_;    
+      LagrangeMultipliers lagMult_;
       /// \brief Vector that contains the step data
-      Eigen::VectorXd z_;             
+      Eigen::VectorXd z_;
 
       /// \brief Set of vector and matrices representing the State of the problem
-      ProblemEvaluation probEval_;    
+      ProblemEvaluation probEval_;
       /// \brief Objet that knows and manages the memory location for all the constraints of the problem
       ConstraintManager cstrMngr_;
 

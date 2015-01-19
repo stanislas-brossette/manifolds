@@ -27,7 +27,7 @@ namespace pgs
     }
     else
     {
-      throw std::runtime_error("Bad Point Initialization"); 
+      throw std::runtime_error("Bad Point Initialization");
     }
   }
 
@@ -83,7 +83,7 @@ namespace pgs
     assert(x.size() == representationDim_);
     return diffMap_(x);
   }
-  
+
   void Manifold::applyDiffMap(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
@@ -120,7 +120,7 @@ namespace pgs
     assert(v.size() == dim());
     applyTransport_(out, in, x, v);
   }
-  
+
   void Manifold::applyInvTransport(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
@@ -152,7 +152,7 @@ namespace pgs
     assert(out.size() == static_cast<int> (representationDim_));
     setIdentity_(out);
   }
-  
+
 
   void Manifold::lock() const
   {

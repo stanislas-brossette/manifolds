@@ -7,53 +7,53 @@ namespace pgs
 {
   /// \brief Structure containing the current evaluation of the problem.
   /// Its integrity is NOT guarantied. In the sence that all the values are not
-  /// necessarily evaluated at the same point. 
+  /// necessarily evaluated at the same point.
   struct ProblemEvaluation
   {
     /// \brief Value of the costFunction
-    double obj;                           
-    /// \brief Value ot the differential of the costFunction  
-    Eigen::MatrixXd diffObj;              
+    double obj;
+    /// \brief Value ot the differential of the costFunction
+    Eigen::MatrixXd diffObj;
     /// \brief Value ot the differential of the costFunction at the previous
-    /// iteration 
-    Eigen::MatrixXd prevDiffObj;              
+    /// iteration
+    Eigen::MatrixXd prevDiffObj;
     /// \brief Tangent Lower Bound
-    Eigen::VectorXd tangentLB;            
+    Eigen::VectorXd tangentLB;
     /// \brief Tangent Upper Bound
-    Eigen::VectorXd tangentUB;            
+    Eigen::VectorXd tangentUB;
 
     /// \brief Value of the Linear Constraints
-    Eigen::VectorXd linCstr;              
+    Eigen::VectorXd linCstr;
     /// \brief Value of the differential of the Linear constraints
-    Eigen::MatrixXd diffLinCstr;          
-    /// \brief Lower Bounds on the Linear Constraints 
-    Eigen::VectorXd linCstrLB;            
+    Eigen::MatrixXd diffLinCstr;
+    /// \brief Lower Bounds on the Linear Constraints
+    Eigen::VectorXd linCstrLB;
     /// \brief Upper Bounds on the Linear Constraints
-    Eigen::VectorXd linCstrUB;            
+    Eigen::VectorXd linCstrUB;
 
     /// \brief Value of the NonLinear Constraints
-    Eigen::VectorXd nonLinCstr;           
+    Eigen::VectorXd nonLinCstr;
     /// \brief Value of the differential of the NonLinear constraints
-    Eigen::MatrixXd diffNonLinCstr;       
+    Eigen::MatrixXd diffNonLinCstr;
     /// \brief Value of the differential of the NonLinear constraints at the
     /// previous iteration
-    Eigen::MatrixXd prevDiffNonLinCstr;       
-    /// \brief Lower Bounds on the NonLinear Constraints 
-    Eigen::VectorXd nonLinCstrLB;         
+    Eigen::MatrixXd prevDiffNonLinCstr;
+    /// \brief Lower Bounds on the NonLinear Constraints
+    Eigen::VectorXd nonLinCstrLB;
     /// \brief Upper Bounds on the NonLinear Constraints
-    Eigen::VectorXd nonLinCstrUB;         
-    
+    Eigen::VectorXd nonLinCstrUB;
+
     /// \brief Hessian of the Lagrangian
-    Eigen::MatrixXd Hessian;              
+    Eigen::MatrixXd Hessian;
     /// \brief Hessian of the cost Function
     Eigen::MatrixXd HessianCost;
     /// \brief Vector containing all the Hessians of the non-Linear constraints
     std::vector<Eigen::MatrixXd> HessiansCstr;
 
     /// \brief Lagrangian
-    double lag;                           
+    double lag;
     /// \brief Differential of the Lagrangian
-    Eigen::MatrixXd diffLag;              
+    Eigen::MatrixXd diffLag;
     /// \brief Differential of the Lagrangian at the previous iteration
     Eigen::MatrixXd prevDiffLag;
 
@@ -66,7 +66,7 @@ namespace pgs
     /// \brief linearized inf bound of linear constraints
     /// LinConstraint - infBound
     Eigen::VectorXd infLinCstr;
-    /// \brief linearized inf bound of nonlinear constraints 
+    /// \brief linearized inf bound of nonlinear constraints
     /// nonLinConstraint - infBound
     Eigen::VectorXd infNonLinCstr;
     /// \brief linearized sup bound of linear constraints (supBound -
@@ -79,15 +79,15 @@ namespace pgs
     /// \brief Violations of all the constraints
     Eigen::VectorXd violCstr;
 
-    /// \brief Concatenation of infLinCstr and infNonLinCstr 
+    /// \brief Concatenation of infLinCstr and infNonLinCstr
     Eigen::VectorXd allInfCstr;
-    /// \brief Concatenation of supLinCstr and supNonLinCstr 
+    /// \brief Concatenation of supLinCstr and supNonLinCstr
     Eigen::VectorXd allSupCstr;
 
     /// \brief Concatenation of linear and nonLinear constraints
-    Eigen::VectorXd allCstr; 
+    Eigen::VectorXd allCstr;
     /// \brief Concatenation of linear and nonLinear diffConstraints
-    Eigen::MatrixXd allDiffCstr; 
+    Eigen::MatrixXd allDiffCstr;
 
     void print()
     {
@@ -139,7 +139,7 @@ namespace pgs
     }
 
     void update(const Eigen::VectorXd& bnd,
-                const Eigen::VectorXd& lin, 
+                const Eigen::VectorXd& lin,
                 const Eigen::VectorXd& nonLin)
     {
       assert(bnd.size() == bounds.size());

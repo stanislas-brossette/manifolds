@@ -17,7 +17,7 @@ namespace pgs
       Problem(Manifold& manifold);
       /// \brief Constructor that sets x
       Problem(Manifold& manifold, const Point& x);
-      
+
       /// \brief Sets new value for x_
       void setX(const Point& x);
       /// \brief Sets new value for z_
@@ -31,7 +31,7 @@ namespace pgs
       const Manifold& M() const;
       /// \brief Gets current value of \f$\phi_x(z)
       const Point& phi_x_z() const;
-      
+
       /// \brief Get Lower Bounds on the variable\n
       /// Correspond to the bounds on z for a given x.
       virtual void getTangentLB(RefVec out) const = 0;
@@ -116,7 +116,7 @@ namespace pgs
       Point x_;
       /// \brief Current tangent vector \f$ z \in T_x\mathcal{M}\f$
       Eigen::VectorXd z_;
-      /// \brief Current Point \f$ x \oplus z = \phi_x(z) \f$ 
+      /// \brief Current Point \f$ x \oplus z = \phi_x(z) \f$
       Point phi_x_z_;
   };
 }

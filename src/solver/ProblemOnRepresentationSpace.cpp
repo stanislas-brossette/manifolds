@@ -2,7 +2,7 @@
 
 namespace pgs
 {
-      
+
   ProblemOnRepresentationSpace::ProblemOnRepresentationSpace(Manifold& M)
     : Problem(M)
   {

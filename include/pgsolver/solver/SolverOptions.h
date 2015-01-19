@@ -19,8 +19,8 @@ namespace pgs
     Filter::eOption filterOpt = Filter::EXISTING;
 
     //TODO: make a pair of {hessMeth, hessType}
-    eHessianUpdateMethod hessianUpdateMethod = BFGS; 
-    eHessianUpdateType hessianUpdateType = GROUPED; 
+    eHessianUpdateMethod hessianUpdateMethod = BFGS;
+    eHessianUpdateType hessianUpdateType = GROUPED;
     eGlobalization globalizationMethod = LINESEARCH;
     eLineSearchType lineSearchMethod = FILTER;
   };

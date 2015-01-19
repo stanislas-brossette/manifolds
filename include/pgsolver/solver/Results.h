@@ -10,7 +10,7 @@ namespace pgs
   {
     CONVERGE,                       // solver has converge properly
     INFEASIBLE_PROBLEM,             // the problem is infeasible (due to nonlinear constraints)
-    INFEASIBLE_LINEAR_CONSTRAINTS,  // the problem is infeasible 
+    INFEASIBLE_LINEAR_CONSTRAINTS,  // the problem is infeasible
     INFEASIBLE_BOUNDS,
     INFEASIBLE_QP,
     MAX_ITER,

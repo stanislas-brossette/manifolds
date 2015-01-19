@@ -47,46 +47,46 @@ namespace pgs
     int iter = 0;
     double alpha = 1;
 
-    while(!convergence(opt_.epsilon_P , opt_.epsilon_P, problem.x(), 
-                        lagMult_.bounds, 
-                        probEval_.tangentLB, 
-                        probEval_.tangentUB, 
-                        lagMult_.linear, 
-                        probEval_.infLinCstr, 
-                        probEval_.supLinCstr, 
-                        lagMult_.nonLinear, 
-                        probEval_.infNonLinCstr, 
-                        probEval_.supNonLinCstr, 
-                        probEval_.diffLag) 
+    while(!convergence(opt_.epsilon_P , opt_.epsilon_P, problem.x(),
+                        lagMult_.bounds,
+                        probEval_.tangentLB,
+                        probEval_.tangentUB,
+                        lagMult_.linear,
+                        probEval_.infLinCstr,
+                        probEval_.supLinCstr,
+                        lagMult_.nonLinear,
+                        probEval_.infNonLinCstr,
+                        probEval_.supNonLinCstr,
+                        probEval_.diffLag)
                         && iter < opt_.maxIter)
     {
       iter++;
       std::cout <<std::endl<< "********************Iteration " << iter <<"*********************"<< std::endl;
 
-      //Resolution of the quadratic tangent problem 
+      //Resolution of the quadratic tangent problem
       QPSolver_.solve(
-          probEval_.Hessian, 
+          probEval_.Hessian,
           probEval_.diffObj.transpose(),
-          probEval_.allDiffCstr, 
-          static_cast<int>(probEval_.allDiffCstr.rows()), 
-          -probEval_.allInfCstr, 
-          -probEval_.allSupCstr, 
-          probEval_.tangentLB, 
+          probEval_.allDiffCstr,
+          static_cast<int>(probEval_.allDiffCstr.rows()),
+          -probEval_.allInfCstr,
+          -probEval_.allSupCstr,
+          probEval_.tangentLB,
           probEval_.tangentUB);
       z_ = QPSolver_.result();
-      
+
       //Globalization
       switch(opt_.globalizationMethod){
         case NONE: alpha = 1; break;
-        case LINESEARCH: 
-          alpha = LineSearcher::LineSearch(*this, problem, filter_, z_); 
+        case LINESEARCH:
+          alpha = LineSearcher::LineSearch(*this, problem, filter_, z_);
           break;
-        case TRUSTREGION: 
-          std::runtime_error("EXACT update is not implemented yet"); 
+        case TRUSTREGION:
+          std::runtime_error("EXACT update is not implemented yet");
           break;
       }
       std::cout << "LineSearch gives alpha = " << alpha << std::endl;
-      
+
       lagMult_.bounds = (1-alpha)*lagMult_.bounds + alpha*(-QPSolver_.clambda().head(lagMult_.bounds.size()));
       lagMult_.linear = (1-alpha)*lagMult_.linear + alpha*(-QPSolver_.clambda().segment(lagMult_.bounds.size(), lagMult_.linear.size()));
       lagMult_.nonLinear = (1-alpha)*lagMult_.nonLinear + alpha*(-QPSolver_.clambda().tail(lagMult_.nonLinear.size()));
@@ -97,22 +97,22 @@ namespace pgs
 
       //Update of the values in problemEval
       updateAllProblemData(problem);
-      
+
       //Update of the Hessians
       switch(opt_.hessianUpdateType){
-        case GROUPED: 
+        case GROUPED:
           HessianUpdater::hessianUpdate(
-            probEval_.Hessian, problem.x(), alpha, z_, 
-            probEval_.prevDiffLag, probEval_.diffLag, opt_); 
+            probEval_.Hessian, problem.x(), alpha, z_,
+            probEval_.prevDiffLag, probEval_.diffLag, opt_);
           break;
         case INDIVIDUAL:
           HessianUpdater::hessianUpdateIndividually(
-            probEval_.Hessian, probEval_.HessianCost, probEval_.HessiansCstr, 
+            probEval_.Hessian, probEval_.HessianCost, probEval_.HessiansCstr,
             lagMult_.nonLinear,
-            problem.x(), alpha, z_, 
-            probEval_.prevDiffObj, probEval_.diffObj, 
-            probEval_.prevDiffNonLinCstr, probEval_.diffNonLinCstr, 
-            opt_); 
+            problem.x(), alpha, z_,
+            probEval_.prevDiffObj, probEval_.diffObj,
+            probEval_.prevDiffNonLinCstr, probEval_.diffNonLinCstr,
+            opt_);
           break;
       }
 
@@ -176,7 +176,7 @@ namespace pgs
     }
 
     probEval_.Hessian.setIdentity();
-    
+
     probEval_.diffLag.resize(1, problem.M().dim());
     probEval_.prevDiffLag.resize(1, problem.M().dim());
     probEval_.diffLag.setZero();
@@ -186,12 +186,12 @@ namespace pgs
     probEval_.supLinCstr.resize(cstrMngr_.totalDimLin());
     probEval_.infNonLinCstr.resize(cstrMngr_.totalDimNonLin());
     probEval_.supNonLinCstr.resize(cstrMngr_.totalDimNonLin());
-    
-    probEval_.allInfCstr.resize(cstrMngr_.totalDimNonLin() 
+
+    probEval_.allInfCstr.resize(cstrMngr_.totalDimNonLin()
                                 + cstrMngr_.totalDimLin());
-    probEval_.allSupCstr.resize(cstrMngr_.totalDimNonLin() 
+    probEval_.allSupCstr.resize(cstrMngr_.totalDimNonLin()
                                 + cstrMngr_.totalDimLin());
-    
+
 
     z_.resize(problem.M().dim());
     lagMult_.bounds.resize(problem.M().dim());
@@ -214,8 +214,8 @@ namespace pgs
   {
     probEval_.prevDiffObj = probEval_.diffObj;
     probEval_.prevDiffNonLinCstr = probEval_.diffNonLinCstr;
-    p.evalObj(probEval_.obj); 
-    p.evalObjDiff(probEval_.diffObj); 
+    p.evalObj(probEval_.obj);
+    p.evalObjDiff(probEval_.diffObj);
     p.getTangentLB(probEval_.tangentLB);
     p.getTangentUB(probEval_.tangentUB);
 
@@ -261,7 +261,7 @@ namespace pgs
 
   void Solver::updateObj(Problem& p)
   {
-    p.evalObj(probEval_.obj); 
+    p.evalObj(probEval_.obj);
   }
 
   void Solver::updateAllCstr(Problem& p)
@@ -291,26 +291,26 @@ namespace pgs
     for (Index i = 0; i < p.M().dim(); ++i)
     {
       probEval_.violCstr(i) = fmax(
-          fmax(probEval_.tangentLB(i) - p.z()(i), 
+          fmax(probEval_.tangentLB(i) - p.z()(i),
             p.z()(i) - probEval_.tangentUB(i)),0);
     }
     for (Index i = 0; i<probEval_.linCstr.size(); ++i)
     {
       probEval_.violCstr(i) = fmax(
-          fmax(probEval_.linCstrLB(i) - probEval_.linCstr(i), 
+          fmax(probEval_.linCstrLB(i) - probEval_.linCstr(i),
             probEval_.linCstr(i) - probEval_.linCstrUB(i)),0);
     }
     for (Index i = 0; i<probEval_.nonLinCstr.size(); ++i)
     {
       probEval_.violCstr(i) = fmax(
-          fmax(probEval_.nonLinCstrLB(i) - probEval_.nonLinCstr(i), 
+          fmax(probEval_.nonLinCstrLB(i) - probEval_.nonLinCstr(i),
             probEval_.nonLinCstr(i) - probEval_.nonLinCstrUB(i)),0);
     }
   }
 
   double Solver::computeLagrangian()
   {
-    double res = probEval_.obj; 
+    double res = probEval_.obj;
     for( Index i = 0; i<problem_->M().dim(); ++i)
     {
       //only the constraints that are violated appear in the lagrangian. The
@@ -341,7 +341,7 @@ namespace pgs
   Eigen::MatrixXd Solver::computeDiffLagrangian()
   {
     Eigen::MatrixXd res(1, problem_->M().dim());
-    res = probEval_.diffObj 
+    res = probEval_.diffObj
             + lagMult_.bounds.transpose()
             + lagMult_.linear.transpose()*probEval_.diffLinCstr
             + lagMult_.nonLinear.transpose()*probEval_.diffNonLinCstr;
@@ -349,16 +349,16 @@ namespace pgs
   }
 
   bool Solver::convergence(
-      double tau_P, double tau_D, const Point& x, 
-      const Eigen::VectorXd& lagMultBnd, 
-      const Eigen::VectorXd& tangentLB, 
-      const Eigen::VectorXd& tangentUB, 
-      const Eigen::VectorXd& lagMultLin, 
-      const Eigen::VectorXd& infCstrLin, 
-      const Eigen::VectorXd& supCstrLin, 
-      const Eigen::VectorXd& lagMultNonLin, 
-      const Eigen::VectorXd& infCstrNonLin, 
-      const Eigen::VectorXd& supCstrNonLin, 
+      double tau_P, double tau_D, const Point& x,
+      const Eigen::VectorXd& lagMultBnd,
+      const Eigen::VectorXd& tangentLB,
+      const Eigen::VectorXd& tangentUB,
+      const Eigen::VectorXd& lagMultLin,
+      const Eigen::VectorXd& infCstrLin,
+      const Eigen::VectorXd& supCstrLin,
+      const Eigen::VectorXd& lagMultNonLin,
+      const Eigen::VectorXd& infCstrNonLin,
+      const Eigen::VectorXd& supCstrNonLin,
       const Eigen::MatrixXd& diffLag) const
   {
     //std::cout << "-----------------Convergence test---------------" << std::endl;
@@ -391,13 +391,13 @@ namespace pgs
     std::cout << "convergedLag = " << convergedLag << std::endl;
     //Test bounds cstr
     std::cout << "Test KKT Bound Cstr " << std::endl;
-    bool convergedBounds = KKTTestCstr(tau_l, tau_x, lagMultBnd, -tangentLB, -tangentUB); 
+    bool convergedBounds = KKTTestCstr(tau_l, tau_x, lagMultBnd, -tangentLB, -tangentUB);
     //Test Linear cstr
     std::cout << "Test KKT Linear Cstr " << std::endl;
-    bool convergedLin = KKTTestCstr(tau_l, tau_x, lagMultLin, infCstrLin, supCstrLin); 
+    bool convergedLin = KKTTestCstr(tau_l, tau_x, lagMultLin, infCstrLin, supCstrLin);
     //Test NonLinear cstr
     std::cout << "Test KKT NonLinear Cstr " << std::endl;
-    bool convergedNonLin = KKTTestCstr(tau_l, tau_x, lagMultNonLin, infCstrNonLin, supCstrNonLin); 
+    bool convergedNonLin = KKTTestCstr(tau_l, tau_x, lagMultNonLin, infCstrNonLin, supCstrNonLin);
 
     bool converged = convergedLag && convergedBounds && convergedLin && convergedNonLin;
 
@@ -406,9 +406,9 @@ namespace pgs
   }
 
   bool Solver::KKTTestCstr(
-      double tau_l, double tau_x, 
-      const Eigen::VectorXd& lagMult, 
-      const Eigen::VectorXd& infCstr, 
+      double tau_l, double tau_x,
+      const Eigen::VectorXd& lagMult,
+      const Eigen::VectorXd& infCstr,
       const Eigen::VectorXd& supCstr) const
   {
     bool converged = true;

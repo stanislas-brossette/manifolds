@@ -27,7 +27,7 @@ namespace pgs
       s.updateObj(p);
       s.updateViolations(p);
       FH << s.probEval().obj, s.probEval().violCstr.lpNorm<1>();
-      
+
       if(filter_.accepts(FH))
       {
         filter_.add(FH);
@@ -44,7 +44,7 @@ namespace pgs
       }
     }
     std::cout << "\033[1;31mWARNING: Line-Search did not converge\033[0m" << std::endl;
-    //throw std::runtime_error("Line-Search did not converge"); 
+    //throw std::runtime_error("Line-Search did not converge");
     return alpha;
   }
 }

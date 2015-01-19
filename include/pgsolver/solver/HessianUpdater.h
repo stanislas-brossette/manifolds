@@ -12,8 +12,8 @@ namespace pgs
   class HessianUpdater
   {
     public:
-      static void hessianUpdate(Eigen::MatrixXd& H, const Point& x, const double alpha, 
-          const Eigen::VectorXd& step, const Eigen::MatrixXd& prevDiffLag, 
+      static void hessianUpdate(Eigen::MatrixXd& H, const Point& x, const double alpha,
+          const Eigen::VectorXd& step, const Eigen::MatrixXd& prevDiffLag,
           const Eigen::MatrixXd& diffLag,
           const SolverOptions& solverOptions);
 
@@ -25,11 +25,11 @@ namespace pgs
 
       /// \brief Upddates the individual hessians of each cstr and cost function
       static void hessianUpdateIndividually(
-          Eigen::MatrixXd& H, Eigen::MatrixXd& HCost, std::vector<Eigen::MatrixXd>& HCstr, 
-          const Eigen::VectorXd& lagMultNonLinCstr, 
-          const Point& x, const double alpha, const Eigen::VectorXd& step, 
-          const Eigen::MatrixXd& prevDiffObj, const Eigen::MatrixXd& diffObj, 
-          const Eigen::MatrixXd& prevDiffCstr, const Eigen::MatrixXd& diffCstr, 
+          Eigen::MatrixXd& H, Eigen::MatrixXd& HCost, std::vector<Eigen::MatrixXd>& HCstr,
+          const Eigen::VectorXd& lagMultNonLinCstr,
+          const Point& x, const double alpha, const Eigen::VectorXd& step,
+          const Eigen::MatrixXd& prevDiffObj, const Eigen::MatrixXd& diffObj,
+          const Eigen::MatrixXd& prevDiffCstr, const Eigen::MatrixXd& diffCstr,
           const SolverOptions& solverOptions)
 ;
   };

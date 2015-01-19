@@ -10,15 +10,15 @@
 
 namespace pgs
 {
-  void HessianUpdater::hessianUpdate(Eigen::MatrixXd& H, const Point& x, 
-      const double alpha, const Eigen::VectorXd& step, 
-      const Eigen::MatrixXd& prevDiffLag, const Eigen::MatrixXd& diffLag, 
+  void HessianUpdater::hessianUpdate(Eigen::MatrixXd& H, const Point& x,
+      const double alpha, const Eigen::VectorXd& step,
+      const Eigen::MatrixXd& prevDiffLag, const Eigen::MatrixXd& diffLag,
       const SolverOptions& solverOptions)
   {
     Index dim = x.getManifold().dim();
     Eigen::VectorXd sk(dim);
     Eigen::VectorXd yk(dim);
-    x.getManifold().applyTransport(sk, alpha*step, x.value(), alpha*step); 
+    x.getManifold().applyTransport(sk, alpha*step, x.value(), alpha*step);
     x.getManifold().applyTransport(yk, prevDiffLag.transpose(), x.value(), alpha*step);
     yk = diffLag.transpose() - yk;
     x.getManifold().applyTransport(H, H, x.value(), alpha*step);
@@ -32,8 +32,8 @@ namespace pgs
     switch(solverOptions.hessianUpdateMethod){
       case BFGS: computeBFGS(H, sk, yk); break;
       case SR1: computeSR1(H, sk, yk); break;
-      case EXACT: 
-        throw std::runtime_error("EXACT update is not implemented yet"); 
+      case EXACT:
+        throw std::runtime_error("EXACT update is not implemented yet");
         break;
     }
   }
@@ -66,20 +66,20 @@ namespace pgs
       B = B + (ymBs*ymBs.transpose())/(ymBs.transpose()*s);
     //else B = B
   }
-  
+
   void HessianUpdater::hessianUpdateIndividually(
-          Eigen::MatrixXd& H, Eigen::MatrixXd& HCost, std::vector<Eigen::MatrixXd>& HCstr, 
-          const Eigen::VectorXd& lagMultNonLinCstr, 
-          const Point& x, const double alpha, const Eigen::VectorXd& step, 
-          const Eigen::MatrixXd& prevDiffObj, const Eigen::MatrixXd& diffObj, 
-          const Eigen::MatrixXd& prevDiffCstr, const Eigen::MatrixXd& diffCstr, 
+          Eigen::MatrixXd& H, Eigen::MatrixXd& HCost, std::vector<Eigen::MatrixXd>& HCstr,
+          const Eigen::VectorXd& lagMultNonLinCstr,
+          const Point& x, const double alpha, const Eigen::VectorXd& step,
+          const Eigen::MatrixXd& prevDiffObj, const Eigen::MatrixXd& diffObj,
+          const Eigen::MatrixXd& prevDiffCstr, const Eigen::MatrixXd& diffCstr,
           const SolverOptions& solverOptions)
   {
     std::cout << "This is an individual update of Hessians" << std::endl;
     Index dim = x.getManifold().dim();
     Eigen::VectorXd sk(dim);
     Eigen::VectorXd yk(dim);
-    x.getManifold().applyTransport(sk, alpha*step, x.value(), alpha*step); 
+    x.getManifold().applyTransport(sk, alpha*step, x.value(), alpha*step);
 
     //Update of the Cost Hessian
     x.getManifold().applyTransport(yk, prevDiffObj.transpose(), x.value(), alpha*step);
@@ -93,8 +93,8 @@ namespace pgs
     switch(solverOptions.hessianUpdateMethod){
       case BFGS: computeBFGS(HCost, sk, yk); break;
       case SR1: computeSR1(HCost, sk, yk); break;
-      case EXACT: 
-        throw std::runtime_error("EXACT update is not implemented yet"); 
+      case EXACT:
+        throw std::runtime_error("EXACT update is not implemented yet");
         break;
     }
 
@@ -112,8 +112,8 @@ namespace pgs
       switch(solverOptions.hessianUpdateMethod){
         case BFGS: computeBFGS(HCstr[i], sk, yk); break;
         case SR1: computeSR1(HCstr[i], sk, yk); break;
-        case EXACT: 
-          throw std::runtime_error("EXACT update is not implemented yet"); 
+        case EXACT:
+          throw std::runtime_error("EXACT update is not implemented yet");
           break;
       }
     }
@@ -123,7 +123,7 @@ namespace pgs
     for(size_t i = 0; i < HCstr.size(); ++i)
     {
       H += lagMultNonLinCstr[(Index)i]*HCstr[i];
-    }    
+    }
   }
 
 }

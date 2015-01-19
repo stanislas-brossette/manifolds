@@ -16,13 +16,13 @@ namespace pgs
     {
       //std::cerr << "PGS ASSERT error is " << message << std::endl;
 #ifdef PGS_ASSERT_THROW
-      throw pgs_exception(); 
+      throw pgs_exception();
 #else
       assert(value);
 #endif //_PGS_ASSERT_THROW_
     }
   }
-    
+
 }
 
 #endif //_PGS_ASSERT_

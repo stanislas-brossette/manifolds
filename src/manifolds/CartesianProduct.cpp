@@ -23,7 +23,7 @@ namespace pgs
     bool out = true;
     for (std::size_t i = 0; i<numberOfSubmanifolds(); ++i)
     {
-      out = out && submanifolds_[i]->isValidInit(getConstView<R>(val, i)); 
+      out = out && submanifolds_[i]->isValidInit(getConstView<R>(val, i));
     }
     return out;
   }
@@ -66,8 +66,8 @@ namespace pgs
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      submanifolds_[i]->plus(getView<R>(out, i), 
-                              getConstView<R>(x, i), 
+      submanifolds_[i]->plus(getView<R>(out, i),
+                              getConstView<R>(x, i),
                               getConstView<T>(v, i));
     }
   }
@@ -77,7 +77,7 @@ namespace pgs
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
       submanifolds_[i]->minus(getView<T>(out,i),
-                              getConstView<R>(x, i), 
+                              getConstView<R>(x, i),
                               getConstView<R>(y, i));
     }
   }
@@ -117,7 +117,7 @@ namespace pgs
                                       getConstView<R>(x, i));
     }
   }
-  
+
   Eigen::MatrixXd CartesianProduct::diffInvMap_(const ConstRefVec& x) const
   {
     Eigen::MatrixXd J(dim(),representationDim());

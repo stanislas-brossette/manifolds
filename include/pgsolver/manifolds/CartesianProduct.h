@@ -12,7 +12,7 @@ namespace pgs
   public:
     /// \brief Default constructor
     CartesianProduct();
-    
+
     /// \brief Constructor of the manifold composed of \f$ m1\times m2\f$
     CartesianProduct(const Manifold& m1, const Manifold& m2);
 
@@ -24,8 +24,6 @@ namespace pgs
     virtual const Manifold& operator()(size_t i) const;
 
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
-  
-
 
   protected:
     virtual bool isValidInit_(const Eigen::VectorXd& val) const;

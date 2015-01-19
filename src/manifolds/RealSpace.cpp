@@ -6,7 +6,7 @@ namespace pgs
     : Manifold(n, n)
   {
   }
-  
+
   bool RealSpace::isValidInit_(const Eigen::VectorXd& val ) const
   {
     bool out( dim() == val.size());
@@ -61,7 +61,7 @@ namespace pgs
   {
     out = in;
   }
-  
+
   Eigen::MatrixXd RealSpace::diffInvMap_(const ConstRefVec&) const
   {
     return Eigen::MatrixXd::Identity(representationDim(),dim());

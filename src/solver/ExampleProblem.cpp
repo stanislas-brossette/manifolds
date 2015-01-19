@@ -2,7 +2,7 @@
 
 namespace pgs
 {
-      
+
   ExampleProblem::ExampleProblem(Manifold& M)
     : Problem(M)
   {

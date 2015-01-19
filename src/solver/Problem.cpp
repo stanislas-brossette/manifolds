@@ -167,7 +167,7 @@ namespace pgs
       startIndex += nonLinCstrDim(i);
     }
   }
-  
+
   void Problem::printState() const
   {
     double obj = 0.0;

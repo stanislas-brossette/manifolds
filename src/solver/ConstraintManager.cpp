@@ -8,7 +8,7 @@ namespace pgs
   {
     std::cout << "Constraint Manager"<< std::endl;
   }
-  
+
   void ConstraintManager::init(Problem& p)
   {
     size_t nbCstr = p.numberOfCstr();
