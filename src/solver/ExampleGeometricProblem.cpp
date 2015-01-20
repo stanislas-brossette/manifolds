@@ -20,13 +20,23 @@ namespace pgs
   {
     assert(out.size() == M().dim() && "wrong size");
     Eigen::Vector3d AbsoluteLB(-10, -10, -10);
-    out = AbsoluteLB - M().getConstView<T>(x().value(), 0); // I think we should use a better accessor for the values of x. Maybe an implementation of Point::GetView
+    Eigen::Vector3d intrinsicBounds(-0.1, -0.1, -0.1); 
+    Eigen::MatrixXd allBounds(3,2);
+    allBounds.col(0) = AbsoluteLB - M().getConstView<T>(x().value(), 0);
+    allBounds.col(1) = intrinsicBounds;
+    out = allBounds.rowwise().maxCoeff();
+    //out = AbsoluteLB - M().getConstView<T>(x().value(), 0); // I think we should use a better accessor for the values of x. Maybe an implementation of Point::GetView
   }
   void ExampleGeometricProblem::getTangentUB(RefVec out) const
   {
     assert(out.size() == M().dim() && "wrong size");
     Eigen::Vector3d AbsoluteUB(10, 10, 10);
-    out = AbsoluteUB - M().getConstView<T>(x().value(), 0); // I think we should use smth like getview here.
+    Eigen::Vector3d intrinsicBounds(0.1, 0.1, 0.1); 
+    Eigen::MatrixXd allBounds(3,2);
+    allBounds.col(0) = AbsoluteUB - M().getConstView<T>(x().value(), 0);
+    allBounds.col(1) = intrinsicBounds;
+    out = allBounds.rowwise().minCoeff();
+    //out = AbsoluteUB - M().getConstView<T>(x().value(), 0); // I think we should use smth like getview here.
   }
 
   void ExampleGeometricProblem::evalObj(double& out) const

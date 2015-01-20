@@ -28,7 +28,7 @@ using namespace pgs;
 
 int main()
 {
-  srand((unsigned)time(NULL));
+  //srand((unsigned)time(NULL));
   std::cout << "Using: Eigen" << EIGEN_WORLD_VERSION << "." << EIGEN_MAJOR_VERSION <<"." << EIGEN_MINOR_VERSION<< std::endl;
   RealSpace R2(2);
   RealSpace R3(3);
@@ -44,7 +44,7 @@ int main()
   {
     ExampleGeometricProblem myProb;
     Solver mySolver;
-    mySolver.opt_.VERBOSE = 2;
+    mySolver.opt_.VERBOSE = 1;
     mySolver.opt_.maxIter = 100;
     mySolver.opt_.epsilon_P = 1e-6;
     mySolver.opt_.epsilon_D = 1e-2;
@@ -55,6 +55,7 @@ int main()
     mySolver.opt_.globalizationMethod = LINESEARCH;
     mySolver.opt_.lineSearchMethod = FILTER;
     Eigen::VectorXd v0 = Eigen::VectorXd::Random(3);
+    v0 << 5,5,5;
     Point x0 = myProb.M().createPoint(v0);
     mySolver.solve(myProb, x0);
   }
