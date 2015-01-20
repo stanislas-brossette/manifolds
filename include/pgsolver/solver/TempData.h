@@ -126,7 +126,9 @@ namespace pgs
     Eigen::VectorXd feasibilitySupCstr;
     Eigen::VectorXd feasibilityLB;
     Eigen::VectorXd feasibilityUB;
+    Eigen::VectorXd feasibleValue;
     Eigen::VectorXd infeasibilityResult;
+    Index nFeasCstr;
 
 
     void print()

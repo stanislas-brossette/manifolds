@@ -7,7 +7,7 @@ namespace pgs
   ExampleGeometricProblem::ExampleGeometricProblem()
     : Problem(R3),
       a(1.0),
-      b(0.0),
+      b(0.5),
       c(-2.0),
       d(0.6),
       R1(0.5),

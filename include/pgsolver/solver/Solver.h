@@ -87,7 +87,8 @@ namespace pgs
         const Eigen::VectorXd& supCstr) const;
 
       /// \brief Method testing the feasibility of a set of constraints
-      bool feasibility(const ProblemEvaluation& probEval, double feasibilityMin);
+      bool feasibility(const ProblemEvaluation& probEval, double feasibilityMin, 
+                        Eigen::VectorXd& feasibleVector, Eigen::VectorXd& infeasibility);
 
       /// \brief Computes the value of the Lagrangian of the problem
       double computeLagrangian();

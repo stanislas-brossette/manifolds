@@ -49,7 +49,7 @@ int main()
     mySolver.opt_.epsilon_D = 1e-2;
     mySolver.opt_.gammaFilter = 1e-16;
     mySolver.opt_.filterOpt = Filter::eOption::EXISTING;
-    mySolver.opt_.hessianUpdateType = INDIVIDUAL;
+    mySolver.opt_.hessianUpdateType = GROUPED;
     mySolver.opt_.hessianUpdateMethod = BFGS;
     mySolver.opt_.globalizationMethod = LINESEARCH;
     mySolver.opt_.lineSearchMethod = FILTER;
