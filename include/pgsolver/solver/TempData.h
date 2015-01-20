@@ -66,12 +66,6 @@ namespace pgs
     /// \brief Differential of the Lagrangian at the previous iteration
     Eigen::MatrixXd prevDiffLag;
 
-    ///// \brief linearized inf bound of bound constraints
-    ///// z - infBound
-    //Eigen::VectorXd infBndCstr;
-    ///// \brief linearized sup bound of bound constraints
-    ///// z - supBound
-    //Eigen::VectorXd supBndCstr;
     /// \brief linearized inf bound of linear constraints
     /// LinConstraint - infBound
     Eigen::VectorXd infLinCstr;
@@ -103,31 +97,20 @@ namespace pgs
     Eigen::VectorXd feasibilityCostF;
     /// \brief Matrix used for describing linearization of feasibility
     /// constraints in the following order:
-    /// [ diffLinConstraint 0     ][1               ]
-    /// [-diffLinConstraint 0     ][ 1              ]
-    /// [ diffLinConstraint 1     ][  1             ]
-    /// [-diffLinConstraint 1     ][   1            ]
-    /// [ diffLinConstraint .     ][    1           ]
-    /// [-diffLinConstraint .     ][     1          ]
-    /// [ diffLinConstraint N     ][      1         ]
-    /// [-diffLinConstraint N     ][       1        ]
-    /// [ diffNonLinConstraint 0  ][        1       ]
-    /// [-diffNonLinConstraint 0  ][         1      ]
-    /// [ diffNonLinConstraint 1  ][          1     ]
-    /// [-diffNonLinConstraint 1  ][           1    ]
-    /// [ diffNonLinConstraint .  ][            1   ]
-    /// [-diffNonLinConstraint .  ][             1  ]
-    /// [ diffNonLinConstraint N  ][              1 ]
-    /// [-diffNonLinConstraint N  ][               1]
+    /// [ diffLinConstraint 0     ][1               ][-1              ]
+    /// [ diffLinConstraint 1     ][  1             ][  -1            ]
+    /// [ diffLinConstraint .     ][    1           ][    -1          ]
+    /// [ diffLinConstraint N     ][      1         ][      -1        ]
+    /// [ diffNonLinConstraint 0  ][        1       ][        -1      ]
+    /// [ diffNonLinConstraint 1  ][          1     ][          -1    ]
+    /// [ diffNonLinConstraint .  ][            1   ][            -1  ]
+    /// [ diffNonLinConstraint N  ][              1 ][              -1]
     Eigen::MatrixXd feasibilityAllDiffCstr;
-    /// \brief Vector containing the Inf bounds for feasibility Cstr
-    Eigen::VectorXd feasibilityInfCstr;
-    /// \brief Vector containing the Sup bounds for feasibility Cstr
-    Eigen::VectorXd feasibilitySupCstr;
     Eigen::VectorXd feasibilityLB;
     Eigen::VectorXd feasibilityUB;
     Eigen::VectorXd feasibleValue;
-    Eigen::VectorXd infeasibilityResult;
+    Eigen::VectorXd infeasibilityInf;
+    Eigen::VectorXd infeasibilitySup;
     Index nFeasCstr;
 
 

@@ -35,7 +35,7 @@ namespace pgs
       void setHessianEXACT(){opt_.hessianUpdateMethod = EXACT;};
 
       /// \brief Accessor for probEval
-      const ProblemEvaluation& probEval() const;
+      const ProblemEvaluation& probEval() const { return probEval_;};
 
       /// \brief Updates Everything in probEval
       void updateAllProblemData(Problem& p);
@@ -86,9 +86,15 @@ namespace pgs
         const Eigen::VectorXd& infCstr,
         const Eigen::VectorXd& supCstr) const;
 
+      /// \brief Restoration method makes sure that the quadratic approximated problem 
+      /// has a solution. If it doesn't, it finds a new evaluation point for
+      /// which it is feasible  
+      void restoration(ProblemEvaluation& probEval, const SolverOptions& opt);
+
       /// \brief Method testing the feasibility of a set of constraints
       bool feasibility(const ProblemEvaluation& probEval, double feasibilityMin, 
-                        Eigen::VectorXd& feasibleVector, Eigen::VectorXd& infeasibility);
+                        Eigen::VectorXd& feasibleVector, 
+                        Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup);
 
       /// \brief Computes the value of the Lagrangian of the problem
       double computeLagrangian();

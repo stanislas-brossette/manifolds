@@ -68,14 +68,9 @@ namespace pgs
         std::cout <<std::endl<< "********************Iteration " << iter <<"*********************"<< std::endl;
       }
 
-      //Test Feasibility
-      bool feasible = feasibility(probEval_, opt_.epsilonFeasibility, 
-          probEval_.feasibleValue, probEval_.infeasibilityResult);
-      if(opt_.VERBOSE >= 1) 
-      {
-        std::cout << "Problem Feasibility = " << feasible << std::endl;
-      }
-
+      //Restoration Phase
+      restoration(probEval_, opt_);
+        
       //Resolution of the quadratic tangent problem
       QPSolver_.solve(
           probEval_.Hessian,
@@ -86,6 +81,10 @@ namespace pgs
           -probEval_.allSupCstr,
           probEval_.tangentLB,
           probEval_.tangentUB);
+
+      if (QPSolver_.fail() > 0)
+        throw std::runtime_error("QP solver FAILED!!! Damnit");
+
       z_ = QPSolver_.result();
 
       //Globalization
@@ -95,7 +94,7 @@ namespace pgs
           alpha = LineSearcher::LineSearch(*this, problem, filter_, z_, opt_);
           break;
         case TRUSTREGION:
-          std::runtime_error("EXACT update is not implemented yet");
+          throw std::runtime_error("EXACT update is not implemented yet");
           break;
       }
 
@@ -128,7 +127,6 @@ namespace pgs
           break;
       }
 
-      //printStatus();
     }
     
     if(opt_.VERBOSE >= 1) 
@@ -248,35 +246,40 @@ namespace pgs
     lagMult_.all.setZero();
 
     probEval_.nFeasCstr = 2*cstrMngr_.totalDim();
-    probEval_.feasibilityCostF.resize(probEval_.varDim + probEval_.nFeasCstr );
+    probEval_.feasibilityCostF.resize(probEval_.varDim + 2*cstrMngr_.totalDim() );
     probEval_.feasibilityCostF.head(probEval_.varDim) = Eigen::VectorXd::Zero(probEval_.varDim);
-    probEval_.feasibilityCostF.tail( probEval_.nFeasCstr ) = Eigen::VectorXd::Constant( probEval_.nFeasCstr, 1);
-    probEval_.feasibilityAllDiffCstr.resize( probEval_.nFeasCstr, probEval_.varDim + probEval_.nFeasCstr );
+    probEval_.feasibilityCostF.segment(probEval_.varDim, cstrMngr_.totalDim()) = 
+                            Eigen::VectorXd::Constant( cstrMngr_.totalDim(), 1);
+    probEval_.feasibilityCostF.tail( cstrMngr_.totalDim() ) = 
+                            Eigen::VectorXd::Constant( cstrMngr_.totalDim(), 1);
+    probEval_.feasibilityAllDiffCstr.resize( cstrMngr_.totalDim(), probEval_.varDim + 2*cstrMngr_.totalDim());
     probEval_.feasibilityAllDiffCstr.setZero();
-    probEval_.feasibilityAllDiffCstr.block(0,probEval_.varDim, probEval_.nFeasCstr, probEval_.nFeasCstr) = Eigen::MatrixXd::Identity(probEval_.nFeasCstr, probEval_.nFeasCstr);
-    probEval_.feasibilityLB.resize(probEval_.varDim + probEval_.nFeasCstr);
+    probEval_.feasibilityAllDiffCstr.block(
+        0,probEval_.varDim, cstrMngr_.totalDim(), cstrMngr_.totalDim()) = 
+                  Eigen::MatrixXd::Identity(cstrMngr_.totalDim(), cstrMngr_.totalDim());
+    probEval_.feasibilityAllDiffCstr.block(
+        0,probEval_.varDim + cstrMngr_.totalDim(), cstrMngr_.totalDim(), cstrMngr_.totalDim()) = 
+                  -Eigen::MatrixXd::Identity(cstrMngr_.totalDim(), cstrMngr_.totalDim());
+    probEval_.feasibilityLB.resize(probEval_.varDim + 2*cstrMngr_.totalDim());
     probEval_.feasibilityLB.setZero();
     probEval_.feasibilityLB.head(probEval_.varDim) = probEval_.tangentLB;
-    probEval_.feasibilityUB.resize(probEval_.varDim + probEval_.nFeasCstr);
+    probEval_.feasibilityUB.resize(probEval_.varDim + 2*cstrMngr_.totalDim());
     probEval_.feasibilityUB.head(probEval_.varDim) = probEval_.tangentUB;
-    probEval_.feasibilityUB.tail(probEval_.nFeasCstr) = 
-           Eigen::VectorXd::Constant(probEval_.nFeasCstr, std::numeric_limits<double>::infinity());
-
-    probEval_.feasibilityInfCstr.resize(probEval_.nFeasCstr);
-    probEval_.feasibilityInfCstr.setZero();
-    probEval_.feasibilitySupCstr.resize(probEval_.nFeasCstr);
-    probEval_.feasibilitySupCstr.setZero();
+    probEval_.feasibilityUB.tail(2*cstrMngr_.totalDim()) = 
+           Eigen::VectorXd::Constant(2*cstrMngr_.totalDim(), std::numeric_limits<double>::infinity());
 
     probEval_.feasibleValue.resize(probEval_.varDim);
     probEval_.feasibleValue.setZero();
-    probEval_.infeasibilityResult.resize(probEval_.nFeasCstr);
-    probEval_.infeasibilityResult.setZero();
+    probEval_.infeasibilityInf.resize(cstrMngr_.totalDim());
+    probEval_.infeasibilityInf.setZero();
+    probEval_.infeasibilitySup.resize(cstrMngr_.totalDim());
+    probEval_.infeasibilitySup.setZero();
 
     QPSolver_ = Eigen::LSSOL(int(probEval_.varDim), int(cstrMngr_.totalDim()));
 
     //TODO: This is WRONG. It should be a LSSOL solver of type LP. Dunno yet how
     //to make one.
-    LPSolver_ = Eigen::LSSOL(int(probEval_.varDim + probEval_.nFeasCstr), int(probEval_.nFeasCstr));
+    LPSolver_ = Eigen::LSSOL(int(probEval_.varDim + 2*cstrMngr_.totalDim()), int(cstrMngr_.totalDim()));
 
   }
 
@@ -330,22 +333,11 @@ namespace pgs
     probEval_.diffLag = computeDiffLagrangian();
 
 
-
-    Index nFeasCstr = 2*cstrMngr_.totalDim();
-    for(Index i = 0; i < cstrMngr_.totalDim(); ++i)
-    {
-      probEval_.feasibilityAllDiffCstr.block(2*i, 0, 1, probEval_.varDim) =
-        probEval_.allDiffCstr.row(i);
-      probEval_.feasibilityAllDiffCstr.block(2*i+1, 0, 1, probEval_.varDim) =
-        - probEval_.allDiffCstr.row(i);
-      probEval_.feasibilityInfCstr(2*i) = -probEval_.allInfCstr(i);
-      probEval_.feasibilityInfCstr(2*i+1) = probEval_.allSupCstr(i);
-    }
-    probEval_.feasibilitySupCstr = Eigen::VectorXd::Constant(nFeasCstr, std::numeric_limits<double>::infinity());
+    //TODO: Avoid those 3 lines by using a map on those matrix. They are just
+    //copies of others...
+    probEval_.feasibilityAllDiffCstr.block(0, 0, cstrMngr_.totalDim(), probEval_.varDim) = probEval_.allDiffCstr;
     probEval_.feasibilityLB.head(probEval_.varDim) = probEval_.tangentLB;
-    probEval_.feasibilityLB.tail(nFeasCstr) = Eigen::VectorXd::Zero(nFeasCstr);
     probEval_.feasibilityUB.head(probEval_.varDim) = probEval_.tangentUB;
-    probEval_.feasibilityUB.tail(nFeasCstr) = Eigen::VectorXd::Constant(nFeasCstr, std::numeric_limits<double>::infinity());
   }
 
   void Solver::updateObj(Problem& p)
@@ -528,35 +520,58 @@ namespace pgs
   }
 
   bool Solver::feasibility(const ProblemEvaluation& probEval, double eps_feasibility, 
-      Eigen::VectorXd& feasibleVector, Eigen::VectorXd& infeasibility)
+      Eigen::VectorXd& feasibleVector, Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup)
   {
     LPSolver_.solve(
         Eigen::MatrixXd::Zero(probEval.feasibilityCostF.size(), probEval.feasibilityCostF.size()),
         probEval.feasibilityCostF,
         probEval.feasibilityAllDiffCstr,
         static_cast<int>(probEval.feasibilityAllDiffCstr.rows()),
-        probEval.feasibilityInfCstr,
-        probEval.feasibilitySupCstr,
+        -probEval_.allInfCstr,
+        -probEval_.allSupCstr,
         probEval.feasibilityLB,
         probEval.feasibilityUB);
     feasibleVector = LPSolver_.result().head(probEval.varDim);
-    infeasibility = LPSolver_.result().tail(probEval.infeasibilityResult.size());
-    //std::cout << "Feasibility Test:"<< std::endl;
-    //std::cout << "probEval_.feasibilityAllDiffCstr = \n" << 
-    //                    probEval_.feasibilityAllDiffCstr << std::endl;
-    //std::cout << "probEval_.feasibilityInfCstr = \n" << probEval_.feasibilityInfCstr << std::endl;
-    //std::cout << "probEval_.feasibilitySupCstr = \n" << probEval_.feasibilitySupCstr << std::endl;
-    //std::cout << "probEval_.feasibilityLB = \n" << probEval_.feasibilityLB << std::endl;
-    //std::cout << "probEval_.feasibilityUB = \n" << probEval_.feasibilityUB << std::endl;
-    //std::cout << "feasibleVector = " << feasibleVector << std::endl;
-    //std::cout << "infeasibility = " << infeasibility << std::endl;
-    bool result = (infeasibility.lpNorm<Eigen::Infinity>() < eps_feasibility);
+    infeasibilityInf = LPSolver_.result().segment(probEval.varDim, cstrMngr_.totalDim());
+    infeasibilitySup = LPSolver_.result().tail(cstrMngr_.totalDim());
+
+    std::cout << "Feasibility Test:"<< std::endl;
+    std::cout << "probEval_.feasibilityAllDiffCstr = \n" << 
+                        probEval_.feasibilityAllDiffCstr << std::endl;
+    std::cout << "-probEval_.allInfCstr = \n" << -probEval_.allInfCstr << std::endl;
+    std::cout << "-probEval_.allSupCstr = \n" << -probEval_.allSupCstr << std::endl;
+    std::cout << "probEval_.feasibilityLB = \n" << probEval_.feasibilityLB << std::endl;
+    std::cout << "probEval_.feasibilityUB = \n" << probEval_.feasibilityUB << std::endl;
+    std::cout << "LPSolver.result = " << LPSolver_.result() << std::endl;
+    std::cout << "feasibleVector = " << feasibleVector << std::endl;
+    std::cout << "infeasibilityInf = " << infeasibilityInf << std::endl;
+    std::cout << "infeasibilitySup = " << infeasibilitySup << std::endl;
+    bool result = (infeasibilityInf.lpNorm<Eigen::Infinity>() < eps_feasibility) && (infeasibilitySup.lpNorm<Eigen::Infinity>() < eps_feasibility);
     return result;
   }
 
-
-  const ProblemEvaluation& Solver::probEval() const
+  void Solver::restoration(ProblemEvaluation& probEval, const SolverOptions& opt)
   {
-    return probEval_;
+    //Test Feasibility
+    bool feasible = false; 
+    //while (!feasible)
+    {
+      feasible = feasibility(probEval, opt.epsilonFeasibility, 
+             probEval.feasibleValue, probEval.infeasibilityInf, probEval.infeasibilitySup);
+      if(opt_.VERBOSE >= 1) 
+      {
+        if (feasible)
+          std::cout << "Problem Feasible. No need for restoration" << std::endl;
+        else
+          std::cout << "Problem NOT Feasible. NEED restoration" << std::endl;
+      }
+
+      if (feasible)
+        return;
+
+      //Approximated problem is not feasible. We initiate the restoration phase
+      std::cout << "infeasibilityInf:\n" << probEval.infeasibilityInf << std::endl;
+      std::cout << "infeasibilitySup:\n" << probEval.infeasibilitySup << std::endl;
+    }
   }
 }
