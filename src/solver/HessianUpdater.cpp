@@ -13,7 +13,7 @@ namespace pgs
   void HessianUpdater::hessianUpdate(Eigen::MatrixXd& H, const Point& x,
       const double alpha, const Eigen::VectorXd& step,
       const Eigen::MatrixXd& prevDiffLag, const Eigen::MatrixXd& diffLag,
-      const SolverOptions& solverOptions)
+      const SolverOptions& opt)
   {
     Index dim = x.getManifold().dim();
     Eigen::VectorXd sk(dim);
@@ -29,7 +29,7 @@ namespace pgs
       std::cerr << "Warning: Secant equation not respected... <sk,yk> <= 0 " << std::endl;
     }
 
-    switch(solverOptions.hessianUpdateMethod){
+    switch(opt.hessianUpdateMethod){
       case BFGS: computeBFGS(H, sk, yk); break;
       case SR1: computeSR1(H, sk, yk); break;
       case EXACT:
@@ -73,9 +73,13 @@ namespace pgs
           const Point& x, const double alpha, const Eigen::VectorXd& step,
           const Eigen::MatrixXd& prevDiffObj, const Eigen::MatrixXd& diffObj,
           const Eigen::MatrixXd& prevDiffCstr, const Eigen::MatrixXd& diffCstr,
-          const SolverOptions& solverOptions)
+          const SolverOptions& opt)
   {
-    std::cout << "This is an individual update of Hessians" << std::endl;
+     
+    if(opt.VERBOSE >= 1) 
+    {
+      std::cout << "This is an individual update of Hessians" << std::endl;
+    }
     Index dim = x.getManifold().dim();
     Eigen::VectorXd sk(dim);
     Eigen::VectorXd yk(dim);
@@ -90,7 +94,7 @@ namespace pgs
     }
     x.getManifold().applyTransport(HCost, HCost, x.value(), alpha*step);
     x.getManifold().applyInvTransport(HCost, HCost, x.value(), alpha*step);
-    switch(solverOptions.hessianUpdateMethod){
+    switch(opt.hessianUpdateMethod){
       case BFGS: computeBFGS(HCost, sk, yk); break;
       case SR1: computeSR1(HCost, sk, yk); break;
       case EXACT:
@@ -109,7 +113,7 @@ namespace pgs
       }
       x.getManifold().applyTransport(HCstr[i], HCstr[i], x.value(), alpha*step);
       x.getManifold().applyInvTransport(HCstr[i], HCstr[i], x.value(), alpha*step);
-      switch(solverOptions.hessianUpdateMethod){
+      switch(opt.hessianUpdateMethod){
         case BFGS: computeBFGS(HCstr[i], sk, yk); break;
         case SR1: computeSR1(HCstr[i], sk, yk); break;
         case EXACT:

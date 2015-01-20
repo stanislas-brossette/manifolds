@@ -44,6 +44,7 @@ int main()
   {
     ExampleGeometricProblem myProb;
     Solver mySolver;
+    mySolver.opt_.VERBOSE = 2;
     mySolver.opt_.maxIter = 100;
     mySolver.opt_.epsilon_P = 1e-6;
     mySolver.opt_.epsilon_D = 1e-2;

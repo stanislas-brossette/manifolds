@@ -6,7 +6,6 @@ namespace pgs
 {
   ConstraintManager::ConstraintManager()
   {
-    std::cout << "Constraint Manager"<< std::endl;
   }
 
   void ConstraintManager::init(Problem& p)

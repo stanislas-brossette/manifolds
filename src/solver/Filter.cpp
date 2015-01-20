@@ -109,6 +109,8 @@ namespace pgs
 
   void Filter::print() const
   {
+    if (this->size() == 0)
+      std::cout << "--empty--" << std::endl;
     for (std::list<Entry>::const_iterator it = filter.begin(); it!= filter.end(); ++it)
     {
       std::cout << it->first.transpose() << std::endl;

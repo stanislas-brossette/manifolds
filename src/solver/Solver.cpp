@@ -8,7 +8,6 @@ namespace pgs
 {
   Solver::Solver()
   {
-    std::cout << "New Solver" << std::endl;
     filter_ = Filter();
   }
 
@@ -17,32 +16,35 @@ namespace pgs
     problem.setX(x0);
     cstrMngr_.init(problem);
     initSolver(problem);
-    std::cout << "Problem with " << cstrMngr_.totalDimLin() << " Linear cstr" << std::endl;
-    std::cout << "And " << cstrMngr_.totalDimNonLin() << " NonLinear cstr" << std::endl;
-
-    std::cout << "Hessian update method is: ";
-    switch(opt_.hessianUpdateMethod){
-      case BFGS: std::cout << "BFGS" << std::endl; break;
-      case SR1: std::cout << "SR1" << std::endl; break;
-      case EXACT: std::cout << "EXACT" << std::endl; break;
-    }
-    std::cout << "Hessian update Type is: ";
-    switch(opt_.hessianUpdateType){
-      case GROUPED: std::cout << "GROUPED" << std::endl; break;
-      case INDIVIDUAL: std::cout << "INDIVIDUAL" << std::endl; break;
-    }
-    std::cout << "Globalization method is: ";
-    switch(opt_.globalizationMethod){
-      case NONE: std::cout << "NONE" << std::endl; break;
-      case LINESEARCH: std::cout << "LINESEARCH" << std::endl; break;
-      case TRUSTREGION: std::cout << "TRUSTREGION" << std::endl; break;
-    }
-
     z_.setZero();
     lagMult_.initOnes();
     updateAllProblemData(problem);
-    std::cout << "================== Initial Conditions ==========================="<< std::endl;
-    printStatus();
+    if(opt_.VERBOSE >= 1) 
+    {
+      std::cout << "Problem with " << cstrMngr_.totalDimLin() << " Linear cstr" << std::endl;
+      std::cout << "And " << cstrMngr_.totalDimNonLin() << " NonLinear cstr" << std::endl;
+
+      std::cout << "Hessian update method is: ";
+      switch(opt_.hessianUpdateMethod){
+        case BFGS: std::cout << "BFGS" << std::endl; break;
+        case SR1: std::cout << "SR1" << std::endl; break;
+        case EXACT: std::cout << "EXACT" << std::endl; break;
+      }
+      std::cout << "Hessian update Type is: ";
+      switch(opt_.hessianUpdateType){
+        case GROUPED: std::cout << "GROUPED" << std::endl; break;
+        case INDIVIDUAL: std::cout << "INDIVIDUAL" << std::endl; break;
+      }
+      std::cout << "Globalization method is: ";
+      switch(opt_.globalizationMethod){
+        case NONE: std::cout << "NONE" << std::endl; break;
+        case LINESEARCH: std::cout << "LINESEARCH" << std::endl; break;
+        case TRUSTREGION: std::cout << "TRUSTREGION" << std::endl; break;
+      }
+      std::cout << "================== Initial Conditions ==========================="<< std::endl;
+      printStatus();
+    }
+
 
     int iter = 0;
     double alpha = 1;
@@ -61,12 +63,18 @@ namespace pgs
                         && iter < opt_.maxIter)
     {
       iter++;
-      std::cout <<std::endl<< "********************Iteration " << iter <<"*********************"<< std::endl;
+      if(opt_.VERBOSE >= 1) 
+      {
+        std::cout <<std::endl<< "********************Iteration " << iter <<"*********************"<< std::endl;
+      }
 
       //Test Feasibility
       bool feasible = feasibility(probEval_, opt_.epsilonFeasibility, 
           probEval_.feasibleValue, probEval_.infeasibilityResult);
-      std::cout << "Problem Feasibility = " << feasible << std::endl;
+      if(opt_.VERBOSE >= 1) 
+      {
+        std::cout << "Problem Feasibility = " << feasible << std::endl;
+      }
 
       //Resolution of the quadratic tangent problem
       QPSolver_.solve(
@@ -84,13 +92,12 @@ namespace pgs
       switch(opt_.globalizationMethod){
         case NONE: alpha = 1; break;
         case LINESEARCH:
-          alpha = LineSearcher::LineSearch(*this, problem, filter_, z_);
+          alpha = LineSearcher::LineSearch(*this, problem, filter_, z_, opt_);
           break;
         case TRUSTREGION:
           std::runtime_error("EXACT update is not implemented yet");
           break;
       }
-      std::cout << "LineSearch gives alpha = " << alpha << std::endl;
 
       lagMult_.bounds = (1-alpha)*lagMult_.bounds + alpha*(-QPSolver_.clambda().head(lagMult_.bounds.size()));
       lagMult_.linear = (1-alpha)*lagMult_.linear + alpha*(-QPSolver_.clambda().segment(lagMult_.bounds.size(), lagMult_.linear.size()));
@@ -123,8 +130,12 @@ namespace pgs
 
       //printStatus();
     }
-    std::cout << "=============== Solution at iteration " << iter << " ========================="<< std::endl;
-    printStatus();
+    
+    if(opt_.VERBOSE >= 1) 
+    {
+      std::cout << "=============== Solution at iteration " << iter << " ========================="<< std::endl;
+      printStatus();
+    }
 
     return Results({ x0, CONVERGE, {} });
   }
@@ -464,17 +475,22 @@ namespace pgs
     //std::cout << "tau_l: " << tau_l << std::endl;
 
     //Test Lagrangian's derivative
-    std::cout << "Test KKT diff Lagrangian: " << std::endl;
+    if(opt_.VERBOSE >= 1)
+      std::cout << "Test KKT diff Lagrangian: " << std::endl;
     bool convergedLag = (diffLag.array().abs() <= tau_l).all();
-    std::cout << "convergedLag = " << convergedLag << std::endl;
+    if(opt_.VERBOSE >= 1)
+      std::cout << "convergedLag = " << convergedLag << std::endl;
     //Test bounds cstr
-    std::cout << "Test KKT Bound Cstr " << std::endl;
+    if(opt_.VERBOSE >= 1)
+      std::cout << "Test KKT Bound Cstr " << std::endl;
     bool convergedBounds = KKTTestCstr(tau_l, tau_x, lagMultBnd, -tangentLB, -tangentUB);
     //Test Linear cstr
-    std::cout << "Test KKT Linear Cstr " << std::endl;
+    if(opt_.VERBOSE >= 1)
+      std::cout << "Test KKT Linear Cstr " << std::endl;
     bool convergedLin = KKTTestCstr(tau_l, tau_x, lagMultLin, infCstrLin, supCstrLin);
     //Test NonLinear cstr
-    std::cout << "Test KKT NonLinear Cstr " << std::endl;
+    if(opt_.VERBOSE >= 1)
+      std::cout << "Test KKT NonLinear Cstr " << std::endl;
     bool convergedNonLin = KKTTestCstr(tau_l, tau_x, lagMultNonLin, infCstrNonLin, supCstrNonLin);
 
     bool converged = convergedLag && convergedBounds && convergedLin && convergedNonLin;
@@ -496,14 +512,16 @@ namespace pgs
           || (fabs(lagMult[i])<=tau_l && infCstr(i)>=-tau_x && supCstr(i)<=tau_x)
           || (lagMult[i]>tau_l && fabs(supCstr(i))<tau_x)))
       {
-        std::cout << "Cstr " << i << " failure" << std::endl;
+        if(opt_.VERBOSE >= 1)
+          std::cout << "Cstr " << i << " failure" << std::endl;
         //std::cout << "!((lagMult[i]<-tau_l && fabs(infCstr(i))<tau_x) || (fabs(lagMult[i])>tau_l && infCstr(i)>=-tau_x && supCstr(i)<=tau_x) || (lagMult[i]>tau_l && fabs(supCstr(i))<tau_x)))"<< std::endl;
         //std::cout << "!((" << lagMult[i] << " < " << -tau_l << " && " << fabs(infCstr(i)) << " < " << tau_x << ") || ( " << fabs(lagMult[i]) << " > " << tau_l << " && " << infCstr(i)<< " >= " << -tau_x << " && " << supCstr(i) << " <= " << tau_x << ") || (" << lagMult[i] << " > " << tau_l << " && " << fabs(supCstr(i)) << " < " << tau_x << "))" << std::endl;
         converged = false;
       }
       else
       {
-        std::cout << "Cstr " << i << " success" << std::endl;
+        if(opt_.VERBOSE >= 1)
+          std::cout << "Cstr " << i << " success" << std::endl;
       }
     }
     return converged;
@@ -512,7 +530,6 @@ namespace pgs
   bool Solver::feasibility(const ProblemEvaluation& probEval, double eps_feasibility, 
       Eigen::VectorXd& feasibleVector, Eigen::VectorXd& infeasibility)
   {
-    //TODO Cleanup that method
     LPSolver_.solve(
         Eigen::MatrixXd::Zero(probEval.feasibilityCostF.size(), probEval.feasibilityCostF.size()),
         probEval.feasibilityCostF,

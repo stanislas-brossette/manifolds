@@ -12,7 +12,7 @@ namespace pgs
   class LineSearcher
   {
     public:
-      static double LineSearch(Solver& s, Problem& p, Filter& filter_, Eigen::VectorXd& step);
+      static double LineSearch(Solver& s, Problem& p, Filter& filter_, Eigen::VectorXd& step, SolverOptions& opt);
   };
 }
 

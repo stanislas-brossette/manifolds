@@ -18,6 +18,7 @@ namespace pgs
     double gammaFilter = 1e-16;
     double epsilonFeasibility = 1e-3;
     Filter::eOption filterOpt = Filter::EXISTING;
+    int VERBOSE = 1;
 
     //TODO: make a pair of {hessMeth, hessType}
     eHessianUpdateMethod hessianUpdateMethod = BFGS;

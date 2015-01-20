@@ -9,15 +9,24 @@
 
 namespace pgs
 {
-  double LineSearcher::LineSearch(Solver& s, Problem& p, Filter& filter_, Eigen::VectorXd& step)
+  double LineSearcher::LineSearch(Solver& s, Problem& p, 
+      Filter& filter_, Eigen::VectorXd& step, SolverOptions& opt)
   {
     double alpha = 1.0;
-    std::cout << "---- Line-search ----"<< std::endl;
-    std::cout << "Starting point: "<< p.x() << std::endl;
-    std::cout << "Search direction: "<< step.transpose() << std::endl;
-    //std::cout << "filter.size() = " << filter_.size() << std::endl;
-    //std::cout << "F = " << s.probEval().obj << std::endl;
-    //std::cout << "H = " << s.probEval().violCstr.transpose() << std::endl;
+    if(opt.VERBOSE >= 1) 
+    {
+      std::cout << "---- Line-search ----"<< std::endl;
+      std::cout << "Starting point: "<< p.x() << std::endl;
+      std::cout << "Search direction: "<< step.transpose() << std::endl;
+      std::cout << "Filter = " << std::endl;
+      filter_.print();
+    }
+       
+    if(opt.VERBOSE >= 2) 
+    {
+      std::cout << "F = " << s.probEval().obj << std::endl;
+      std::cout << "H = " << s.probEval().violCstr.transpose() << std::endl;
+    }
 
     Eigen::Vector2d FH;
 
@@ -27,21 +36,30 @@ namespace pgs
       s.updateObj(p);
       s.updateViolations(p);
       FH << s.probEval().obj, s.probEval().violCstr.lpNorm<1>();
-      std::cout << "Trial with alpha = " << alpha << std::endl;
+      if(opt.VERBOSE >= 2) 
+      {
+        std::cout << "Trial with alpha = " << alpha << std::endl;
+        std::cout << "F = " << FH[0] << std::endl;
+        std::cout << "H = " << FH[1] << std::endl;
+      }
 
       if(filter_.accepts(FH))
       {
         filter_.add(FH);
-        std::cout << "Filter accepted: " << FH.transpose() << std::endl;
-        std::cout << "---------------------"<< std::endl;
+        if(opt.VERBOSE >= 1) 
+        {
+          std::cout << "Filter accepted: " << FH.transpose() << std::endl;
+          std::cout << "alpha = " << alpha << std::endl;
+          std::cout << "---------------------"<< std::endl;
+        }
         return alpha;
       }
       else
       {
-        //std::cout << "alpha*step = " << p.z() << std::endl;
-        std::cout << "Filter refused: " << FH.transpose() << std::endl;
-        //std::cout << "Filter = " << std::endl;
-        filter_.print();
+        if(opt.VERBOSE >= 1) 
+        {
+          std::cout << "Filter refused: " << FH.transpose() << std::endl;
+        }
         alpha = alpha*0.9;
       }
     }
