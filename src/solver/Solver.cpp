@@ -520,8 +520,12 @@ namespace pgs
   }
 
   bool Solver::feasibility(const ProblemEvaluation& probEval, double eps_feasibility, 
-      Eigen::VectorXd& feasibleVector, Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup)
+      Eigen::VectorXd& feasibleVector, 
+      Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup)
   {
+    if(opt_.VERBOSE >= 1)
+      std::cout << "-----------------Feasibility------------------"<< std::endl;
+
     LPSolver_.solve(
         Eigen::MatrixXd::Zero(probEval.feasibilityCostF.size(), probEval.feasibilityCostF.size()),
         probEval.feasibilityCostF,
@@ -534,24 +538,28 @@ namespace pgs
     feasibleVector = LPSolver_.result().head(probEval.varDim);
     infeasibilityInf = LPSolver_.result().segment(probEval.varDim, cstrMngr_.totalDim());
     infeasibilitySup = LPSolver_.result().tail(cstrMngr_.totalDim());
-
-    std::cout << "Feasibility Test:"<< std::endl;
-    std::cout << "probEval_.feasibilityAllDiffCstr = \n" << 
-                        probEval_.feasibilityAllDiffCstr << std::endl;
-    std::cout << "-probEval_.allInfCstr = \n" << -probEval_.allInfCstr << std::endl;
-    std::cout << "-probEval_.allSupCstr = \n" << -probEval_.allSupCstr << std::endl;
-    std::cout << "probEval_.feasibilityLB = \n" << probEval_.feasibilityLB << std::endl;
-    std::cout << "probEval_.feasibilityUB = \n" << probEval_.feasibilityUB << std::endl;
-    std::cout << "LPSolver.result = " << LPSolver_.result() << std::endl;
-    std::cout << "feasibleVector = " << feasibleVector << std::endl;
-    std::cout << "infeasibilityInf = " << infeasibilityInf << std::endl;
-    std::cout << "infeasibilitySup = " << infeasibilitySup << std::endl;
     bool result = (infeasibilityInf.lpNorm<Eigen::Infinity>() < eps_feasibility) && (infeasibilitySup.lpNorm<Eigen::Infinity>() < eps_feasibility);
+
+    if(opt_.VERBOSE >= 1)
+    {
+      //std::cout << "probEval_.feasibilityAllDiffCstr = \n" << 
+      //                    probEval_.feasibilityAllDiffCstr << std::endl;
+      //std::cout << "-probEval_.allInfCstr = \n" << -probEval_.allInfCstr << std::endl;
+      //std::cout << "-probEval_.allSupCstr = \n" << -probEval_.allSupCstr << std::endl;
+      //std::cout << "probEval_.feasibilityLB = \n" << probEval_.feasibilityLB << std::endl;
+      //std::cout << "probEval_.feasibilityUB = \n" << probEval_.feasibilityUB << std::endl;
+      //std::cout << "LPSolver.result = \n" << LPSolver_.result() << std::endl;
+      std::cout << "feasibleVector = \n" << feasibleVector << std::endl;
+      std::cout << "infeasibilityInf = \n" << infeasibilityInf << std::endl;
+      std::cout << "infeasibilitySup = \n" << infeasibilitySup << std::endl;
+      std::cout << "----------------------------------------------"<< std::endl;
+    }
     return result;
   }
 
   void Solver::restoration(ProblemEvaluation& probEval, const SolverOptions& opt)
   {
+    std::cout << "########## Restoration Phase ############ " << std::endl;
     //Test Feasibility
     bool feasible = false; 
     //while (!feasible)
@@ -567,11 +575,14 @@ namespace pgs
       }
 
       if (feasible)
+      {
+        std::cout << "######################################### " << std::endl;
         return;
+      }
 
-      //Approximated problem is not feasible. We initiate the restoration phase
-      std::cout << "infeasibilityInf:\n" << probEval.infeasibilityInf << std::endl;
-      std::cout << "infeasibilitySup:\n" << probEval.infeasibilitySup << std::endl;
+      //Approximated problem is not feasible. Restoration phase
+
     }
+    std::cout << "######################################### " << std::endl;
   }
 }

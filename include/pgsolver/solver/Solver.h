@@ -86,14 +86,29 @@ namespace pgs
         const Eigen::VectorXd& infCstr,
         const Eigen::VectorXd& supCstr) const;
 
-      /// \brief Restoration method makes sure that the quadratic approximated problem 
+      /// \brief Restoration method makes sure that the quadratic approximated problem
       /// has a solution. If it doesn't, it finds a new evaluation point for
-      /// which it is feasible  
+      /// which it is feasible
       void restoration(ProblemEvaluation& probEval, const SolverOptions& opt);
 
       /// \brief Method testing the feasibility of a set of constraints
-      bool feasibility(const ProblemEvaluation& probEval, double feasibilityMin, 
-                        Eigen::VectorXd& feasibleVector, 
+      /// This method solves the following problem:
+      /// \f$
+      /// \begin{align}
+      ///   \min \sum {{\bf v}_i} + \sum {{\bf w}_i} \nonumber\\
+      ///   \text{subject to }&
+      ///   \left\{
+      ///   \begin{array}{lr}
+      ///     lb \leq {\bf x}\leq ub & (\text{Bounds})\\
+      ///     lb \leq \nabla c_k.{\bf x} + c_k + {\bf v} - {\bf w} \leq ub\\
+      ///     0 \leq {\bf v}_i \leq +\infty \\
+      ///     0 \leq {\bf w}_i \leq +\infty \\
+      ///   \end{array} \nonumber
+      ///   \right.
+      /// \end{align}
+      /// $\f
+      bool feasibility(const ProblemEvaluation& probEval, double feasibilityMin,
+                        Eigen::VectorXd& feasibleVector,
                         Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup);
 
       /// \brief Computes the value of the Lagrangian of the problem
