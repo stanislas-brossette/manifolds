@@ -93,20 +93,18 @@ namespace pgs
 
       /// \brief Method testing the feasibility of a set of constraints
       /// This method solves the following problem:
-      /// \f$
-      /// \begin{align}
+      /// \f{align}{
       ///   \min \sum {{\bf v}_i} + \sum {{\bf w}_i} \nonumber\\
       ///   \text{subject to }&
       ///   \left\{
       ///   \begin{array}{lr}
-      ///     lb \leq {\bf x}\leq ub & (\text{Bounds})\\
+      ///     lb \leq {\bf x}\leq ub\\
       ///     lb \leq \nabla c_k.{\bf x} + c_k + {\bf v} - {\bf w} \leq ub\\
       ///     0 \leq {\bf v}_i \leq +\infty \\
       ///     0 \leq {\bf w}_i \leq +\infty \\
       ///   \end{array} \nonumber
       ///   \right.
-      /// \end{align}
-      /// $\f
+      /// \f}
       bool feasibility(const ProblemEvaluation& probEval, double feasibilityMin,
                         Eigen::VectorXd& feasibleVector,
                         Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup);
