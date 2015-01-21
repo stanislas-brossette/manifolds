@@ -1,3 +1,5 @@
+#include <stdexcept>
+#include <limits>
 #include <pgsolver/solver/ConstraintManager.h>
 #include <pgsolver/solver/LineSearcher.h>
 #include <pgsolver/solver/HessianUpdater.h>
@@ -68,6 +70,15 @@ namespace pgs
         std::cout <<std::endl<< "********************Iteration " << iter <<"*********************"<< std::endl;
       }
 
+      std::cout << "::::::::::::::::Arguments to be sent to LSSOL :::::::::::::::" << std::endl;
+      std::cout << "probEval_.Hessian = \n" << probEval_.Hessian << std::endl;
+      std::cout << "probEval_.diffObj.transpose() = \n" << probEval_.diffObj.transpose() << std::endl;
+      std::cout << "probEval_.allDiffCstr = \n" << probEval_.allDiffCstr << std::endl;
+      std::cout << "static_cast<int>(probEval_.allDiffCstr.rows()) = \n" << static_cast<int>(probEval_.allDiffCstr.rows()) << std::endl;
+      std::cout << "-probEval_.allInfCstr = \n" << -probEval_.allInfCstr << std::endl;
+      std::cout << "-probEval_.allSupCstr = \n" << -probEval_.allSupCstr << std::endl;
+      std::cout << "probEval_.tangentLB = \n" << probEval_.tangentLB << std::endl;
+      std::cout << "probEval_.tangentUB = \n" << probEval_.tangentUB << std::endl;
       //Restoration Phase
       restoration(probEval_, opt_);
         
@@ -218,11 +229,9 @@ namespace pgs
     probEval_.supNonLinCstr.resize(cstrMngr_.totalDimNonLin());
     probEval_.supNonLinCstr.setZero();
 
-    probEval_.allInfCstr.resize(cstrMngr_.totalDimNonLin()
-                                + cstrMngr_.totalDimLin());
+    probEval_.allInfCstr.resize(cstrMngr_.totalDimNonLin() + cstrMngr_.totalDimLin());
     probEval_.allInfCstr.setZero();
-    probEval_.allSupCstr.resize(cstrMngr_.totalDimNonLin()
-                                + cstrMngr_.totalDimLin());
+    probEval_.allSupCstr.resize(cstrMngr_.totalDimNonLin() + cstrMngr_.totalDimLin());
     probEval_.allSupCstr.setZero();
 
 
@@ -245,6 +254,7 @@ namespace pgs
     lagMult_.all.resize(probEval_.varDim + cstrMngr_.totalDim());
     lagMult_.all.setZero();
 
+    // -------------------- FEASIBILITY DATA ---------------------------
     probEval_.nFeasCstr = 2*cstrMngr_.totalDim();
     probEval_.feasibilityCostF.resize(probEval_.varDim + 2*cstrMngr_.totalDim() );
     probEval_.feasibilityCostF.head(probEval_.varDim) = Eigen::VectorXd::Zero(probEval_.varDim);
@@ -274,12 +284,25 @@ namespace pgs
     probEval_.infeasibilityInf.setZero();
     probEval_.infeasibilitySup.resize(cstrMngr_.totalDim());
     probEval_.infeasibilitySup.setZero();
+    // -----------------------------------------------------------------
 
+    // -------------------- RESTORATION DATA ---------------------------
+    probEval_.restorationDiffObj.resize(probEval_.varDim );
+    probEval_.restorationAllDiffCstr.resize( cstrMngr_.totalDim(), probEval_.varDim);
+    probEval_.restorationAllInfCstr.resize(cstrMngr_.totalDimNonLin() + cstrMngr_.totalDimLin());
+    probEval_.restorationAllSupCstr.resize(cstrMngr_.totalDimNonLin() + cstrMngr_.totalDimLin());
+    probEval_.restorationDiffObj.setZero();
+    probEval_.restorationAllDiffCstr.setZero();
+    probEval_.restorationAllInfCstr.setZero();
+    probEval_.restorationAllSupCstr.setZero();
+    // -----------------------------------------------------------------
+
+    // -------------------- SOLVERS ---------------------------
     QPSolver_ = Eigen::LSSOL(int(probEval_.varDim), int(cstrMngr_.totalDim()));
-
     //TODO: This is WRONG. It should be a LSSOL solver of type LP. Dunno yet how
     //to make one.
-    LPSolver_ = Eigen::LSSOL(int(probEval_.varDim + 2*cstrMngr_.totalDim()), int(cstrMngr_.totalDim()));
+    LPSolver_ = Eigen::LSSOL(int(probEval_.varDim+2*cstrMngr_.totalDim()), int(cstrMngr_.totalDim()));
+    // --------------------------------------------------------
 
   }
 
@@ -338,6 +361,13 @@ namespace pgs
     probEval_.feasibilityAllDiffCstr.block(0, 0, cstrMngr_.totalDim(), probEval_.varDim) = probEval_.allDiffCstr;
     probEval_.feasibilityLB.head(probEval_.varDim) = probEval_.tangentLB;
     probEval_.feasibilityUB.head(probEval_.varDim) = probEval_.tangentUB;
+
+    for (Index i = 0; i < cstrMngr_.totalDim(); ++i)
+    {
+      assert ( !(probEval_.allInfCstr(i) == -std::numeric_limits<double>::infinity() 
+          && probEval_.allSupCstr(i) == std::numeric_limits<double>::infinity()) 
+          && "Both bounds of this linear constraint are -infinity and +infinity. ALWAYS feasible");
+    }
   }
 
   void Solver::updateObj(Problem& p)
@@ -523,8 +553,8 @@ namespace pgs
       Eigen::VectorXd& feasibleVector, 
       Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup)
   {
-    if(opt_.VERBOSE >= 1)
-      std::cout << "-----------------Feasibility------------------"<< std::endl;
+    if(opt_.VERBOSE >= 2)
+      std::cout << "---------------- Feasibility -----------------"<< std::endl;
 
     LPSolver_.solve(
         Eigen::MatrixXd::Zero(probEval.feasibilityCostF.size(), probEval.feasibilityCostF.size()),
@@ -538,17 +568,17 @@ namespace pgs
     feasibleVector = LPSolver_.result().head(probEval.varDim);
     infeasibilityInf = LPSolver_.result().segment(probEval.varDim, cstrMngr_.totalDim());
     infeasibilitySup = LPSolver_.result().tail(cstrMngr_.totalDim());
-    bool result = (infeasibilityInf.lpNorm<Eigen::Infinity>() < eps_feasibility) && (infeasibilitySup.lpNorm<Eigen::Infinity>() < eps_feasibility);
+    bool result = (infeasibilityInf.lpNorm<Eigen::Infinity>() <= eps_feasibility) && (infeasibilitySup.lpNorm<Eigen::Infinity>() <= eps_feasibility);
 
-    if(opt_.VERBOSE >= 1)
+    if(opt_.VERBOSE >= 2)
     {
-      //std::cout << "probEval_.feasibilityAllDiffCstr = \n" << 
-      //                    probEval_.feasibilityAllDiffCstr << std::endl;
-      //std::cout << "-probEval_.allInfCstr = \n" << -probEval_.allInfCstr << std::endl;
-      //std::cout << "-probEval_.allSupCstr = \n" << -probEval_.allSupCstr << std::endl;
-      //std::cout << "probEval_.feasibilityLB = \n" << probEval_.feasibilityLB << std::endl;
-      //std::cout << "probEval_.feasibilityUB = \n" << probEval_.feasibilityUB << std::endl;
-      //std::cout << "LPSolver.result = \n" << LPSolver_.result() << std::endl;
+      std::cout << "probEval_.feasibilityAllDiffCstr = \n" << 
+                          probEval_.feasibilityAllDiffCstr << std::endl;
+      std::cout << "-probEval_.allInfCstr = \n" << -probEval_.allInfCstr << std::endl;
+      std::cout << "-probEval_.allSupCstr = \n" << -probEval_.allSupCstr << std::endl;
+      std::cout << "probEval_.feasibilityLB = \n" << probEval_.feasibilityLB << std::endl;
+      std::cout << "probEval_.feasibilityUB = \n" << probEval_.feasibilityUB << std::endl;
+      std::cout << "LPSolver.result = \n" << LPSolver_.result() << std::endl;
       std::cout << "feasibleVector = \n" << feasibleVector << std::endl;
       std::cout << "infeasibilityInf = \n" << infeasibilityInf << std::endl;
       std::cout << "infeasibilitySup = \n" << infeasibilitySup << std::endl;
@@ -562,10 +592,11 @@ namespace pgs
     std::cout << "########## Restoration Phase ############ " << std::endl;
     //Test Feasibility
     bool feasible = false; 
+    double alphaRest = 1;
+    feasible = feasibility(probEval, opt.epsilonFeasibility, 
+           probEval.feasibleValue, probEval.infeasibilityInf, probEval.infeasibilitySup);
     //while (!feasible)
     {
-      feasible = feasibility(probEval, opt.epsilonFeasibility, 
-             probEval.feasibleValue, probEval.infeasibilityInf, probEval.infeasibilitySup);
       if(opt_.VERBOSE >= 1) 
       {
         if (feasible)
@@ -581,7 +612,114 @@ namespace pgs
       }
 
       //Approximated problem is not feasible. Restoration phase
+      Index indexCstr = 0;
+      for (Index i = 0; i < cstrMngr_.totalDim(); ++i)
+      {
+        if(probEval.infeasibilityInf(i) <= opt.epsilonFeasibility &&
+            probEval.infeasibilitySup(i) <= opt.epsilonFeasibility)
+        {
+          //Constraint i is feasible on both sides. It stays
+          probEval.restorationAllDiffCstr.row(indexCstr) = probEval.allDiffCstr.row(i);
+          // REMINDER: 
+          // The - sign here comes from the fact that allInfCstr =
+          // cstr-bound (That was used for KKT) in Restoration we need bound-cstr
+          probEval.restorationAllInfCstr(indexCstr) = -probEval.allInfCstr(i);
+          probEval.restorationAllSupCstr(indexCstr) = -probEval.allSupCstr(i);
+          indexCstr += 1;
+        }
+        else if(probEval.infeasibilityInf(i) > opt.epsilonFeasibility &&
+            probEval.infeasibilitySup(i) <= opt.epsilonFeasibility)
+        {
+          //Constraint i Inferior bound is not feasible (it goes to cost)
+          //Constraint i Superior bound is feasible (it stays, except if infinity)
+          probEval.restorationDiffObj += probEval.allDiffCstr.row(i);
 
+          if (-probEval.allSupCstr(i) != std::numeric_limits<double>::infinity())
+          {
+            probEval.restorationAllDiffCstr.row(indexCstr) = probEval.allDiffCstr.row(i);
+            probEval.restorationAllInfCstr(indexCstr) = -std::numeric_limits<double>::infinity();
+            probEval.restorationAllSupCstr(indexCstr) = -probEval.allSupCstr(i);
+            indexCstr += 1;
+          }
+        }
+        else if(probEval.infeasibilityInf(i) <= opt.epsilonFeasibility &&
+            probEval.infeasibilitySup(i) > opt.epsilonFeasibility)
+        {
+          //Constraint i Inferior bound is feasible (it stays, except if -infinity)
+          //Constraint i Superior bound is not feasible (it goes to cost)
+          probEval.restorationDiffObj -= probEval.allDiffCstr.row(i);
+
+          if (-probEval.allInfCstr(i) != -std::numeric_limits<double>::infinity())
+          {
+            probEval.restorationAllDiffCstr.row(indexCstr) = probEval.allDiffCstr.row(i);
+            probEval.restorationAllInfCstr(indexCstr) = -probEval.allInfCstr(i);
+            probEval.restorationAllSupCstr(indexCstr) = std::numeric_limits<double>::infinity();
+            indexCstr += 1;
+          }
+        }
+        else
+        {
+          std::cout << "Constraint " << i << std::endl;
+          std::cout << "infeasibilityInf(i) = \n" << probEval.infeasibilityInf(i) << std::endl;
+          std::cout << "infeasibilitySup(i) = \n" << probEval.infeasibilitySup(i) << std::endl;
+          std::cout << "allDiffCstr.row(i) = \n" << probEval.allDiffCstr.row(i) << std::endl;
+          std::cout << "allInfCstr(i) = \n" << probEval.allInfCstr(i) << std::endl;
+          std::cout << "allSupCstr(i) = \n" << probEval.allSupCstr(i) << std::endl;
+
+          assert(0 && "This situation should not have happened");
+        }
+      }
+
+      std::cout << "restorationDiffObj = \n" << probEval.restorationDiffObj << std::endl;
+      std::cout << "restorationAllDiffCstr = \n"<< probEval.restorationAllDiffCstr << std::endl;
+      std::cout << "restorationAllInfCstr = \n" << probEval.restorationAllInfCstr << std::endl;
+      std::cout << "restorationAllSupCstr = \n" << probEval.restorationAllSupCstr << std::endl;
+
+      RestQPSolver_ = Eigen::LSSOL(int(probEval_.varDim), int(indexCstr));
+
+
+      std::cout << "@@@@@@@@ Args for Restoration solver @@@@@@@@@@@"<< std::endl;
+      std::cout << "probEval.Hessian = \n" << probEval.Hessian << std::endl;
+      std::cout << "probEval.restorationDiffObj = \n" << probEval.restorationDiffObj << std::endl;
+      std::cout << "probEval.restorationAllDiffCstr.topRows(indexCstr) = \n" << probEval.restorationAllDiffCstr.topRows(indexCstr) << std::endl;
+      std::cout << "static_cast<int>(indexCstr) = \n" << static_cast<int>(indexCstr) << std::endl;
+      std::cout << "probEval.restorationAllInfCstr.topRows(indexCstr) = \n" << probEval.restorationAllInfCstr.topRows(indexCstr) << std::endl;
+      std::cout << "probEval.restorationAllSupCstr.topRows(indexCstr) = \n" << probEval.restorationAllSupCstr.topRows(indexCstr) << std::endl;
+      std::cout << "probEval.tangentLB = \n" << probEval.tangentLB << std::endl;
+      std::cout << "probEval.tangentUB = \n" << probEval.tangentUB << std::endl;
+      std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<< std::endl;
+
+      HessianUpdater::hessianUpdateIndividually(
+        probEval.Hessian, probEval.HessianCost, probEval.HessiansCstr,
+        lagMult_.nonLinear,
+        problem_->x(), alphaRest, z_,
+        probEval.prevDiffObj, probEval.diffObj,
+        probEval.prevDiffNonLinCstr, probEval.diffNonLinCstr,
+        opt_);
+      //TODO Hessian is wrong here
+      RestQPSolver_.solve(
+          probEval.Hessian,
+          //Eigen::Matrix3d::Zero(),
+          probEval.restorationDiffObj,
+          probEval.restorationAllDiffCstr.topRows(indexCstr),
+          probEval.restorationAllInfCstr.topRows(indexCstr),
+          probEval.restorationAllSupCstr.topRows(indexCstr),
+          probEval.tangentLB,
+          probEval.tangentUB);
+
+      z_ = RestQPSolver_.result();
+      std::cout << "z_ = \n" << z_.transpose() << std::endl;
+
+      if (!(RestQPSolver_.fail() == 0 || RestQPSolver_.fail() == 1))
+      {
+        std::cout << "LSSOL.inform()" << RestQPSolver_.fail() << std::endl;
+        std::cout << "LSSOL.istate()" << RestQPSolver_.istate() << std::endl;
+        throw std::runtime_error("Restoration QP solver FAILED!!! Damnit");
+      }
+
+ 
+      feasible = feasibility(probEval, opt.epsilonFeasibility, 
+             probEval.feasibleValue, probEval.infeasibilityInf, probEval.infeasibilitySup);
     }
     std::cout << "######################################### " << std::endl;
   }

@@ -92,6 +92,7 @@ namespace pgs
     /// \brief Concatenation of linear and nonLinear diffConstraints
     Eigen::MatrixXd allDiffCstr;
 
+    //-------------- FEASIBILITY DATA ---------------------
     /// \brief Vector used in the calculation of the cost function of the
     /// feasibility problem
     Eigen::VectorXd feasibilityCostF;
@@ -112,6 +113,13 @@ namespace pgs
     Eigen::VectorXd infeasibilityInf;
     Eigen::VectorXd infeasibilitySup;
     Index nFeasCstr;
+
+
+    //-------------- RESTORATION DATA ---------------------
+    Eigen::VectorXd restorationDiffObj;
+    Eigen::MatrixXd restorationAllDiffCstr;
+    Eigen::VectorXd restorationAllInfCstr;
+    Eigen::VectorXd restorationAllSupCstr;
 
 
     void print()

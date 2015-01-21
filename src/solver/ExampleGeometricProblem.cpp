@@ -1,3 +1,4 @@
+#include <limits>
 #include <pgsolver/solver/ExampleGeometricProblem.h>
 
 namespace pgs
@@ -176,7 +177,8 @@ namespace pgs
     }
     else if(i==1)
     {
-      out << R1*R1;
+      //out << R1*R1;
+      out << -std::numeric_limits<double>::infinity();
     }
   }
   void ExampleGeometricProblem::getNonLinCstrUB(RefMat out, size_t i) const
