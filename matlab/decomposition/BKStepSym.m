@@ -19,7 +19,7 @@ if lambda>0
     p = p+k;
     if p>=r, p=p+1; end
     if sigma*abs(A(k+1,k+1)) >= alpha*lambda^2
-      s = 1; t = 1;
+      s = 1; t = k+1;
     elseif abs(A(r,r)) >= alpha*sigma
       s = 1; t = r;
     else
