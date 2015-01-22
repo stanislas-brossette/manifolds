@@ -9,11 +9,12 @@
 
 namespace pgs
 {
-  double LineSearcher::LineSearch(Solver& s, Problem& p, 
-      Filter& filter_, Eigen::VectorXd& step, SolverOptions& opt)
+  double LineSearcher::LineSearch(Solver& s, 
+      Problem& p, ProblemEvaluation& probE,  
+      Filter& filter_, Eigen::VectorXd& step, SolverOptions& opt,
+      Eigen::VectorXi feasibilityStatus)
   {
-    double alpha = 1.0;
-    if(opt.VERBOSE >= 1) 
+    if(opt.VERBOSE >= 2) 
     {
       std::cout << "---- Line-search ----"<< std::endl;
       std::cout << "Starting point: "<< p.x() << std::endl;
@@ -21,21 +22,18 @@ namespace pgs
       std::cout << "Filter = " << std::endl;
       filter_.print();
     }
-       
-    if(opt.VERBOSE >= 2) 
-    {
-      std::cout << "F = " << s.probEval().obj << std::endl;
-      std::cout << "H = " << s.probEval().violCstr.transpose() << std::endl;
-    }
+
+    double alpha = 1.0;
 
     Eigen::Vector2d FH;
 
     while(alpha > 1e-4)
     {
       p.setZ(alpha*step);
-      s.updateObj(p);
-      s.updateViolations(p);
-      FH << s.probEval().obj, s.probEval().violCstr.lpNorm<1>();
+      s.updateAllCstr(p);
+
+      FH = s.computeFHforFilter(probE, feasibilityStatus);
+
       if(opt.VERBOSE >= 2) 
       {
         std::cout << "Trial with alpha = " << alpha << std::endl;
@@ -46,7 +44,7 @@ namespace pgs
       if(filter_.accepts(FH))
       {
         filter_.add(FH);
-        if(opt.VERBOSE >= 1) 
+        if(opt.VERBOSE >= 2) 
         {
           std::cout << "Filter accepted: " << FH.transpose() << std::endl;
           std::cout << "alpha = " << alpha << std::endl;
@@ -56,7 +54,7 @@ namespace pgs
       }
       else
       {
-        if(opt.VERBOSE >= 1) 
+        if(opt.VERBOSE >= 2) 
         {
           std::cout << "Filter refused: " << FH.transpose() << std::endl;
         }

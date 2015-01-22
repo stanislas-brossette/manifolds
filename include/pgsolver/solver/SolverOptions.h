@@ -10,6 +10,14 @@ namespace pgs
   enum eGlobalization { NONE, LINESEARCH, TRUSTREGION };
   enum eLineSearchType { FILTER };
   enum eTrustRegionType { };
+  enum eCstrStatus {
+    VIOLATED_LB = -2,
+    VIOLATED_UB = -1,
+    SATISFIED = 0,
+    ACTIVE_LB = 1,
+    ACTIVE_UB = 2,
+    ACTIVE_EQUALITY = 3
+    };
   struct SolverOptions
   {
     int maxIter = 100;

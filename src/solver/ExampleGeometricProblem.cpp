@@ -177,8 +177,7 @@ namespace pgs
     }
     else if(i==1)
     {
-      //out << R1*R1;
-      out << -std::numeric_limits<double>::infinity();
+      out << R1*R1;
     }
   }
   void ExampleGeometricProblem::getNonLinCstrUB(RefMat out, size_t i) const

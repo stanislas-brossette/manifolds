@@ -79,14 +79,15 @@ namespace pgs
     /// nonLinConstraint - supBound
     Eigen::VectorXd supNonLinCstr;
 
-    /// \brief Violations of all the constraints
-    Eigen::VectorXd violCstr;
-
     /// \brief Concatenation of infLinCstr and infNonLinCstr
     Eigen::VectorXd allInfCstr;
     /// \brief Concatenation of supLinCstr and supNonLinCstr
     Eigen::VectorXd allSupCstr;
 
+    /// \brief Concatenation of linear and nonLinear constraints LB
+    Eigen::VectorXd allCstrLB;
+    /// \brief Concatenation of linear and nonLinear constraints UB
+    Eigen::VectorXd allCstrUB;
     /// \brief Concatenation of linear and nonLinear constraints
     Eigen::VectorXd allCstr;
     /// \brief Concatenation of linear and nonLinear diffConstraints
@@ -114,6 +115,12 @@ namespace pgs
     Eigen::VectorXd infeasibilitySup;
     Index nFeasCstr;
 
+    /// \brief Vector containing the status of each cstr in the same order as
+    /// in allCstr with values taken in enum eCstrStatus
+    /// REMINDER:
+    /// eCstrStatus {VIOLATED_LB = -2,VIOLATED_UB = -1,SATISFIED = 0, 
+    /// ACTIVE_LB = 1, ACTIVE_UB = 2, ACTIVE_EQUALITY = 3}
+    Eigen::VectorXi infeasStatus;
 
     //-------------- RESTORATION DATA ---------------------
     Eigen::VectorXd restorationDiffObj;

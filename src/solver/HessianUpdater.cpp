@@ -15,6 +15,12 @@ namespace pgs
       const Eigen::MatrixXd& prevDiffLag, const Eigen::MatrixXd& diffLag,
       const SolverOptions& opt)
   {
+    if(step.lpNorm<Eigen::Infinity>() == 0)
+    {
+      //Should be used on first iteration
+      //Nothing to do here
+      return;
+    }
     Index dim = x.getManifold().dim();
     Eigen::VectorXd sk(dim);
     Eigen::VectorXd yk(dim);
@@ -75,11 +81,13 @@ namespace pgs
           const Eigen::MatrixXd& prevDiffCstr, const Eigen::MatrixXd& diffCstr,
           const SolverOptions& opt)
   {
-     
-    if(opt.VERBOSE >= 1) 
+    if(step.lpNorm<Eigen::Infinity>() == 0)
     {
-      std::cout << "This is an individual update of Hessians" << std::endl;
+      //Should be used on first iteration
+      //Nothing to do here
+      return;
     }
+     
     Index dim = x.getManifold().dim();
     Eigen::VectorXd sk(dim);
     Eigen::VectorXd yk(dim);
@@ -92,6 +100,8 @@ namespace pgs
     {
       std::cerr << "Warning: Secant equation not respected... <sk,yk> <= 0 " << std::endl;
     }
+    //std::cout << "sk = \n" << sk.transpose() << std::endl;
+    //std::cout << "yk = \n" << yk.transpose() << std::endl;
     x.getManifold().applyTransport(HCost, HCost, x.value(), alpha*step);
     x.getManifold().applyInvTransport(HCost, HCost, x.value(), alpha*step);
     switch(opt.hessianUpdateMethod){
@@ -101,6 +111,7 @@ namespace pgs
         throw std::runtime_error("EXACT update is not implemented yet");
         break;
     }
+    //std::cout << "HCost = \n" << HCost << std::endl;
 
     //Update of the Cstr Hessians
     for(size_t i = 0; i < HCstr.size(); ++i)
@@ -111,6 +122,8 @@ namespace pgs
       {
         std::cerr << "Warning: Secant equation not respected... <sk,yk> <= 0 " << std::endl;
       }
+      //std::cout << "sk = \n" << sk.transpose() << std::endl;
+      //std::cout << "yk = \n" << yk.transpose() << std::endl;
       x.getManifold().applyTransport(HCstr[i], HCstr[i], x.value(), alpha*step);
       x.getManifold().applyInvTransport(HCstr[i], HCstr[i], x.value(), alpha*step);
       switch(opt.hessianUpdateMethod){
@@ -120,6 +133,7 @@ namespace pgs
           throw std::runtime_error("EXACT update is not implemented yet");
           break;
       }
+      //std::cout << "HCstr[i] = \n" << HCstr[i] << std::endl;
     }
 
     //Update of the global Hessian
@@ -128,6 +142,7 @@ namespace pgs
     {
       H += lagMultNonLinCstr[(Index)i]*HCstr[i];
     }
+    //std::cout << "H = \n" << H << std::endl;
   }
 
 }

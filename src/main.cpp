@@ -55,7 +55,7 @@ int main()
     mySolver.opt_.globalizationMethod = LINESEARCH;
     mySolver.opt_.lineSearchMethod = FILTER;
     Eigen::VectorXd v0 = Eigen::VectorXd::Random(3);
-    v0 << 5,5,5;
+    v0 << 1.2,1.2,1.2;
     Point x0 = myProb.M().createPoint(v0);
     mySolver.solve(myProb, x0);
   }

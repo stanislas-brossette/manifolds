@@ -46,12 +46,20 @@ namespace pgs
       /// \brief Updates all the Constraints
       void updateAllCstr(Problem& p);
 
-      /// \brief Updates the cstrViolation vector. This method also updates all
-      /// the constraints
-      void updateViolations(Problem& p);
+      /// \brief Computes the cstrViolation of a set of constraint values. 
+      /// This method requires updated constraints
+      double computeCstrViolation(
+                    const Eigen::VectorXd& lb, 
+                    const Eigen::VectorXd& c, 
+                    const Eigen::VectorXd& ub);
 
       /// \brief Option for the solver
       SolverOptions opt_;
+
+      /// \brief Computes the Cost and constraint violation given an
+      /// infeasibility status vector
+      Eigen::Vector2d computeFHforFilter(
+          const ProblemEvaluation& p,const Eigen::VectorXi infeasStatus);
 
     protected:
       /// \brief Initializes the solver, makes all the memory allocations
@@ -89,22 +97,28 @@ namespace pgs
       /// \brief Restoration method makes sure that the quadratic approximated problem
       /// has a solution. If it doesn't, it finds a new evaluation point for
       /// which it is feasible
-      void restoration(ProblemEvaluation& probEval, const SolverOptions& opt);
+      void restoration();
 
-      /// \brief Method testing the feasibility of a set of constraints
-      /// This method solves the following problem:
-      /// \f{align}{
-      ///   \min \sum {{\bf v}_i} + \sum {{\bf w}_i} \nonumber
-      ///   \\ \text{subject to }&
-      ///   \left\{
-      ///   \begin{array}{lr}
-      ///     lb \leq {\bf x}\leq ub
-      ///     \\ lb \leq \nabla c_k.{\bf x} + c_k + {\bf v} - {\bf w} \leq ub
-      ///     \\ 0 \leq {\bf v}_i \leq +\infty 
-      ///     \\ 0 \leq {\bf w}_i \leq +\infty 
-      ///   \\ \end{array} \nonumber
-      ///   \right.
-      /// \f}
+      /// \brief Computes the cost and constraints for restoration based on
+      /// feasibility results
+      void computeRestorationQuantities(ProblemEvaluation& probEval, Index& nCstr, const SolverOptions& opt);
+
+      /**
+      \brief Method testing the feasibility of a set of constraints
+      This method solves the following problem:
+      \f{align}{
+        \min \sum {{\bf v}_i} + \sum {{\bf w}_i} \nonumber
+        \\ \text{subject to }&
+        \left\{
+        \begin{array}{lr}
+          lb \leq {\bf x}\leq ub
+          \\ lb \leq \nabla c_k.{\bf x} + c_k + {\bf v} - {\bf w} \leq ub
+          \\ 0 \leq {\bf v}_i \leq +\infty 
+          \\ 0 \leq {\bf w}_i \leq +\infty 
+        \\ \end{array} \nonumber
+        \right.
+      \f}
+      **/
       bool feasibility(const ProblemEvaluation& probEval, double feasibilityMin,
                         Eigen::VectorXd& feasibleVector,
                         Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup);
