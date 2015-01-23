@@ -9,8 +9,9 @@
 namespace pgs
 {
   Solver::Solver()
+    : filter_(1e-12),
+      restFilter_(1e-12)
   {
-    filter_ = Filter();
   }
 
   Results Solver::solve(Problem& problem, Point& x0)
@@ -20,6 +21,7 @@ namespace pgs
     initSolver(problem);
     z_.setZero();
     lagMult_.initOnes();
+    restorationLagMult_.initOnes();
     updateAllProblemData(problem);
     //////////On init prev values are set as equal to values////////////
     probEval_.prevDiffLag = probEval_.diffLag;
@@ -86,7 +88,6 @@ namespace pgs
       //std::cout << "probEval_.tangentUB = \n" << probEval_.tangentUB << std::endl;
       //Restoration Phase
       restoration();
-      printStatus();
               
       //Resolution of the quadratic tangent problem
       QPSolver_.solve(
@@ -117,7 +118,6 @@ namespace pgs
           break;
       }
 
-      std::cout << "0" << std::endl;
       lagMult_.bounds = (1-alpha)*lagMult_.bounds + alpha*(-QPSolver_.clambda().head(lagMult_.bounds.size()));
       lagMult_.linear = (1-alpha)*lagMult_.linear + alpha*(-QPSolver_.clambda().segment(lagMult_.bounds.size(), lagMult_.linear.size()));
       lagMult_.nonLinear = (1-alpha)*lagMult_.nonLinear + alpha*(-QPSolver_.clambda().tail(lagMult_.nonLinear.size()));
@@ -125,11 +125,9 @@ namespace pgs
       //Update the value of x before update problem evaluation
       problem.setX(problem.x() + alpha*z_);
       problem.setZ(Eigen::VectorXd::Zero(z_.size()));
-      std::cout << "0" << std::endl;
 
       //Update of the values in problemEval
       updateAllProblemData(problem);
-      std::cout << "0" << std::endl;
 
       //Update of the Hessians
       switch(opt_.hessianUpdateType){
@@ -137,7 +135,6 @@ namespace pgs
           HessianUpdater::hessianUpdate(
             probEval_.Hessian, problem.x(), alpha, z_,
             probEval_.prevDiffLag, probEval_.diffLag, opt_);
-          std::cout << "0" << std::endl;
           break;
         case INDIVIDUAL:
           HessianUpdater::hessianUpdateIndividually(
@@ -254,6 +251,8 @@ namespace pgs
     lagMult_.linear.setZero();
     lagMult_.nonLinear.resize(cstrMngr_.totalDimNonLin());
     lagMult_.nonLinear.setZero();
+    lagMult_.all.resize(probEval_.varDim + cstrMngr_.totalDim());
+    lagMult_.all.setZero();
 
     probEval_.allCstrUB.resize(cstrMngr_.totalDimNonLin()+cstrMngr_.totalDimLin());
     probEval_.allCstrUB.setZero();
@@ -264,8 +263,6 @@ namespace pgs
     probEval_.allDiffCstr.resize(cstrMngr_.totalDim(), probEval_.varDim);
     probEval_.allDiffCstr.setZero();
 
-    lagMult_.all.resize(probEval_.varDim + cstrMngr_.totalDim());
-    lagMult_.all.setZero();
 
     // -------------------- FEASIBILITY DATA ---------------------------
     probEval_.nFeasCstr = 2*cstrMngr_.totalDim();
@@ -300,17 +297,34 @@ namespace pgs
 
     probEval_.infeasStatus.resize(cstrMngr_.totalDim());
     probEval_.infeasStatus.setZero();
+
+    feasibilityLagMult_.bounds.resize(probEval_.varDim);
+    feasibilityLagMult_.bounds.setZero();
+    feasibilityLagMult_.linear.resize(cstrMngr_.totalDimLin());
+    feasibilityLagMult_.linear.setZero();
+    feasibilityLagMult_.nonLinear.resize(cstrMngr_.totalDimNonLin());
+    feasibilityLagMult_.nonLinear.setZero();
+    feasibilityLagMult_.all.resize(probEval_.varDim + cstrMngr_.totalDim());
+    feasibilityLagMult_.all.setZero();
     // -----------------------------------------------------------------
 
     // -------------------- RESTORATION DATA ---------------------------
     probEval_.restorationDiffObj.resize(probEval_.varDim );
-    probEval_.restorationAllDiffCstr.resize( cstrMngr_.totalDim(), probEval_.varDim);
-    probEval_.restorationAllInfCstr.resize(cstrMngr_.totalDimNonLin() + cstrMngr_.totalDimLin());
-    probEval_.restorationAllSupCstr.resize(cstrMngr_.totalDimNonLin() + cstrMngr_.totalDimLin());
     probEval_.restorationDiffObj.setZero();
+    probEval_.restorationAllDiffCstr.resize( cstrMngr_.totalDim(), probEval_.varDim);
     probEval_.restorationAllDiffCstr.setZero();
+    probEval_.restorationAllInfCstr.resize(cstrMngr_.totalDim());
     probEval_.restorationAllInfCstr.setZero();
+    probEval_.restorationAllSupCstr.resize(cstrMngr_.totalDim());
     probEval_.restorationAllSupCstr.setZero();
+    restorationLagMult_.bounds.resize(probEval_.varDim);
+    restorationLagMult_.bounds.setZero();
+    restorationLagMult_.linear.resize(cstrMngr_.totalDimLin());
+    restorationLagMult_.linear.setZero();
+    restorationLagMult_.nonLinear.resize(cstrMngr_.totalDimNonLin());
+    restorationLagMult_.nonLinear.setZero();
+    restorationLagMult_.all.resize(probEval_.varDim + cstrMngr_.totalDim());
+    restorationLagMult_.all.setZero();
     // -----------------------------------------------------------------
 
     // -------------------- SOLVERS ---------------------------
@@ -564,7 +578,8 @@ namespace pgs
 
   bool Solver::feasibility(const ProblemEvaluation& probEval, double eps_feasibility, 
       Eigen::VectorXd& feasibleVector, 
-      Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup)
+      Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup,
+      LagrangeMultipliers& feasLagMult)
   {
     if(opt_.VERBOSE >= 2)
       std::cout << "---------------- Feasibility -----------------"<< std::endl;
@@ -588,6 +603,11 @@ namespace pgs
     infeasibilitySup = LPSolver_.result().tail(cstrMngr_.totalDim());
     bool result = (infeasibilityInf.lpNorm<Eigen::Infinity>() <= eps_feasibility) && (infeasibilitySup.lpNorm<Eigen::Infinity>() <= eps_feasibility);
 
+    feasLagMult.bounds = -LPSolver_.clambda().head(feasLagMult.bounds.size());
+    feasLagMult.linear = -LPSolver_.clambda().segment(feasLagMult.bounds.size(), feasLagMult.linear.size());
+    feasLagMult.nonLinear = -LPSolver_.clambda().tail(feasLagMult.nonLinear.size());
+
+
     if(opt_.VERBOSE >= 2)
     {
       std::cout << "probEval_.feasibilityAllDiffCstr = \n" << 
@@ -600,6 +620,7 @@ namespace pgs
       std::cout << "feasibleVector = \n" << feasibleVector << std::endl;
       std::cout << "infeasibilityInf = \n" << infeasibilityInf << std::endl;
       std::cout << "infeasibilitySup = \n" << infeasibilitySup << std::endl;
+      std::cout << "LPSolver_.clambda() = \n" << LPSolver_.clambda() << std::endl;
       std::cout << "----------------------------------------------"<< std::endl;
     }
     return result;
@@ -607,21 +628,23 @@ namespace pgs
 
   void Solver::restoration()
   {
+    //TODO: In restoration, the lagMults.bounds and .linear are useless it
+    //seems. 
     std::cout << "########## Restoration Phase ############ " << std::endl;
 
     //New filter for restoration phase
-    Filter restFilter;
+    restFilter_.reset();
 
     //Test Feasibility
     bool feasible = false; 
     double alphaRest = 1;
+
+    //Reminder: feasibility puts the lagrange multipliers directly in the
+    //restorationLagMult vector without ponderation by alpha for initialization
     feasible = feasibility(probEval_, opt_.epsilonFeasibility, 
-           probEval_.feasibleValue, probEval_.infeasibilityInf, probEval_.infeasibilitySup);
-    if (!feasible)
-    {
-      //Add the initial point to the filter
-      restFilter.add(computeFHforFilter(probEval_, probEval_.infeasStatus));
-    }
+           probEval_.feasibleValue, probEval_.infeasibilityInf, probEval_.infeasibilitySup,
+           restorationLagMult_);
+
     if(opt_.VERBOSE >= 1) 
     {
       if (feasible)
@@ -632,40 +655,41 @@ namespace pgs
     
     int iterRest = 0;
     int maxIterRest = 100;
+    Index indexCstr = 0;
 
-    while (!feasible && iterRest < maxIterRest)
+    if (!feasible)
     {
-      iterRest += 1;
-
-      if (feasible)
-      {
-        std::cout << "######################################### " << std::endl;
-        return;
-      }
-
-      //Approximated problem is not feasible. Restoration phase
-      Index indexCstr = 0;
       computeRestorationQuantities(probEval_, indexCstr, opt_);
-      
+      //Add the initial point to the filter
+      restFilter_.add(computeFHforFilter(probEval_, probEval_.infeasStatus));
+
       HessianUpdater::hessianUpdateIndividually(
         probEval_.Hessian, probEval_.HessianCost, probEval_.HessiansCstr,
-        lagMult_.nonLinear,
+        restorationLagMult_.nonLinear,
         problem_->x(), alphaRest, z_,
         probEval_.prevDiffObj, probEval_.diffObj,
         probEval_.prevDiffNonLinCstr, probEval_.diffNonLinCstr,
         opt_);
+    }
+    while (!feasible && iterRest < maxIterRest)
+    {
+      iterRest += 1;
 
       RestQPSolver_ = Eigen::LSSOL(int(probEval_.varDim), int(indexCstr));
 
-      //std::cout << "@@@@@@@@ Args for Restoration solver @@@@@@@@@@@"<< std::endl;
-      //std::cout << "probEval_.Hessian = \n" << probEval_.Hessian << std::endl;
-      //std::cout << "probEval_.restorationDiffObj = \n" << probEval_.restorationDiffObj << std::endl;
-      //std::cout << "probEval_.restorationAllDiffCstr.topRows(indexCstr) = \n" << probEval_.restorationAllDiffCstr.topRows(indexCstr) << std::endl;
-      //std::cout << "probEval_.restorationAllInfCstr.topRows(indexCstr) = \n" << probEval_.restorationAllInfCstr.topRows(indexCstr) << std::endl;
-      //std::cout << "probEval_.restorationAllSupCstr.topRows(indexCstr) = \n" << probEval_.restorationAllSupCstr.topRows(indexCstr) << std::endl;
-      //std::cout << "probEval_.tangentLB = \n" << probEval_.tangentLB << std::endl;
-      //std::cout << "probEval_.tangentUB = \n" << probEval_.tangentUB << std::endl;
-      //std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<< std::endl;
+      if(opt_.VERBOSE >= 2)
+      {
+        std::cout << "iterRest = " << iterRest << std::endl;
+        std::cout << "@@@@@@@@ Args for Restoration solver @@@@@@@@@@@"<< std::endl;
+        std::cout << "probEval_.Hessian = \n" << probEval_.Hessian << std::endl;
+        std::cout << "probEval_.restorationDiffObj = \n" << probEval_.restorationDiffObj << std::endl;
+        std::cout << "probEval_.restorationAllDiffCstr.topRows(indexCstr) = \n" << probEval_.restorationAllDiffCstr.topRows(indexCstr) << std::endl;
+        std::cout << "probEval_.restorationAllInfCstr.topRows(indexCstr) = \n" << probEval_.restorationAllInfCstr.topRows(indexCstr) << std::endl;
+        std::cout << "probEval_.restorationAllSupCstr.topRows(indexCstr) = \n" << probEval_.restorationAllSupCstr.topRows(indexCstr) << std::endl;
+        std::cout << "probEval_.tangentLB = \n" << probEval_.tangentLB << std::endl;
+        std::cout << "probEval_.tangentUB = \n" << probEval_.tangentUB << std::endl;
+        std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<< std::endl;
+      }
 
       //TODO Hessian needs to be H = Sum(H_unFeas) + Sum(Lambda*H_feas)
       RestQPSolver_.solve(
@@ -685,7 +709,7 @@ namespace pgs
 
       z_ = RestQPSolver_.result();
       alphaRest = LineSearcher::LineSearch(*this, *problem_, probEval_, 
-                                restFilter, z_, opt_, probEval_.infeasStatus);
+                                restFilter_, z_, opt_, probEval_.infeasStatus);
 
       if (opt_.VERBOSE >= 1)
       {
@@ -698,7 +722,32 @@ namespace pgs
       updateAllProblemData(*problem_);
 
       feasible = feasibility(probEval_, opt_.epsilonFeasibility, 
-             probEval_.feasibleValue, probEval_.infeasibilityInf, probEval_.infeasibilitySup);
+             probEval_.feasibleValue, probEval_.infeasibilityInf, probEval_.infeasibilitySup,
+             feasibilityLagMult_);
+
+      if (feasible)
+      {
+        std::cout << "######################################### " << std::endl;
+        return;
+      }
+
+      //Approximated problem is not feasible. Restoration phase
+      indexCstr = 0;
+      computeRestorationQuantities(probEval_, indexCstr, opt_);
+
+      HessianUpdater::hessianUpdateIndividually(
+        probEval_.Hessian, probEval_.HessianCost, probEval_.HessiansCstr,
+        restorationLagMult_.nonLinear,
+        problem_->x(), alphaRest, z_,
+        probEval_.prevDiffObj, probEval_.diffObj,
+        probEval_.prevDiffNonLinCstr, probEval_.diffNonLinCstr,
+        opt_);
+      restorationLagMult_.bounds = (1-alphaRest)*restorationLagMult_.bounds + 
+            alphaRest*feasibilityLagMult_.bounds;
+      restorationLagMult_.linear = (1-alphaRest)*restorationLagMult_.linear + 
+            alphaRest*feasibilityLagMult_.linear;
+      restorationLagMult_.nonLinear = (1-alphaRest)*restorationLagMult_.nonLinear + 
+            alphaRest*feasibilityLagMult_.nonLinear;
     }
     std::cout << "############ END OF RESTORATION ######### " << std::endl;
   }

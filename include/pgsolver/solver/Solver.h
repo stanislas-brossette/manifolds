@@ -121,7 +121,8 @@ namespace pgs
       **/
       bool feasibility(const ProblemEvaluation& probEval, double feasibilityMin,
                         Eigen::VectorXd& feasibleVector,
-                        Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup);
+                        Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup,
+                        LagrangeMultipliers& feasLagMult);
 
       /// \brief Computes the value of the Lagrangian of the problem
       double computeLagrangian();
@@ -130,6 +131,12 @@ namespace pgs
     private:
       /// \brief Structure containing The Lagrange Multiplier for Linear and nonLinear Constraints
       LagrangeMultipliers lagMult_;
+      /// \brief Structure containing The Lagrange Multiplier for Linear and nonLinear Constraints
+      /// that is only used for the feasibility phases
+      LagrangeMultipliers feasibilityLagMult_;
+      /// \brief Structure containing The Lagrange Multiplier for Linear and nonLinear Constraints
+      /// that is only used for the restoration phases
+      LagrangeMultipliers restorationLagMult_;
       /// \brief Vector that contains the step data
       Eigen::VectorXd z_;
 
@@ -140,6 +147,8 @@ namespace pgs
 
       /// \brief Filter
       Filter filter_;
+      /// \brief Filter for restoration
+      Filter restFilter_;
 
       /// \brief pointer on the problem considered
       Problem* problem_;

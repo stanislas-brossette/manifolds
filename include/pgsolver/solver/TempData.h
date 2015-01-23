@@ -127,6 +127,7 @@ namespace pgs
     Eigen::MatrixXd restorationAllDiffCstr;
     Eigen::VectorXd restorationAllInfCstr;
     Eigen::VectorXd restorationAllSupCstr;
+    Eigen::VectorXd restorationLagMult;
 
 
     void print()

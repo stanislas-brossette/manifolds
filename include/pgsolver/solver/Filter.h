@@ -38,6 +38,8 @@ namespace pgs
     const Eigen::VectorXd& get(size_t i) const;
     void print() const;
 
+    void reset();
+
 
   private:
     bool accepts(const Entry& i, const Entry& p) const;             //i accepts p

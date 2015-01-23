@@ -28,7 +28,7 @@ using namespace pgs;
 
 int main()
 {
-  //srand((unsigned)time(NULL));
+  srand((unsigned)time(NULL));
   std::cout << "Using: Eigen" << EIGEN_WORLD_VERSION << "." << EIGEN_MAJOR_VERSION <<"." << EIGEN_MINOR_VERSION<< std::endl;
   RealSpace R2(2);
   RealSpace R3(3);
@@ -54,8 +54,8 @@ int main()
     mySolver.opt_.hessianUpdateMethod = BFGS;
     mySolver.opt_.globalizationMethod = LINESEARCH;
     mySolver.opt_.lineSearchMethod = FILTER;
-    Eigen::VectorXd v0 = Eigen::VectorXd::Random(3);
-    v0 << 1.2,1.2,1.2;
+    Eigen::VectorXd v0 = 2*Eigen::VectorXd::Random(3);
+    //v0 << 1.2,1.2,1.2;
     Point x0 = myProb.M().createPoint(v0);
     mySolver.solve(myProb, x0);
   }
