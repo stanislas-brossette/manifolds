@@ -9,8 +9,8 @@
 namespace pgs
 {
   Solver::Solver()
+    :filter_(1e-5)
   {
-    filter_ = Filter();
   }
 
   Results Solver::solve(Problem& problem, Point& x0)
@@ -610,7 +610,7 @@ namespace pgs
     std::cout << "########## Restoration Phase ############ " << std::endl;
 
     //New filter for restoration phase
-    Filter restFilter;
+    Filter restFilter(1e-5);
 
     //Test Feasibility
     bool feasible = false; 

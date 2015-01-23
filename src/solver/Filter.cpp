@@ -6,10 +6,6 @@ using namespace Eigen;
 
 namespace pgs
 {
-  Filter::Filter()
-  {
-  }
-
   Filter::Filter(double gamma, Filter::eOption opt)
     : gamma(gamma)
     , option(opt)
