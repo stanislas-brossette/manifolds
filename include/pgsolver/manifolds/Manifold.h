@@ -15,7 +15,7 @@ namespace pgs
   /// the basic operations on it, like external addition, internal substraction,
   /// Translation from tangent space to representation space and back, derivatives
   /// etc...\n
-  /// Manifold derives from RefCounter to keep track of how many points depend on it\n 
+  /// Manifold derives from RefCounter to keep track of how many points depend on it\n
   /// A manifold is represented by its tangent space and its representation
   /// space and by the method to go from a vector of the tangent space to a point
   /// of the manifold and its inverse that we denote respectively Map and
@@ -24,8 +24,8 @@ namespace pgs
   /// \f$ x \f$ is \f$ T_x^\mathcal{M} \f$ and its representation space is
   /// denoted \f$\mathbb{E}\f$\n
   /// The map function is \f$ \phi:\mathbb{M},T^\mathbb{M}\to\mathbb{M}
-  /// \f$ and the map function on a point \f$x\f$ is \f$ \phi_x:T_x^\mathbb{M}\to\mathbb{M}\f$ 
-  
+  /// \f$ and the map function on a point \f$x\f$ is \f$ \phi_x:T_x^\mathbb{M}\to\mathbb{M}\f$
+
   class PGS_API Manifold : public RefCounter
   {
   public:
@@ -36,7 +36,7 @@ namespace pgs
     /// \brief CreatePoint allows to create a point that belongs to a manifold and that
     /// behaves according to the manifolds operations
     Point createPoint() const;
-    
+
     /// \brief Overload of createPoint to set the value of the point
     Point createPoint(const Eigen::VectorXd& val) const;
 
@@ -83,7 +83,7 @@ namespace pgs
 
     /// \brief Sets vector out to identity
     void setIdentity(RefVec out) const;
-    
+
     /// \brief External addition operation \f$ out = x \oplus v = \phi_x(v) \f$
     /// \param out output reference on element of the manifold
     /// \f$out\in\mathbb{M}\f$
@@ -113,7 +113,7 @@ namespace pgs
     /// \return Matrix representing \f$\frac{\partial\phi_x}{\partial v}(0)\f$
     Eigen::MatrixXd diffMap(const ConstRefVec& x) const;
 
-    /// \brief Computes the product of a matrix in with the jacobian matrix of 
+    /// \brief Computes the product of a matrix in with the jacobian matrix of
     /// the map on point x.\n \f$ out = in*\frac{\partial\phi_x}{\partial v}(0)\f$
     /// \param out result of the operation
     /// \param in matrix to which the operation is applied
@@ -126,14 +126,14 @@ namespace pgs
     /// \return Matrix representing \f$\frac{\partial\phi^{-1}_0}{\partial x}(x)\f$
     Eigen::MatrixXd diffInvMap(const ConstRefVec& x) const;
 
-    /// \brief Computes the product of a matrix in with the jacobian matrix of 
+    /// \brief Computes the product of a matrix in with the jacobian matrix of
     /// the inverse map on point x.\n \f$ out = in*\frac{\partial\phi^{-1}_0}{\partial x}(x)\f$
     /// \param out result of the operation
     /// \param in matrix to which the operation is applied
     /// \param x point of the manifold on which the map is taken
     void applyDiffInvMap(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
 
-    /// \brief applies a transport operation from point \f$x\in\mathcal{M}\f$ of 
+    /// \brief applies a transport operation from point \f$x\in\mathcal{M}\f$ of
     /// direction \f$v\in T_x^\mathcal{M}\f$ on matrix in
     /// \param out result of the operation
     /// \param in matrix to which the operation is applied
@@ -141,7 +141,7 @@ namespace pgs
     /// \param v element of the tangent space of the manifold
     void applyTransport(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
 
-    /// \brief applies an inverse transport operation from point \f$x\in\mathcal{M}\f$ of 
+    /// \brief applies an inverse transport operation from point \f$x\in\mathcal{M}\f$ of
     /// direction \f$v\in T_x^\mathcal{M}\f$ on matrix in
     /// \param out result of the operation
     /// \param in matrix to which the operation is applied
@@ -150,22 +150,22 @@ namespace pgs
     void applyInvTransport(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
 
     /// \brief Locks the manifold\n Once a point of the manifold is created, the
-    /// manifold cannot be modified anymore. 
+    /// manifold cannot be modified anymore.
     void lock() const;
 
   protected:
     /// \brief Set manifold dimension to d
     void setDimension(Index d);
-    
+
     /// \brief Set manifolds representation space dimension to rd
     void setRepresentationDimension(Index rd);
     virtual bool isValidInit_(const Eigen::VectorXd& val) const = 0;
 
-    /// \brief Gets the manifolds dimension 
+    /// \brief Gets the manifolds dimension
     template<int D>
     Index getDim() const;
 
-    /// \brief Gets the dimension of submanifold of index i 
+    /// \brief Gets the dimension of submanifold of index i
     template<int D>
     Index getDim(size_t i) const;
 
@@ -175,7 +175,7 @@ namespace pgs
     /// space
     template<int D>
     Index getStart(size_t i) const;
-    
+
     /// \brief Gets the start index of submanifold of index i in a vector
     /// representing an element of the representation space of the manifold
     virtual Index startR(size_t i) const;
@@ -199,10 +199,10 @@ namespace pgs
     void testLock() const;
 
   private:
-    /// \brief dimension of the manifold 
+    /// \brief dimension of the manifold
     Index dimension_;
 
-    /// \brief dimension of the representation space of the manifold 
+    /// \brief dimension of the representation space of the manifold
     Index representationDim_;
 
     /// \brief if true, the manifold if locked
@@ -216,7 +216,7 @@ namespace pgs
     assert(val.size() == getDim<D>());
     return val.segment(getStart<D>(i), getDim<D>(i));
   }
-  
+
   template<int D>
   inline ConstSegment Manifold::getConstView(const ConstRefVec& val, size_t i) const
   {
@@ -250,7 +250,7 @@ namespace pgs
   {
     return dim();
   }
-  
+
   template<>
   inline Index Manifold::getDim<R>(size_t i) const
   {

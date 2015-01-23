@@ -17,7 +17,7 @@ namespace pgs
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
-  
+
   protected:
     //map operations
     virtual bool isValidInit_(const Eigen::VectorXd& val) const;
@@ -41,7 +41,7 @@ namespace pgs
     : Manifold(Map::InputDim_, Map::OutputDim_)
   {
   }
-  
+
   template<typename Map>
   inline bool SO3<Map>::isValidInit_(const Eigen::VectorXd& val) const
   {
@@ -60,7 +60,7 @@ namespace pgs
     assert(i < 1 && "invalid index");
     return *this;
   }
-   
+
   template<typename Map>
   inline std::string SO3<Map>::toString(const ConstRefVec& val, const std::string& prefix) const
   {
@@ -88,7 +88,7 @@ namespace pgs
   {
     Map::invMap_( out, x);
   }
-  
+
   template<typename Map>
   inline void SO3<Map>::setIdentity_(RefVec out) const
   {

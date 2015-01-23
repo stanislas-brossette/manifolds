@@ -33,12 +33,38 @@ namespace pgs
       void setHessianBFGS(){opt_.hessianUpdateMethod = BFGS;};
       void setHessianSR1(){opt_.hessianUpdateMethod = SR1;};
       void setHessianEXACT(){opt_.hessianUpdateMethod = EXACT;};
-      
+
+      /// \brief Accessor for probEval
+      const ProblemEvaluation& probEval() const { return probEval_;};
+
+      /// \brief Updates Everything in probEval
+      void updateAllProblemData(Problem& p);
+
+      /// \brief Updates the Objective
+      void updateObj(Problem& p);
+
+      /// \brief Updates all the Constraints
+      void updateAllCstr(Problem& p);
+
+      /// \brief Computes the cstrViolation of a set of constraint values. 
+      /// This method requires updated constraints
+      double computeCstrViolation(
+                    const Eigen::VectorXd& lb, 
+                    const Eigen::VectorXd& c, 
+                    const Eigen::VectorXd& ub);
+
+      /// \brief Option for the solver
+      SolverOptions opt_;
+
+      /// \brief Computes the Cost and constraint violation given an
+      /// infeasibility status vector
+      Eigen::Vector2d computeFHforFilter(
+          const ProblemEvaluation& p,const Eigen::VectorXi infeasStatus);
 
     protected:
       /// \brief Initializes the solver, makes all the memory allocations
-      void initSolver(Problem& p); 
-      void updateAllProblemData(Problem& p);
+      void initSolver(Problem& p);
+
       /// \brief Tests the convergence of the solver based on the criterion
       /// presented in SNOPT paper page 108
       /// \param tau_P Primal problem convergence criterion
@@ -51,22 +77,51 @@ namespace pgs
       /// top the linear constraints, followed by the non-linear constraints
       /// \param diffLag Derivative of the Lagrangian (Jacobian. Should be a line-vector)
       bool convergence(
-        double tau_P, double tau_D, const Point& x, 
-        const Eigen::VectorXd& lagMultBnd, 
-        const Eigen::VectorXd& tangentLB, 
-        const Eigen::VectorXd& tangentUB, 
-        const Eigen::VectorXd& lagMultLin, 
-        const Eigen::VectorXd& infCstrLin, 
-        const Eigen::VectorXd& supCstrLin, 
-        const Eigen::VectorXd& lagMultNonLin, 
-        const Eigen::VectorXd& infCstrNonLin, 
-        const Eigen::VectorXd& supCstrNonLin, 
+        double tau_P, double tau_D, const Point& x,
+        const Eigen::VectorXd& lagMultBnd,
+        const Eigen::VectorXd& tangentLB,
+        const Eigen::VectorXd& tangentUB,
+        const Eigen::VectorXd& lagMultLin,
+        const Eigen::VectorXd& infCstrLin,
+        const Eigen::VectorXd& supCstrLin,
+        const Eigen::VectorXd& lagMultNonLin,
+        const Eigen::VectorXd& infCstrNonLin,
+        const Eigen::VectorXd& supCstrNonLin,
         const Eigen::MatrixXd& diffLag) const;
       bool KKTTestCstr(
-        double tau_l, double tau_x, 
-        const Eigen::VectorXd& lagMult, 
-        const Eigen::VectorXd& infCstr, 
+        double tau_l, double tau_x,
+        const Eigen::VectorXd& lagMult,
+        const Eigen::VectorXd& infCstr,
         const Eigen::VectorXd& supCstr) const;
+
+      /// \brief Restoration method makes sure that the quadratic approximated problem
+      /// has a solution. If it doesn't, it finds a new evaluation point for
+      /// which it is feasible
+      void restoration();
+
+      /// \brief Computes the cost and constraints for restoration based on
+      /// feasibility results
+      void computeRestorationQuantities(ProblemEvaluation& probEval, Index& nCstr, const SolverOptions& opt);
+
+      /**
+      \brief Method testing the feasibility of a set of constraints
+      This method solves the following problem:
+      \f{align}{
+        \min \sum {{\bf v}_i} + \sum {{\bf w}_i} \nonumber
+        \\ \text{subject to }&
+        \left\{
+        \begin{array}{lr}
+          lb \leq {\bf x}\leq ub
+          \\ lb \leq \nabla c_k.{\bf x} + c_k + {\bf v} - {\bf w} \leq ub
+          \\ 0 \leq {\bf v}_i \leq +\infty 
+          \\ 0 \leq {\bf w}_i \leq +\infty 
+        \\ \end{array} \nonumber
+        \right.
+      \f}
+      **/
+      bool feasibility(const ProblemEvaluation& probEval, double feasibilityMin,
+                        Eigen::VectorXd& feasibleVector,
+                        Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup);
 
       /// \brief Computes the value of the Lagrangian of the problem
       double computeLagrangian();
@@ -74,14 +129,12 @@ namespace pgs
 
     private:
       /// \brief Structure containing The Lagrange Multiplier for Linear and nonLinear Constraints
-      LagrangeMultipliers lagMult_;    
+      LagrangeMultipliers lagMult_;
       /// \brief Vector that contains the step data
-      Eigen::VectorXd z_;             
+      Eigen::VectorXd z_;
 
       /// \brief Set of vector and matrices representing the State of the problem
-      ProblemEvaluation probEval_;    
-      /// \brief Option for the solver
-      SolverOptions opt_;              
+      ProblemEvaluation probEval_;
       /// \brief Objet that knows and manages the memory location for all the constraints of the problem
       ConstraintManager cstrMngr_;
 
@@ -93,6 +146,10 @@ namespace pgs
 
       /// \brief QP solver
       Eigen::LSSOL QPSolver_;
+      /// \brief LP solver
+      Eigen::LSSOL LPSolver_;
+      /// \brief Restoration QP solver
+      Eigen::LSSOL RestQPSolver_;
 
   };
 }

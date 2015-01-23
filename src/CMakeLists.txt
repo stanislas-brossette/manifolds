@@ -1,9 +1,9 @@
-set(SOURCES 
-  main.cpp 
-  manifolds/CartesianProduct.cpp 
-  manifolds/ExpMapMatrix.cpp 
-  manifolds/Manifold.cpp 
-  manifolds/Point.cpp 
+set(SOURCES
+  main.cpp
+  manifolds/CartesianProduct.cpp
+  manifolds/ExpMapMatrix.cpp
+  manifolds/Manifold.cpp
+  manifolds/Point.cpp
   manifolds/RealSpace.cpp
   manifolds/ReusableTemporaryMap.cpp
   solver/ConstraintManager.cpp

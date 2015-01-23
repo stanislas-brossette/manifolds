@@ -34,7 +34,7 @@ namespace utility
 namespace pgs
 {
   const double ExpMapMatrix::prec = 1e-8;
- 
+
   void ExpMapMatrix::plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v)
   {
     DisplayType E;
@@ -59,14 +59,14 @@ namespace pgs
       c = (1 - cos(t)) / n;
       s = sin(t) / t;
     }
-    E <<  1 - c*(v.y()*v.y() + v.z()*v.z()), 
-          -s*v.z() + c * v.x()*v.y(), 
+    E <<  1 - c*(v.y()*v.y() + v.z()*v.z()),
+          -s*v.z() + c * v.x()*v.y(),
           s*v.y() + c * v.x()*v.z(),
-          s * v.z() + c*v.x()*v.y(), 
-          1 - c*(v.x()*v.x() + v.z()*v.z()) , 
+          s * v.z() + c*v.x()*v.y(),
+          1 - c*(v.x()*v.x() + v.z()*v.z()) ,
           -s*v.x() + c*v.y()*v.z(),
-          -s*v.y() + c*v.x()*v.z(), 
-          s*v.x() + c*v.y()*v.z(), 
+          -s*v.y() + c*v.x()*v.z(),
+          s*v.x() + c*v.y()*v.z(),
           1 - c*(v.x()*v.x() + v.y()*v.y());
   }
 
@@ -83,14 +83,14 @@ namespace pgs
     DisplayType R(ConstMapMat3(x.data()));
     logarithm(out,R);
   }
-  
+
   void ExpMapMatrix::logarithm(RefVec out, const DisplayType& R)
   {
-    Eigen::Vector3d v(-R(1,2), R(0,2), -R(0,1)); 
+    Eigen::Vector3d v(-R(1,2), R(0,2), -R(0,1));
     double acosTr = std::acos((R.trace()-1)/2);
     if (v.norm() < prec)
       out = v;
-    else 
+    else
     {
       DisplayType diff(R-R.transpose());
       double coeff = acosTr/(2*std::sin(acosTr));
@@ -114,7 +114,7 @@ namespace pgs
     bool out(val.size()==9);
     double det = toMat3(val.data()).determinant();
     out = out && (fabs(det - 1) < prec);
-    out = out && 
+    out = out &&
       ((toMat3(val.data()).transpose())*toMat3(val.data())).isIdentity(prec);
     return out;
   }
@@ -122,7 +122,7 @@ namespace pgs
   Eigen::Matrix<double, 9, 3> ExpMapMatrix::diffMap_(const ConstRefVec& x)
   {
     Eigen::Matrix<double, 9, 3> J;
-    J << 0   , -x(6), x(3) ,  
+    J << 0   , -x(6), x(3) ,
          0   , -x(7), x(4) ,
          0   , -x(8), x(5) ,
          x(6),  0   , -x(0),
@@ -148,7 +148,7 @@ namespace pgs
     Eigen::Matrix<double, 3, 9> J;
     J.setZero();
     //Valid approximation of the log when v<<1
-    Eigen::Vector3d v((R(5)-R(7))/2, (R(6)-R(2))/2, (R(1)-R(3))/2);      
+    Eigen::Vector3d v((R(5)-R(7))/2, (R(6)-R(2))/2, (R(1)-R(3))/2);
 
     double trR = R(0)+R(4)+R(8); //Trace of R;
     double trRm1o2 = (trR-1) / 2;
@@ -195,7 +195,7 @@ namespace pgs
     DisplayType E;
     exponential(E,v);
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(InputDim_, in.cols());
-    a.noalias() = E*in; 
+    a.noalias() = E*in;
     out = a;
   }
 
@@ -204,7 +204,7 @@ namespace pgs
     DisplayType E;
     exponential(E,v);
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(), InputDim_);
-    a.noalias() = in*(E.transpose()); 
+    a.noalias() = in*(E.transpose());
     out = a;
   }
 }

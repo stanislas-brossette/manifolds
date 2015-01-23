@@ -1,3 +1,4 @@
+#include <iostream>
 #include <pgsolver/solver/Filter.h>
 //#include "lex_assert.h"
 
@@ -8,13 +9,13 @@ namespace pgs
   Filter::Filter()
   {
   }
-  
+
   Filter::Filter(double gamma, Filter::eOption opt)
     : gamma(gamma)
     , option(opt)
   {
   }
-  
+
   bool Filter::accepts(const VectorXd& p) const
   {
     Entry e = std::make_pair(p,p.norm());
@@ -25,12 +26,12 @@ namespace pgs
     }
     return true;
   }
-  
+
   bool Filter::dominates(const VectorXd& p) const
   {
     return !accepts(p);
   }
-  
+
   void Filter::add(const VectorXd& p)
   {
     //lex_assert(accepts(p));
@@ -45,7 +46,7 @@ namespace pgs
     }
     filter.push_back(e);
   }
-  
+
   double Filter::getGamma() const
   {
     return gamma;
@@ -54,7 +55,7 @@ namespace pgs
   {
     gamma = newGamma;
   }
-  
+
   Filter::eOption Filter::getOption() const
   {
     return option;
@@ -63,24 +64,24 @@ namespace pgs
   {
     option = newOption;
   }
-  
+
   size_t Filter::size() const
   {
     return filter.size();
   }
-  
+
   const VectorXd& Filter::get(size_t i) const
   {
     std::list<Entry>::const_iterator it = filter.begin();
     advance(it,i);
     return it->first;
   }
-  
-  
+
+
   bool Filter::accepts(const Entry& i, const Entry& p) const
   {
     double viol;
-  
+
     switch(option)
     {
       case EXISTING:  viol = i.second;                    break;
@@ -88,10 +89,10 @@ namespace pgs
       case MIN:       viol = std::min(i.second,p.second); break;
       case SEPARATE:  return (p.first.array()<(1-gamma)*i.first.array()).any();break;
     }
-  
+
     return ((i.first - p.first).array()>gamma*viol).any();  // eq. (2.1)
   }
-  
+
   bool Filter::isStronglyDominated(const Entry& i, const Entry& p) const
   {
     //implements eq. (2.5)
@@ -105,8 +106,18 @@ namespace pgs
     }
     return ((i.first - p.first).array() >= a).all();
   }
-  
-  
+
+  void Filter::print() const
+  {
+    if (this->size() == 0)
+      std::cout << "--empty--" << std::endl;
+    for (std::list<Entry>::const_iterator it = filter.begin(); it!= filter.end(); ++it)
+    {
+      std::cout << it->first.transpose() << std::endl;
+    }
+  }
+
+
   void testFilter01()
   {
     Filter f(1e-5, Filter::EXISTING);
@@ -116,7 +127,7 @@ namespace pgs
     Vector2d v4(0.8, 1.2);
     Vector2d v5(0.9, 0.9);
     Vector2d v6(0.7, 0.6);
-  
+
     f.accepts(v1);
     f.add(v1);
     f.accepts(v2);

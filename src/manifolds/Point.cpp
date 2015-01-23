@@ -32,13 +32,13 @@ namespace pgs
     unregisterPoint();
   }
 
-  
+
   Point& Point::increment(const Eigen::VectorXd& v)
   {
     manifold_.plus(value_, value_, v);
     return *this;
   }
-  
+
   Point Point::operator()(size_t i) const
   {
     return Point(manifold_(i), manifold_.getConstView<R>(value_, i));
@@ -58,7 +58,7 @@ namespace pgs
   {
     return manifold_.getView<R>(value_, i);
   }
-  
+
   const Manifold& Point::getManifold() const
   {
     return manifold_;

@@ -6,9 +6,8 @@ namespace pgs
 {
   ConstraintManager::ConstraintManager()
   {
-    std::cout << "Constraint Manager"<< std::endl;
   }
-  
+
   void ConstraintManager::init(Problem& p)
   {
     size_t nbCstr = p.numberOfCstr();
@@ -27,6 +26,7 @@ namespace pgs
       totalDimLin_ += dimLin_[i];
       totalDimNonLin_ += dimNonLin_[i];
     }
+    totalDim_ = totalDimLin_ + totalDimNonLin_;
   }
 
   RefMat ConstraintManager::getViewLin(RefMat J, size_t i) const
@@ -58,5 +58,9 @@ namespace pgs
   const Index& ConstraintManager::totalDimNonLin() const
   {
     return totalDimNonLin_;
+  }
+  const Index& ConstraintManager::totalDim() const
+  {
+    return totalDim_;
   }
 }

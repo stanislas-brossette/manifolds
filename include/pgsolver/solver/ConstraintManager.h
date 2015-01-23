@@ -31,6 +31,7 @@ namespace pgs
 
       const Index& totalDimLin() const;
       const Index& totalDimNonLin() const;
+      const Index& totalDim() const;
 
     private:
       std::vector<Index> startLin_;
@@ -39,6 +40,7 @@ namespace pgs
       std::vector<Index> startNonLin_;
       std::vector<Index> dimNonLin_;
       Index totalDimNonLin_;
+      Index totalDim_;
   };
 }
 

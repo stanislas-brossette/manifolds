@@ -14,5 +14,5 @@
 #else
     #define PGS_API PGS_DLLIMPORT
 #endif
-    
+
 #endif
