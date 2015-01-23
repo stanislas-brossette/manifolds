@@ -52,6 +52,8 @@ namespace pgs
     Eigen::VectorXd r = theta*y + (1-theta)*Bs;
 
     B = B - (Bs*Bs.transpose())/sBs + (r*r.transpose())/(s.transpose()*r);
+    //double tau = (s.dot(r) / sBs);
+    //B = std::min(tau,1.)*(B - (Bs*Bs.transpose()) / sBs) + (r*r.transpose()) / (s.transpose()*r);
 
     //TODO Implement EigenValue control (LDL)
   }
