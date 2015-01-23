@@ -1,9 +1,8 @@
-function [t,L,B,E,s] = BKStepSym(A,k)
+function [t,B,s] = BKStepSym(A,k)
 n = size(A,1);
 if n==1
   t = 1;
   L = 1;
-  E = A;
   B = [];
   s = 1;
   return;
@@ -38,7 +37,7 @@ if lambda>0
     %tmp = A(:,i); A(:,i) = A(:,t(i)); A(:,t(i))=tmp;
     %tmp = A(i,:); A(i,:) = A(t(i),:); A(t(i),:)=tmp;
     tmp=Ap(t(i)+1:end,k+i); Ap(t(i)+1:end,k+i)=Ap(t(i)+1:end,t(i)); Ap(t(i)+1:end,t(i))=tmp;
-    tmp=Ap(k+i,k+1:k+i-1); Ap(k+i,k+1:k+i-1)=Ap(t(i),k+1:k+i-1); Ap(t(i),k+1:k+i-1)=tmp;
+    tmp=Ap(k+i,1:k+i-1); Ap(k+i,1:k+i-1)=Ap(t(i),1:k+i-1); Ap(t(i),1:k+i-1)=tmp;
     tmp=Ap(k+i+1:t(i)-1,k+i); Ap(k+i+1:t(i)-1,k+i)=Ap(t(i),k+i+1:t(i)-1)'; Ap(t(i),k+i+1:t(i)-1)=tmp';
     tmp=Ap(k+i,k+i); Ap(k+i,k+i)=Ap(t(i),t(i)); Ap(t(i),t(i))=tmp;
   end
@@ -46,19 +45,22 @@ if lambda>0
   E = Ap(k+1:k+s,k+1:k+s); if s==2, E(1,2)=E(2,1); end
   C = Ap(k+s+1:n,k+1:k+s);
   B = Ap(k+s+1:n,k+s+1:n);
-  L = [eye(s), zeros(s,n-k-s); C/E, eye(n-k-s)];
+  L = C/E;
   I = repmat([1:n-k-s]',1,n-k-s);
   J = repmat([1:n-k-s],n-k-s,1);
-  Bp = B';
-  B(I<J) = Bp(I<J);
+  B1 = B';
+  B2 = B;
+  B(I<J) = B1(I<J);
   B = B - (C/E)*C';
+  B(I<J) = B2(I<J);
   Ap(k+s+1:n,k+s+1:n) = B;
+  Ap(k+s+1:n,k+1:k+s) = L;
   B = Ap;
 else
   s = 1;
   t = k+1;
-  L = eye(n-k);
-  E = A(k+1,k+1);
+  L = zeros(n-k-1,1);
   B = A;
 end
+B
 end
