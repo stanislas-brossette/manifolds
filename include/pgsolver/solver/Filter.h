@@ -23,7 +23,6 @@ namespace pgs
 
     typedef std::pair<Eigen::VectorXd, double> Entry;
 
-    Filter();
     Filter(double gamma, eOption opt=SEPARATE);
 
     bool accepts(const Eigen::VectorXd& p) const;

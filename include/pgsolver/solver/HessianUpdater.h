@@ -1,6 +1,7 @@
 #ifndef _PGS_HESSIAN_UPDATER_H_
 #define _PGS_HESSIAN_UPDATER_H_
 
+#include <vector>
 #include <Eigen/Core>
 
 #include <pgsolver/manifolds/Point.h>
