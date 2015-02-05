@@ -121,10 +121,10 @@ namespace pgs
         \right.
       \f}
       **/
-      bool feasibility( ProblemEvaluation& probEval, double feasibilityMin,
-                        Eigen::VectorXd& feasibleVector,
-                        Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup,
-                        LagrangeMultipliers& feasLagMult);
+      //bool feasibility( ProblemEvaluation& probEval, double feasibilityMin,
+      //                  Eigen::VectorXd& feasibleVector,
+      //                  Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup,
+      //                  LagrangeMultipliers& feasLagMult);
 
       bool feasibility( Eigen::VectorXd& xl, Eigen::VectorXd& xu,
                         Eigen::VectorXd& cvec, Eigen::MatrixXd& C,

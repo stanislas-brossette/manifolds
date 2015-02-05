@@ -574,72 +574,72 @@ namespace pgs
     return converged;
   }
 
-  bool Solver::feasibility( ProblemEvaluation& probEval, double eps_feasibility, 
-      Eigen::VectorXd& feasibleVector, 
-      Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup,
-      LagrangeMultipliers& feasLagMult)
-  {
-    if(opt_.VERBOSE >= 2)
-      std::cout << "---------------- Feasibility -----------------"<< std::endl;
+  //bool Solver::feasibility( ProblemEvaluation& probEval, double eps_feasibility, 
+  //    Eigen::VectorXd& feasibleVector, 
+  //    Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup,
+  //    LagrangeMultipliers& feasLagMult)
+  //{
+  //  if(opt_.VERBOSE >= 2)
+  //    std::cout << "---------------- Feasibility -----------------"<< std::endl;
 
-    LPSolver_.reset();
-    LPSolver_.solve(
-        probEval.feasibilityLB,
-        probEval.feasibilityUB,
-        probEval.feasibilityCostF,
-        probEval.feasibilityAllDiffCstr,
-        probEval_.allInfCstr,
-        probEval_.allSupCstr
-        );
-    LPSolver_.print_result();
-    LPSolver_.print_inform();
-    if (!(LPSolver_.inform() == 0 || LPSolver_.inform() == 1))
-    {
-      LPSolver_.print_inform();
-      std::cout << "LSSOL.istate()" << LPSolver_.istate() << std::endl;
-      std::cout << "========Testing same problem with new solver========" << std::endl;
-      Eigen::LSSOL_LP testLP(7,2);
-      testLP.printLevel(1);
-      testLP.solve(
-        probEval.feasibilityLB,
-        probEval.feasibilityUB,
-        probEval.feasibilityCostF,
-        probEval.feasibilityAllDiffCstr,
-        probEval_.allInfCstr,
-        probEval_.allSupCstr
-        );
-      testLP.print_inform();
-      std::cout << "====================================================" << std::endl;
+  //  LPSolver_.reset();
+  //  LPSolver_.solve(
+  //      probEval.feasibilityLB,
+  //      probEval.feasibilityUB,
+  //      probEval.feasibilityCostF,
+  //      probEval.feasibilityAllDiffCstr,
+  //      probEval_.allInfCstr,
+  //      probEval_.allSupCstr
+  //      );
+  //  LPSolver_.print_result();
+  //  LPSolver_.print_inform();
+  //  if (!(LPSolver_.inform() == 0 || LPSolver_.inform() == 1))
+  //  {
+  //    LPSolver_.print_inform();
+  //    std::cout << "LSSOL.istate()" << LPSolver_.istate() << std::endl;
+  //    std::cout << "========Testing same problem with new solver========" << std::endl;
+  //    Eigen::LSSOL_LP testLP(7,2);
+  //    testLP.printLevel(1);
+  //    testLP.solve(
+  //      probEval.feasibilityLB,
+  //      probEval.feasibilityUB,
+  //      probEval.feasibilityCostF,
+  //      probEval.feasibilityAllDiffCstr,
+  //      probEval_.allInfCstr,
+  //      probEval_.allSupCstr
+  //      );
+  //    testLP.print_inform();
+  //    std::cout << "====================================================" << std::endl;
 
-      throw std::runtime_error("Feasibility LP solver FAILED!!! Damnit");
-    }
-    feasibleVector = LPSolver_.result().head(probEval.varDim);
-    infeasibilityInf = LPSolver_.result().segment(probEval.varDim, cstrMngr_.totalDim());
-    infeasibilitySup = LPSolver_.result().tail(cstrMngr_.totalDim());
-    bool result = (infeasibilityInf.lpNorm<Eigen::Infinity>() <= eps_feasibility) && (infeasibilitySup.lpNorm<Eigen::Infinity>() <= eps_feasibility);
+  //    throw std::runtime_error("Feasibility LP solver FAILED!!! Damnit");
+  //  }
+  //  feasibleVector = LPSolver_.result().head(probEval.varDim);
+  //  infeasibilityInf = LPSolver_.result().segment(probEval.varDim, cstrMngr_.totalDim());
+  //  infeasibilitySup = LPSolver_.result().tail(cstrMngr_.totalDim());
+  //  bool result = (infeasibilityInf.lpNorm<Eigen::Infinity>() <= eps_feasibility) && (infeasibilitySup.lpNorm<Eigen::Infinity>() <= eps_feasibility);
 
-    feasLagMult.bounds = -LPSolver_.lambda().head(feasLagMult.bounds.size());
-    feasLagMult.linear = -LPSolver_.lambda().segment(feasLagMult.bounds.size(), feasLagMult.linear.size());
-    feasLagMult.nonLinear = -LPSolver_.lambda().tail(feasLagMult.nonLinear.size());
+  //  feasLagMult.bounds = -LPSolver_.lambda().head(feasLagMult.bounds.size());
+  //  feasLagMult.linear = -LPSolver_.lambda().segment(feasLagMult.bounds.size(), feasLagMult.linear.size());
+  //  feasLagMult.nonLinear = -LPSolver_.lambda().tail(feasLagMult.nonLinear.size());
 
 
-    if(opt_.VERBOSE >= 2)
-    {
-      std::cout << "probEval_.feasibilityAllDiffCstr = \n" << 
-                          probEval_.feasibilityAllDiffCstr << std::endl;
-      std::cout << "probEval_.allInfCstr = \n" << probEval_.allInfCstr << std::endl;
-      std::cout << "probEval_.allSupCstr = \n" << probEval_.allSupCstr << std::endl;
-      std::cout << "probEval_.feasibilityLB = \n" << probEval_.feasibilityLB << std::endl;
-      std::cout << "probEval_.feasibilityUB = \n" << probEval_.feasibilityUB << std::endl;
-      std::cout << "LPSolver.result = \n" << LPSolver_.result() << std::endl;
-      std::cout << "feasibleVector = \n" << feasibleVector << std::endl;
-      std::cout << "infeasibilityInf = \n" << infeasibilityInf << std::endl;
-      std::cout << "infeasibilitySup = \n" << infeasibilitySup << std::endl;
-      std::cout << "LPSolver_.lambda() = \n" << LPSolver_.lambda() << std::endl;
-      std::cout << "----------------------------------------------"<< std::endl;
-    }
-    return result;
-  }
+  //  if(opt_.VERBOSE >= 2)
+  //  {
+  //    std::cout << "probEval_.feasibilityAllDiffCstr = \n" << 
+  //                        probEval_.feasibilityAllDiffCstr << std::endl;
+  //    std::cout << "probEval_.allInfCstr = \n" << probEval_.allInfCstr << std::endl;
+  //    std::cout << "probEval_.allSupCstr = \n" << probEval_.allSupCstr << std::endl;
+  //    std::cout << "probEval_.feasibilityLB = \n" << probEval_.feasibilityLB << std::endl;
+  //    std::cout << "probEval_.feasibilityUB = \n" << probEval_.feasibilityUB << std::endl;
+  //    std::cout << "LPSolver.result = \n" << LPSolver_.result() << std::endl;
+  //    std::cout << "feasibleVector = \n" << feasibleVector << std::endl;
+  //    std::cout << "infeasibilityInf = \n" << infeasibilityInf << std::endl;
+  //    std::cout << "infeasibilitySup = \n" << infeasibilitySup << std::endl;
+  //    std::cout << "LPSolver_.lambda() = \n" << LPSolver_.lambda() << std::endl;
+  //    std::cout << "----------------------------------------------"<< std::endl;
+  //  }
+  //  return result;
+  //}
 
   bool Solver::feasibility( Eigen::VectorXd& xl, Eigen::VectorXd& xu,
                             Eigen::VectorXd& cvec, Eigen::MatrixXd& C,
@@ -652,7 +652,7 @@ namespace pgs
     if(opt_.VERBOSE >= 2)
       std::cout << "---------------- Feasibility -----------------"<< std::endl;
 
-    LPSolver_.printLevel(1);
+    LPSolver_.printLevel(1004);
     LPSolver_.solve(xl, xu, cvec, C, cl, cu);
     LPSolver_.print_inform();
     LPSolver_.print_result();
@@ -661,6 +661,14 @@ namespace pgs
     {
       LPSolver_.inform();
       std::cout << "LSSOL.istate()" << LPSolver_.istate().transpose() << std::endl;
+      LPSolver_.print_inform();
+      std::cout << "LSSOL.istate()" << LPSolver_.istate() << std::endl;
+      std::cout << "========Testing same problem with new solver========" << std::endl;
+      Eigen::LSSOL_LP testLP(7,2);
+      testLP.printLevel(1003);
+      testLP.solve(xl, xu, cvec, C, cl, cu);
+      testLP.print_inform();
+      std::cout << "====================================================" << std::endl;
       throw std::runtime_error("Feasibility LP solver FAILED!!! Damnit");
     }
     feasibleVector = LPSolver_.result().head(probEval_.varDim);
@@ -739,7 +747,7 @@ namespace pgs
         probEval_.prevDiffNonLinCstr, probEval_.diffNonLinCstr,
         opt_);
     }
-    RestQPSolver_.printLevel(3002);
+    RestQPSolver_.printLevel(0);
     while (!feasible && iterRest < maxIterRest)
     {
       iterRest += 1;
@@ -792,9 +800,12 @@ namespace pgs
 
       updateAllProblemData(*problem_);
 
-      feasible = feasibility(probEval_, opt_.epsilonFeasibility, 
-             probEval_.feasibleValue, probEval_.infeasibilityInf, probEval_.infeasibilitySup,
-             feasibilityLagMult_);
+      feasibility( probEval_.feasibilityLB, probEval_.feasibilityUB,
+        probEval_.feasibilityCostF, probEval_.feasibilityAllDiffCstr,
+        probEval_.allInfCstr, probEval_.allSupCstr, 
+        opt_.epsilonFeasibility,  probEval_.feasibleValue, 
+        probEval_.infeasibilityInf, probEval_.infeasibilitySup,
+        restorationLagMult_);
 
       if (feasible)
       {
