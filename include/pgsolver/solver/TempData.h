@@ -79,9 +79,11 @@ namespace pgs
     /// nonLinConstraint - supBound
     Eigen::VectorXd supNonLinCstr;
 
-    /// \brief Concatenation of infLinCstr and infNonLinCstr
+    /// \brief Concatenation of -infLinCstr and -infNonLinCstr
+    /// allInfCstr(i) = LB - c(i)
     Eigen::VectorXd allInfCstr;
-    /// \brief Concatenation of supLinCstr and supNonLinCstr
+    /// \brief Concatenation of -supLinCstr and -supNonLinCstr
+    /// allSupCstr(i) = UB - c(i)
     Eigen::VectorXd allSupCstr;
 
     /// \brief Concatenation of linear and nonLinear constraints LB

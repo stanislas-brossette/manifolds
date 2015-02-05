@@ -122,7 +122,7 @@ namespace Eigen {
         MaxBlockSizeAtCompileTime = _MaxBlockSizeAtCompileTime,
         Options = _Options
       };
-      typedef typename Matrix<Scalar, MaxBlockSizeAtCompileTime, ColsAtCompileTime, Options&RowMajor ? RowMajor : ColMajor, MaxBlockSizeAtCompileTime, MaxColsAtCompileTime> CoefficientsType;
+      typedef Matrix<Scalar, MaxBlockSizeAtCompileTime, ColsAtCompileTime, Options&RowMajor ? RowMajor : ColMajor, MaxBlockSizeAtCompileTime, MaxColsAtCompileTime> CoefficientsType;
       typedef Matrix<Index, BlocksAtCompileTime, 1, 0, (BlocksAtCompileTime != Dynamic) ? BlocksAtCompileTime : MaxRowsAtCompileTime, 1> IndexVector;
       typedef IndexVector BlockSizes;
     };
@@ -135,6 +135,7 @@ namespace Eigen {
       typedef typename internal::traits<BlockDiagonalMatrix>::Index Index;
       typedef typename internal::traits<BlockDiagonalMatrix>::CoefficientsType CoefficientsType;
       typedef typename internal::traits<BlockDiagonalMatrix>::BlockSizes BlockSizes;
+      typedef typename internal::traits<BlockDiagonalMatrix>::IndexVector IndexVector;
 
       enum {
         MaxBlockSizeAtCompileTime = internal::traits<BlockDiagonalMatrix>::MaxBlockSizeAtCompileTime
@@ -142,7 +143,8 @@ namespace Eigen {
 
       inline BlockDiagonalMatrix(const BlockSizes& blockSizes)
         : m_size(blockSizes.sum())
-        , m_coeffs(((MaxBlockSizeAtCompileTime != Dynamic)?MaxBlockSizeAtCompileTime:m_size), m_size)
+        , m_coeffs(((MaxBlockSizeAtCompileTime != Dynamic) ? 
+              static_cast<Index>(MaxBlockSizeAtCompileTime) : m_size), m_size)
         , m_cumul(-1), m_nblocks(blockSizes.size())
         , m_blocksizes(blockSizes)
         , m_starts(blockSizes.size())
@@ -156,7 +158,8 @@ namespace Eigen {
 
       inline BlockDiagonalMatrix(Index size)
         : m_size(size)
-        , m_coeffs(((MaxBlockSizeAtCompileTime != Dynamic) ? MaxBlockSizeAtCompileTime : m_size), m_size)
+        , m_coeffs(((MaxBlockSizeAtCompileTime != Dynamic) ? 
+              static_cast<Index>(MaxBlockSizeAtCompileTime) : size), size)
         , m_cumul(0)
         , m_nblocks(0)
         , m_blocksizes(size)
@@ -216,19 +219,20 @@ namespace Eigen {
       {
         eigen_assert(completed());
         eigen_assert(N == m_blocksizes[i]);
-        return m_coeffs.block<N, N>(0, starts[i]);
+        return m_coeffs.template block<N, N>(0, m_starts[i]);
       }
 
       template<int N> inline Block<CoefficientsType, N, N> block(Index i)
       {
         eigen_assert(completed());
         eigen_assert(N == m_blocksizes[i]);
-        return m_coeffs.block<N, N>(0, m_starts[i]);
+        return m_coeffs.template block<N, N>(0, m_starts[i]);
       }
 
       void resize(Index newSize)
       {
-        m_coeffs.resize(((MaxBlockSizeAtCompileTime != Dynamic) ? MaxBlockSizeAtCompileTime : m_size), m_size);
+        m_coeffs.resize(((MaxBlockSizeAtCompileTime != Dynamic) ? 
+              static_cast<Index>(MaxBlockSizeAtCompileTime) : m_size), m_size);
         m_cumul = 0;
         m_nblocks = 0;
         m_blocksizes.resize(newSize);

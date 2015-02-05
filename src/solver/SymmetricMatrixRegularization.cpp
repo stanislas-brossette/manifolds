@@ -1,4 +1,4 @@
-#include "SymmetricMatrixRegularization.h"
+#include <pgsolver/solver/SymmetricMatrixRegularization.h>
 
 namespace
 {
@@ -62,11 +62,12 @@ namespace pgs
       {
         Eigen::Matrix2d Q;
         Eigen::Vector2d d;
-        eig2d(B.block(i), Q, d);
+        eig2d(B.block<2>(i), Q, d);
         d(0) = std::max(d(0), valMin_);
         d(1) = std::max(d(1), valMin_);
         Eigen::Matrix2d DQt = d.asDiagonal()*Q.transpose();
-        Eigen::Matrix2d QDQt = Q*DQt;
+        Eigen::Matrix2d QDQt; //Line split due to stupid-gcc-bug
+        QDQt.noalias() = Q*DQt;
         tmp2_.middleRows(k, 2).noalias() = QDQt * M.middleRows(k, 2);
       }
     }

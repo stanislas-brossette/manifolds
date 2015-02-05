@@ -2,8 +2,8 @@
 #define _PGS_SYMETRIC_MATRIX_REGULARIZATION_
 
 #include <Eigen/Eigen>
-#include "BlockDiagonalMatrix.h"
-#include "LBLT.h"
+#include <pgsolver/utils/BlockDiagonalMatrix.h>
+#include <pgsolver/utils/LBLT.h>
 
 namespace pgs
 {
@@ -14,6 +14,8 @@ namespace pgs
     typedef Eigen::internal::LBLT_Traits<Eigen::MatrixXd, Eigen::Lower>::MatrixL MatrixL;
     typedef Eigen::MatrixXd::Index Index;
 
+    /// \arg size matrix
+    /// \arg minimum diag value
     SymmetricMatrixRegularization(int size, double valMin);
 
     const Eigen::MatrixXd& regularize(const Eigen::MatrixXd& M);

@@ -15,6 +15,8 @@
 #include <pgsolver/solver/TempData.h>
 
 #include <EigenQP/LSSOL.h>
+#include <EigenQP/LSSOL_LP.h>
+#include <EigenQP/LSSOL_QP.h>
 
 namespace pgs
 {
@@ -119,7 +121,15 @@ namespace pgs
         \right.
       \f}
       **/
-      bool feasibility(const ProblemEvaluation& probEval, double feasibilityMin,
+      bool feasibility( ProblemEvaluation& probEval, double feasibilityMin,
+                        Eigen::VectorXd& feasibleVector,
+                        Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup,
+                        LagrangeMultipliers& feasLagMult);
+
+      bool feasibility( Eigen::VectorXd& xl, Eigen::VectorXd& xu,
+                        Eigen::VectorXd& cvec, Eigen::MatrixXd& C,
+                        Eigen::VectorXd& cl, Eigen::VectorXd& cu,
+                        double feasibilityMin,
                         Eigen::VectorXd& feasibleVector,
                         Eigen::VectorXd& infeasibilityInf, Eigen::VectorXd& infeasibilitySup,
                         LagrangeMultipliers& feasLagMult);
@@ -154,11 +164,11 @@ namespace pgs
       Problem* problem_;
 
       /// \brief QP solver
-      Eigen::LSSOL QPSolver_;
+      Eigen::LSSOL_QP QPSolver_;
       /// \brief LP solver
-      Eigen::LSSOL LPSolver_;
+      Eigen::LSSOL_LP LPSolver_;
       /// \brief Restoration QP solver
-      Eigen::LSSOL RestQPSolver_;
+      Eigen::LSSOL_QP RestQPSolver_;
 
   };
 }

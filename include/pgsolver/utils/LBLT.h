@@ -24,7 +24,7 @@ namespace Eigen {
     typedef typename MatrixType::Index Index;
     typedef Matrix<Scalar, RowsAtCompileTime, 2, Options, MaxRowsAtCompileTime, 2> TmpMatrixType;
 
-    typedef Transpositions<RowsAtCompileTime, MaxRowsAtCompileTime> TranspositionType;
+    typedef Transpositions<RowsAtCompileTime, MaxRowsAtCompileTime, Index> TranspositionType;
 
     typedef internal::LBLT_Traits<MatrixType, UpLo> Traits;
     typedef typename Traits::MatrixB MatrixB;
@@ -178,7 +178,7 @@ namespace Eigen {
             if (abs(mat(k, k)) >= alpha*lambda)
             {
               s = 1;
-              transpositions[k] = k;
+              transpositions.coeffRef(k) = k;
             }
             else
             {
@@ -252,7 +252,7 @@ namespace Eigen {
                 mat.col(ki).tail(t).swap(mat.col(piv).tail(t));
                 mat.row(ki).head(ki).swap(mat.row(piv).head(ki));
                 std::swap(mat.coeffRef(ki, ki), mat.coeffRef(piv,piv));
-                for (int j = ki + 1; j<piv; ++j)
+                for (Index j = ki + 1; j<piv; ++j)
                 {
                   Scalar tmp = mat.coeffRef(j, ki);
                   mat.coeffRef(j, ki) = numext::conj(mat.coeffRef(piv, j));
@@ -266,7 +266,7 @@ namespace Eigen {
             //std::cout << "%before update " << k << std::endl;
             //std::cout << "M = " << (toMatlab)mat << std::endl << std::endl;
             Index t = size - k - s;
-            SelfAdjointView<Block<MatrixType, Dynamic, Dynamic>, Lower> C = mat.bottomRightCorner(t, t).selfadjointView<Lower>();
+            SelfAdjointView<Block<MatrixType, Dynamic, Dynamic>, Lower> C = mat.bottomRightCorner(t, t).template selfadjointView<Lower>();
             if (s == 1)
             {
               Scalar Akk = mat.coeffRef(k, k);
@@ -283,13 +283,13 @@ namespace Eigen {
             }
             else //s == 2
             {
-              Matrix<Scalar,2,2> D = mat.block<2, 2>(k, k).selfadjointView<Lower>();
+              Matrix<Scalar,2,2> D = mat.template block<2, 2>(k, k).template selfadjointView<Lower>();
               Matrix<Scalar, 2, 2> invD = D.inverse();
               C.rankUpdate(mat.col(k).tail(t), -invD(0,0));
               C.rankUpdate(mat.col(k+1).tail(t), -invD(1,1));
               C.rankUpdate(mat.col(k).tail(t), mat.col(k+1).tail(t), -invD(1,0));
-              temp.bottomRows(t) = mat.block<Dynamic, 2>(k + 2, k, t, 2) * invD;
-              mat.block<Dynamic, 2>(k + 2, k, t, 2) = temp.bottomRows(t);
+              temp.bottomRows(t) = mat.template block<Dynamic, 2>(k + 2, k, t, 2) * invD;
+              mat.template block<Dynamic, 2>(k + 2, k, t, 2) = temp.bottomRows(t);
               mat(k + 1, k) = Scalar(0);
               B.push_block(D);
             }
@@ -356,7 +356,7 @@ namespace Eigen {
 
     m_matrix = a;
 
-    m_transpositions.resize(size);
+    m_transpositions.resize(static_cast<int>(size));
     m_isInitialized = false;
     m_temporary.resize(size,2);
     m_blocks.resize(size);

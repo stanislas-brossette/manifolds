@@ -14,6 +14,7 @@ set(SOURCES
   solver/LineSearcher.cpp
   solver/Problem.cpp
   solver/Solver.cpp
+  solver/SymmetricMatrixRegularization.cpp
   )
 set(HEADERS
   ../include/pgsolver/manifolds/CartesianProduct.h
@@ -34,7 +35,11 @@ set(HEADERS
   ../include/pgsolver/solver/Problem.h
   ../include/pgsolver/solver/Solver.h
   ../include/pgsolver/solver/SolverOptions.h
+  ../include/pgsolver/solver/SymmetricMatrixRegularization.h
   ../include/pgsolver/solver/TempData.h
+  ../include/pgsolver/utils/BlockDiagonalMatrix.h
+  ../include/pgsolver/utils/LBLT.h
+  ../include/pgsolver/utils/lex_assert.h
 )
 
 set(LIBRARIES
