@@ -1,9 +1,9 @@
 #include <iostream>
 #include <stdexcept>
 
-#include <pgsolver/manifolds/pgs_assert.h>
-#include <pgsolver/manifolds/RealSpace.h>
-#include <pgsolver/manifolds/Point.h>
+#include <manifolds/pgs_assert.h>
+#include <manifolds/RealSpace.h>
+#include <manifolds/Point.h>
 
 #ifndef _WIN32
 #define BOOST_TEST_MODULE PGSolver 

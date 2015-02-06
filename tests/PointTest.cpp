@@ -6,9 +6,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <pgsolver/manifolds/Point.h>
-#include <pgsolver/manifolds/RealSpace.h>
-#include <pgsolver/manifolds/CartesianProduct.h>
+#include <manifolds/Point.h>
+#include <manifolds/RealSpace.h>
+#include <manifolds/CartesianProduct.h>
 
 using namespace pgs;
 

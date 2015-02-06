@@ -11,11 +11,11 @@ include(cmake/boost.cmake)
 include(cmake/eigen.cmake)
 include(cmake/pkg-config.cmake)
 
-set(PROJECT_NAME PGSolver)
-set(PROJECT_DESCRIPTION PGSolver)
+set(PROJECT_NAME Manifolds)
+set(PROJECT_DESCRIPTION Manifolds)
 set(PROJECT_URL https://brossette@idh.lirmm.fr/././././pgsolver.git)
 
-set(CUSTOM_HEADER_DIR PGSolver)
+set(CUSTOM_HEADER_DIR Manifolds)
 set(HEADERS )
 
 setup_project()
@@ -26,36 +26,37 @@ if(CMAKE_BUILD_TYPE MATCHES Rel)
 endif()
 
 # Add main library to pkg-config file.
-PKG_CONFIG_APPEND_LIBS(PGSolver)
+PKG_CONFIG_APPEND_LIBS(Manifolds)
 #
 #search_for_boost()
 
 # Require Eigen >= 3.2.1 for Eigen::Ref
 SET(Eigen_REQUIRED "eigen3 >= 3.2.1")
-IF(PKG_CONFIG_FOUND)
-  SEARCH_FOR_EIGEN()
-ELSE()
-  find_path(Eigen_INCLUDE_DIR NAMES signature_of_eigen3_matrix_library
-    PATHS
-    ${CMAKE_INSTALL_PREFIX}/include
-    PATH_SUFFIXES eigen3 eigen
-  )
-  INCLUDE_DIRECTORIES(SYSTEM ${Eigen_INCLUDE_DIR})
-ENDIF()
-IF(PKG_CONFIG_FOUND)
-ADD_REQUIRED_DEPENDENCY(EigenQP)
-ELSE()
-find_path(EigenQP_INCLUDE_DIR NAMES EigenQP/EigenQPAPI.h
-    PATHS
-    ${CMAKE_INSTALL_PREFIX}/include
-  )
-  INCLUDE_DIRECTORIES(SYSTEM ${EigenQP_INCLUDE_DIR})
-find_path(EigenQP_LIB_DIR NAMES EigenQP.lib libEigenQP.so
-    PATHS
-    ${CMAKE_INSTALL_PREFIX}/library
-    )
-   LINK_DIRECTORIES(${EigenQP_LIB_DIR})
-ENDIF()
+search_for_eigen()
+#IF(PKG_CONFIG_FOUND)
+#  SEARCH_FOR_EIGEN()
+#ELSE()
+#  find_path(Eigen_INCLUDE_DIR NAMES signature_of_eigen3_matrix_library
+#    PATHS
+#    ${CMAKE_INSTALL_PREFIX}/include
+#    PATH_SUFFIXES eigen3 eigen
+#  )
+#  INCLUDE_DIRECTORIES(SYSTEM ${Eigen_INCLUDE_DIR})
+#ENDIF()
+#IF(PKG_CONFIG_FOUND)
+#ADD_REQUIRED_DEPENDENCY(EigenQP)
+#ELSE()
+#find_path(EigenQP_INCLUDE_DIR NAMES EigenQP/EigenQPAPI.h
+#    PATHS
+#    ${CMAKE_INSTALL_PREFIX}/include
+#  )
+#  INCLUDE_DIRECTORIES(SYSTEM ${EigenQP_INCLUDE_DIR})
+#find_path(EigenQP_LIB_DIR NAMES EigenQP.lib libEigenQP.so
+#    PATHS
+#    ${CMAKE_INSTALL_PREFIX}/library
+#    )
+#   LINK_DIRECTORIES(${EigenQP_LIB_DIR})
+#ENDIF()
 include_directories(include)
 
 FIND_PACKAGE(Boost REQUIRED)
