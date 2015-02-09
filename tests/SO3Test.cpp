@@ -1,5 +1,8 @@
 #include <iostream>
 #include <stdexcept>
+
+#include <manifolds/defs.h>
+#include <manifolds/utils.h>
 #include <manifolds/pgs_assert.h>
 #include <manifolds/SO3.h>
 #include <manifolds/Point.h>
@@ -280,6 +283,7 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
   S.applyDiffInvMap(J2, J1, x);
 
   Eigen::internal::set_is_malloc_allowed(false);
+  utils::set_is_malloc_allowed(false);
   {
     std::cout << "Memory allocation tests:" << std::endl;
     S.plus(z, x, p);
@@ -297,6 +301,7 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
     S.applyInvTransport(H2, H0, x, p);
     std::cout << "- method 'applyInvTransport' passed" << std::endl;
   }
+  utils::set_is_malloc_allowed(true);
   Eigen::internal::set_is_malloc_allowed(true);
 }
 #endif

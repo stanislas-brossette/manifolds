@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include <manifolds/defs.h>
+#include <manifolds/utils.h>
 #include <manifolds/pgs_assert.h>
 #include <manifolds/RealSpace.h>
 #include <manifolds/Point.h>
@@ -191,6 +193,7 @@ BOOST_AUTO_TEST_CASE(RealNoAllocation)
   Eigen::MatrixXd H2 = Eigen::MatrixXd::Random(R.dim(), R.dim());
 
   Eigen::internal::set_is_malloc_allowed(false);
+  utils::set_is_malloc_allowed(false);
   {
     R.plus(z, x, v);
     R.minus(z, x, y);
@@ -200,6 +203,7 @@ BOOST_AUTO_TEST_CASE(RealNoAllocation)
     R.applyTransport(H1, H0, x, v);
     R.applyInvTransport(H2, H0, x, v);
   }
+  utils::set_is_malloc_allowed(true);
   Eigen::internal::set_is_malloc_allowed(true);
 }
 #endif

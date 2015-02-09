@@ -6,6 +6,7 @@ set(SOURCES
   Point.cpp
   RealSpace.cpp
   ReusableTemporaryMap.cpp
+  utils.cpp
   )
 set(HEADERS
   ../include/manifolds/CartesianProduct.h
@@ -17,6 +18,7 @@ set(HEADERS
   ../include/manifolds/RealSpace.h
   ../include/manifolds/ReusableTemporaryMap.h
   ../include/manifolds/SO3.h
+  ../include/manifolds/utils.h
   ../include/manifolds/view.h
   ../include/manifolds/RefCounter.h
 )
@@ -34,7 +36,7 @@ foreach(lib ${LIBRARIES})
 #  target_compile_definitions(${lib} PUBLIC "-DPGS_EXPORT")
 endforeach()
 
-target_compile_definitions(manifoldsTest PUBLIC "-DPGS_ASSERT_THROW -DEIGEN_RUNTIME_NO_MALLOC")
+# target_compile_definitions(manifoldsTest PUBLIC "-DPGS_ASSERT_THROW -DEIGEN_RUNTIME_NO_MALLOC")
 
 install(TARGETS manifolds
   RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}

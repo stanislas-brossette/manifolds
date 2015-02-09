@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include <manifolds/defs.h>
+#include <manifolds/utils.h>
 #include <manifolds/SO3.h>
 #include <manifolds/RealSpace.h>
 #include <manifolds/CartesianProduct.h>
@@ -442,6 +444,7 @@ BOOST_AUTO_TEST_CASE(CardProdNoAllocation)
   S.applyDiffInvMap(J2, J1, x);
 
   Eigen::internal::set_is_malloc_allowed(false);
+  utils::set_is_malloc_allowed(false);
   {
     S.plus(z, x, p);
     S.minus(d, x, y);
@@ -451,6 +454,7 @@ BOOST_AUTO_TEST_CASE(CardProdNoAllocation)
     S.applyTransport(H1, H0, x, p);
     S.applyInvTransport(H2, H0, x, p);
   }
+  utils::set_is_malloc_allowed(true);
   Eigen::internal::set_is_malloc_allowed(true);
 }
 #endif

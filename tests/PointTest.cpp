@@ -6,6 +6,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <manifolds/defs.h>
+#include <manifolds/utils.h>
 #include <manifolds/Point.h>
 #include <manifolds/RealSpace.h>
 #include <manifolds/CartesianProduct.h>
