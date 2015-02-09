@@ -6,16 +6,16 @@ endif()
 
 enable_testing()
 
+set(CUSTOM_HEADER_DIR manifolds)
 include(cmake/base.cmake)
 include(cmake/boost.cmake)
 include(cmake/eigen.cmake)
 include(cmake/pkg-config.cmake)
 
-set(PROJECT_NAME Manifolds)
-set(PROJECT_DESCRIPTION Manifolds)
+set(PROJECT_NAME manifolds)
+set(PROJECT_DESCRIPTION manifolds)
 set(PROJECT_URL https://brossette@idh.lirmm.fr/././././pgsolver.git)
 
-set(CUSTOM_HEADER_DIR Manifolds)
 set(HEADERS )
 
 setup_project()
@@ -26,7 +26,7 @@ if(CMAKE_BUILD_TYPE MATCHES Rel)
 endif()
 
 # Add main library to pkg-config file.
-PKG_CONFIG_APPEND_LIBS(Manifolds)
+PKG_CONFIG_APPEND_LIBS(manifolds)
 #
 #search_for_boost()
 

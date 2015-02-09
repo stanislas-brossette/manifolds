@@ -17,11 +17,13 @@ set(HEADERS
   ../include/manifolds/RealSpace.h
   ../include/manifolds/ReusableTemporaryMap.h
   ../include/manifolds/SO3.h
+  ../include/manifolds/view.h
+  ../include/manifolds/RefCounter.h
 )
 
 set(LIBRARIES
-  Manifolds
-  ManifoldsTest
+  manifolds
+  manifoldsTest
 )
 foreach(lib ${LIBRARIES})
   add_library(${lib} SHARED ${SOURCES} ${HEADERS})
@@ -32,20 +34,22 @@ foreach(lib ${LIBRARIES})
 #  target_compile_definitions(${lib} PUBLIC "-DPGS_EXPORT")
 endforeach()
 
-target_compile_definitions(ManifoldsTest PUBLIC "-DPGS_ASSERT_THROW -DEIGEN_RUNTIME_NO_MALLOC")
+target_compile_definitions(manifoldsTest PUBLIC "-DPGS_ASSERT_THROW -DEIGEN_RUNTIME_NO_MALLOC")
 
-install(TARGETS Manifolds
+install(TARGETS manifolds
   RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
 )
 if(WIN32)
-install(TARGETS ManifoldsTest
+install(TARGETS manifoldsTest
   RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
 )
 endif()
 
+install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/manifolds)
+
 add_executable(ManifoldsExe main.cpp)
-target_link_libraries(ManifoldsExe Manifolds)
+target_link_libraries(ManifoldsExe manifolds)
