@@ -1,5 +1,5 @@
-#ifndef _PGS_VIEW_H_
-#define _PGS_VIEW_H_
+#ifndef _MANIFOLDS_VIEW_H_
+#define _MANIFOLDS_VIEW_H_
 
 #include <Eigen/Core>
 #include <manifolds/defs.h>
@@ -23,4 +23,5 @@ namespace pgs
   template<> struct ConstViewReturnType<F, F> { typedef ConstRefMat Type; };
 }
 
-#endif //_PGS_VIEW_H_
+#endif //_MANIFOLDS_VIEW_H_
+

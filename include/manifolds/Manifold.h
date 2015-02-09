@@ -1,5 +1,5 @@
-#ifndef _PGS_MANIFOLD_H_
-#define _PGS_MANIFOLD_H_
+#ifndef _MANIFOLDS_MANIFOLD_H_
+#define _MANIFOLDS_MANIFOLD_H_
 
 #include <iostream>
 #include <Eigen/Core>
@@ -370,5 +370,5 @@ namespace pgs
 
 }
 
-#endif //_PGS_MANIFOLD_H_
+#endif //_MANIFOLDS_MANIFOLD_H_
 

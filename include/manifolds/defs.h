@@ -1,5 +1,7 @@
-#ifndef _PGS_DEFS_H_
-#define _PGS_DEFS_H_
+#ifndef _MANIFOLDS_DEFS_H_
+#define _MANIFOLDS_DEFS_H_
+
+#define EIGEN_RUNTIME_NO_MALLOC
 
 #include <Eigen/Core>
 
@@ -16,5 +18,5 @@ namespace pgs
 
 #include <pgs_api.h>
 
-#endif //_PGS_DEFS_H_
+#endif //_MANIFOLDS_DEFS_H_
 

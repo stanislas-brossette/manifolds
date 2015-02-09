@@ -1,7 +1,8 @@
-#ifndef _PGS_REAL_SPACE_H_
-#define _PGS_REAL_SPACE_H_
+#ifndef _MANIFOLDS_REAL_SPACE_H_
+#define _MANIFOLDS_REAL_SPACE_H_
 
 #include <iostream>
+#include <manifolds/defs.h>
 #include <manifolds/Manifold.h>
 
 namespace pgs
@@ -36,5 +37,5 @@ namespace pgs
   };
 }
 
-#endif //_PGS_REAL_SPACE_H_
+#endif //_MANIFOLDS_REAL_SPACE_H_
 

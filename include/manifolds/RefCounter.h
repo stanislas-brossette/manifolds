@@ -1,7 +1,8 @@
-#ifndef _PGS_REF_COUNTER_H_
-#define _PGS_REF_COUNTER_H_
+#ifndef _MANIFOLDS_REF_COUNTER_H_
+#define _MANIFOLDS_REF_COUNTER_H_
 
 #include <cassert>
+#include <manifolds/defs.h>
 #include <manifolds/Point.h>
 
 #define DEBUG
@@ -51,4 +52,5 @@ namespace pgs
   };
 }
 
-#endif //_PGS_REF_COUNTER_H_
+#endif //_MANIFOLDS_REF_COUNTER_H_
+

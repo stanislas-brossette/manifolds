@@ -1,5 +1,5 @@
-#ifndef _PGS_SO3_H_
-#define _PGS_SO3_H_
+#ifndef _MANIFOLDS_SO3_H_
+#define _MANIFOLDS_SO3_H_
 
 #include <manifolds/defs.h>
 #include <manifolds/Manifold.h>
@@ -131,5 +131,5 @@ namespace pgs
     Map::applyInvTransport_(out, in, x, v, bufferMap_);
   }
 }
-#endif //_PGS_SO3_H_
+#endif //_MANIFOLDS_SO3_H_
 

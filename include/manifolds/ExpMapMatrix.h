@@ -1,5 +1,5 @@
-#ifndef _PGS_EXPMAPMATRIX_H_
-#define _PGS_EXPMAPMATRIX_H_
+#ifndef _MANIFOLDS_EXPMAPMATRIX_H_
+#define _MANIFOLDS_EXPMAPMATRIX_H_
 
 #include <Eigen/Core>
 #include <manifolds/defs.h>
@@ -39,4 +39,5 @@ namespace pgs
   };
 }
 
-#endif //_PGS_EXPMAPMATRIX_H_
+#endif //_MANIFOLDS_EXPMAPMATRIX_H_
+

@@ -1,7 +1,8 @@
-#ifndef _PGS_CARTESIAN_PRODUCT_H_
-#define _PGS_CARTESIAN_PRODUCT_H_
+#ifndef _MANIFOLDS_CARTESIAN_PRODUCT_H_
+#define _MANIFOLDS_CARTESIAN_PRODUCT_H_
 
 #include <vector>
+#include <manifolds/defs.h>
 #include <manifolds/Manifold.h>
 
 namespace pgs
@@ -68,5 +69,5 @@ namespace pgs
   }
 }
 
-#endif //_PGS_CARTESIAN_PRODUCT_H_
+#endif //_MANIFOLDS_CARTESIAN_PRODUCT_H_
 

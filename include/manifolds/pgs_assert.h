@@ -1,5 +1,5 @@
-#ifndef _PGS_ASSERT_
-#define _PGS_ASSERT_
+#ifndef _MANIFOLDS_ASSERT_
+#define _MANIFOLDS_ASSERT_
 
 #include <cassert>
 #include <string>
@@ -25,4 +25,5 @@ namespace pgs
 
 }
 
-#endif //_PGS_ASSERT_
+#endif //_MANIFOLDS_ASSERT_
+

@@ -1,8 +1,9 @@
-#ifndef _PGS_REUSABLE_TEMPORARY_MAP_H_
-#define _PGS_REUSABLE_TEMPORARY_MAP_H_
+#ifndef _MANIFOLDS_REUSABLE_TEMPORARY_MAP_H_
+#define _MANIFOLDS_REUSABLE_TEMPORARY_MAP_H_
 
 #include <Eigen/Core>
 
+#include <manifolds/defs.h>
 #include <pgs_api.h>
 
 namespace pgs
@@ -44,4 +45,5 @@ namespace pgs
   }
 }
 
-#endif //_PGS_REUSABLE_TEMPORARY_MAP_H_
+#endif //_MANIFOLDS_REUSABLE_TEMPORARY_MAP_H_
+

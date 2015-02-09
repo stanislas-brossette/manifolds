@@ -1,5 +1,5 @@
-#ifndef _PGS_POINT_H_
-#define _PGS_POINT_H_
+#ifndef _MANIFOLDS_POINT_H_
+#define _MANIFOLDS_POINT_H_
 
 #include <manifolds/defs.h>
 
@@ -55,5 +55,5 @@ namespace pgs
   }
 }
 
-#endif //_PGS_POINT_H_
+#endif //_MANIFOLDS_POINT_H_
 
