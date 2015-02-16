@@ -21,6 +21,7 @@ set(HEADERS
   ../include/manifolds/utils.h
   ../include/manifolds/view.h
   ../include/manifolds/RefCounter.h
+  ../include/manifolds/manifolds_api.h
 )
 
 set(LIBRARIES
@@ -33,7 +34,7 @@ foreach(lib ${LIBRARIES})
     VERSION ${PROJECT_VERSION}
     SOVERSION 0.1
   )
-#  target_compile_definitions(${lib} PUBLIC "-DPGS_EXPORT")
+  target_compile_definitions(${lib} PRIVATE "-DMANIFOLDS_EXPORT")
 endforeach()
 
 # target_compile_definitions(manifoldsTest PUBLIC "-DPGS_ASSERT_THROW -DEIGEN_RUNTIME_NO_MALLOC")

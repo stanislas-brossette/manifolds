@@ -31,18 +31,17 @@ PKG_CONFIG_APPEND_LIBS(manifolds)
 #search_for_boost()
 
 # Require Eigen >= 3.2.1 for Eigen::Ref
-SET(Eigen_REQUIRED "eigen3 >= 3.2.1")
-search_for_eigen()
-#IF(PKG_CONFIG_FOUND)
-#  SEARCH_FOR_EIGEN()
-#ELSE()
-#  find_path(Eigen_INCLUDE_DIR NAMES signature_of_eigen3_matrix_library
-#    PATHS
-#    ${CMAKE_INSTALL_PREFIX}/include
-#    PATH_SUFFIXES eigen3 eigen
-#  )
-#  INCLUDE_DIRECTORIES(SYSTEM ${Eigen_INCLUDE_DIR})
-#ENDIF()
+IF(NOT WIN32)
+  SET(Eigen_REQUIRED "eigen3 >= 3.2.1")
+  SEARCH_FOR_EIGEN()
+ELSE()
+  find_path(Eigen_INCLUDE_DIR NAMES signature_of_eigen3_matrix_library
+    PATHS
+    ${CMAKE_INSTALL_PREFIX}/include
+    PATH_SUFFIXES eigen3 eigen
+  )
+  INCLUDE_DIRECTORIES(SYSTEM ${Eigen_INCLUDE_DIR})
+ENDIF()
 #IF(PKG_CONFIG_FOUND)
 #ADD_REQUIRED_DEPENDENCY(EigenQP)
 #ELSE()
@@ -61,6 +60,8 @@ include_directories(include)
 
 FIND_PACKAGE(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
+
+set(CMAKE_DEBUG_POSTFIX "_d")
 
 # add_subdirectory(bin)
 # add_subdirectory(share)

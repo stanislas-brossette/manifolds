@@ -4,11 +4,10 @@
 #include <Eigen/Core>
 
 #include <manifolds/defs.h>
-#include <pgs_api.h>
 
 namespace pgs
 {
-  class PGS_API ReusableTemporaryMap
+  class MANIFOLDS_API ReusableTemporaryMap
   {
   public:
     ReusableTemporaryMap(size_t size = 256);

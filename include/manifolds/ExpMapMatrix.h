@@ -9,7 +9,7 @@ namespace pgs
 {
   /// \brief Structure representing the exponential map going from
   /// \f$ \mathbb{R}^3 \f$ to SO(3) represented in \f$ \mathbb{R}^{3\times3} \f$
-  struct PGS_API ExpMapMatrix
+  struct MANIFOLDS_API ExpMapMatrix
   {
     /// \brief precision constant
     static const double prec;

@@ -5,7 +5,7 @@
 
 namespace utils
 {
-  bool set_is_malloc_allowed(bool allow);
+  bool MANIFOLDS_API set_is_malloc_allowed(bool allow);
 }
 
 #endif //_MANIFOLDS_UTILS_H_

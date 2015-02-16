@@ -16,7 +16,7 @@ namespace pgs
   typedef Eigen::VectorXd::Index Index;
 }
 
-#include <pgs_api.h>
+#include <manifolds/manifolds_api.h>
 
 #endif //_MANIFOLDS_DEFS_H_
 

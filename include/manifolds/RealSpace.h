@@ -9,7 +9,7 @@ namespace pgs
 {
   /// \brief Manifold representing the space of real numbers of dimension n
   /// \f$\mathbb{R}^n\f$
-  class PGS_API RealSpace: public Manifold
+  class MANIFOLDS_API RealSpace: public Manifold
   {
   public:
     /// \brief Constructor

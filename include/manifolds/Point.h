@@ -7,7 +7,7 @@ namespace pgs
 {
   class Manifold;
 
-  class PGS_API Point
+  class MANIFOLDS_API Point
   {
   private:  //only Manifold can create Point
     Point(const Manifold& M);
@@ -44,8 +44,8 @@ namespace pgs
     friend class Manifold;
   };
 
-  PGS_API Point operator+(const Point& x, const ConstRefVec& v);
-  PGS_API Eigen::VectorXd operator-(const Point& x, const Point& y);
+  MANIFOLDS_API Point operator+(const Point& x, const ConstRefVec& v);
+  MANIFOLDS_API Eigen::VectorXd operator-(const Point& x, const Point& y);
 
   inline std::ostream& operator<< (std::ostream& os, const Point& x)
   {
