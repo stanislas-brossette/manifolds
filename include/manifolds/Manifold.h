@@ -16,13 +16,12 @@ namespace pgs
   /// Translation from tangent space to representation space and back, derivatives
   /// etc...\n
   /// Manifold derives from RefCounter to keep track of how many points depend on it\n
-  /// A manifold is represented by its tangent space and its representation
-  /// space and by the method to go from a vector of the tangent space to a point
-  /// of the manifold and its inverse that we denote respectively Map and
-  /// invMap\n
+  /// A manifold is characterized by its tangent space and its representation
+  /// space and by the map to go from a vector of the tangent space to a point
+  /// of the manifold.
   /// We denote the a manifold as \f$ \mathcal{M}\f$, its tangent space at point
-  /// \f$ x \f$ is \f$ T_x^\mathcal{M} \f$ and its representation space is
-  /// denoted \f$\mathbb{E}\f$\n
+  /// \f$ x \f$ is \f$ T_x^\mathcal{M} \f$ seen as subspace of \f$\mathbb{R}^t \f$ and its 
+  /// representation space is denoted \f$\mathbb{E}\f$\n
   /// The map function is \f$ \phi:\mathbb{M},T^\mathbb{M}\to\mathbb{M}
   /// \f$ and the map function on a point \f$x\f$ is \f$ \phi_x:T_x^\mathbb{M}\to\mathbb{M}\f$
 
@@ -31,7 +30,7 @@ namespace pgs
   public:
     /// \brief Default Constructor that sets the dimensions of the manifold and of its
     /// representation space
-    Manifold(Index dimension, Index representationDimension);
+    Manifold(Index dimension, Index tangentDimension, Index representationDimension);
 
     /// \brief CreatePoint allows to create a point that belongs to a manifold and that
     /// behaves according to the manifolds operations
@@ -49,6 +48,10 @@ namespace pgs
 
     /// \brief Returns the dimension of the Manifold
     Index dim() const;
+
+    /// \brief Returns the number \a t of parameters used to represent a tangent vector
+    /// i.e. T_x\mathbb{M} is seen as a subspace of \f$ \mathbb{R}^t \f$
+    Index tangentDim() const;
 
     /// \brief Returns the dimension of the representation space of the manifold
     Index representationDim() const;
@@ -149,6 +152,18 @@ namespace pgs
     /// \param v element of the tangent space of the manifold
     void applyInvTransport(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
 
+    /// \brief returns the constraint matrix to test that a vector \f$v \in \mathbb{R}^t \f$
+    /// belongs to \f$ T_x \mathbb{M} \f$. This is the case if \f$out v = 0\f$.
+    /// Returns a (\a t - \a d) by \a t matrix.
+    void tangentConstraint(RefMat out, const ConstRefVec& x);
+
+    /// \brief checks if \a v belongs to \f$ T_x \mathbb{M} \f$.
+    bool isInTxM(const ConstRefVec& x, const ConstRefVec& v);
+
+    /// \brief finds the closest vector to \a in on \f$ T_x \mathbb{M} \f$.
+    /// If \a t = \a d, \a out = \a in.
+    void forceOnTxM(RefVec out, const ConstRefVec&x, const ConstRefVec& in);
+
     /// \brief Locks the manifold\n Once a point of the manifold is created, the
     /// manifold cannot be modified anymore.
     void lock() const;
@@ -201,6 +216,9 @@ namespace pgs
   private:
     /// \brief dimension of the manifold
     Index dimension_;
+
+    /// \brief dimension of the representation space of the manifold
+    Index tangentDim_;
 
     /// \brief dimension of the representation space of the manifold
     Index representationDim_;
