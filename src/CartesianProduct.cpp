@@ -3,14 +3,14 @@
 namespace pgs
 {
   CartesianProduct::CartesianProduct()
-    : Manifold(0,0)
+    : Manifold(0,0,0)
   {
     startIndexT_.push_back(0);
     startIndexR_.push_back(0);
   }
 
   CartesianProduct::CartesianProduct(const Manifold& m1, const Manifold& m2)
-    : Manifold(0,0)
+    : Manifold(0,0,0)
   {
     startIndexT_.push_back(0);
     startIndexR_.push_back(0);

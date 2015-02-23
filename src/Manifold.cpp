@@ -3,13 +3,17 @@
 
 namespace pgs
 {
-  Manifold::Manifold(Index dimension, Index representationDimension)
+  Manifold::Manifold(Index dimension, Index tangentDimension, Index representationDimension)
     : dimension_(dimension)
+    , tangentDim_(tangentDimension)
     , representationDim_(representationDimension)
     , lock_(false)
   {
     assert(dimension>=0 && "Negative dimension not accepted");
-    assert(representationDimension>=0 && "Negative dimension not accepted");
+    assert(tangentDimension >= 0 && "Negative dimension not accepted");
+    assert(representationDimension >= 0 && "Negative dimension not accepted");
+    assert(dimension <= tangentDimension);
+    assert(tangentDimension <= representationDimension);
   }
 
   Point Manifold::createPoint() const

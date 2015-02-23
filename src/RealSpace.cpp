@@ -3,7 +3,7 @@
 namespace pgs
 {
   RealSpace::RealSpace(Index n)
-    : Manifold(n, n)
+    : Manifold(n, n, n)
   {
   }
 

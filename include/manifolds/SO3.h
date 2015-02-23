@@ -38,7 +38,7 @@ namespace pgs
   //Implementations of the methods
   template<typename Map>
   inline SO3<Map>::SO3()
-    : Manifold(Map::InputDim_, Map::OutputDim_)
+    : Manifold(Map::InputDim_, Map::InputDim_, Map::OutputDim_)
   {
   }
 
