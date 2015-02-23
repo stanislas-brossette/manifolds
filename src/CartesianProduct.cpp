@@ -1,4 +1,5 @@
 #include <manifolds/CartesianProduct.h>
+#include <manifolds/pgs_assert.h>
 
 namespace pgs
 {
@@ -46,7 +47,7 @@ namespace pgs
 
   const Manifold& CartesianProduct::operator()(size_t i) const
   {
-    assert(i < submanifolds_.size() && "invalid index");
+    pgs_assert(i < submanifolds_.size() && "invalid index");
     return *submanifolds_[i];
   }
 

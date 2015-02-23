@@ -1,4 +1,5 @@
 #include <manifolds/RealSpace.h>
+#include <manifolds/pgs_assert.h>
 
 namespace pgs
 {
@@ -19,7 +20,7 @@ namespace pgs
   }
   const Manifold& RealSpace::operator()(size_t i) const
   {
-    assert(i < 1 && "invalid index");
+    pgs_assert(i < 1 && "invalid index");
     return *this;
   }
 

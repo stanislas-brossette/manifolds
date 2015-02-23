@@ -4,8 +4,7 @@
 #include <cassert>
 #include <manifolds/defs.h>
 #include <manifolds/Point.h>
-
-#define DEBUG
+#include <manifolds/pgs_assert.h>
 
 namespace pgs
 {
@@ -15,7 +14,7 @@ namespace pgs
   {
     public:
       RefCounter()
-#ifdef DEBUG
+#ifndef NDEBUG
         :count_(0)
 #endif
       {
@@ -23,28 +22,28 @@ namespace pgs
 
       ~RefCounter()
       {
-#ifdef DEBUG
-        assert(count_ == 0 && "You cannot destroy this manifold because some points still depend on it");
+#ifndef NDEBUG
+        pgs_assert(count_ == 0 && "You cannot destroy this manifold because some points still depend on it");
 #endif
       }
 
     protected:
       void incrementRefCounter() const
       {
-#ifdef DEBUG
+#ifndef NDEBUG
         count_++;
 #endif
       }
       void decrementRefCounter() const
       {
-#ifdef DEBUG
-        assert(count_>0 && "You cannot decrement when no point exist");
+#ifndef NDEBUG
+        pgs_assert(count_>0 && "You cannot decrement when no point exist");
         count_--;
 #endif
       }
 
     private:
-#ifdef DEBUG
+#ifndef NDEBUG
       mutable int count_;
 #endif
       friend void Point::registerPoint();

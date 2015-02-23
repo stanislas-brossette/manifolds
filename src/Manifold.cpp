@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <manifolds/Manifold.h>
+#include <manifolds/pgs_assert.h>
 
 namespace pgs
 {
@@ -9,11 +10,11 @@ namespace pgs
     , representationDim_(representationDimension)
     , lock_(false)
   {
-    assert(dimension>=0 && "Negative dimension not accepted");
-    assert(tangentDimension >= 0 && "Negative dimension not accepted");
-    assert(representationDimension >= 0 && "Negative dimension not accepted");
-    assert(dimension <= tangentDimension);
-    assert(tangentDimension <= representationDimension);
+    pgs_assert(dimension>=0 && "Negative dimension not accepted");
+    pgs_assert(tangentDimension >= 0 && "Negative dimension not accepted");
+    pgs_assert(representationDimension >= 0 && "Negative dimension not accepted");
+    pgs_assert(dimension <= tangentDimension);
+    pgs_assert(tangentDimension <= representationDimension);
   }
 
   Point Manifold::createPoint() const
@@ -37,7 +38,7 @@ namespace pgs
 
   bool Manifold::isValidInit(const Eigen::VectorXd& val) const
   {
-    assert(val.size() == representationDim());
+    pgs_assert(val.size() == representationDim());
     return isValidInit_(val);
   }
 
@@ -61,91 +62,91 @@ namespace pgs
 
   void Manifold::plus(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
-    assert(out.size() ==  representationDim_);
-    assert(x.size() == representationDim_);
-    assert(v.size() == dimension_);
+    pgs_assert(out.size() ==  representationDim_);
+    pgs_assert(x.size() == representationDim_);
+    pgs_assert(v.size() == dimension_);
     plus_(out, x, v);
   }
 
   void Manifold::minus(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   {
-    assert(out.size() == dimension_);
-    assert(x.size() == representationDim_);
-    assert(y.size() == representationDim_);
+    pgs_assert(out.size() == dimension_);
+    pgs_assert(x.size() == representationDim_);
+    pgs_assert(y.size() == representationDim_);
     minus_(out, x, y);
   }
 
   void Manifold::invMap(RefVec out, const ConstRefVec& x) const
   {
-    assert(out.size() == dimension_);
-    assert(x.size() == representationDim_);
+    pgs_assert(out.size() == dimension_);
+    pgs_assert(x.size() == representationDim_);
     invMap_(out, x);
   }
 
   Eigen::MatrixXd Manifold::diffMap(const ConstRefVec& x) const
   {
-    assert(x.size() == representationDim_);
+    pgs_assert(x.size() == representationDim_);
     return diffMap_(x);
   }
 
   void Manifold::applyDiffMap(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
-    assert(in.cols() == representationDim_);
-    assert(out.cols() == dimension_);
-    assert(in.rows() == out.rows());
-    assert(x.size() == representationDim_);
+    pgs_assert(in.cols() == representationDim_);
+    pgs_assert(out.cols() == dimension_);
+    pgs_assert(in.rows() == out.rows());
+    pgs_assert(x.size() == representationDim_);
     applyDiffMap_(out, in, x);
   }
 
   Eigen::MatrixXd Manifold::diffInvMap(const ConstRefVec& x) const
   {
-    assert(x.size() == representationDim_);
+    pgs_assert(x.size() == representationDim_);
     return diffInvMap_(x);
   }
 
   void Manifold::applyDiffInvMap(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
-    assert(out.cols() == representationDim_);
-    assert(in.cols() == dimension_);
-    assert(in.rows() == out.rows());
-    assert(x.size() == representationDim_);
+    pgs_assert(out.cols() == representationDim_);
+    pgs_assert(in.cols() == dimension_);
+    pgs_assert(in.rows() == out.rows());
+    pgs_assert(x.size() == representationDim_);
     applyDiffInvMap_(out, in, x);
   }
 
   void Manifold::applyTransport(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
-    assert(in.rows() == dimension_);
-    assert(out.rows() == dimension_);
-    assert(in.cols() == out.cols());
-    assert(x.size() == representationDim());
-    assert(v.size() == dim());
+    pgs_assert(in.rows() == dimension_);
+    pgs_assert(out.rows() == dimension_);
+    pgs_assert(in.cols() == out.cols());
+    pgs_assert(x.size() == representationDim());
+    pgs_assert(v.size() == dim());
     applyTransport_(out, in, x, v);
   }
 
   void Manifold::applyInvTransport(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
-    assert(in.cols() == dimension_);
-    assert(out.cols() == dimension_);
-    assert(in.rows() == out.rows());
-    assert(x.size() == representationDim());
-    assert(v.size() == dim());
+    pgs_assert(in.cols() == dimension_);
+    pgs_assert(out.cols() == dimension_);
+    pgs_assert(in.rows() == out.rows());
+    pgs_assert(x.size() == representationDim());
+    pgs_assert(v.size() == dim());
     applyInvTransport_(out, in, x, v);
   }
 
   void Manifold::setDimension(Index d)
   {
-    assert(d>0 && "Negative dimension not accepted");
+    pgs_assert(d>0 && "Negative dimension not accepted");
     testLock();
     dimension_ = d;
   }
 
   void Manifold::setRepresentationDimension(Index rd)
   {
-    assert(rd>0 && "Negative dimension not accepted");
+    pgs_assert(rd>0 && "Negative dimension not accepted");
     testLock();
     representationDim_ = rd;
   }
@@ -153,7 +154,7 @@ namespace pgs
 
   void Manifold::setIdentity(RefVec out) const
   {
-    assert(out.size() == static_cast<int> (representationDim_));
+    pgs_assert(out.size() == static_cast<int> (representationDim_));
     setIdentity_(out);
   }
 

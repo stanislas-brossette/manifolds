@@ -44,9 +44,9 @@ namespace pgs
 
   void ExpMapMatrix::exponential(DisplayType& E, const ConstRefVec& v)
   {
-    assert(v.size() == 3 && "Increment for expMap must be of size 3");
+    pgs_assert(v.size() == 3 && "Increment for expMap must be of size 3");
     double n = v.squaredNorm();
-    assert(sqrt(n) < M_PI && "Increment for expMap must be of norm at most pi");
+    pgs_assert(sqrt(n) < M_PI && "Increment for expMap must be of norm at most pi");
     double c, s;
     if (n < prec)
     {
@@ -137,7 +137,7 @@ namespace pgs
   void ExpMapMatrix::applyDiffMap_(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m)
   {
-    assert(in.cols() == OutputDim_ && "Dimensions mismatch" );
+    pgs_assert(in.cols() == OutputDim_ && "Dimensions mismatch" );
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),3);
     a.noalias() = in*diffMap_(x);
     out = a;
@@ -184,7 +184,7 @@ namespace pgs
   void ExpMapMatrix::applyDiffInvMap_(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m)
   {
-    assert(in.cols() == InputDim_ && "Dimensions mismatch" );
+    pgs_assert(in.cols() == InputDim_ && "Dimensions mismatch" );
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),OutputDim_);
     a.noalias() = in*diffInvMap_(x);
     out = a;

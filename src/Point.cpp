@@ -1,7 +1,7 @@
-#include <assert.h>
 #include <iostream>
 #include <manifolds/Point.h>
 #include <manifolds/Manifold.h>
+#include <manifolds/pgs_assert.h>
 
 namespace pgs
 {
@@ -16,7 +16,7 @@ namespace pgs
     : manifold_(M)
     , value_(val)
   {
-    assert(M.representationDim() == val.size());
+    pgs_assert(M.representationDim() == val.size());
     registerPoint();
   }
 
@@ -35,14 +35,14 @@ namespace pgs
 
   Point& Point::increment(const Eigen::VectorXd& v)
   {
-    assert(manifold_.isValid() || manifold_.seeMessageAbove());
+    pgs_assert(manifold_.isValid() || manifold_.seeMessageAbove());
     manifold_.plus(value_, value_, v);
     return *this;
   }
 
   Point Point::operator()(size_t i) const
   {
-    assert(manifold_.isValid() || manifold_.seeMessageAbove());
+    pgs_assert(manifold_.isValid() || manifold_.seeMessageAbove());
     return Point(manifold_(i), manifold_.getConstView<R>(value_, i));
   }
 
@@ -53,19 +53,19 @@ namespace pgs
 
   ConstSegment Point::operator[](size_t i) const
   {
-    assert(manifold_.isValid() || manifold_.seeMessageAbove());
+    pgs_assert(manifold_.isValid() || manifold_.seeMessageAbove());
     return manifold_.getConstView<R>(value_, i);
   }
 
   Segment Point::operator[](size_t i)
   {
-    assert(manifold_.isValid() || manifold_.seeMessageAbove());
+    pgs_assert(manifold_.isValid() || manifold_.seeMessageAbove());
     return manifold_.getView<R>(value_, i);
   }
 
   const Manifold& Point::getManifold() const
   {
-    assert(manifold_.isValid() || manifold_.seeMessageAbove());
+    pgs_assert(manifold_.isValid() || manifold_.seeMessageAbove());
     return manifold_;
   }
 
@@ -83,8 +83,8 @@ namespace pgs
 
   Point & Point::operator=(const Point& x)
   {
-    assert(this->manifold_.dim() == x.manifold_.dim());
-    assert(this->manifold_.representationDim() == x.manifold_.representationDim());
+    pgs_assert(this->manifold_.dim() == x.manifold_.dim());
+    pgs_assert(this->manifold_.representationDim() == x.manifold_.representationDim());
     this->value_ = x.value();
     return *this;
   }
@@ -96,13 +96,13 @@ namespace pgs
 
   void Point::registerPoint()
   {
-    assert(manifold_.isValid() || manifold_.seeMessageAbove());
+    pgs_assert(manifold_.isValid() || manifold_.seeMessageAbove());
     this->manifold_.incrementRefCounter();
   }
 
   void Point::unregisterPoint()
   {
-    assert(manifold_.isValid() || manifold_.seeMessageAbove());
+    pgs_assert(manifold_.isValid() || manifold_.seeMessageAbove());
     this->manifold_.decrementRefCounter();
   }
 }

@@ -58,13 +58,13 @@ namespace pgs
 
   inline Index CartesianProduct::startR(size_t i) const
   {
-    assert(i < numberOfSubmanifolds() && "invalid index");
+    pgs_assert(i < numberOfSubmanifolds() && "invalid index");
     return startIndexR_[i];
   }
 
   inline Index CartesianProduct::startT(size_t i) const
   {
-    assert(i < numberOfSubmanifolds() && "invalid index");
+    pgs_assert(i < numberOfSubmanifolds() && "invalid index");
     return startIndexT_[i];
   }
 }

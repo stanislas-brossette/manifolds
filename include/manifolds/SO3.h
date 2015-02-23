@@ -57,7 +57,7 @@ namespace pgs
   template<typename Map>
   inline const Manifold& SO3<Map>::operator()(size_t i) const
   {
-    assert(i < 1 && "invalid index");
+    pgs_assert(i < 1 && "invalid index");
     return *this;
   }
 

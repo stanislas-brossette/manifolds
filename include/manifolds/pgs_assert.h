@@ -10,19 +10,18 @@ namespace pgs
   {
   };
 
-  inline void pgs_assert(bool value, std::string)
+#ifdef PGS_ASSERT_THROW
+  inline void pgs_assert(bool value)
   {
     if(!value)
     {
       //std::cerr << "PGS ASSERT error is " << message << std::endl;
-#ifdef PGS_ASSERT_THROW
       throw pgs_exception();
-#else
-      assert(value);
-#endif //_PGS_ASSERT_THROW_
     }
   }
-
+#else
+#  define pgs_assert(expr) assert(expr);
+#endif //_PGS_ASSERT_THROW_
 }
 
 #endif //_MANIFOLDS_ASSERT_
