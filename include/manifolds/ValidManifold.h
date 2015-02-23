@@ -8,9 +8,9 @@ namespace pgs
 {
   class ValidManifold
   {
+#ifndef NDEBUG
   private:
     static const int FLAG = 1736274519; //a random number
-#ifndef NDEBUG
   public:
     ValidManifold() : flag_(FLAG) {}
     ~ValidManifold() { flag_ = -271828182; }
@@ -28,6 +28,17 @@ left since then. For Stan: https://www.youtube.com/watch?v=Yy8MUnlT9Oo\n");
     }
   private:
     int flag_;
+#else
+  public:
+    ValidManifold() {}
+    ~ValidManifold() {}
+
+    bool isValid() const { return true; }
+
+    bool seeMessageAbove() const
+    {
+      return true;
+    }
 #endif
   };
 }
