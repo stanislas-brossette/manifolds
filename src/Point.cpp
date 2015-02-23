@@ -35,14 +35,12 @@ namespace pgs
 
   Point& Point::increment(const Eigen::VectorXd& v)
   {
-    pgs_assert(manifold_.isValid() || manifold_.seeMessageAbove());
     manifold_.plus(value_, value_, v);
     return *this;
   }
 
   Point Point::operator()(size_t i) const
   {
-    pgs_assert(manifold_.isValid() || manifold_.seeMessageAbove());
     return Point(manifold_(i), manifold_.getConstView<R>(value_, i));
   }
 
@@ -59,13 +57,11 @@ namespace pgs
 
   Segment Point::operator[](size_t i)
   {
-    pgs_assert(manifold_.isValid() || manifold_.seeMessageAbove());
     return manifold_.getView<R>(value_, i);
   }
 
   const Manifold& Point::getManifold() const
   {
-    pgs_assert(manifold_.isValid() || manifold_.seeMessageAbove());
     return manifold_;
   }
 
@@ -96,13 +92,11 @@ namespace pgs
 
   void Point::registerPoint()
   {
-    pgs_assert(manifold_.isValid() || manifold_.seeMessageAbove());
     this->manifold_.incrementRefCounter();
   }
 
   void Point::unregisterPoint()
   {
-    pgs_assert(manifold_.isValid() || manifold_.seeMessageAbove());
     this->manifold_.decrementRefCounter();
   }
 }

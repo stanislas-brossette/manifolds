@@ -25,20 +25,33 @@ set(HEADERS
   ../include/manifolds/manifolds_api.h
 )
 
-set(LIBRARIES
-  manifolds
-  manifoldsTest
-)
-foreach(lib ${LIBRARIES})
-  add_library(${lib} SHARED ${SOURCES} ${HEADERS})
-  set_target_properties(${lib} PROPERTIES
-    VERSION ${PROJECT_VERSION}
-    SOVERSION 0.1
-  )
-  target_compile_definitions(${lib} PRIVATE "-DMANIFOLDS_EXPORT")
-endforeach()
+# set(LIBRARIES
+#   manifolds
+#   manifoldsTest
+# )
+# foreach(lib ${LIBRARIES})
+#   add_library(${lib} SHARED ${SOURCES} ${HEADERS})
+#   set_target_properties(${lib} PROPERTIES
+#     VERSION ${PROJECT_VERSION}
+#     SOVERSION 0.1
+#   )
+#   target_compile_definitions(${lib} PRIVATE "-DMANIFOLDS_EXPORT")
+# endforeach()
 
-# target_compile_definitions(manifoldsTest PUBLIC "-DPGS_ASSERT_THROW -DEIGEN_RUNTIME_NO_MALLOC")
+# manifolds library
+add_library(manifolds SHARED ${SOURCES} ${HEADERS})
+set_target_properties(manifolds PROPERTIES
+	                  VERSION ${PROJECT_VERSION}
+                      SOVERSION 0.1)
+target_compile_definitions(manifolds PRIVATE "-DMANIFOLDS_EXPORT")
+
+# manifoldsTest library
+add_library(manifoldsTest SHARED ${SOURCES} ${HEADERS})
+set_target_properties(manifoldsTest PROPERTIES
+	                  VERSION ${PROJECT_VERSION}
+                      SOVERSION 0.1)
+#target_compile_definitions(manifoldsTest PRIVATE -DMANIFOLDS_EXPORT -DPGS_ASSERT_THROW -DEIGEN_RUNTIME_NO_MALLOC)
+target_compile_definitions(manifoldsTest PRIVATE -DMANIFOLDS_EXPORT -DPGS_ASSERT_THROW)
 
 install(TARGETS manifolds
   RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}

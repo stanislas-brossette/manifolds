@@ -75,3 +75,17 @@ BOOST_AUTO_TEST_CASE(PointMinus)
   res = y - x;
   BOOST_CHECK(res.isApprox(v));
 }
+
+CartesianProduct* buildProduct()
+{
+  RealSpace R3(3);
+  RealSpace R2(2);
+  CartesianProduct* M = new CartesianProduct(R3,R2);
+  return M;
+}
+
+BOOST_AUTO_TEST_CASE(PointValidManifold)
+{
+  CartesianProduct* M = buildProduct();
+  BOOST_CHECK_THROW(M->getIdentity(), pgs::pgs_exception);
+}

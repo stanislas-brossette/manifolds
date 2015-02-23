@@ -1,7 +1,6 @@
 #ifndef _MANIFOLDS_REF_COUNTER_H_
 #define _MANIFOLDS_REF_COUNTER_H_
 
-#include <cassert>
 #include <manifolds/defs.h>
 #include <manifolds/Point.h>
 #include <manifolds/pgs_assert.h>

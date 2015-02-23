@@ -19,13 +19,15 @@ namespace pgs
 
   Point Manifold::createPoint() const
   {
+    pgs_assert(isValid() || seeMessageAbove());
     lock();
     return Point(*this);
   }
 
   Point Manifold::createPoint(const Eigen::VectorXd& val) const
   {
-    if(isValidInit(val))
+    pgs_assert(isValid() || seeMessageAbove());
+    if (isValidInit(val))
     {
       lock();
       return Point(*this, val);
@@ -38,12 +40,14 @@ namespace pgs
 
   bool Manifold::isValidInit(const Eigen::VectorXd& val) const
   {
+    pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(val.size() == representationDim());
     return isValidInit_(val);
   }
 
   Point Manifold::getIdentity() const
   {
+    pgs_assert(isValid() || seeMessageAbove());
     lock();
     Eigen::VectorXd id(representationDim_);
     setIdentity(id);
@@ -52,17 +56,20 @@ namespace pgs
 
   Index Manifold::dim() const
   {
+    pgs_assert(isValid() || seeMessageAbove());
     return dimension_;
   }
 
   Index Manifold::representationDim() const
   {
+    pgs_assert(isValid() || seeMessageAbove());
     return representationDim_;
   }
 
   void Manifold::plus(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
-    pgs_assert(out.size() ==  representationDim_);
+    pgs_assert(isValid() || seeMessageAbove());
+    pgs_assert(out.size() == representationDim_);
     pgs_assert(x.size() == representationDim_);
     pgs_assert(v.size() == dimension_);
     plus_(out, x, v);
@@ -70,6 +77,7 @@ namespace pgs
 
   void Manifold::minus(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   {
+    pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(out.size() == dimension_);
     pgs_assert(x.size() == representationDim_);
     pgs_assert(y.size() == representationDim_);
@@ -85,6 +93,7 @@ namespace pgs
 
   Eigen::MatrixXd Manifold::diffMap(const ConstRefVec& x) const
   {
+    pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(x.size() == representationDim_);
     return diffMap_(x);
   }
@@ -92,6 +101,7 @@ namespace pgs
   void Manifold::applyDiffMap(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
+    pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(in.cols() == representationDim_);
     pgs_assert(out.cols() == dimension_);
     pgs_assert(in.rows() == out.rows());
@@ -101,6 +111,7 @@ namespace pgs
 
   Eigen::MatrixXd Manifold::diffInvMap(const ConstRefVec& x) const
   {
+    pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(x.size() == representationDim_);
     return diffInvMap_(x);
   }
@@ -108,6 +119,7 @@ namespace pgs
   void Manifold::applyDiffInvMap(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
+    pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(out.cols() == representationDim_);
     pgs_assert(in.cols() == dimension_);
     pgs_assert(in.rows() == out.rows());
@@ -118,6 +130,7 @@ namespace pgs
   void Manifold::applyTransport(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
+    pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(in.rows() == dimension_);
     pgs_assert(out.rows() == dimension_);
     pgs_assert(in.cols() == out.cols());
@@ -129,6 +142,7 @@ namespace pgs
   void Manifold::applyInvTransport(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
+    pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(in.cols() == dimension_);
     pgs_assert(out.cols() == dimension_);
     pgs_assert(in.rows() == out.rows());
@@ -139,6 +153,7 @@ namespace pgs
 
   void Manifold::setDimension(Index d)
   {
+    pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(d>0 && "Negative dimension not accepted");
     testLock();
     dimension_ = d;
@@ -146,6 +161,7 @@ namespace pgs
 
   void Manifold::setRepresentationDimension(Index rd)
   {
+    pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(rd>0 && "Negative dimension not accepted");
     testLock();
     representationDim_ = rd;
@@ -154,6 +170,7 @@ namespace pgs
 
   void Manifold::setIdentity(RefVec out) const
   {
+    pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(out.size() == static_cast<int> (representationDim_));
     setIdentity_(out);
   }
