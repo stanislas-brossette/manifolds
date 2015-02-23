@@ -7,6 +7,7 @@
 #include <manifolds/view.h>
 #include <manifolds/RefCounter.h>
 #include <manifolds/Point.h>
+#include <manifolds/ValidManifold.h>
 
 
 namespace pgs
@@ -25,7 +26,7 @@ namespace pgs
   /// The map function is \f$ \phi:\mathbb{M},T^\mathbb{M}\to\mathbb{M}
   /// \f$ and the map function on a point \f$x\f$ is \f$ \phi_x:T_x^\mathbb{M}\to\mathbb{M}\f$
 
-  class MANIFOLDS_API Manifold : public RefCounter
+  class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   {
   public:
     /// \brief Default Constructor that sets the dimensions of the manifold and of its

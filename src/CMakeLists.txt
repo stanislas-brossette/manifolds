@@ -21,6 +21,7 @@ set(HEADERS
   ../include/manifolds/utils.h
   ../include/manifolds/view.h
   ../include/manifolds/RefCounter.h
+  ../include/manifolds/ValidManifold.h
   ../include/manifolds/manifolds_api.h
 )
 
