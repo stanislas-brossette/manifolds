@@ -24,7 +24,7 @@ namespace pgs
     return Point(*this);
   }
 
-  Point Manifold::createPoint(const Eigen::VectorXd& val) const
+  Point Manifold::createPoint(const ConstRefVec& val) const
   {
     pgs_assert(isValid() || seeMessageAbove());
     if (isValidInit(val))

@@ -38,7 +38,7 @@ namespace pgs
     Point createPoint() const;
 
     /// \brief Overload of createPoint to set the value of the point
-    Point createPoint(const Eigen::VectorXd& val) const;
+    Point createPoint(const ConstRefVec& val) const;
 
     /// \brief Creates a point that represents the identity wrt the addition operation
     ///defined in this manifold

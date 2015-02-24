@@ -45,8 +45,8 @@ namespace pgs
 #ifndef NDEBUG
       mutable int count_;
 #endif
-      friend void Point::registerPoint();
-      friend void Point::unregisterPoint();
+      friend void ConstSubPoint::registerPoint();
+      friend void ConstSubPoint::unregisterPoint();
   };
 }
 

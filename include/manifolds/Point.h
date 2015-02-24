@@ -7,39 +7,104 @@ namespace pgs
 {
   class Manifold;
 
-  class MANIFOLDS_API Point
+  class ConstSubPoint
   {
-  private:  //only Manifold can create Point
-    Point(const Manifold& M);
-    Point(const Manifold& M, const Eigen::VectorXd& val);
+  protected:
+    ConstSubPoint(const Manifold& M, RefVec val);
+    ConstSubPoint(const Manifold& M, const ConstRefVec& val);
+
+  private:
+    ConstSubPoint(const ConstSubPoint&);
+    ConstSubPoint& operator=(const ConstSubPoint&);
 
   public:
-    Point(const Point& other);
-    ~Point();
-    Point& increment(const Eigen::VectorXd& v);
+    ~ConstSubPoint();
+
+    //get the data of this point
+    MANIFOLDS_API ConstRefVec value() const;
 
     //get a sub point
-    Point operator()(size_t i) const;
+    ConstSubPoint operator()(size_t i) const;
 
     //get the data of a sub point
-    const Eigen::VectorXd& value() const;
+    //P[i] is equivalent to P(i).value()
     ConstSegment operator[](size_t i) const;
-    Segment operator[](size_t i);
 
     const Manifold& getManifold() const;
 
     std::string toString(std::string& prefix) const; //Dislays point in representation space
 
-    Point & operator=(const Point& x);
-    friend inline std::ostream& operator<< (std::ostream& os, const Point& x);
+  private:
     void registerPoint();
     void unregisterPoint();
 
-  private:
+  protected:
+    const Manifold& manifold_;
+
+    /// \internal We keep value as a non const reference here for easy use in SubPoint. 
+    /// This require a const_cast upon building ConstSubPoint, however we honor the
+    /// constness in this class.
+    RefVec value_;
+
+    friend inline std::ostream& operator<< (std::ostream& os, const ConstSubPoint& x);
+    friend class RefCounter;
+  };
+
+  class SubPoint : public ConstSubPoint
+  {
+  protected:
+    SubPoint(const Manifold& M, RefVec val);
 
   private:
-    const Manifold& manifold_;
-    Eigen::VectorXd value_;
+    SubPoint(const SubPoint&);
+
+  public:
+    using ConstSubPoint::value;
+    using ConstSubPoint::operator();
+    using ConstSubPoint::operator[];
+
+    //get the data the point
+    MANIFOLDS_API RefVec value();
+
+    //get a sub point
+    SubPoint operator()(size_t i);
+
+    //get the data of a sub point
+    //P[i] is equivalent to P(i).value()
+    Segment operator[](size_t i);
+
+  };
+
+
+  class MANIFOLDS_API PointMemory
+  {
+  protected:
+    PointMemory(Index size);
+    PointMemory(const ConstRefVec& v);
+    Eigen::VectorXd& getMem();
+
+  private:
+    Eigen::VectorXd mem_;
+  };
+
+
+  class MANIFOLDS_API Point : public PointMemory, public SubPoint
+  {
+  private:  //only Manifold can create Point
+    Point(const Manifold& M);
+    Point(const Manifold& M, const ConstRefVec& val);
+
+  public:
+    using SubPoint::value;
+    //using ConstSubPoint::value;
+
+    Point(const Point& other);
+    Point(const ConstSubPoint& other);
+
+    /// \internal For now, we keep operations on Point only. ConstSubPoint and SubPoint
+    /// are only intended for memory read/write, not Manifold operations. 
+    Point& increment(const ConstRefVec& v);
+    Point & operator=(const Point& x);
 
     friend class Manifold;
   };
@@ -47,7 +112,7 @@ namespace pgs
   MANIFOLDS_API Point operator+(const Point& x, const ConstRefVec& v);
   MANIFOLDS_API Eigen::VectorXd operator-(const Point& x, const Point& y);
 
-  inline std::ostream& operator<< (std::ostream& os, const Point& x)
+  inline std::ostream& operator<< (std::ostream& os, const ConstSubPoint& x)
   {
     std::string prefix("");
     os << x.toString(prefix);
