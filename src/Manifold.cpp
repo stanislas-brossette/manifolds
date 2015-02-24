@@ -154,7 +154,7 @@ namespace pgs
   void Manifold::setDimension(Index d)
   {
     pgs_assert(isValid() || seeMessageAbove());
-    pgs_assert(d>0 && "Negative dimension not accepted");
+    pgs_assert(d>=0 && "Negative dimension not accepted");
     testLock();
     dimension_ = d;
   }
@@ -162,7 +162,7 @@ namespace pgs
   void Manifold::setRepresentationDimension(Index rd)
   {
     pgs_assert(isValid() || seeMessageAbove());
-    pgs_assert(rd>0 && "Negative dimension not accepted");
+    pgs_assert(rd>=0 && "Negative dimension not accepted");
     testLock();
     representationDim_ = rd;
   }
