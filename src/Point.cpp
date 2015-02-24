@@ -51,7 +51,6 @@ namespace pgs
 
   ConstSegment Point::operator[](size_t i) const
   {
-    pgs_assert(manifold_.isValid() || manifold_.seeMessageAbove());
     return manifold_.getConstView<R>(value_, i);
   }
 
