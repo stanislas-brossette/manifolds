@@ -19,7 +19,7 @@ namespace pgs
       {
       }
 
-      ~RefCounter()
+      virtual ~RefCounter() noexcept(false)
       {
 #ifndef NDEBUG
         pgs_assert(count_ == 0 && "You cannot destroy this manifold because some points still depend on it");

@@ -85,18 +85,20 @@ BOOST_AUTO_TEST_CASE(SubPointManipulation)
   RealSpace R8(8);
   RealSpace R13(13);
 
-  //            P
-  //          /   \
-  //         /      P3 
-  //        /      /  \
-  //      P1      P2  R13
-  //     /  \    /  \
-  //    R2  R3  P5  P8
+  /*
+              P
+            /   \
+           /      P3
+          /      /  \
+        P1      P2  R13
+       /  \    /  \
+      R2  R3  P5  P8
+  */
   CartesianProduct P1(R2, R3);
   CartesianProduct P2(R5, R8);
   CartesianProduct P3(P2, R13);
   CartesianProduct P(P1, P3);
-  Eigen::VectorXd v = Eigen::VectorXd::LinSpaced(P.representationDim(), 1, P.representationDim());
+  Eigen::VectorXd v = Eigen::VectorXd::LinSpaced(P.representationDim(), 1, static_cast<double>(P.representationDim()));
   Point x = P.createPoint(v);
 
   ConstSubPoint p1 = x(0);
