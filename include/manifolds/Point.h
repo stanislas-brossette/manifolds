@@ -7,21 +7,23 @@ namespace pgs
 {
   class Manifold;
 
-  class ConstSubPoint
+  class MANIFOLDS_API ConstSubPoint
   {
   protected:
     ConstSubPoint(const Manifold& M, RefVec val);
     ConstSubPoint(const Manifold& M, const ConstRefVec& val);
 
-  private:
+  public:
     ConstSubPoint(const ConstSubPoint&);
+
+  private:
     ConstSubPoint& operator=(const ConstSubPoint&);
 
   public:
     ~ConstSubPoint();
 
     //get the data of this point
-    MANIFOLDS_API ConstRefVec value() const;
+    ConstRefVec value() const;
 
     //get a sub point
     ConstSubPoint operator()(size_t i) const;
@@ -50,13 +52,16 @@ namespace pgs
     friend class RefCounter;
   };
 
-  class SubPoint : public ConstSubPoint
+  class MANIFOLDS_API SubPoint : public ConstSubPoint
   {
   protected:
     SubPoint(const Manifold& M, RefVec val);
 
-  private:
+  public:
     SubPoint(const SubPoint&);
+
+  private:
+    SubPoint& operator=(const SubPoint&);
 
   public:
     using ConstSubPoint::value;
@@ -64,7 +69,7 @@ namespace pgs
     using ConstSubPoint::operator[];
 
     //get the data the point
-    MANIFOLDS_API RefVec value();
+    RefVec value();
 
     //get a sub point
     SubPoint operator()(size_t i);
@@ -95,9 +100,6 @@ namespace pgs
     Point(const Manifold& M, const ConstRefVec& val);
 
   public:
-    using SubPoint::value;
-    //using ConstSubPoint::value;
-
     Point(const Point& other);
     Point(const ConstSubPoint& other);
 

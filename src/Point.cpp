@@ -21,6 +21,13 @@ namespace pgs
     registerPoint();
   }
 
+  ConstSubPoint::ConstSubPoint(const ConstSubPoint& other)
+    : manifold_(other.manifold_)
+    , value_(other.value_)
+  {
+    registerPoint();
+  }
+
   ConstSubPoint::~ConstSubPoint()
   {
     unregisterPoint();
@@ -66,6 +73,16 @@ namespace pgs
   SubPoint::SubPoint(const Manifold& M, RefVec val)
     : ConstSubPoint(M, val)
   {
+  }
+
+  SubPoint::SubPoint(const SubPoint& other)
+    : ConstSubPoint(other)
+  {
+  }
+
+  RefVec SubPoint::value()
+  {
+    return value_;
   }
 
   SubPoint SubPoint::operator()(size_t i)

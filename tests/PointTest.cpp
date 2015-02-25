@@ -76,3 +76,42 @@ BOOST_AUTO_TEST_CASE(PointMinus)
   res = y - x;
   BOOST_CHECK(res.isApprox(v));
 }
+
+BOOST_AUTO_TEST_CASE(SubPointManipulation)
+{
+  RealSpace R2(2);
+  RealSpace R3(3);
+  RealSpace R5(5);
+  RealSpace R8(8);
+  RealSpace R13(13);
+
+  //            P
+  //          /   \
+  //         /      P3 
+  //        /      /  \
+  //      P1      P2  R13
+  //     /  \    /  \
+  //    R2  R3  P5  P8
+  CartesianProduct P1(R2, R3);
+  CartesianProduct P2(R5, R8);
+  CartesianProduct P3(P2, R13);
+  CartesianProduct P(P1, P3);
+  Eigen::VectorXd v = Eigen::VectorXd::LinSpaced(P.representationDim(), 1, P.representationDim());
+  Point x = P.createPoint(v);
+
+  ConstSubPoint s1 = x(0);
+  SubPoint s3 = x(1);
+  SubPoint s2 = s3(0);
+  SubPoint p2 = x(0)(0);
+  SubPoint p3 = x(0)(1);
+  SubPoint p5 = s2(0);
+  SubPoint p8 = s2(1);
+  ConstSubPoint p13 = p3(1);
+
+  BOOST_CHECK(&x.getManifold() == &P);
+  BOOST_CHECK(&p2.getManifold() == &R2);
+  BOOST_CHECK(&p3.getManifold() == &R3);
+  BOOST_CHECK(&p5.getManifold() == &R5);
+  BOOST_CHECK(&p8.getManifold() == &R8);
+  BOOST_CHECK(&p13.getManifold() == &R13);
+}
