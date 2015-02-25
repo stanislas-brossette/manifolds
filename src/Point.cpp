@@ -38,7 +38,7 @@ namespace pgs
     return value_;
   }
 
-  ConstSubPoint ConstSubPoint::operator()(size_t i) const
+  const ConstSubPoint ConstSubPoint::operator()(size_t i) const
   {
     return ConstSubPoint(manifold_(i), manifold_.getConstView<R>(value_, i));
   }

@@ -26,7 +26,7 @@ namespace pgs
     ConstRefVec value() const;
 
     //get a sub point
-    ConstSubPoint operator()(size_t i) const;
+    const ConstSubPoint operator()(size_t i) const;
 
     //get the data of a sub point
     //P[i] is equivalent to P(i).value()
@@ -64,19 +64,19 @@ namespace pgs
     SubPoint& operator=(const SubPoint&);
 
   public:
-    using ConstSubPoint::value;
-    using ConstSubPoint::operator();
-    using ConstSubPoint::operator[];
-
     //get the data the point
     RefVec value();
+    ConstRefVec value() const { return ConstSubPoint::value(); }
 
     //get a sub point
     SubPoint operator()(size_t i);
+    ConstSubPoint operator()(size_t i) const { return ConstSubPoint::operator()(i); }
+    //using ConstSubPoint::operator();
 
     //get the data of a sub point
     //P[i] is equivalent to P(i).value()
     Segment operator[](size_t i);
+    ConstSegment operator[](size_t i) const { return ConstSubPoint::operator[](i); }
 
   };
 

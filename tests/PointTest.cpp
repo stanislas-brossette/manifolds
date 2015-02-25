@@ -99,19 +99,28 @@ BOOST_AUTO_TEST_CASE(SubPointManipulation)
   Eigen::VectorXd v = Eigen::VectorXd::LinSpaced(P.representationDim(), 1, P.representationDim());
   Point x = P.createPoint(v);
 
-  ConstSubPoint s1 = x(0);
-  SubPoint s3 = x(1);
-  SubPoint s2 = s3(0);
-  SubPoint p2 = x(0)(0);
-  SubPoint p3 = x(0)(1);
-  SubPoint p5 = s2(0);
-  SubPoint p8 = s2(1);
-  ConstSubPoint p13 = p3(1);
+  ConstSubPoint p1 = x(0);
+  SubPoint p3 = x(1);
+  SubPoint p2 = p3(0);
+  SubPoint r2 = x(0)(0);
+  ConstSubPoint r3 = p1(1);
+  //SubPoint r3b = p1(1);  //Does not compile, normal
+  SubPoint r5 = p2(0);
+  SubPoint r8 = p2(1);
+  ConstSubPoint r13 = p3(1);
 
   BOOST_CHECK(&x.getManifold() == &P);
-  BOOST_CHECK(&p2.getManifold() == &R2);
-  BOOST_CHECK(&p3.getManifold() == &R3);
-  BOOST_CHECK(&p5.getManifold() == &R5);
-  BOOST_CHECK(&p8.getManifold() == &R8);
-  BOOST_CHECK(&p13.getManifold() == &R13);
+  BOOST_CHECK(&r2.getManifold() == &R2);
+  BOOST_CHECK(&r3.getManifold() == &R3);
+  BOOST_CHECK(&r5.getManifold() == &R5);
+  BOOST_CHECK(&r8.getManifold() == &R8);
+  BOOST_CHECK(&r13.getManifold() == &R13);
+  BOOST_CHECK(&p1.getManifold() == &P1);
+  BOOST_CHECK(&p2.getManifold() == &P2);
+  BOOST_CHECK(&p3.getManifold() == &P3);
+
+  Eigen::VectorXd v5(5); v5 << 0, 0, 7, 0, 0;
+  r5.value() = v5;
+  BOOST_CHECK(p2.value().head<5>() == v5);
+  BOOST_CHECK(x.value().segment<5>(5) == v5);
 }
