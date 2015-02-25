@@ -101,16 +101,17 @@ BOOST_AUTO_TEST_CASE(SubPointManipulation)
   Eigen::VectorXd v = Eigen::VectorXd::LinSpaced(P.representationDim(), 1, static_cast<double>(P.representationDim()));
   Point x = P.createPoint(v);
 
-  ConstSubPoint p1 = x(0);
-  SubPoint p3 = x(1);
-  SubPoint p2 = p3(0);
-  SubPoint r2 = x(0)(0);
-  ConstSubPoint r3 = p1(1);
-  //SubPoint r3b = p1(1);  //Does not compile, normal
-  SubPoint r5 = p2(0);
-  SubPoint r8 = p2(1);
-  ConstSubPoint r13 = p3(1);
+  ConstSubPoint p1 = x(0);  //const subpoint
+  SubPoint p3 = x(1);       //non const subpoint
+  SubPoint p2 = p3(0);      //non const again
+  SubPoint r2 = x(0)(0);    //chaining subpoint
+  ConstSubPoint r3 = p1(1); //const subpoint of a const subpoint
+  //SubPoint r3b = p1(1);   //non const subpoint to a const subpoint. Does not compile, normal
+  SubPoint r5 = p2(0);      //non const subpoint to a non const subpoint
+  SubPoint r8 = p2(1);      //idem
+  ConstSubPoint r13 = p3(1);//const subpoint of a non-const subpoint
 
+  //Correct submanifold
   BOOST_CHECK(&x.getManifold() == &P);
   BOOST_CHECK(&r2.getManifold() == &R2);
   BOOST_CHECK(&r3.getManifold() == &R3);
@@ -121,8 +122,16 @@ BOOST_AUTO_TEST_CASE(SubPointManipulation)
   BOOST_CHECK(&p2.getManifold() == &P2);
   BOOST_CHECK(&p3.getManifold() == &P3);
 
+  //Changing values of a subpoint
   Eigen::VectorXd v5(5); v5 << 0, 0, 7, 0, 0;
   r5.value() = v5;
+  BOOST_CHECK(p2.value().head<5>() == v5);
+  BOOST_CHECK(x.value().segment<5>(5) == v5);
+
+  //New point is a duplicate, not a subpoint
+  Eigen::VectorXd w5(5); w5 << 7, 7, 0, 7, 7;
+  Point newr5 = p2(0);
+  newr5.value() = w5;
   BOOST_CHECK(p2.value().head<5>() == v5);
   BOOST_CHECK(x.value().segment<5>(5) == v5);
 }
