@@ -16,6 +16,10 @@ namespace pgs
     pgs_assert(dimension <= tangentDimension);
     pgs_assert(tangentDimension <= representationDimension);
   }
+  
+  Manifold::~Manifold()
+  {
+  }
 
   Point Manifold::createPoint() const
   {

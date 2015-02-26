@@ -33,6 +33,9 @@ namespace pgs
     /// representation space
     Manifold(Index dimension, Index tangentDimension, Index representationDimension);
 
+    /// \brief The destructor
+    virtual ~Manifold();
+
     /// \brief CreatePoint allows to create a point that belongs to a manifold and that
     /// behaves according to the manifolds operations
     Point createPoint() const;

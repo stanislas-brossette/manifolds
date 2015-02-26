@@ -5,6 +5,13 @@
 #include <manifolds/Point.h>
 #include <manifolds/pgs_assert.h>
 
+//180021114 is a version number for which noexcept works, not sure about noexcept(false)
+#if defined(_MSC_FULL_VER) && _MSC_FULL_VER >= 180021114
+#define NOEXCEPT(x) noexcept(x)
+#else
+#define NOEXCEPT(x)
+#endif
+
 namespace pgs
 {
   /// \brief object containing a counter and that cannot be destroyed if the
@@ -19,7 +26,7 @@ namespace pgs
       {
       }
 
-      virtual ~RefCounter() noexcept(false)
+      ~RefCounter() NOEXCEPT(false)
       {
 #ifndef NDEBUG
         pgs_assert(count_ == 0 && "You cannot destroy this manifold because some points still depend on it");
