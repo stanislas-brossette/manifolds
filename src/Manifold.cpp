@@ -80,6 +80,7 @@ namespace pgs
     pgs_assert(out.size() == representationDim_);
     pgs_assert(x.size() == representationDim_);
     pgs_assert(v.size() == tangentDim_);
+    pgs_assert(isInTxM(x, v));
     plus_(out, x, v);
   }
 
@@ -144,6 +145,7 @@ namespace pgs
     pgs_assert(in.cols() == out.cols());
     pgs_assert(x.size() == representationDim());
     pgs_assert(v.size() == dim());
+    pgs_assert(isInTxM(x, v));
     applyTransport_(out, in, x, v);
   }
 
@@ -156,6 +158,7 @@ namespace pgs
     pgs_assert(in.rows() == out.rows());
     pgs_assert(x.size() == representationDim());
     pgs_assert(v.size() == dim());
+    pgs_assert(isInTxM(x, v));
     applyInvTransport_(out, in, x, v);
   }
 
