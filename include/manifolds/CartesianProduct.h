@@ -42,6 +42,10 @@ namespace pgs
     virtual void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
     virtual void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
+    
+    virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const;
+    virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const;
+    virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
 
   private:
     /// \brief List of pointers on all the manifolds in the cartesian product

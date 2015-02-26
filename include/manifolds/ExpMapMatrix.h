@@ -36,6 +36,11 @@ namespace pgs
     static void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);
     static void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v, ReusableTemporaryMap& m);
     static void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v, ReusableTemporaryMap& m);
+
+    static void tangentConstraint_(RefMat out, const ConstRefVec& x);
+    static bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v);
+    static void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x);
+
   };
 }
 

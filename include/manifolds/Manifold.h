@@ -159,14 +159,15 @@ namespace pgs
     /// \brief returns the constraint matrix to test that a vector \f$v \in \mathbb{R}^t \f$
     /// belongs to \f$ T_x \mathbb{M} \f$. This is the case if \f$out v = 0\f$.
     /// Returns a (\a t - \a d) by \a t matrix.
-    void tangentConstraint(RefMat out, const ConstRefVec& x);
+    void tangentConstraint(RefMat out, const ConstRefVec& x) const;
 
     /// \brief checks if \a v belongs to \f$ T_x \mathbb{M} \f$.
-    bool isInTxM(const ConstRefVec& x, const ConstRefVec& v);
+    /// If \a t = \a d, return always true
+    bool isInTxM(const ConstRefVec& x, const ConstRefVec& v) const;
 
     /// \brief finds the closest vector to \a in on \f$ T_x \mathbb{M} \f$.
     /// If \a t = \a d, \a out = \a in.
-    void forceOnTxM(RefVec out, const ConstRefVec&x, const ConstRefVec& in);
+    void forceOnTxM(RefVec out, const ConstRefVec& in, const ConstRefVec&x) const;
 
     /// \brief Locks the manifold\n Once a point of the manifold is created, the
     /// manifold cannot be modified anymore.
@@ -175,6 +176,9 @@ namespace pgs
   protected:
     /// \brief Set manifold dimension to d
     void setDimension(Index d);
+
+    /// \brief Set manifolds tangent space dimension to td
+    void setTangentDimension(Index td);
 
     /// \brief Set manifolds representation space dimension to rd
     void setRepresentationDimension(Index rd);
@@ -214,6 +218,10 @@ namespace pgs
     virtual void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const = 0;
     virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const = 0;
 
+    virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const = 0;
+    virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const = 0;
+    virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const = 0;
+
     /// \brief tests if the manifold is locked
     void testLock() const;
 
@@ -221,7 +229,7 @@ namespace pgs
     /// \brief dimension of the manifold
     Index dimension_;
 
-    /// \brief dimension of the representation space of the manifold
+    /// \brief dimension of the tangent space of the manifold
     Index tangentDim_;
 
     /// \brief dimension of the representation space of the manifold
@@ -270,7 +278,7 @@ namespace pgs
   template<>
   inline Index Manifold::getDim<T>() const
   {
-    return dim();
+    return tangentDim();
   }
 
   template<>
@@ -284,7 +292,7 @@ namespace pgs
   inline Index Manifold::getDim<T>(size_t i) const
   {
     pgs_assert(i < numberOfSubmanifolds() && "invalid index");
-    return this->operator()(i).dim();
+    return this->operator()(i).tangentDim();
   }
 
   inline Index Manifold::startR(size_t i) const

@@ -33,9 +33,10 @@ namespace pgs
   {
     m.lock();
     setDimension(dim() + m.dim());
+    setTangentDimension(tangentDim() + m.tangentDim());
     setRepresentationDimension(representationDim() + m.representationDim());
     submanifolds_.push_back(&m);
-    startIndexT_.push_back(startIndexT_.back() + m.dim());
+    startIndexT_.push_back(startIndexT_.back() + m.tangentDim());
     startIndexR_.push_back(startIndexR_.back() + m.representationDim());
     return *this;
   }
@@ -100,7 +101,7 @@ namespace pgs
 
   Eigen::MatrixXd CartesianProduct::diffMap_(const ConstRefVec& x ) const
   {
-    Eigen::MatrixXd J(representationDim(),dim());
+    Eigen::MatrixXd J(representationDim(),tangentDim());
     J.setZero();
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
@@ -121,7 +122,7 @@ namespace pgs
 
   Eigen::MatrixXd CartesianProduct::diffInvMap_(const ConstRefVec& x) const
   {
-    Eigen::MatrixXd J(dim(),representationDim());
+    Eigen::MatrixXd J(tangentDim(),representationDim());
     J.setZero();
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
@@ -160,6 +161,36 @@ namespace pgs
                                           getConstView<R>(x, i),
                                           getConstView<T>(v, i));
     }
+  }
+
+  void CartesianProduct::tangentConstraint_(RefMat out, const ConstRefVec& x) const
+  {
+    Index k = 0;
+    out.setZero();
+    for (size_t i = 0; i < submanifolds_.size(); ++i)
+    {
+      Index s = submanifolds_[i]->tangentDim() - submanifolds_[i]->dim();
+      auto Ci = getView<F, T>(out, i);
+      submanifolds_[i]->tangentConstraint(Ci.middleRows(k,s),
+                                          getConstView<R>(x, i));
+      k += s;
+    }
+  }
+
+  bool CartesianProduct::isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const
+  {
+    bool b = true;
+    for (size_t i = 0; i < submanifolds_.size() && b; ++i)
+      b = submanifolds_[i]->isInTxM(getConstView<R>(x, i), getConstView<T>(v, i));
+    return b;
+  }
+
+  void CartesianProduct::forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const
+  {
+    for (size_t i = 0; i < submanifolds_.size(); ++i)
+      submanifolds_[i]->forceOnTxM(getView<T>(out, i), 
+                                   getConstView<T>(in, i),
+                                   getConstView<R>(x, i));
   }
 }
 

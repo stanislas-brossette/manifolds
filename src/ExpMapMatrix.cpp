@@ -207,5 +207,21 @@ namespace pgs
     a.noalias() = in*(E.transpose());
     out = a;
   }
+
+  void ExpMapMatrix::tangentConstraint_(RefMat out, const ConstRefVec& x)
+  {
+    //out is 0xt, no need to fill it
+  }
+
+  bool ExpMapMatrix::isInTxM_(const ConstRefVec& x, const ConstRefVec& v)
+  {
+    return true;
+  }
+
+  void ExpMapMatrix::forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x)
+  {
+    out = in;
+  }
+
 }
 

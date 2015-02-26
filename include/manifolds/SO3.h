@@ -32,13 +32,17 @@ namespace pgs
     virtual void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
 
+    virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const;
+    virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const;
+    virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
+
     mutable ReusableTemporaryMap bufferMap_;
   };
 
   //Implementations of the methods
   template<typename Map>
   inline SO3<Map>::SO3()
-    : Manifold(Map::InputDim_, Map::InputDim_, Map::OutputDim_)
+    : Manifold(3, Map::InputDim_, Map::OutputDim_)
   {
   }
 
@@ -129,6 +133,24 @@ namespace pgs
   inline void SO3<Map>::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
     Map::applyInvTransport_(out, in, x, v, bufferMap_);
+  }
+
+  template<typename Map>
+  void SO3<Map>::tangentConstraint_(RefMat out, const ConstRefVec& x) const
+  {
+    Map::tangentConstraint_(out, x);
+  }
+
+  template<typename Map>
+  bool SO3<Map>::isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const
+  {
+    return Map::isInTxM_(x, v);
+  }
+
+  template<typename Map>
+  void SO3<Map>::forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const
+  {
+    Map::forceOnTxM_(out, in, x);
   }
 }
 #endif //_MANIFOLDS_SO3_H_
