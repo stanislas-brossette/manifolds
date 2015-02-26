@@ -1,6 +1,7 @@
 set(SOURCES
   main.cpp
   CartesianProduct.cpp
+  CartesianPower.cpp
   ExpMapMatrix.cpp
   Manifold.cpp
   Point.cpp
@@ -10,6 +11,7 @@ set(SOURCES
   )
 set(HEADERS
   ../include/manifolds/CartesianProduct.h
+  ../include/manifolds/CartesianPower.h
   ../include/manifolds/defs.h
   ../include/manifolds/ExpMapMatrix.h
   ../include/manifolds/Manifold.h
