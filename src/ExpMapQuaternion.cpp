@@ -8,60 +8,67 @@
 
 namespace pgs
 {
+  typedef Eigen::Map< Eigen::Quaterniond > toQuat;
+  typedef Eigen::Map< const Eigen::Quaterniond > toConstQuat;
   const double ExpMapQuaternion::prec = 1e-8; //TODO Should be sqrt(sqrt(machine precision))
 
   void ExpMapQuaternion::plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v)
   {
-    DisplayType q;
+    OutputType q;
     exponential(q,v);
-    Eigen::Map<DisplayType>(out.data()) = (Eigen::Map<const DisplayType>(x.data()))*q;
+    toQuat(out.data()) = (toConstQuat(x.data()))*(toConstQuat(q.data())); //out = x*exp(v)
   }
 
-  void ExpMapQuaternion::exponential(DisplayType& q, const ConstRefVec& v)
+  void ExpMapQuaternion::exponential(OutputType& q, const ConstRefVec& v)
   {
     pgs_assert(v.size() == 3 && "Increment for expMap must be of size 3");
-    double n = v.squaredNorm(); // (theta)^2 (in Grassia)
-    pgs_assert(sqrt(n) < M_PI && "Increment for expMap must be of norm at most pi");
-    double c; // cos(theta/2) in Grassia
+    double n2 = v.squaredNorm(); // (theta)^2 (in Grassia)
+    pgs_assert(sqrt(n2) < M_PI && "Increment for expMap must be of norm at most pi");
     double s; // sin(theta/2)/theta in Grassia
-    if (n < prec)
+    if (n2 < prec)
     {
-      c = 1 - n / 8;
-      s = 1/2 + n / 48;
+      toQuat(q.data()).w() = 1 + (-1 + n2 / 48)*(n2/8);// cos(theta/2) in Grassia
+      s = (1+(-1+0.0125*n2)*n2/24)/2;
     }
     else
     {
-      double t = sqrt(n); // theta (in Grassia)
-      c = cos(t/2);
-      s = sin(t/2) / t;
+      double t = sqrt(n2); // theta (in Grassia)
+      toQuat(q.data()).w() = cos(0.5*t);
+      s = sin(0.5*t) / t;
     }
-    q.w() = c;
-    q.vec() = s*v;
+    toQuat(q.data()).vec() = s*v;
   }
 
   void ExpMapQuaternion::minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y)
   {
-    typedef Eigen::Map<const Eigen::Matrix3d> ConstMapMat3;
-    DisplayType R(((ConstMapMat3(y.data())).transpose())*(ConstMapMat3(x.data())));
-    logarithm(out,R);
+    Eigen::Vector4d tmp;
+    toQuat q(tmp.data());
+    const toConstQuat xQ(x.data());
+    const toConstQuat yQ(y.data());
+    q = yQ.inverse()*xQ; //TODO double-check that formula
+    logarithm(out,tmp);
   }
 
   void ExpMapQuaternion::invMap_(RefVec out, const ConstRefVec& x)
   {
-    typedef Eigen::Map<const Eigen::Matrix3d> ConstMapMat3;
-    DisplayType R(ConstMapMat3(x.data()));
-    logarithm(out,R);
+    logarithm(out,x);
   }
 
-  void ExpMapQuaternion::logarithm(RefVec out, const DisplayType& R)
+  void ExpMapQuaternion::logarithm(RefVec out, const OutputType& v)
   {
-    Eigen::Vector3d v(R.vec());
-    out = v;
+    const toConstQuat vQ(v.data());
+    double n2 = vQ.vec().squaredNorm();
+    double n = sqrt(n2);
+
+    if (n < prec)
+      out = (2/vQ.w())*vQ.vec();
+    else
+      out = atan2(2 * n * vQ.w(), vQ.w() * vQ.w() - n2) / n * vQ.vec(); 
   }
 
   void ExpMapQuaternion::setIdentity_(RefVec out)
   {
-    out << 1,0,0,0;
+    out << 0,0,0,1;
   }
 
   bool ExpMapQuaternion::isValidInit_(const Eigen::VectorXd& val)
@@ -73,10 +80,14 @@ namespace pgs
     return out;
   }
 
-  Eigen::Matrix<double, 4, 3> ExpMapQuaternion::diffMap_(const ConstRefVec& )
+  Eigen::Matrix<double, 4, 3> ExpMapQuaternion::diffMap_(const ConstRefVec& x)
   {
+    const Eigen::Map<const Eigen::Quaterniond> xQ(x.data());
     Eigen::Matrix<double, 4, 3> J;
-    J.setZero();
+    J <<  0.5*xQ.w(), -0.5*xQ.z(),  0.5*xQ.y(),
+          0.5*xQ.z(),  0.5*xQ.w(), -0.5*xQ.x(),
+         -0.5*xQ.y(),  0.5*xQ.x(),  0.5*xQ.w(),
+         -0.5*xQ.x(), -0.5*xQ.y(), -0.5*xQ.z();
     return J;
   }
 
@@ -105,12 +116,22 @@ namespace pgs
     out = a;
   }
 
-  void ExpMapQuaternion::applyTransport_(RefMat , const ConstRefMat&, const ConstRefVec&, const ConstRefVec& , ReusableTemporaryMap& )
+  void ExpMapQuaternion::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
   {
+    OutputType E;
+    exponential(E,v);
+    Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(InputDim_, in.cols());
+    a.noalias() = E*in;
+    out = a;
   }
 
-  void ExpMapQuaternion::applyInvTransport_(RefMat , const ConstRefMat& , const ConstRefVec&, const ConstRefVec& , ReusableTemporaryMap& )
+  void ExpMapQuaternion::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
   {
+    OutputType E;
+    exponential(E,v);
+    Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(), InputDim_);
+    a.noalias() = in*(E.transpose());
+    out = a;
   }
 
   void ExpMapQuaternion::tangentConstraint_(RefMat, const ConstRefVec&)

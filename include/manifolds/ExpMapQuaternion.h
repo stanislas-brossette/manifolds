@@ -10,7 +10,7 @@ namespace pgs
 {
   /// \brief Structure representing the exponential map going from
   /// \f$ \mathbb{R}^3 \f$ to SO(3) represented in the quaternion space
-  /// as a vector, the quaternions are represented as q = (w, x, y, z);
+  /// as a vector, the quaternions are represented as q = (x, y, z, w);
   struct MANIFOLDS_API ExpMapQuaternion
   {
     /// \brief precision constant
@@ -21,15 +21,16 @@ namespace pgs
 
     /// \brief dimension of \f$ \mathbb{R}^3=3 \f$ 
     static const int InputDim_ = 3;
-    typedef Eigen::Quaterniond DisplayType; //display as q=(w, x, y, z)
+    typedef Eigen::Vector4d DisplayType; //display as q=(x, y, z, w)
+    typedef Eigen::Vector4d OutputType;
     static bool isValidInit_(const Eigen::VectorXd& val);
     static void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v);
     static void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y);
     static void invMap_(RefVec out, const ConstRefVec& x);
     static void setIdentity_(RefVec out);
 
-    static void logarithm(RefVec out, const DisplayType& M);
-    static void exponential(DisplayType& out, const ConstRefVec& v);
+    static void logarithm(RefVec out, const OutputType& M);
+    static void exponential(OutputType& out, const ConstRefVec& v);
 
     static Eigen::Matrix<double, 4, 3> diffMap_(const ConstRefVec& x);
     static void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);

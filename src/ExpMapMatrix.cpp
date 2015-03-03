@@ -37,12 +37,12 @@ namespace pgs
 
   void ExpMapMatrix::plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v)
   {
-    DisplayType E;
+    OutputType E;
     exponential(E,v);
-    Eigen::Map<DisplayType>(out.data()) = (Eigen::Map<const DisplayType>(x.data()))*E;
+    Eigen::Map<OutputType>(out.data()) = (Eigen::Map<const OutputType>(x.data()))*E;
   }
 
-  void ExpMapMatrix::exponential(DisplayType& E, const ConstRefVec& v)
+  void ExpMapMatrix::exponential(OutputType& E, const ConstRefVec& v)
   {
     pgs_assert(v.size() == 3 && "Increment for expMap must be of size 3");
     double n = v.squaredNorm();
@@ -50,8 +50,8 @@ namespace pgs
     double c, s;
     if (n < prec)
     {
-      c = 0.5 - n / 24;
-      s = 1 - n / 6;
+      c = 0.5 - n / 24;       
+      s = 1 - n / 6; //TODO Check this value. Because there is a mistake here in Grassia
     }
     else
     {
@@ -73,18 +73,18 @@ namespace pgs
   void ExpMapMatrix::minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y)
   {
     typedef Eigen::Map<const Eigen::Matrix3d> ConstMapMat3;
-    DisplayType R(((ConstMapMat3(y.data())).transpose())*(ConstMapMat3(x.data())));
+    OutputType R(((ConstMapMat3(y.data())).transpose())*(ConstMapMat3(x.data())));
     logarithm(out,R);
   }
 
   void ExpMapMatrix::invMap_(RefVec out, const ConstRefVec& x)
   {
     typedef Eigen::Map<const Eigen::Matrix3d> ConstMapMat3;
-    DisplayType R(ConstMapMat3(x.data()));
+    OutputType R(ConstMapMat3(x.data()));
     logarithm(out,R);
   }
 
-  void ExpMapMatrix::logarithm(RefVec out, const DisplayType& R)
+  void ExpMapMatrix::logarithm(RefVec out, const OutputType& R)
   {
     Eigen::Vector3d v(-R(1,2), R(0,2), -R(0,1));
     double acosTr = std::acos((R.trace()-1)/2);
@@ -92,7 +92,7 @@ namespace pgs
       out = v;
     else
     {
-      DisplayType diff(R-R.transpose());
+      OutputType diff(R-R.transpose());
       double coeff = acosTr/(2*std::sin(acosTr));
       v(0)=diff(2,1)*coeff;
       v(1)=diff(0,2)*coeff;
@@ -192,7 +192,7 @@ namespace pgs
 
   void ExpMapMatrix::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
   {
-    DisplayType E;
+    OutputType E;
     exponential(E,v);
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(InputDim_, in.cols());
     a.noalias() = E*in;
@@ -201,7 +201,7 @@ namespace pgs
 
   void ExpMapMatrix::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
   {
-    DisplayType E;
+    OutputType E;
     exponential(E,v);
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(), InputDim_);
     a.noalias() = in*(E.transpose());

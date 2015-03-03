@@ -20,15 +20,15 @@ namespace pgs
     /// \brief dimension of \f$ \mathbb{R}^3=3 \f$ 
     static const int InputDim_ = 3;
     typedef Eigen::Matrix3d DisplayType;
-    typedef Eigen::Matrix<double, 9, 1> OutputType;
+    typedef Eigen::Matrix3d OutputType;
     static bool isValidInit_(const Eigen::VectorXd& val);
     static void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v);
     static void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y);
     static void invMap_(RefVec out, const ConstRefVec& x);
     static void setIdentity_(RefVec out);
 
-    static void logarithm(RefVec out, const DisplayType& M);
-    static void exponential(DisplayType& out, const ConstRefVec& v);
+    static void logarithm(RefVec out, const OutputType& M);
+    static void exponential(OutputType& out, const ConstRefVec& v);
 
     static Eigen::Matrix<double, 9, 3> diffMap_(const ConstRefVec& x);
     static void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);

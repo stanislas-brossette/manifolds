@@ -6,10 +6,10 @@
 #include <manifolds/pgs_assert.h>
 
 //180021114 is a version number for which noexcept works, not sure about noexcept(false)
-#if defined(_MSC_FULL_VER) && _MSC_FULL_VER >= 180021114
-#define NOEXCEPT(x) noexcept(x)
-#else
+#if defined(_MSC_FULL_VER) && _MSC_FULL_VER < 180021114
 #define NOEXCEPT(x)
+#else
+#define NOEXCEPT(x) noexcept(x)
 #endif
 
 namespace pgs

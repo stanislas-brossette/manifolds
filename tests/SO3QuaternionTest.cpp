@@ -24,138 +24,119 @@ BOOST_AUTO_TEST_CASE(RotSpaceConstructor)
   BOOST_CHECK_EQUAL(S.numberOfSubmanifolds(), 1);
 }
 
-//BOOST_AUTO_TEST_CASE(SO3Constructor)
-//{
-//  SO3<ExpMapQuaternion> S;
-//  Point x = S.getIdentity();
-//  Eigen::VectorXd v(4);
-//  v << 1,0,0,0;
-//  Point y = S.createPoint(v);
-//  BOOST_CHECK_EQUAL(x.value().size(), 9);
-//  BOOST_CHECK_EQUAL(x.value()[0], 1);
-//  BOOST_CHECK_EQUAL(x.value()[1], 0);
-//  BOOST_CHECK_EQUAL(x.value()[2], 0);
-//  BOOST_CHECK_EQUAL(x.value()[3], 0);
-//  BOOST_CHECK_EQUAL(x.value()[4], 1);
-//  BOOST_CHECK_EQUAL(x.value()[5], 0);
-//  BOOST_CHECK_EQUAL(x.value()[6], 0);
-//  BOOST_CHECK_EQUAL(x.value()[7], 0);
-//  BOOST_CHECK_EQUAL(x.value()[8], 1);
-//  BOOST_CHECK_EQUAL(y.value().size(), 9);
-//  BOOST_CHECK_EQUAL(y.value()[0], 1);
-//  BOOST_CHECK_EQUAL(y.value()[1], 0);
-//  BOOST_CHECK_EQUAL(y.value()[2], 0);
-//  BOOST_CHECK_EQUAL(y.value()[3], 0);
-//  BOOST_CHECK_EQUAL(y.value()[4], 1);
-//  BOOST_CHECK_EQUAL(y.value()[5], 0);
-//  BOOST_CHECK_EQUAL(y.value()[6], 0);
-//  BOOST_CHECK_EQUAL(y.value()[7], 0);
-//  BOOST_CHECK_EQUAL(y.value()[8], 1);
-//}
-//
-//BOOST_AUTO_TEST_CASE(SO3Increment)
-//{
-//  SO3<ExpMapMatrix> S;
-//  Eigen::VectorXd x = S.getIdentity().value();
-//  Eigen::Vector3d vy;
-//  vy << 0.1,0.2,0.3;
-//  S.plus(x, x, vy);
-//  S.plus(x, x, vy);
-//  BOOST_CHECK_EQUAL(x.size(), 9);
-//  BOOST_CHECK_CLOSE(x[0],  0.751909095300295, 1e-12);
-//  BOOST_CHECK_CLOSE(x[1],  0.583715086608147, 1e-12);
-//  BOOST_CHECK_CLOSE(x[2], -0.306446422838863, 1e-12);
-//  BOOST_CHECK_CLOSE(x[3], -0.507379423623623, 1e-12);
-//  BOOST_CHECK_CLOSE(x[4],  0.809160842538688, 1e-12);
-//  BOOST_CHECK_CLOSE(x[5],  0.296352579515415, 1e-12);
-//  BOOST_CHECK_CLOSE(x[6],  0.420949917315650, 1e-12);
-//  BOOST_CHECK_CLOSE(x[7], -0.067345590561841, 1e-12);
-//  BOOST_CHECK_CLOSE(x[8],  0.904580421269344, 1e-12);
-//}
-//
-//BOOST_AUTO_TEST_CASE(SO3Addition)
-//{
-//  SO3<ExpMapMatrix> S;
-//  Eigen::VectorXd y = S.getIdentity().value();
-//  Eigen::Vector3d vy;
-//  vy << 0.1,0.2,0.3;
-//  S.plus(y, y, vy);
-//  S.plus(y, y, vy);
-//  BOOST_CHECK_EQUAL(y.size(), 9);
-//  BOOST_CHECK_CLOSE(y[0],  0.751909095300295, 1e-12);
-//  BOOST_CHECK_CLOSE(y[1],  0.583715086608147, 1e-12);
-//  BOOST_CHECK_CLOSE(y[2], -0.306446422838863, 1e-12);
-//  BOOST_CHECK_CLOSE(y[3], -0.507379423623623, 1e-12);
-//  BOOST_CHECK_CLOSE(y[4],  0.809160842538688, 1e-12);
-//  BOOST_CHECK_CLOSE(y[5],  0.296352579515415, 1e-12);
-//  BOOST_CHECK_CLOSE(y[6],  0.420949917315650, 1e-12);
-//  BOOST_CHECK_CLOSE(y[7], -0.067345590561841, 1e-12);
-//  BOOST_CHECK_CLOSE(y[8],  0.904580421269344, 1e-12);
-//}
-//
-//BOOST_AUTO_TEST_CASE(SO3Substraction)
-//{
-//  SO3<ExpMapMatrix> S;
-//  Eigen::Vector3d v( 0.2, 0.4, 0.6);
-//  Eigen::VectorXd R1 = S.getIdentity().value();
-//  Eigen::VectorXd R2(9);
-//  S.plus(R1, R1, v);
-//  S.plus(R2, R1, v);
-//  Eigen::Vector3d d;
-//  S.minus(d,R2,R1);
-//  BOOST_CHECK_CLOSE(d[0], 0.2, 1e-8);
-//  BOOST_CHECK_CLOSE(d[1], 0.4, 1e-8);
-//  BOOST_CHECK_CLOSE(d[2], 0.6, 1e-8);
-//}
-//
-//BOOST_AUTO_TEST_CASE(SO3PointInvMap)
-//{
-//  SO3<ExpMapMatrix> S;
-//  Eigen::VectorXd x = S.getIdentity().value();
-//  Eigen::VectorXd vy = Eigen::VectorXd::Random(S.dim());
-//  S.plus(x, x, vy);
-//  Eigen::VectorXd z(S.dim());
-//  S.invMap(z, x); 
-//  BOOST_CHECK(z.isApprox(vy));
-//}
-//
-//BOOST_AUTO_TEST_CASE(SO3Diff)
-//{
-//  SO3<ExpMapMatrix> S;
-//  Eigen::MatrixXd J;
-//  Eigen::MatrixXd Jtest(9,3);
-//  Jtest <<         0,  0.003580526006716, -0.558259982176135,
-//                   0,  0.646068748944272,  0.634553549147103,
-//                   0, -0.763270824459509,  0.534497507539106,
-//  -0.003580526006716,                  0, -0.829658346630838,
-//  -0.646068748944272,                  0, -0.424189774632061,
-//   0.763270824459509,                  0, -0.362946363755562,
-//   0.558259982176135,  0.829658346630838,                  0,
-//  -0.634553549147103,  0.424189774632061,                  0,
-//  -0.534497507539106,  0.362946363755562,                  0;
-//  Eigen::Vector3d v(0.680375, -0.211234, 0.566198);
-//  Eigen::VectorXd x = S.getIdentity().value();
-//  S.plus(x, x, v);
-//  J = S.diffMap(x);
-//  BOOST_CHECK(J.isApprox(Jtest));
-//}
-//
-//BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
-//{
-//  int c = 5;
-//  SO3<ExpMapMatrix> S;
-//  Index dim = S.dim();
-//  Index repDim = S.representationDim();
-//  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
-//  Eigen::VectorXd x = S.getIdentity().value();
-//  S.plus(x, x, Eigen::VectorXd::Random(dim));
-//  Eigen::MatrixXd expectedRes;
-//  expectedRes = Jf*S.diffMap(x);
-//  Eigen::MatrixXd J(c,dim);
-//  S.applyDiffMap(J, Jf, x);
-//  BOOST_CHECK(expectedRes.isApprox(J));
-//}
-//
+BOOST_AUTO_TEST_CASE(SO3Identity)
+{
+  SO3<ExpMapQuaternion> S;
+  Point x = S.getIdentity();
+  Eigen::Map<Eigen::Quaterniond> xQ(x.value().data());
+  BOOST_CHECK(xQ.matrix().isApprox(Eigen::Matrix3d::Identity()));
+}
+BOOST_AUTO_TEST_CASE(SO3Constructor)
+{
+  SO3<ExpMapQuaternion> S;
+  Point x = S.getIdentity();
+  Eigen::VectorXd v(4);
+  v << 0,0,0,1;
+  Point y = S.createPoint(v);
+  BOOST_CHECK_EQUAL(x.value().size(), 4);
+  BOOST_CHECK_EQUAL(x.value()[0], 0);
+  BOOST_CHECK_EQUAL(x.value()[1], 0);
+  BOOST_CHECK_EQUAL(x.value()[2], 0);
+  BOOST_CHECK_EQUAL(x.value()[3], 1);
+  BOOST_CHECK_EQUAL(y.value().size(), 4);
+  BOOST_CHECK_EQUAL(y.value()[0], 0);
+  BOOST_CHECK_EQUAL(y.value()[1], 0);
+  BOOST_CHECK_EQUAL(y.value()[2], 0);
+  BOOST_CHECK_EQUAL(y.value()[3], 1);
+}
+
+BOOST_AUTO_TEST_CASE(SO3Addition)
+{
+  SO3<ExpMapQuaternion> S;
+  Eigen::Vector4d x = S.getIdentity().value();
+  Eigen::Map<Eigen::Quaterniond> xQ(x.data());
+
+  Eigen::Vector3d vy;
+  vy << 0.1,0.2,0.3;
+  S.plus(x, x, vy);
+  S.plus(x, x, vy);
+  Eigen::Matrix3d solution;
+  solution <<  0.751909095300295,-0.507379423623623, 0.420949917315650, 
+               0.583715086608147, 0.809160842538688,-0.067345590561841,
+              -0.306446422838863, 0.296352579515415, 0.904580421269344;
+  BOOST_CHECK(xQ.matrix().isApprox(solution));
+}
+
+BOOST_AUTO_TEST_CASE(SO3InvMap)
+{
+  SO3<ExpMapQuaternion> S;
+  Eigen::Vector4d x = S.getIdentity().value();
+
+  Eigen::Vector3d v;
+  v << 0.12364,-0.2234234,0.325843516;
+  S.plus(x, x, v);
+  Eigen::Vector3d logX;
+  S.invMap(logX, x);
+  BOOST_CHECK(logX.isApprox(v));
+}
+
+BOOST_AUTO_TEST_CASE(SO3Substraction)
+{
+  SO3<ExpMapQuaternion> S;
+  Eigen::Vector3d v( 0.268745647, -0.3544, 0.355546);
+  Eigen::VectorXd q1 = S.getIdentity().value();
+  Eigen::VectorXd q2(4);
+  S.plus(q1, q1, v);
+  S.plus(q2, q1, v);
+  Eigen::Vector3d d;
+  S.minus(d,q2,q1);
+  BOOST_CHECK_CLOSE(d[0], v(0), 1e-8);
+  BOOST_CHECK_CLOSE(d[1], v(1), 1e-8);
+  BOOST_CHECK_CLOSE(d[2], v(2), 1e-8);
+}
+
+BOOST_AUTO_TEST_CASE(SO3Diff)
+{
+  double prec = 1e-9;
+  SO3<ExpMapQuaternion> S;
+  Eigen::Vector3d v(0.680375, -0.211234, 0.566198);
+  Eigen::Vector4d q = S.getIdentity().value();
+  S.plus(q, q, v);
+  Eigen::Matrix<double, 4, 3> J;
+  Eigen::Vector4d dqdvx, dqdvy, dqdvz; 
+  Eigen::Vector4d qpdx, qpdy, qpdz; 
+  Eigen::Vector3d dvx, dvy, dvz;
+  dvx << prec, 0, 0;
+  dvy << 0, prec, 0;
+  dvz << 0, 0, prec;
+  S.plus(qpdx,q,dvx);
+  S.plus(qpdy,q,dvy);
+  S.plus(qpdz,q,dvz);
+  J.col(0) = (qpdx-q)/prec;
+  J.col(1) = (qpdy-q)/prec;
+  J.col(2) = (qpdz-q)/prec;
+
+  Eigen::Matrix<double, 4, 3> diffM = S.diffMap(q);
+
+  BOOST_CHECK(J.isApprox(diffM, 1e-6));
+}
+
+BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
+{
+  int c = 5;
+  SO3<ExpMapQuaternion> S;
+  Index dim = S.dim();
+  Index repDim = S.representationDim();
+  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
+  Eigen::VectorXd x = S.getIdentity().value();
+  S.plus(x, x, Eigen::VectorXd::Random(dim));
+  Eigen::MatrixXd expectedRes;
+  expectedRes = Jf*S.diffMap(x);
+  Eigen::MatrixXd J(c,dim);
+  S.applyDiffMap(J, Jf, x);
+  BOOST_CHECK(expectedRes.isApprox(J));
+}
+
 //BOOST_AUTO_TEST_CASE(SO3invDiff)
 //{
 //  SO3<ExpMapMatrix> S;
@@ -304,5 +285,5 @@ BOOST_AUTO_TEST_CASE(RotSpaceConstructor)
 //  utils::set_is_malloc_allowed(true);
 //  Eigen::internal::set_is_malloc_allowed(true);
 //}
-#endif
+//#endif
 
