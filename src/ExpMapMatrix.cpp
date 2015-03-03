@@ -208,17 +208,17 @@ namespace pgs
     out = a;
   }
 
-  void ExpMapMatrix::tangentConstraint_(RefMat out, const ConstRefVec& x)
+  void ExpMapMatrix::tangentConstraint_(RefMat, const ConstRefVec&)
   {
     //out is 0xt, no need to fill it
   }
 
-  bool ExpMapMatrix::isInTxM_(const ConstRefVec& x, const ConstRefVec& v)
+  bool ExpMapMatrix::isInTxM_(const ConstRefVec&, const ConstRefVec&)
   {
     return true;
   }
 
-  void ExpMapMatrix::forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x)
+  void ExpMapMatrix::forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec&)
   {
     out = in;
   }

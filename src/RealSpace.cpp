@@ -83,17 +83,17 @@ namespace pgs
     out = in;
   }
 
-  void RealSpace::tangentConstraint_(RefMat out, const ConstRefVec& x) const
+  void RealSpace::tangentConstraint_(RefMat, const ConstRefVec&) const
   {
     //matrix is 0xt, no need to fill it.
   }
 
-  bool RealSpace::isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const
+  bool RealSpace::isInTxM_(const ConstRefVec&, const ConstRefVec&) const
   {
     return true;
   }
 
-  void RealSpace::forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const
+  void RealSpace::forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec&) const
   {
     out = in;
   }
