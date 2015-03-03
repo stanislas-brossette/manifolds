@@ -3,6 +3,7 @@ set(SOURCES
   CartesianProduct.cpp
   CartesianPower.cpp
   ExpMapMatrix.cpp
+  #  ExpMapQuaternion.cpp
   Manifold.cpp
   Point.cpp
   RealSpace.cpp
@@ -14,6 +15,7 @@ set(HEADERS
   ../include/manifolds/CartesianPower.h
   ../include/manifolds/defs.h
   ../include/manifolds/ExpMapMatrix.h
+  #../include/manifolds/ExpMapQuaternion.h
   ../include/manifolds/Manifold.h
   ../include/manifolds/pgs_assert.h
   ../include/manifolds/Point.h

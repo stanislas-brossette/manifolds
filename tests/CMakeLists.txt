@@ -12,6 +12,10 @@ add_executable(SO3Test SO3Test.cpp)
 target_link_libraries(SO3Test manifoldsTest ${Boost_LIBRARIES})
 add_test(SO3Test SO3Test)
 
+#add_executable(SO3QuaternionTest SO3QuaternionTest.cpp)
+#target_link_libraries(SO3QuaternionTest manifoldsTest ${Boost_LIBRARIES})
+#add_test(SO3QuaternionTest SO3QuaternionTest)
+
 add_executable(CartesianProductTest CartesianProductTest.cpp)
 target_link_libraries(CartesianProductTest manifoldsTest ${Boost_LIBRARIES})
 add_test(CartesianProductTest CartesianProductTest)
