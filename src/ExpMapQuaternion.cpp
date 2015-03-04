@@ -60,7 +60,7 @@ namespace pgs
     double n2 = vQ.vec().squaredNorm();
     double n = sqrt(n2);
 
-    if (n < prec)
+    if (n < prec && vQ.w()!=0 )
       out = (2/vQ.w())*vQ.vec();
     else
       out = atan2(2 * n * vQ.w(), vQ.w() * vQ.w() - n2) / n * vQ.vec(); 
@@ -100,10 +100,46 @@ namespace pgs
     out = a;
   }
 
-  Eigen::Matrix<double, 3, 4> ExpMapQuaternion::diffInvMap_(const ConstRefVec& )
+  Eigen::Matrix<double, 3, 4> ExpMapQuaternion::diffInvMap_(const ConstRefVec& v)
   {
+    const toConstQuat vQ(v.data());
+    double n2 = vQ.vec().squaredNorm();
+    double n = sqrt(n2);
     Eigen::Matrix<double, 3, 4> J;
-    J.setZero();
+
+    if (n < prec && vQ.w()!=0 )
+    {
+      double a = 2/vQ.w();
+      double b = -2/(vQ.w()*vQ.w());
+      J <<  a, 0, 0, b*vQ.x(),
+            0, a, 0, b*vQ.y(),
+            0, 0, a, b*vQ.z();
+    }
+    else
+    {
+      // log(x,y,z,w) = f(x,y,z,w)*[x;y;z]
+      double f = atan2(2 * n * vQ.w(), vQ.w() * vQ.w() - n2) / n; 
+      // df/dx = (x*atan((2*w*(x^2 + y^2 + z^2)^(1/2))/(- w^2 + x^2 + y^2 + z^2)))/(x^2 + y^2 + z^2)^(3/2) - ((2*w*x)/((x^2 + y^2 + z^2)^(1/2)*(- w^2 + x^2 + y^2 + z^2)) - (4*w*x*(x^2 + y^2 + z^2)^(1/2))/(- w^2 + x^2 + y^2 + z^2)^2)/(((4*w^2*(x^2 + y^2 + z^2))/(- w^2 + x^2 + y^2 + z^2)^2 + 1)*(x^2 + y^2 + z^2)^(1/2))
+      // df/dy = (y*atan((2*w*(x^2 + y^2 + z^2)^(1/2))/(- w^2 + x^2 + y^2 + z^2)))/(x^2 + y^2 + z^2)^(3/2) - ((2*w*y)/((x^2 + y^2 + z^2)^(1/2)*(- w^2 + x^2 + y^2 + z^2)) - (4*w*y*(x^2 + y^2 + z^2)^(1/2))/(- w^2 + x^2 + y^2 + z^2)^2)/(((4*w^2*(x^2 + y^2 + z^2))/(- w^2 + x^2 + y^2 + z^2)^2 + 1)*(x^2 + y^2 + z^2)^(1/2))
+      // df/dz = (z*atan((2*w*(x^2 + y^2 + z^2)^(1/2))/(- w^2 + x^2 + y^2 + z^2)))/(x^2 + y^2 + z^2)^(3/2) - ((2*w*z)/((x^2 + y^2 + z^2)^(1/2)*(- w^2 + x^2 + y^2 + z^2)) - (4*w*z*(x^2 + y^2 + z^2)^(1/2))/(- w^2 + x^2 + y^2 + z^2)^2)/(((4*w^2*(x^2 + y^2 + z^2))/(- w^2 + x^2 + y^2 + z^2)^2 + 1)*(x^2 + y^2 + z^2)^(1/2))
+      
+      // g = (atan((2*w*n)/(- w^2 + n2)))/(n2)^(3/2) - ((2*w)/(n*(- w^2 + n2)) - (4*w*n)/(- w^2 + n2)^2)/(((4*w^2*n2)/(- w^2 + n2)^2 + 1)*n)
+      // g = (atan((2*w*n)/(- w^2 + n2)))/(n2*n) - ((2*w/n2)*(- w^2 + n2) - 4*w)/(4*w^2*n2+(- w^2 + n2)^2)
+      // df/dx = g*x = (x*atan((2*w*n)/(- w^2 + n2)))/(n2)^(3/2) - ((2*w*x)/(n*(- w^2 + n2)) - (4*w*x*n)/(- w^2 + n2)^2)/(((4*w^2*n2)/(- w^2 + n2)^2 + 1)*n)
+      // df/dy = g*y = (y*atan((2*w*n)/(- w^2 + n2)))/(n2)^(3/2) - ((2*w*y)/(n*(- w^2 + n2)) - (4*w*y*n)/(- w^2 + n2)^2)/(((4*w^2*n2)/(- w^2 + n2)^2 + 1)*n)
+      // df/dz = g*z = (z*atan((2*w*n)/(- w^2 + n2)))/(n2)^(3/2) - ((2*w*z)/(n*(- w^2 + n2)) - (4*w*z*n)/(- w^2 + n2)^2)/(((4*w^2*n2)/(- w^2 + n2)^2 + 1)*n)
+      // df/dw = -2/(w²+x²+y²+z²)
+      double g = (atan((2*vQ.w()*n)/(- vQ.w()*vQ.w() + n2)))/(n2*n) - ((2*vQ.w()/n2)*(- vQ.w()*vQ.w() + n2) - 4*vQ.w())/(4*vQ.w()*vQ.w()*n2+(- vQ.w()*vQ.w() + n2)*(- vQ.w()*vQ.w() + n2));
+      double dfdw = -2/(vQ.w()*vQ.w() + n2);
+      /*
+       * J = [ g.x²+f, g.y.x, g.z.x, df/dw.x]
+       *     [ g.x.y, g.y²+f, g.z.y, df/dw.y]
+       *     [ g.x.z, g.y.z, g.z²+f, df/dw.z]
+      */
+      J << g*vQ.x()*vQ.x()+f, g*vQ.y()*vQ.x(), g*vQ.z()*vQ.x(), dfdw*vQ.x(),
+           g*vQ.x()*vQ.y(), g*vQ.y()*vQ.y()+f, g*vQ.z()*vQ.y(), dfdw*vQ.y(),
+           g*vQ.x()*vQ.z(), g*vQ.y()*vQ.z(), g*vQ.z()*vQ.z()+f, dfdw*vQ.z();
+    }
     return J;
   }
 
@@ -116,22 +152,28 @@ namespace pgs
     out = a;
   }
 
-  void ExpMapQuaternion::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
+  //void ExpMapQuaternion::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
+  void ExpMapQuaternion::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& , ReusableTemporaryMap& )
   {
-    OutputType E;
-    exponential(E,v);
-    Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(InputDim_, in.cols());
-    a.noalias() = E*in;
-    out = a;
+    //OutputType E;
+    //exponential(E,v);
+    //Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(InputDim_, in.cols());
+    //a.noalias() = E*in;
+    //out = a;
+    //TODO Make sure that out=in is OK here...
+    out = in;
   }
 
-  void ExpMapQuaternion::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
+  //void ExpMapQuaternion::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
+  void ExpMapQuaternion::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& , ReusableTemporaryMap&)
   {
-    OutputType E;
-    exponential(E,v);
-    Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(), InputDim_);
-    a.noalias() = in*(E.transpose());
-    out = a;
+    //OutputType E;
+    //exponential(E,v);
+    //Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(), InputDim_);
+    //a.noalias() = in*(E.transpose());
+    //out = a;
+    //TODO Make sure that out=in is OK here...
+    out = in;
   }
 
   void ExpMapQuaternion::tangentConstraint_(RefMat, const ConstRefVec&)

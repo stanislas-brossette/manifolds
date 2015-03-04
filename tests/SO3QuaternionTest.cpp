@@ -31,6 +31,7 @@ BOOST_AUTO_TEST_CASE(SO3Identity)
   Eigen::Map<Eigen::Quaterniond> xQ(x.value().data());
   BOOST_CHECK(xQ.matrix().isApprox(Eigen::Matrix3d::Identity()));
 }
+
 BOOST_AUTO_TEST_CASE(SO3Constructor)
 {
   SO3<ExpMapQuaternion> S;
@@ -137,7 +138,44 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
-//BOOST_AUTO_TEST_CASE(SO3invDiff)
+BOOST_AUTO_TEST_CASE(SO3InvDiff)
+{
+  double prec = 1e-6;
+  SO3<ExpMapQuaternion> S;
+  Eigen::Vector4d q = S.getIdentity().value();
+  Eigen::Vector4d qpdx, qpdy, qpdz, qpdw;
+
+  Eigen::Vector3d v;
+  v << 0.12364,-0.2234234,0.325843516;
+  S.plus(q, q, v);
+  qpdx = q;
+  qpdx(0) += prec;
+  qpdy = q;
+  qpdy(1) += prec;
+  qpdz = q;
+  qpdz(2) += prec;
+  qpdw = q;
+  qpdw(3) += prec;
+  Eigen::Vector3d logQ, logQpdx, logQpdy, logQpdz, logQpdw;
+  S.invMap(logQ, q);
+  S.invMap(logQpdx, qpdx);
+  S.invMap(logQpdy, qpdy);
+  S.invMap(logQpdz, qpdz);
+  S.invMap(logQpdw, qpdw);
+
+  Eigen::Matrix<double, 3, 4> J;
+  J.col(0) = (logQpdx-logQ)/prec;
+  J.col(1) = (logQpdy-logQ)/prec;
+  J.col(2) = (logQpdz-logQ)/prec;
+  J.col(3) = (logQpdw-logQ)/prec;
+
+  Eigen::Matrix<double, 3, 4> invDiffM = S.diffInvMap(q);
+  std::cout << "J = \n" << J << std::endl;
+  std::cout << "invDiffM = \n" << invDiffM << std::endl;
+
+  BOOST_CHECK(J.isApprox(invDiffM, 1e-6));
+}
+//BOOST_AUTO_TEST_CASE(SO3invDiffSmallValue)
 //{
 //  SO3<ExpMapMatrix> S;
 //  Eigen::MatrixXd J;
@@ -146,50 +184,38 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
 //  -0.064043491813865,                 0,                  0,                  0, -0.064043491813865, 0.545030346992499,                 0, -0.545030346992499, -0.064043491813865,
 //  -0.110117993664377,                 0, -0.545030346992499,                  0, -0.110117993664377,                 0, 0.545030346992499,                  0, -0.110117993664377,
 //  -0.042109988599266, 0.545030346992499,                  0, -0.545030346992499, -0.042109988599266,                 0,                 0,                  0, -0.042109988599266;
-//  Eigen::Vector3d v(0.3403857, 0.58526775, 0.223811);
-//  Eigen::VectorXd x = S.getIdentity().value();
-//  S.plus(x,x,v);
-//  J = S.diffInvMap(x);
+//  Eigen::Vector3d v( 1.0e-08*0.081125768865785, 1.0e-08*0.929385970968730, 1.0e-08*0.775712678608402);
+//  Point x = S.getIdentity();
+//  x.increment(v);
+//  J = S.diffInvMap(x.value());
+//  std::cout << "J = " << J << std::endl; 
 //  BOOST_CHECK(J.isApprox(Jtest));
 //}
-//
-////BOOST_AUTO_TEST_CASE(SO3invDiffSmallValue)
-////{
-////  SO3<ExpMapMatrix> S;
-////  Eigen::MatrixXd J;
-////  Eigen::MatrixXd Jtest(3,9);
-////  Jtest <<
-////  -0.064043491813865,                 0,                  0,                  0, -0.064043491813865, 0.545030346992499,                 0, -0.545030346992499, -0.064043491813865,
-////  -0.110117993664377,                 0, -0.545030346992499,                  0, -0.110117993664377,                 0, 0.545030346992499,                  0, -0.110117993664377,
-////  -0.042109988599266, 0.545030346992499,                  0, -0.545030346992499, -0.042109988599266,                 0,                 0,                  0, -0.042109988599266;
-////  Eigen::Vector3d v( 1.0e-08*0.081125768865785, 1.0e-08*0.929385970968730, 1.0e-08*0.775712678608402);
-////  Point x = S.getIdentity();
-////  x.increment(v);
-////  J = S.diffInvMap(x.value());
-////  std::cout << "J = " << J << std::endl; 
-////  BOOST_CHECK(J.isApprox(Jtest));
-////}
-//
-//BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
-//{
-//  int c = 5;
-//  SO3<ExpMapMatrix> S;
-//  Index dim = S.dim();
-//  Index repDim = S.representationDim();
-//  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,dim);
-//  Eigen::VectorXd x = S.getIdentity().value();
-//  S.plus(x, x, Eigen::VectorXd::Random(dim));
-//  Eigen::MatrixXd expectedRes;
-//  expectedRes = Jf*S.diffInvMap(x);
-//  Eigen::MatrixXd J(c,repDim);
-//  S.applyDiffInvMap(J, Jf, x);
-//  BOOST_CHECK(expectedRes.isApprox(J));
-//}
-//
+
+BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
+{
+  int c = 5;
+  SO3<ExpMapQuaternion> S;
+  Index dim = S.dim();
+  Index repDim = S.representationDim();
+  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,dim);
+  Eigen::VectorXd x = S.getIdentity().value();
+  S.plus(x, x, Eigen::VectorXd::Random(dim));
+  Eigen::MatrixXd expectedRes;
+  expectedRes = Jf*S.diffInvMap(x);
+  Eigen::MatrixXd J(c,repDim);
+  S.applyDiffInvMap(J, Jf, x);
+  std::cout << "expectedRes = \n" << expectedRes << std::endl;
+  std::cout << "J = \n" << J << std::endl;
+  BOOST_CHECK(expectedRes.isApprox(J));
+}
+
 //BOOST_AUTO_TEST_CASE(SO3Transport)
 //{
+//  std::cout << "SO3Transport" << std::endl;
+//  
 //  int c = 4;
-//  SO3<ExpMapMatrix> S;
+//  SO3<ExpMapQuaternion> S;
 //  Index dim = S.dim();
 //  Eigen::MatrixXd H(dim,c);
 //  H <<  1, 2, 3, 4,
@@ -204,10 +230,11 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
 //  expectedRes << 1.126248257109656, 1.969921592423433, 2.813594927737210, 3.657268263050987,
 //                 4.539510349826134, 5.725092676723538, 6.910675003620942, 8.096257330518345,
 //                 9.226289104899047, 10.165762281434207, 11.105235457969370, 12.044708634504529;
+//  std::cout << "COUCOU" << std::endl;
 //  S.applyTransport(Hout, H, x, v);
 //  BOOST_CHECK(expectedRes.isApprox(Hout));
 //}
-//
+
 //BOOST_AUTO_TEST_CASE(SO3InvTransport)
 //{
 //  int r = 4;
@@ -232,58 +259,58 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
 //  BOOST_CHECK(expectedRes.isApprox(Hout));
 //}
 //
-//#if   EIGEN_WORLD_VERSION > 3 \
-//  || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) \
-//  || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && EIGEN_MINOR_VERSION > 0)
-//BOOST_AUTO_TEST_CASE(SO3NoAllocation)
-//{
-//  //We only test here that the operations on the manifold do not create
-//  //temporary. Passing arguments that are not recognize by the Eigen::Ref will
-//  //create temporaries, but this is the user's fault.
-//  const int r = 100;
-//  SO3<ExpMapMatrix> S;
-//  Index dim = S.dim();
-//  Index repDim = S.representationDim();
-//  Eigen::VectorXd x = Eigen::VectorXd::Random(repDim);
-//  Eigen::VectorXd p = Eigen::VectorXd::Random(dim);
-//  Eigen::VectorXd y = Eigen::VectorXd::Random(repDim);
-//  Eigen::VectorXd z(repDim);
-//  Eigen::VectorXd d(dim);
-//  Eigen::MatrixXd J0 = Eigen::MatrixXd::Random(r, repDim);
-//  Eigen::MatrixXd J1(r, dim);
-//  Eigen::MatrixXd J2(r, repDim);
-//  Eigen::MatrixXd H0 = Eigen::MatrixXd::Random(S.dim(), S.dim());
-//  Eigen::MatrixXd H1 = Eigen::MatrixXd::Random(S.dim(), S.dim());
-//  Eigen::MatrixXd H2 = Eigen::MatrixXd::Random(S.dim(), S.dim());
-//
-//  //The first call to the following methods might trigger a memory allocation
-//  //depending on the size of the Ji and the initial buffer size inside S.
-//  //However, subsequent calls should not require any allocation, what we check
-//  //after.
-//  S.applyDiffMap(J1, J0, x);
-//  S.applyDiffInvMap(J2, J1, x);
-//
-//  Eigen::internal::set_is_malloc_allowed(false);
-//  utils::set_is_malloc_allowed(false);
-//  {
-//    std::cout << "Memory allocation tests:" << std::endl;
-//    S.plus(z, x, p);
-//    std::cout << "- method 'plus' passed" << std::endl;
-//    S.minus(d, x, y);
-//    std::cout << "- method 'minus' passed" << std::endl;
-//    S.invMap(d, x);
-//    std::cout << "- method 'invMap' passed" << std::endl;
-//    S.applyDiffMap(J1, J0, x);
-//    std::cout << "- method 'applyDiffMap' passed" << std::endl;
-//    S.applyDiffInvMap(J2, J1, x);
-//    std::cout << "- method 'applyDiffInvMap' passed" << std::endl;
-//    S.applyTransport(H1, H0, x, p);
-//    std::cout << "- method 'applyTransport' passed" << std::endl;
-//    S.applyInvTransport(H2, H0, x, p);
-//    std::cout << "- method 'applyInvTransport' passed" << std::endl;
-//  }
-//  utils::set_is_malloc_allowed(true);
-//  Eigen::internal::set_is_malloc_allowed(true);
-//}
-//#endif
+#if   EIGEN_WORLD_VERSION > 3 \
+  || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) \
+  || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && EIGEN_MINOR_VERSION > 0)
+BOOST_AUTO_TEST_CASE(SO3NoAllocation)
+{
+  //We only test here that the operations on the manifold do not create
+  //temporary. Passing arguments that are not recognize by the Eigen::Ref will
+  //create temporaries, but this is the user's fault.
+  const int r = 100;
+  SO3<ExpMapQuaternion> S;
+  Index dim = S.dim();
+  Index repDim = S.representationDim();
+  Eigen::VectorXd x = Eigen::VectorXd::Random(repDim);
+  Eigen::VectorXd p = Eigen::VectorXd::Random(dim);
+  Eigen::VectorXd y = Eigen::VectorXd::Random(repDim);
+  Eigen::VectorXd z(repDim);
+  Eigen::VectorXd d(dim);
+  Eigen::MatrixXd J0 = Eigen::MatrixXd::Random(r, repDim);
+  Eigen::MatrixXd J1(r, dim);
+  Eigen::MatrixXd J2(r, repDim);
+  Eigen::MatrixXd H0 = Eigen::MatrixXd::Random(S.dim(), S.dim());
+  Eigen::MatrixXd H1 = Eigen::MatrixXd::Random(S.dim(), S.dim());
+  Eigen::MatrixXd H2 = Eigen::MatrixXd::Random(S.dim(), S.dim());
+
+  //The first call to the following methods might trigger a memory allocation
+  //depending on the size of the Ji and the initial buffer size inside S.
+  //However, subsequent calls should not require any allocation, what we check
+  //after.
+  S.applyDiffMap(J1, J0, x);
+  S.applyDiffInvMap(J2, J1, x);
+
+  Eigen::internal::set_is_malloc_allowed(false);
+  utils::set_is_malloc_allowed(false);
+  {
+    std::cout << "Memory allocation tests:" << std::endl;
+    S.plus(z, x, p);
+    std::cout << "- method 'plus' passed" << std::endl;
+    S.minus(d, x, y);
+    std::cout << "- method 'minus' passed" << std::endl;
+    S.invMap(d, x);
+    std::cout << "- method 'invMap' passed" << std::endl;
+    S.applyDiffMap(J1, J0, x);
+    std::cout << "- method 'applyDiffMap' passed" << std::endl;
+    S.applyDiffInvMap(J2, J1, x);
+    std::cout << "- method 'applyDiffInvMap' passed" << std::endl;
+    S.applyTransport(H1, H0, x, p);
+    std::cout << "- method 'applyTransport' passed" << std::endl;
+    S.applyInvTransport(H2, H0, x, p);
+    std::cout << "- method 'applyInvTransport' passed" << std::endl;
+  }
+  utils::set_is_malloc_allowed(true);
+  Eigen::internal::set_is_malloc_allowed(true);
+}
+#endif
 

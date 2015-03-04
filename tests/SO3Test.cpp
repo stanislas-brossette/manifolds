@@ -185,51 +185,51 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
-BOOST_AUTO_TEST_CASE(SO3Transport)
-{
-  int c = 4;
-  SO3<ExpMapMatrix> S;
-  Index dim = S.dim();
-  Eigen::MatrixXd H(dim,c);
-  H <<  1, 2, 3, 4,
-        5, 6, 7, 8,
-        9,10,11,12;
-  Eigen::MatrixXd Hout(dim,c);
-  Eigen::VectorXd v(dim);
-  v <<  0.083549465660115, 0.164064455761495, 0.287252050630289;
-  Eigen::VectorXd x = S.getIdentity().value();
-  S.plus(x, x, Eigen::VectorXd::Random(3));
-  Eigen::MatrixXd expectedRes(dim,c);
-  expectedRes << 1.126248257109656, 1.969921592423433, 2.813594927737210, 3.657268263050987,
-                 4.539510349826134, 5.725092676723538, 6.910675003620942, 8.096257330518345,
-                 9.226289104899047, 10.165762281434207, 11.105235457969370, 12.044708634504529;
-  S.applyTransport(Hout, H, x, v);
-  BOOST_CHECK(expectedRes.isApprox(Hout));
-}
-
-BOOST_AUTO_TEST_CASE(SO3InvTransport)
-{
-  int r = 4;
-  SO3<ExpMapMatrix> S;
-  Index dim = S.dim();
-  Eigen::MatrixXd H(r,dim);
-  H <<  1, 2, 3,
-        4, 5, 6,
-        7, 8, 9,
-        10, 11, 12;
-  Eigen::MatrixXd Hout(r,dim);
-  Eigen::VectorXd v(dim);
-  v << 0.289466560559783, 0.047283924503264, 0.291177834528185;
-  Eigen::VectorXd x = S.getIdentity().value();
-  S.plus(x, x, Eigen::VectorXd::Random(3));
-  Eigen::MatrixXd expectedRes(r,dim);
-  expectedRes <<  0.667168954696934, 1.299987987788895,  3.444548855437121,
-                  2.972337006917136, 4.096292499301232,  7.168375023495865,
-                  5.277505059137337, 6.892597010813567, 10.892201191554610,
-                  7.582673111357540, 9.688901522325903, 14.616027359613355;
-  S.applyInvTransport(Hout, H, x, v);
-  BOOST_CHECK(expectedRes.isApprox(Hout));
-}
+//BOOST_AUTO_TEST_CASE(SO3Transport)
+//{
+//  int c = 4;
+//  SO3<ExpMapMatrix> S;
+//  Index dim = S.dim();
+//  Eigen::MatrixXd H(dim,c);
+//  H <<  1, 2, 3, 4,
+//        5, 6, 7, 8,
+//        9,10,11,12;
+//  Eigen::MatrixXd Hout(dim,c);
+//  Eigen::VectorXd v(dim);
+//  v <<  0.083549465660115, 0.164064455761495, 0.287252050630289;
+//  Eigen::VectorXd x = S.getIdentity().value();
+//  S.plus(x, x, Eigen::VectorXd::Random(3));
+//  Eigen::MatrixXd expectedRes(dim,c);
+//  expectedRes << 1.126248257109656, 1.969921592423433, 2.813594927737210, 3.657268263050987,
+//                 4.539510349826134, 5.725092676723538, 6.910675003620942, 8.096257330518345,
+//                 9.226289104899047, 10.165762281434207, 11.105235457969370, 12.044708634504529;
+//  S.applyTransport(Hout, H, x, v);
+//  BOOST_CHECK(expectedRes.isApprox(Hout));
+//}
+//
+//BOOST_AUTO_TEST_CASE(SO3InvTransport)
+//{
+//  int r = 4;
+//  SO3<ExpMapMatrix> S;
+//  Index dim = S.dim();
+//  Eigen::MatrixXd H(r,dim);
+//  H <<  1, 2, 3,
+//        4, 5, 6,
+//        7, 8, 9,
+//        10, 11, 12;
+//  Eigen::MatrixXd Hout(r,dim);
+//  Eigen::VectorXd v(dim);
+//  v << 0.289466560559783, 0.047283924503264, 0.291177834528185;
+//  Eigen::VectorXd x = S.getIdentity().value();
+//  S.plus(x, x, Eigen::VectorXd::Random(3));
+//  Eigen::MatrixXd expectedRes(r,dim);
+//  expectedRes <<  0.667168954696934, 1.299987987788895,  3.444548855437121,
+//                  2.972337006917136, 4.096292499301232,  7.168375023495865,
+//                  5.277505059137337, 6.892597010813567, 10.892201191554610,
+//                  7.582673111357540, 9.688901522325903, 14.616027359613355;
+//  S.applyInvTransport(Hout, H, x, v);
+//  BOOST_CHECK(expectedRes.isApprox(Hout));
+//}
 
 #if   EIGEN_WORLD_VERSION > 3 \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) \

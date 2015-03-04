@@ -293,86 +293,86 @@ BOOST_AUTO_TEST_CASE(CardProdApplyInvDiff)
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
-BOOST_AUTO_TEST_CASE(CardProdTransport)
-{
-  int c = 4;
-  SO3<ExpMapMatrix> RotSpace;
-  RealSpace R3(3);
-  RealSpace R2(2);
-  CartesianProduct S(R3, RotSpace);
-  S.multiply(R2);
-  Index dim = S.dim();
-  Eigen::MatrixXd H(dim,c);
-  H <<   1, 2, 3, 4,
-         5, 6, 7, 8,
-         9,10,11,12,
-        13,14,15,16,
-        17,18,19,20,
-        21,22,23,24,
-        25,26,27,28,
-        29,30,31,32;
-  Eigen::MatrixXd Hout(dim,c);
-  Eigen::VectorXd v(dim);
-  v <<  0.141886338627215,
-        0.421761282626275,
-        0.915735525189067,
-        0.287150084472884,
-        0.145612694616852,
-        0.240084140666640,
-        0.792207329559554,
-        0.959492426392903;
-  Eigen::VectorXd x = S.getIdentity().value();
-  S.plus(x, x, Eigen::VectorXd::Random(8));
-  Eigen::MatrixXd expectedRes(dim,c);
-  expectedRes <<   1, 2, 3, 4,
-                   5, 6, 7, 8,
-                   9,10,11,12,
-                  12.562951305087033, 13.486740548139206, 14.410529791191379, 15.334319034243553,
-                  13.623940511618414, 14.546891198380022, 15.469841885141630, 16.392792571903236,
-                  23.570330914984936, 24.708212923027673, 25.846094931070407, 26.983976939113141,
-                  25,26,27,28,
-                  29,30,31,32;
-                 
-  S.applyTransport(Hout, H, x, v);
-  BOOST_CHECK(expectedRes.isApprox(Hout));
-}
-
-BOOST_AUTO_TEST_CASE(CardProdInvTransport)
-{
-  int r = 4;
-  SO3<ExpMapMatrix> RotSpace;
-  RealSpace R3(3);
-  RealSpace R2(2);
-  CartesianProduct S(R3, RotSpace);
-  S.multiply(R2);
-  Index dim = S.dim();
-  Eigen::MatrixXd H(r,dim);
-  H <<  1, 2, 3, 4, 5, 6, 7, 8,
-        9,10,11,12,13,14,15,16,
-       17,18,19,20,21,22,23,24,
-       25,26,27,28,29,30,31,32;
-  Eigen::MatrixXd Hout(r,dim);
-  Eigen::VectorXd v(dim);
-  v <<  0.013851417189346,
-        0.029139534370754,
-        0.247037348498188,
-        0.208448586892745,
-        0.095129844018258,
-        0.285066614651506,
-        0.010333824150873,
-        0.131623307896919;
-
-  Eigen::VectorXd x = S.getIdentity().value();
-  S.plus(x, x, Eigen::VectorXd::Random(8));
-  Eigen::MatrixXd expectedRes(r,dim);
-
-  expectedRes <<   1, 2, 3, 3.211060456124126,  4.703367298475802,  6.675883971635843, 7, 8,
-                   9,10,11, 9.681461929634750, 12.995126625170094, 15.697005411887588,15,16,
-                  17,18,19,16.151863403145374, 21.286885951864392, 24.718126852139335,23,24,
-                  25,26,27,22.622264876655997, 29.578645278558682, 33.739248292391082,31,32;
-  S.applyInvTransport(Hout, H, x, v);
-  BOOST_CHECK(expectedRes.isApprox(Hout));
-}
+//BOOST_AUTO_TEST_CASE(CardProdTransport)
+//{
+//  int c = 4;
+//  SO3<ExpMapMatrix> RotSpace;
+//  RealSpace R3(3);
+//  RealSpace R2(2);
+//  CartesianProduct S(R3, RotSpace);
+//  S.multiply(R2);
+//  Index dim = S.dim();
+//  Eigen::MatrixXd H(dim,c);
+//  H <<   1, 2, 3, 4,
+//         5, 6, 7, 8,
+//         9,10,11,12,
+//        13,14,15,16,
+//        17,18,19,20,
+//        21,22,23,24,
+//        25,26,27,28,
+//        29,30,31,32;
+//  Eigen::MatrixXd Hout(dim,c);
+//  Eigen::VectorXd v(dim);
+//  v <<  0.141886338627215,
+//        0.421761282626275,
+//        0.915735525189067,
+//        0.287150084472884,
+//        0.145612694616852,
+//        0.240084140666640,
+//        0.792207329559554,
+//        0.959492426392903;
+//  Eigen::VectorXd x = S.getIdentity().value();
+//  S.plus(x, x, Eigen::VectorXd::Random(8));
+//  Eigen::MatrixXd expectedRes(dim,c);
+//  expectedRes <<   1, 2, 3, 4,
+//                   5, 6, 7, 8,
+//                   9,10,11,12,
+//                  12.562951305087033, 13.486740548139206, 14.410529791191379, 15.334319034243553,
+//                  13.623940511618414, 14.546891198380022, 15.469841885141630, 16.392792571903236,
+//                  23.570330914984936, 24.708212923027673, 25.846094931070407, 26.983976939113141,
+//                  25,26,27,28,
+//                  29,30,31,32;
+//                 
+//  S.applyTransport(Hout, H, x, v);
+//  BOOST_CHECK(expectedRes.isApprox(Hout));
+//}
+//
+//BOOST_AUTO_TEST_CASE(CardProdInvTransport)
+//{
+//  int r = 4;
+//  SO3<ExpMapMatrix> RotSpace;
+//  RealSpace R3(3);
+//  RealSpace R2(2);
+//  CartesianProduct S(R3, RotSpace);
+//  S.multiply(R2);
+//  Index dim = S.dim();
+//  Eigen::MatrixXd H(r,dim);
+//  H <<  1, 2, 3, 4, 5, 6, 7, 8,
+//        9,10,11,12,13,14,15,16,
+//       17,18,19,20,21,22,23,24,
+//       25,26,27,28,29,30,31,32;
+//  Eigen::MatrixXd Hout(r,dim);
+//  Eigen::VectorXd v(dim);
+//  v <<  0.013851417189346,
+//        0.029139534370754,
+//        0.247037348498188,
+//        0.208448586892745,
+//        0.095129844018258,
+//        0.285066614651506,
+//        0.010333824150873,
+//        0.131623307896919;
+//
+//  Eigen::VectorXd x = S.getIdentity().value();
+//  S.plus(x, x, Eigen::VectorXd::Random(8));
+//  Eigen::MatrixXd expectedRes(r,dim);
+//
+//  expectedRes <<   1, 2, 3, 3.211060456124126,  4.703367298475802,  6.675883971635843, 7, 8,
+//                   9,10,11, 9.681461929634750, 12.995126625170094, 15.697005411887588,15,16,
+//                  17,18,19,16.151863403145374, 21.286885951864392, 24.718126852139335,23,24,
+//                  25,26,27,22.622264876655997, 29.578645278558682, 33.739248292391082,31,32;
+//  S.applyInvTransport(Hout, H, x, v);
+//  BOOST_CHECK(expectedRes.isApprox(Hout));
+//}
 
 BOOST_AUTO_TEST_CASE(CardProdGetView)
 {
