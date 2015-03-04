@@ -256,6 +256,51 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
 //  BOOST_CHECK(expectedRes.isApprox(Hout));
 //}
 
+Eigen::Vector3d rotatePointMatrix(Point& Rp, RefVec P)
+{
+  Eigen::Map<Eigen::Matrix3d> R(Rp.value().data());
+  Eigen::Vector3d res = R*P;
+  return res;
+}
+Eigen::Matrix<double,3,9> diffRotatePointMatrix(Point& , RefVec P)
+{
+  Eigen::Matrix<double,3,9> res;
+  res << P(0), 0, 0, P(1), 0, 0, P(2), 0, 0, 
+         0, P(0), 0, 0, P(1), 0, 0, P(2), 0,
+         0, 0, P(0), 0, 0, P(1), 0, 0, P(2);
+  return res;
+}
+
+Eigen::Vector3d rotatePointQuaternion(Point& Qp, RefVec P)
+{
+  Eigen::Map<Eigen::Quaterniond> Q(Qp.value().data());
+  Eigen::Vector3d res;
+  res <<  P.x() - 2*P.x()*Q.y()*Q.y() - 2*P.x()*Q.z()*Q.z() - 2*P.y()*Q.w()*Q.z() + 2*P.y()*Q.x()*Q.y() + 2*P.z()*Q.w()*Q.y() + 2*P.z()*Q.x()*Q.z(),
+          P.y() - 2*P.y()*Q.x()*Q.x() - 2*P.y()*Q.z()*Q.z() + 2*P.x()*Q.w()*Q.z() + 2*P.x()*Q.x()*Q.y() - 2*P.z()*Q.w()*Q.x() + 2*P.z()*Q.y()*Q.z(),
+          P.z() - 2*P.z()*Q.x()*Q.x() - 2*P.z()*Q.y()*Q.y() - 2*P.x()*Q.w()*Q.y() + 2*P.y()*Q.w()*Q.x() + 2*P.x()*Q.x()*Q.z() + 2*P.y()*Q.y()*Q.z();
+  return res;
+}
+
+Eigen::Matrix<double,3,4> diffRotatePointQuaternion(Point& Qp, RefVec Pp)
+{
+  Eigen::Matrix<double,3,4> res;
+  Eigen::Map<Eigen::Vector3d> P(Pp.data());
+  Eigen::Map<Eigen::Quaterniond> Q(Qp.value().data());
+  res.col(0) << 2*P.y()*Q.y() + 2*P.z()*Q.z(),
+                2*P.x()*Q.y() - 4*P.y()*Q.x() - 2*P.z()*Q.w(),
+                2*P.y()*Q.w() + 2*P.x()*Q.z() - 4*P.z()*Q.x();
+  res.col(1) << 2*P.y()*Q.x() - 4*P.x()*Q.y() + 2*P.z()*Q.w(),
+                2*P.x()*Q.x() + 2*P.z()*Q.z(),
+                2*P.y()*Q.z() - 2*P.x()*Q.w() - 4*P.z()*Q.y();
+  res.col(2) << 2*P.z()*Q.x() - 4*P.x()*Q.z() - 2*P.y()*Q.w(),
+                2*P.x()*Q.w() - 4*P.y()*Q.z() + 2*P.z()*Q.y(),
+                2*P.x()*Q.x() + 2*P.y()*Q.y();
+  res.col(3) << 2*P.z()*Q.y() - 2*P.y()*Q.z(),
+                2*P.x()*Q.z() - 2*P.z()*Q.x(),
+                2*P.y()*Q.x() - 2*P.x()*Q.y();
+  return res;
+}
+
 BOOST_AUTO_TEST_CASE(SO3CompareMatrixQuaternion)
 {
   SO3<ExpMapMatrix> SO3_M;
@@ -281,7 +326,26 @@ BOOST_AUTO_TEST_CASE(SO3CompareMatrixQuaternion)
   // Check that the logarithm for quaternion and 
   // rotation matrix are identical
   BOOST_CHECK(logX_Q.isApprox(logX_M));
-  
+
+  Eigen::Vector3d P0 = Eigen::Vector3d::Random();
+  Eigen::Vector3d P0_Q = rotatePointQuaternion(x_Q, P0);
+  Eigen::Vector3d P0_M = rotatePointMatrix(x_M, P0);
+
+  // Check that the rotate function for quaternion and 
+  // rotation matrix are identical
+  BOOST_CHECK(P0_M.isApprox(P0_Q));
+
+  Eigen::Matrix<double, 3, 3> J_M;
+  Eigen::Matrix<double, 3, 9> J_M0 = diffRotatePointMatrix( x_M, P0);
+  SO3_M.applyDiffMap(J_M, J_M0, x_M.value());
+
+  Eigen::Matrix<double, 3, 3> J_Q;
+  Eigen::Matrix<double, 3, 4> J_Q0 = diffRotatePointQuaternion( x_Q, P0);
+  SO3_Q.applyDiffMap(J_Q, J_Q0, x_Q.value());
+
+  // Check that the rotate function for quaternion and 
+  // rotation matrix are identical
+  BOOST_CHECK(J_M.isApprox(J_Q));
 }
 
 
