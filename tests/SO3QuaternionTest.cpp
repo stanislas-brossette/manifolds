@@ -6,6 +6,7 @@
 #include <manifolds/pgs_assert.h>
 #include <manifolds/SO3.h>
 #include <manifolds/Point.h>
+#include <manifolds/ExpMapMatrix.h>
 #include <manifolds/ExpMapQuaternion.h>
 
 #ifndef _WIN32
@@ -170,8 +171,6 @@ BOOST_AUTO_TEST_CASE(SO3InvDiff)
   J.col(3) = (logQpdw-logQ)/prec;
 
   Eigen::Matrix<double, 3, 4> invDiffM = S.diffInvMap(q);
-  std::cout << "J = \n" << J << std::endl;
-  std::cout << "invDiffM = \n" << invDiffM << std::endl;
 
   BOOST_CHECK(J.isApprox(invDiffM, 1e-6));
 }
@@ -205,8 +204,6 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
   expectedRes = Jf*S.diffInvMap(x);
   Eigen::MatrixXd J(c,repDim);
   S.applyDiffInvMap(J, Jf, x);
-  std::cout << "expectedRes = \n" << expectedRes << std::endl;
-  std::cout << "J = \n" << J << std::endl;
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
@@ -258,7 +255,36 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
 //  S.applyInvTransport(Hout, H, x, v);
 //  BOOST_CHECK(expectedRes.isApprox(Hout));
 //}
-//
+
+BOOST_AUTO_TEST_CASE(SO3CompareMatrixQuaternion)
+{
+  SO3<ExpMapMatrix> SO3_M;
+  SO3<ExpMapQuaternion> SO3_Q;
+  Point x_M = SO3_M.getIdentity();
+  Point x_Q = SO3_Q.getIdentity();
+  Eigen::Vector3d v = Eigen::Vector3d::Random();
+  Eigen::Vector3d v2 = Eigen::Vector3d::Random();
+  SO3_M.plus(x_M.value(),x_M.value(),v);
+  SO3_M.plus(x_M.value(),x_M.value(),v2);
+  SO3_Q.plus(x_Q.value(),x_Q.value(),v);
+  SO3_Q.plus(x_Q.value(),x_Q.value(),v2);
+  Eigen::Map<Eigen::Quaterniond> xQ(x_Q.value().data());
+  Eigen::Map<Eigen::Matrix3d> xM(x_M.value().data());
+
+  // Check that the expMaps for quaternion and 
+  // rotation matrix are identical
+  BOOST_CHECK(xQ.matrix().isApprox(xM));
+
+  Eigen::Vector3d logX_Q, logX_M;
+  SO3_Q.invMap(logX_Q,x_Q.value());
+  SO3_M.invMap(logX_M,x_M.value());
+  // Check that the logarithm for quaternion and 
+  // rotation matrix are identical
+  BOOST_CHECK(logX_Q.isApprox(logX_M));
+  
+}
+
+
 #if   EIGEN_WORLD_VERSION > 3 \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && EIGEN_MINOR_VERSION > 0)
