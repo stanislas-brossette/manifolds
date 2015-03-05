@@ -30,8 +30,8 @@ namespace pgs
     static void logarithm(RefVec out, const OutputType& M);
     static void exponential(OutputType& out, const ConstRefVec& v);
 
-    static Eigen::Matrix<double, 9, 3> diffMap_(const ConstRefVec& x);
-    static void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);
+    static Eigen::Matrix<double, 9, 3> diffRetractation_(const ConstRefVec& x);
+    static void applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);
     static Eigen::Matrix<double, 3, 9> diffInvMap_(const ConstRefVec& x);
     static void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);
     static void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v, ReusableTemporaryMap& m);

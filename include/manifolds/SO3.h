@@ -25,8 +25,8 @@ namespace pgs
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void invMap_(RefVec out, const ConstRefVec& x) const;
     virtual void setZero_(RefVec out) const;
-    virtual Eigen::MatrixXd diffMap_(const ConstRefVec& x) const;
-    virtual void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
+    virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const;
+    virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
     virtual Eigen::MatrixXd diffInvMap_(const ConstRefVec& x) const;
     virtual void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
     virtual void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
@@ -100,15 +100,15 @@ namespace pgs
   }
 
   template<typename Map>
-  inline Eigen::MatrixXd SO3<Map>::diffMap_(const ConstRefVec& x) const
+  inline Eigen::MatrixXd SO3<Map>::diffRetractation_(const ConstRefVec& x) const
   {
-    return Map::diffMap_(x);
+    return Map::diffRetractation_(x);
   }
 
   template<typename Map>
-  inline void SO3<Map>::applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  inline void SO3<Map>::applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
-    Map::applyDiffMap_(out, in, x, bufferMap_);
+    Map::applyDiffRetractation_(out, in, x, bufferMap_);
   }
 
   template<typename Map>

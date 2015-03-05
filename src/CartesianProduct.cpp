@@ -99,22 +99,22 @@ namespace pgs
       submanifolds_[i]->setZero(getView<R>(out, i));
   }
 
-  Eigen::MatrixXd CartesianProduct::diffMap_(const ConstRefVec& x ) const
+  Eigen::MatrixXd CartesianProduct::diffRetractation_(const ConstRefVec& x ) const
   {
     Eigen::MatrixXd J(representationDim(),tangentDim());
     J.setZero();
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      getView<R, T>(J, i) = submanifolds_[i]->diffMap(getConstView<R>(x, i));
+      getView<R, T>(J, i) = submanifolds_[i]->diffRetractation(getConstView<R>(x, i));
     }
     return J;
   }
 
-  void CartesianProduct::applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  void CartesianProduct::applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      submanifolds_[i]->applyDiffMap( getView<F, T>(out, i),
+      submanifolds_[i]->applyDiffRetractation( getView<F, T>(out, i),
                                       getConstView<F, R>(in, i),
                                       getConstView<R>(x, i));
     }

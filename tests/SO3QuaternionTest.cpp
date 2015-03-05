@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(SO3Diff)
   J.col(1) = (qpdy-q)/prec;
   J.col(2) = (qpdz-q)/prec;
 
-  Eigen::Matrix<double, 4, 3> diffM = S.diffMap(q);
+  Eigen::Matrix<double, 4, 3> diffM = S.diffRetractation(q);
 
   BOOST_CHECK(J.isApprox(diffM, 1e-6));
 }
@@ -133,9 +133,9 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
   Eigen::VectorXd x = S.getZero().value();
   S.retractation(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
-  expectedRes = Jf*S.diffMap(x);
+  expectedRes = Jf*S.diffRetractation(x);
   Eigen::MatrixXd J(c,dim);
-  S.applyDiffMap(J, Jf, x);
+  S.applyDiffRetractation(J, Jf, x);
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
@@ -338,11 +338,11 @@ BOOST_AUTO_TEST_CASE(SO3CompareMatrixQuaternion)
 
   Eigen::Matrix<double, 3, 3> J_M;
   Eigen::Matrix<double, 3, 9> J_M0 = diffRotatePointMatrix( x_M, P0);
-  SO3_M.applyDiffMap(J_M, J_M0, x_M.value());
+  SO3_M.applyDiffRetractation(J_M, J_M0, x_M.value());
 
   Eigen::Matrix<double, 3, 3> J_Q;
   Eigen::Matrix<double, 3, 4> J_Q0 = diffRotatePointQuaternion( x_Q, P0);
-  SO3_Q.applyDiffMap(J_Q, J_Q0, x_Q.value());
+  SO3_Q.applyDiffRetractation(J_Q, J_Q0, x_Q.value());
 
   // Check that the rotate function for quaternion and 
   // rotation matrix are identical
@@ -378,7 +378,7 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
   //depending on the size of the Ji and the initial buffer size inside S.
   //However, subsequent calls should not require any allocation, what we check
   //after.
-  S.applyDiffMap(J1, J0, x);
+  S.applyDiffRetractation(J1, J0, x);
   S.applyDiffInvMap(J2, J1, x);
 
   Eigen::internal::set_is_malloc_allowed(false);
@@ -391,8 +391,8 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
     std::cout << "- method 'minus' passed" << std::endl;
     S.invMap(d, x);
     std::cout << "- method 'invMap' passed" << std::endl;
-    S.applyDiffMap(J1, J0, x);
-    std::cout << "- method 'applyDiffMap' passed" << std::endl;
+    S.applyDiffRetractation(J1, J0, x);
+    std::cout << "- method 'applyDiffRetractation' passed" << std::endl;
     S.applyDiffInvMap(J2, J1, x);
     std::cout << "- method 'applyDiffInvMap' passed" << std::endl;
     S.applyTransport(H1, H0, x, p);

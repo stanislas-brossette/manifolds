@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(RealPointDiff)
   RealSpace R7(7);
   Eigen::MatrixXd J;
   Eigen::VectorXd x = R7.createPoint().value();
-  J = R7.diffMap(x);
+  J = R7.diffRetractation(x);
   BOOST_CHECK(J.isIdentity());
 }
 
@@ -119,9 +119,9 @@ BOOST_AUTO_TEST_CASE(RealApplyDiff)
   Eigen::VectorXd x = Space.getZero().value();
   Space.retractation(x,x,Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
-  expectedRes = Jf*Space.diffMap(x);
+  expectedRes = Jf*Space.diffRetractation(x);
   Eigen::MatrixXd J(c,dim);
-  Space.applyDiffMap(J, Jf, x);
+  Space.applyDiffRetractation(J, Jf, x);
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
@@ -198,7 +198,7 @@ BOOST_AUTO_TEST_CASE(RealNoAllocation)
     R.retractation(z, x, v);
     R.minus(z, x, y);
     R.invMap(z, x);
-    R.applyDiffMap(J1, J0, x);
+    R.applyDiffRetractation(J1, J0, x);
     R.applyDiffInvMap(J2, J0, x);
     R.applyTransport(H1, H0, x, v);
     R.applyInvTransport(H2, H0, x, v);

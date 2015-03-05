@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(SO3Diff)
   Eigen::Vector3d v(0.680375, -0.211234, 0.566198);
   Eigen::VectorXd x = S.getZero().value();
   S.retractation(x, x, v);
-  J = S.diffMap(x);
+  J = S.diffRetractation(x);
   BOOST_CHECK(J.isApprox(Jtest));
 }
 
@@ -130,9 +130,9 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
   Eigen::VectorXd x = S.getZero().value();
   S.retractation(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
-  expectedRes = Jf*S.diffMap(x);
+  expectedRes = Jf*S.diffRetractation(x);
   Eigen::MatrixXd J(c,dim);
-  S.applyDiffMap(J, Jf, x);
+  S.applyDiffRetractation(J, Jf, x);
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
@@ -259,7 +259,7 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
   //depending on the size of the Ji and the initial buffer size inside S.
   //However, subsequent calls should not require any allocation, what we check
   //after.
-  S.applyDiffMap(J1, J0, x);
+  S.applyDiffRetractation(J1, J0, x);
   S.applyDiffInvMap(J2, J1, x);
 
   Eigen::internal::set_is_malloc_allowed(false);
@@ -272,8 +272,8 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
     std::cout << "- method 'minus' passed" << std::endl;
     S.invMap(d, x);
     std::cout << "- method 'invMap' passed" << std::endl;
-    S.applyDiffMap(J1, J0, x);
-    std::cout << "- method 'applyDiffMap' passed" << std::endl;
+    S.applyDiffRetractation(J1, J0, x);
+    std::cout << "- method 'applyDiffRetractation' passed" << std::endl;
     S.applyDiffInvMap(J2, J1, x);
     std::cout << "- method 'applyDiffInvMap' passed" << std::endl;
     S.applyTransport(H1, H0, x, p);

@@ -117,7 +117,7 @@ namespace pgs
     return out;
   }
 
-  Eigen::Matrix<double, 9, 3> ExpMapMatrix::diffMap_(const ConstRefVec& x)
+  Eigen::Matrix<double, 9, 3> ExpMapMatrix::diffRetractation_(const ConstRefVec& x)
   {
     Eigen::Matrix<double, 9, 3> J;
     J << 0   , -x(6), x(3) ,
@@ -132,12 +132,12 @@ namespace pgs
     return J;
   }
 
-  void ExpMapMatrix::applyDiffMap_(
+  void ExpMapMatrix::applyDiffRetractation_(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m)
   {
     pgs_assert(in.cols() == OutputDim_ && "Dimensions mismatch" );
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),3);
-    a.noalias() = in*diffMap_(x);
+    a.noalias() = in*diffRetractation_(x);
     out = a;
   }
 

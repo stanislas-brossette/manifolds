@@ -80,7 +80,7 @@ namespace pgs
     return out;
   }
 
-  Eigen::Matrix<double, 4, 3> ExpMapQuaternion::diffMap_(const ConstRefVec& x)
+  Eigen::Matrix<double, 4, 3> ExpMapQuaternion::diffRetractation_(const ConstRefVec& x)
   {
     const Eigen::Map<const Eigen::Quaterniond> xQ(x.data());
     Eigen::Matrix<double, 4, 3> J;
@@ -91,12 +91,12 @@ namespace pgs
     return J;
   }
 
-  void ExpMapQuaternion::applyDiffMap_(
+  void ExpMapQuaternion::applyDiffRetractation_(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m)
   {
     pgs_assert(in.cols() == OutputDim_ && "Dimensions mismatch" );
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),3);
-    a.noalias() = in*diffMap_(x);
+    a.noalias() = in*diffRetractation_(x);
     out = a;
   }
 
