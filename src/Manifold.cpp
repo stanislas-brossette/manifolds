@@ -84,13 +84,13 @@ namespace pgs
     retractation_(out, x, v);
   }
 
-  void Manifold::minus(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
+  void Manifold::pseudoLog(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   {
     pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(out.size() == tangentDim_);
     pgs_assert(x.size() == representationDim_);
     pgs_assert(y.size() == representationDim_);
-    minus_(out, x, y);
+    pseudoLog_(out, x, y);
   }
 
   void Manifold::invMap(RefVec out, const ConstRefVec& x) const

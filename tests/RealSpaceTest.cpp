@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(RealPointSubstraction)
   x << 4,3.4,7;
   y << 1,2,3;
   Eigen::Vector3d z; 
-  R3.minus(z,y,x);
+  R3.pseudoLog(z,y,x);
   BOOST_CHECK_EQUAL(z[0], -3);
   BOOST_CHECK_EQUAL(z[1], -1.4);
   BOOST_CHECK_EQUAL(z[2], -4);
@@ -196,7 +196,7 @@ BOOST_AUTO_TEST_CASE(RealNoAllocation)
   utils::set_is_malloc_allowed(false);
   {
     R.retractation(z, x, v);
-    R.minus(z, x, y);
+    R.pseudoLog(z, x, y);
     R.invMap(z, x);
     R.applyDiffRetractation(J1, J0, x);
     R.applyDiffInvMap(J2, J0, x);

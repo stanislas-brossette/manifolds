@@ -106,7 +106,7 @@ namespace pgs
     /// manifold \f$out\in\mathbb{M}\f$
     /// \param x element of the manifold \f$x\in\mathbb{M}\f$
     /// \param y element of the manifold \f$y\in\mathbb{M}\f$
-    void minus(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
+    void pseudoLog(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
 
     /// \brief computes the inverse of a point of the manifold through its map
     /// \f$ out = x \ominus 0 = \phi_0^{-1}(x) \f$
@@ -211,7 +211,7 @@ namespace pgs
     virtual Index startT(size_t i) const;
 
     virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
-    virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
+    virtual void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
     virtual void invMap_(RefVec out, const ConstRefVec& x) const = 0;
     virtual void setZero_(RefVec out) const = 0;
     virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const = 0;

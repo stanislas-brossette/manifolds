@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(SO3Substraction)
   S.retractation(q1, q1, v);
   S.retractation(q2, q1, v);
   Eigen::Vector3d d;
-  S.minus(d,q2,q1);
+  S.pseudoLog(d,q2,q1);
   BOOST_CHECK_CLOSE(d[0], v(0), 1e-8);
   BOOST_CHECK_CLOSE(d[1], v(1), 1e-8);
   BOOST_CHECK_CLOSE(d[2], v(2), 1e-8);
@@ -387,8 +387,8 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
     std::cout << "Memory allocation tests:" << std::endl;
     S.retractation(z, x, p);
     std::cout << "- method 'retractation' passed" << std::endl;
-    S.minus(d, x, y);
-    std::cout << "- method 'minus' passed" << std::endl;
+    S.pseudoLog(d, x, y);
+    std::cout << "- method 'pseudoLog' passed" << std::endl;
     S.invMap(d, x);
     std::cout << "- method 'invMap' passed" << std::endl;
     S.applyDiffRetractation(J1, J0, x);

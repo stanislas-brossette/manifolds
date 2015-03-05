@@ -38,7 +38,7 @@ namespace pgs
     out = x + v;
   }
 
-  void RealSpace::minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
+  void RealSpace::pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   {
     out = x - y;
   }

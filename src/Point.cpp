@@ -155,7 +155,7 @@ namespace pgs
   Eigen::VectorXd operator-(const Point& x, const Point& y)
   {
     Eigen::VectorXd output(x.getManifold().dim());
-    x.getManifold().minus(output, x.value(), y.value());
+    x.getManifold().pseudoLog(output, x.value(), y.value());
     return output;
   }
 

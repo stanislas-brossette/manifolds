@@ -74,11 +74,11 @@ namespace pgs
     }
   }
 
-  void CartesianProduct::minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
+  void CartesianProduct::pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      submanifolds_[i]->minus(getView<T>(out,i),
+      submanifolds_[i]->pseudoLog(getView<T>(out,i),
                               getConstView<R>(x, i),
                               getConstView<R>(y, i));
     }

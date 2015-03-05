@@ -39,7 +39,7 @@ namespace pgs
     toQuat(q.data()).vec() = s*v;
   }
 
-  void ExpMapQuaternion::minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y)
+  void ExpMapQuaternion::pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y)
   {
     Eigen::Vector4d tmp;
     toQuat q(tmp.data());
