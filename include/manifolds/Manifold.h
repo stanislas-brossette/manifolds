@@ -98,7 +98,7 @@ namespace pgs
     /// \param x element of the manifold \f$x\in\mathbb{M}\f$
     /// \param v element of the tangent space of the manifold
     /// \f$v\in T_x^\mathcal{M}\f$
-    void plus(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
+    void retractation(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
 
     /// \brief Internal substraction operation
     /// \f$ out = x \ominus y = \phi_y^{-1}(x) \f$
@@ -183,6 +183,8 @@ namespace pgs
 
     /// \brief Set manifolds representation space dimension to rd
     void setRepresentationDimension(Index rd);
+
+    /// \brief Ensures that val in representation space in a point of M
     virtual bool isInM_(const Eigen::VectorXd& val) const = 0;
 
     /// \brief Gets the manifolds dimension
@@ -208,7 +210,7 @@ namespace pgs
     /// representing an element of the tangent space of the manifold
     virtual Index startT(size_t i) const;
 
-    virtual void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
+    virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
     virtual void invMap_(RefVec out, const ConstRefVec& x) const = 0;
     virtual void setZero_(RefVec out) const = 0;

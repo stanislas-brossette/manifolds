@@ -59,8 +59,8 @@ BOOST_AUTO_TEST_CASE(SO3Addition)
   Eigen::VectorXd y = S.getZero().value();
   Eigen::Vector3d vy;
   vy << 0.1,0.2,0.3;
-  S.plus(y, y, vy);
-  S.plus(y, y, vy);
+  S.retractation(y, y, vy);
+  S.retractation(y, y, vy);
   BOOST_CHECK_EQUAL(y.size(), 9);
   BOOST_CHECK_CLOSE(y[0],  0.751909095300295, 1e-12);
   BOOST_CHECK_CLOSE(y[1],  0.583715086608147, 1e-12);
@@ -79,8 +79,8 @@ BOOST_AUTO_TEST_CASE(SO3Substraction)
   Eigen::Vector3d v( 0.2, 0.4, 0.6);
   Eigen::VectorXd R1 = S.getZero().value();
   Eigen::VectorXd R2(9);
-  S.plus(R1, R1, v);
-  S.plus(R2, R1, v);
+  S.retractation(R1, R1, v);
+  S.retractation(R2, R1, v);
   Eigen::Vector3d d;
   S.minus(d,R2,R1);
   BOOST_CHECK_CLOSE(d[0], 0.2, 1e-8);
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(SO3PointInvMap)
   SO3<ExpMapMatrix> S;
   Eigen::VectorXd x = S.getZero().value();
   Eigen::VectorXd vy = Eigen::VectorXd::Random(S.dim());
-  S.plus(x, x, vy);
+  S.retractation(x, x, vy);
   Eigen::VectorXd z(S.dim());
   S.invMap(z, x); 
   BOOST_CHECK(z.isApprox(vy));
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(SO3Diff)
   -0.534497507539106,  0.362946363755562,                  0;
   Eigen::Vector3d v(0.680375, -0.211234, 0.566198);
   Eigen::VectorXd x = S.getZero().value();
-  S.plus(x, x, v);
+  S.retractation(x, x, v);
   J = S.diffMap(x);
   BOOST_CHECK(J.isApprox(Jtest));
 }
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
   Index repDim = S.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
   Eigen::VectorXd x = S.getZero().value();
-  S.plus(x, x, Eigen::VectorXd::Random(dim));
+  S.retractation(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
   expectedRes = Jf*S.diffMap(x);
   Eigen::MatrixXd J(c,dim);
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(SO3invDiff)
   -0.042109988599266, 0.545030346992499,                  0, -0.545030346992499, -0.042109988599266,                 0,                 0,                  0, -0.042109988599266;
   Eigen::Vector3d v(0.3403857, 0.58526775, 0.223811);
   Eigen::VectorXd x = S.getZero().value();
-  S.plus(x,x,v);
+  S.retractation(x,x,v);
   J = S.diffInvMap(x);
   BOOST_CHECK(J.isApprox(Jtest));
 }
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
   Index repDim = S.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,dim);
   Eigen::VectorXd x = S.getZero().value();
-  S.plus(x, x, Eigen::VectorXd::Random(dim));
+  S.retractation(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
   expectedRes = Jf*S.diffInvMap(x);
   Eigen::MatrixXd J(c,repDim);
@@ -198,7 +198,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
 //  Eigen::VectorXd v(dim);
 //  v <<  0.083549465660115, 0.164064455761495, 0.287252050630289;
 //  Eigen::VectorXd x = S.getZero().value();
-//  S.plus(x, x, Eigen::VectorXd::Random(3));
+//  S.retractation(x, x, Eigen::VectorXd::Random(3));
 //  Eigen::MatrixXd expectedRes(dim,c);
 //  expectedRes << 1.126248257109656, 1.969921592423433, 2.813594927737210, 3.657268263050987,
 //                 4.539510349826134, 5.725092676723538, 6.910675003620942, 8.096257330518345,
@@ -221,7 +221,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
 //  Eigen::VectorXd v(dim);
 //  v << 0.289466560559783, 0.047283924503264, 0.291177834528185;
 //  Eigen::VectorXd x = S.getZero().value();
-//  S.plus(x, x, Eigen::VectorXd::Random(3));
+//  S.retractation(x, x, Eigen::VectorXd::Random(3));
 //  Eigen::MatrixXd expectedRes(r,dim);
 //  expectedRes <<  0.667168954696934, 1.299987987788895,  3.444548855437121,
 //                  2.972337006917136, 4.096292499301232,  7.168375023495865,
@@ -266,8 +266,8 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
   utils::set_is_malloc_allowed(false);
   {
     std::cout << "Memory allocation tests:" << std::endl;
-    S.plus(z, x, p);
-    std::cout << "- method 'plus' passed" << std::endl;
+    S.retractation(z, x, p);
+    std::cout << "- method 'retractation' passed" << std::endl;
     S.minus(d, x, y);
     std::cout << "- method 'minus' passed" << std::endl;
     S.invMap(d, x);

@@ -21,7 +21,7 @@ namespace pgs
   protected:
     //map operations
     virtual bool isInM_(const Eigen::VectorXd& val) const;
-    virtual void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
+    virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void invMap_(RefVec out, const ConstRefVec& x) const;
     virtual void setZero_(RefVec out) const;
@@ -76,9 +76,9 @@ namespace pgs
   }
 
   template<typename Map>
-  inline void SO3<Map>::plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
+  inline void SO3<Map>::retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
-    Map::plus_(out, x, v);
+    Map::retractation_(out, x, v);
   }
 
   template<typename Map>

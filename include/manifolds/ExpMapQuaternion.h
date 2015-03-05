@@ -24,7 +24,7 @@ namespace pgs
     typedef Eigen::Vector4d DisplayType; //display as q=(x, y, z, w)
     typedef Eigen::Vector4d OutputType;
     static bool isInM_(const Eigen::VectorXd& val);
-    static void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v);
+    static void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v);
     static void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y);
     static void invMap_(RefVec out, const ConstRefVec& x);
     static void setZero_(RefVec out);

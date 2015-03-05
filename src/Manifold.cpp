@@ -74,14 +74,14 @@ namespace pgs
     return representationDim_;
   }
 
-  void Manifold::plus(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
+  void Manifold::retractation(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
     pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(out.size() == representationDim_);
     pgs_assert(x.size() == representationDim_);
     pgs_assert(v.size() == tangentDim_);
     pgs_assert(isInTxM(x, v));
-    plus_(out, x, v);
+    retractation_(out, x, v);
   }
 
   void Manifold::minus(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const

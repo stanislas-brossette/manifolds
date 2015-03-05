@@ -135,7 +135,7 @@ namespace pgs
 
   Point& Point::increment(const ConstRefVec& v)
   {
-    manifold_.plus(value_, value_, v);
+    manifold_.retractation(value_, value_, v);
     return *this;
   }
 

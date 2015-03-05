@@ -33,7 +33,7 @@ namespace pgs
     return ss.str();
   }
 
-  void RealSpace::plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
+  void RealSpace::retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
     out = x + v;
   }

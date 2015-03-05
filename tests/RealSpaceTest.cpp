@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(RealPointIncrement)
   Eigen::Vector3d vy;
   vx << -7, 2, 1.2;
   vy << 1,2,3;
-  R3.plus(vx,vx,vy);
+  R3.retractation(vx,vx,vy);
   BOOST_CHECK_EQUAL(vx.size(), 3);
   BOOST_CHECK_EQUAL(vx[0], -6);
   BOOST_CHECK_EQUAL(vx[1], 4);
@@ -67,8 +67,8 @@ BOOST_AUTO_TEST_CASE(RealPointAddition)
   Eigen::Vector3d y = Eigen::Vector3d::Zero();
   Eigen::Vector3d v;
   v << 1,2,3;
-  R3.plus(y,y,v);
-  R3.plus(y,y,v);
+  R3.retractation(y,y,v);
+  R3.retractation(y,y,v);
   BOOST_CHECK_EQUAL(y.size(), 3);
   BOOST_CHECK_EQUAL(y[0], 2);
   BOOST_CHECK_EQUAL(y[1], 4);
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(RealPointInvMap)
   RealSpace Space(7);
   Eigen::VectorXd x = Space.getZero().value();
   Eigen::VectorXd vy = Eigen::VectorXd::Random(Space.dim());;
-  Space.plus(x, x, vy);
+  Space.retractation(x, x, vy);
   Eigen::VectorXd z(Space.dim());
   Space.invMap(z, x); 
   BOOST_CHECK(z.isApprox(vy));
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE(RealApplyDiff)
   Index repDim = Space.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
   Eigen::VectorXd x = Space.getZero().value();
-  Space.plus(x,x,Eigen::VectorXd::Random(dim));
+  Space.retractation(x,x,Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
   expectedRes = Jf*Space.diffMap(x);
   Eigen::MatrixXd J(c,dim);
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(RealApplyInvDiff)
   Index repDim = Space.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,dim);
   Eigen::VectorXd x = Space.getZero().value();
-  Space.plus(x, x, Eigen::VectorXd::Random(dim));
+  Space.retractation(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
   expectedRes = Jf*Space.diffInvMap(x);
   Eigen::MatrixXd J(c,repDim);
@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(RealTransport)
   Eigen::MatrixXd Hout(dim,c);
   Eigen::VectorXd v = Eigen::VectorXd::Random(dim);
   Eigen::VectorXd x = Space.getZero().value();
-  Space.plus(x, x, v);
+  Space.retractation(x, x, v);
   Eigen::MatrixXd expectedRes = H;
   Space.applyTransport(Hout, H, x, v);
   BOOST_CHECK(expectedRes.isApprox(Hout));
@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE(RealInvTransport)
   Eigen::MatrixXd Hout(c,dim);
   Eigen::VectorXd v = Eigen::VectorXd::Random(dim);
   Eigen::VectorXd x = Space.getZero().value();
-  Space.plus(x, x, v);
+  Space.retractation(x, x, v);
   Eigen::MatrixXd expectedRes = H;
   Space.applyInvTransport(Hout, H, x, v);
   BOOST_CHECK(expectedRes.isApprox(Hout));
@@ -195,7 +195,7 @@ BOOST_AUTO_TEST_CASE(RealNoAllocation)
   Eigen::internal::set_is_malloc_allowed(false);
   utils::set_is_malloc_allowed(false);
   {
-    R.plus(z, x, v);
+    R.retractation(z, x, v);
     R.minus(z, x, y);
     R.invMap(z, x);
     R.applyDiffMap(J1, J0, x);

@@ -24,7 +24,7 @@ namespace pgs
   protected:
     //map operations
     virtual bool isInM_(const Eigen::VectorXd& ) const;
-    virtual void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
+    virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void invMap_(RefVec out, const ConstRefVec& x) const;
     virtual void setZero_(RefVec out) const;
@@ -34,7 +34,7 @@ namespace pgs
     virtual void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
     virtual void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
-  
+
     virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const;
     virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec&x) const;

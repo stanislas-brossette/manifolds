@@ -8,9 +8,9 @@ add_executable(RealSpaceTest RealSpaceTest.cpp)
 target_link_libraries(RealSpaceTest manifoldsTest ${Boost_LIBRARIES})
 add_test(RealSpaceTest RealSpaceTest)
 
-add_executable(SO3Test SO3Test.cpp)
-target_link_libraries(SO3Test manifoldsTest ${Boost_LIBRARIES})
-add_test(SO3Test SO3Test)
+add_executable(SO3MatrixTest SO3MatrixTest.cpp)
+target_link_libraries(SO3MatrixTest manifoldsTest ${Boost_LIBRARIES})
+add_test(SO3MatrixTest SO3MatrixTest)
 
 add_executable(SO3QuaternionTest SO3QuaternionTest.cpp)
 target_link_libraries(SO3QuaternionTest manifoldsTest ${Boost_LIBRARIES})

@@ -60,8 +60,8 @@ BOOST_AUTO_TEST_CASE(SO3Addition)
 
   Eigen::Vector3d vy;
   vy << 0.1,0.2,0.3;
-  S.plus(x, x, vy);
-  S.plus(x, x, vy);
+  S.retractation(x, x, vy);
+  S.retractation(x, x, vy);
   Eigen::Matrix3d solution;
   solution <<  0.751909095300295,-0.507379423623623, 0.420949917315650, 
                0.583715086608147, 0.809160842538688,-0.067345590561841,
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(SO3InvMap)
 
   Eigen::Vector3d v;
   v << 0.12364,-0.2234234,0.325843516;
-  S.plus(x, x, v);
+  S.retractation(x, x, v);
   Eigen::Vector3d logX;
   S.invMap(logX, x);
   BOOST_CHECK(logX.isApprox(v));
@@ -88,8 +88,8 @@ BOOST_AUTO_TEST_CASE(SO3Substraction)
   Eigen::Vector3d v( 0.268745647, -0.3544, 0.355546);
   Eigen::VectorXd q1 = S.getZero().value();
   Eigen::VectorXd q2(4);
-  S.plus(q1, q1, v);
-  S.plus(q2, q1, v);
+  S.retractation(q1, q1, v);
+  S.retractation(q2, q1, v);
   Eigen::Vector3d d;
   S.minus(d,q2,q1);
   BOOST_CHECK_CLOSE(d[0], v(0), 1e-8);
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE(SO3Diff)
   SO3<ExpMapQuaternion> S;
   Eigen::Vector3d v(0.680375, -0.211234, 0.566198);
   Eigen::Vector4d q = S.getZero().value();
-  S.plus(q, q, v);
+  S.retractation(q, q, v);
   Eigen::Matrix<double, 4, 3> J;
   Eigen::Vector4d dqdvx, dqdvy, dqdvz; 
   Eigen::Vector4d qpdx, qpdy, qpdz; 
@@ -111,9 +111,9 @@ BOOST_AUTO_TEST_CASE(SO3Diff)
   dvx << prec, 0, 0;
   dvy << 0, prec, 0;
   dvz << 0, 0, prec;
-  S.plus(qpdx,q,dvx);
-  S.plus(qpdy,q,dvy);
-  S.plus(qpdz,q,dvz);
+  S.retractation(qpdx,q,dvx);
+  S.retractation(qpdy,q,dvy);
+  S.retractation(qpdz,q,dvz);
   J.col(0) = (qpdx-q)/prec;
   J.col(1) = (qpdy-q)/prec;
   J.col(2) = (qpdz-q)/prec;
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
   Index repDim = S.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
   Eigen::VectorXd x = S.getZero().value();
-  S.plus(x, x, Eigen::VectorXd::Random(dim));
+  S.retractation(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
   expectedRes = Jf*S.diffMap(x);
   Eigen::MatrixXd J(c,dim);
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE(SO3InvDiff)
 
   Eigen::Vector3d v;
   v << 0.12364,-0.2234234,0.325843516;
-  S.plus(q, q, v);
+  S.retractation(q, q, v);
   qpdx = q;
   qpdx(0) += prec;
   qpdy = q;
@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
   Index repDim = S.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,dim);
   Eigen::VectorXd x = S.getZero().value();
-  S.plus(x, x, Eigen::VectorXd::Random(dim));
+  S.retractation(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
   expectedRes = Jf*S.diffInvMap(x);
   Eigen::MatrixXd J(c,repDim);
@@ -222,7 +222,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
 //  Eigen::VectorXd v(dim);
 //  v <<  0.083549465660115, 0.164064455761495, 0.287252050630289;
 //  Eigen::VectorXd x = S.getZero().value();
-//  S.plus(x, x, Eigen::VectorXd::Random(3));
+//  S.retractation(x, x, Eigen::VectorXd::Random(3));
 //  Eigen::MatrixXd expectedRes(dim,c);
 //  expectedRes << 1.126248257109656, 1.969921592423433, 2.813594927737210, 3.657268263050987,
 //                 4.539510349826134, 5.725092676723538, 6.910675003620942, 8.096257330518345,
@@ -246,7 +246,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
 //  Eigen::VectorXd v(dim);
 //  v << 0.289466560559783, 0.047283924503264, 0.291177834528185;
 //  Eigen::VectorXd x = S.getZero().value();
-//  S.plus(x, x, Eigen::VectorXd::Random(3));
+//  S.retractation(x, x, Eigen::VectorXd::Random(3));
 //  Eigen::MatrixXd expectedRes(r,dim);
 //  expectedRes <<  0.667168954696934, 1.299987987788895,  3.444548855437121,
 //                  2.972337006917136, 4.096292499301232,  7.168375023495865,
@@ -310,10 +310,10 @@ BOOST_AUTO_TEST_CASE(SO3CompareMatrixQuaternion)
   Point x_Q = SO3_Q.getZero();
   Eigen::Vector3d v = Eigen::Vector3d::Random();
   Eigen::Vector3d v2 = Eigen::Vector3d::Random();
-  SO3_M.plus(x_M.value(),x_M.value(),v);
-  SO3_M.plus(x_M.value(),x_M.value(),v2);
-  SO3_Q.plus(x_Q.value(),x_Q.value(),v);
-  SO3_Q.plus(x_Q.value(),x_Q.value(),v2);
+  SO3_M.retractation(x_M.value(),x_M.value(),v);
+  SO3_M.retractation(x_M.value(),x_M.value(),v2);
+  SO3_Q.retractation(x_Q.value(),x_Q.value(),v);
+  SO3_Q.retractation(x_Q.value(),x_Q.value(),v2);
   Eigen::Map<Eigen::Quaterniond> xQ(x_Q.value().data());
   Eigen::Map<Eigen::Matrix3d> xM(x_M.value().data());
 
@@ -385,8 +385,8 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
   utils::set_is_malloc_allowed(false);
   {
     std::cout << "Memory allocation tests:" << std::endl;
-    S.plus(z, x, p);
-    std::cout << "- method 'plus' passed" << std::endl;
+    S.retractation(z, x, p);
+    std::cout << "- method 'retractation' passed" << std::endl;
     S.minus(d, x, y);
     std::cout << "- method 'minus' passed" << std::endl;
     S.invMap(d, x);

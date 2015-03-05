@@ -70,8 +70,8 @@ BOOST_AUTO_TEST_CASE(CartProdIncrement)
   Eigen::VectorXd x = S.getZero().value();
   Eigen::VectorXd vy(10);
   vy << 1,2,3,4,5,6,7,0.1,0.2,0.3;
-  S.plus(x, x, vy);
-  S.plus(x, x, vy);
+  S.retractation(x, x, vy);
+  S.retractation(x, x, vy);
   BOOST_CHECK_EQUAL(x.size(), 16);
   BOOST_CHECK_EQUAL(x[0], 2);
   BOOST_CHECK_EQUAL(x[1], 4);
@@ -102,8 +102,8 @@ BOOST_AUTO_TEST_CASE(CartProdAddition)
   Eigen::VectorXd x = S.getZero().value();
   Eigen::VectorXd vy(10);
   vy << 0.1,0.2,0.3,1,2,3,4,5,6,7;
-  S.plus(x, x, vy);
-  S.plus(x, x, vy);
+  S.retractation(x, x, vy);
+  S.retractation(x, x, vy);
   BOOST_CHECK_EQUAL(x.size(), 16);
   BOOST_CHECK_CLOSE(x[0],  0.751909095300295, 1e-12);
   BOOST_CHECK_CLOSE(x[1],  0.583715086608147, 1e-12);
@@ -137,12 +137,12 @@ BOOST_AUTO_TEST_CASE(CartProSubstraction)
   Eigen::VectorXd vy(10);
   vx << 1,0.1,1,1,2,3,4,5,6,7;
   vy << 0.07,3,0.01,4,6,2,1,4,6,4;
-  S.plus(x, x, vx);
-  S.plus(y, y, vy);
+  S.retractation(x, x, vx);
+  S.retractation(y, y, vy);
   Eigen::VectorXd z(16);
   Eigen::VectorXd d(10);
   S.minus(d,y,x);
-  S.plus(z,x,d);
+  S.retractation(z,x,d);
 
   BOOST_CHECK_EQUAL(z.size(), 16);
   for (int i = 0; i < 10; ++i)
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE(CardProdPointInvMap)
   CartesianProduct S(SO3R2R3R2, RotSpace);
   Eigen::VectorXd x = S.getZero().value();
   Eigen::VectorXd vy = Eigen::VectorXd::Random(S.dim());;
-  S.plus(x, x, vy);
+  S.retractation(x, x, vy);
   Eigen::VectorXd z(S.dim());
   S.invMap(z, x); 
   BOOST_CHECK(z.isApprox(vy));
@@ -182,13 +182,13 @@ BOOST_AUTO_TEST_CASE(CartProInvMap)
   Eigen::VectorXd vy(10);
   vx << -7,2,1,0.1,1,3,4,5,6,7;
   vy << 4,6,0.07,3,0.01,2,1,4,6,4;
-  S.plus(x,x,vx);
-  S.plus(x,x,vy);
+  S.retractation(x,x,vx);
+  S.retractation(x,x,vy);
   Eigen::VectorXd x0(10);
   S.invMap(x0, x);
 
   Eigen::VectorXd newX(16);
-  S.plus(newX, Id, x0); 
+  S.retractation(newX, Id, x0); 
 
   BOOST_CHECK_EQUAL(newX.size(), 16);
   for (int i = 0; i < 10; ++i)
@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE(CardProdDiff)
   Eigen::VectorXd x = S.getZero().value();
   Eigen::VectorXd v(5);
   v << 243.27432598, -2314327.23748, 0.3403857, 0.58526775, 0.223811;
-  S.plus(x, x, v);
+  S.retractation(x, x, v);
   J = S.diffMap(x);
   BOOST_CHECK(J.isApprox(Jtest));
 }
@@ -238,7 +238,7 @@ BOOST_AUTO_TEST_CASE(CardProdApplyDiff)
   Index repDim = S.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
   Eigen::VectorXd x = S.getZero().value();
-  S.plus(x, x, Eigen::VectorXd::Random(dim));
+  S.retractation(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
   expectedRes = Jf*S.diffMap(x);
   Eigen::MatrixXd J(c,dim);
@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE(CardProdDiffInv)
   Eigen::VectorXd x = S.getZero().value();
   Eigen::VectorXd v(8);
   v << 243.27432598, -2314327.23748, 0.3403857, 0.58526775, 0.223811, 3.08, 0.00000001, 232.5;
-  S.plus(x, x, v);
+  S.retractation(x, x, v);
   J = S.diffInvMap(x);
   BOOST_CHECK(J.isApprox(Jtest));
 }
@@ -285,7 +285,7 @@ BOOST_AUTO_TEST_CASE(CardProdApplyInvDiff)
   Index repDim = S.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,dim);
   Eigen::VectorXd x = S.getZero().value();
-  S.plus(x, x, Eigen::VectorXd::Random(dim));
+  S.retractation(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
   expectedRes = Jf*S.diffInvMap(x);
   Eigen::MatrixXd J(c,repDim);
@@ -322,7 +322,7 @@ BOOST_AUTO_TEST_CASE(CardProdApplyInvDiff)
 //        0.792207329559554,
 //        0.959492426392903;
 //  Eigen::VectorXd x = S.getZero().value();
-//  S.plus(x, x, Eigen::VectorXd::Random(8));
+//  S.retractation(x, x, Eigen::VectorXd::Random(8));
 //  Eigen::MatrixXd expectedRes(dim,c);
 //  expectedRes <<   1, 2, 3, 4,
 //                   5, 6, 7, 8,
@@ -363,7 +363,7 @@ BOOST_AUTO_TEST_CASE(CardProdApplyInvDiff)
 //        0.131623307896919;
 //
 //  Eigen::VectorXd x = S.getZero().value();
-//  S.plus(x, x, Eigen::VectorXd::Random(8));
+//  S.retractation(x, x, Eigen::VectorXd::Random(8));
 //  Eigen::MatrixXd expectedRes(r,dim);
 //
 //  expectedRes <<   1, 2, 3, 3.211060456124126,  4.703367298475802,  6.675883971635843, 7, 8,
@@ -446,7 +446,7 @@ BOOST_AUTO_TEST_CASE(CardProdNoAllocation)
   Eigen::internal::set_is_malloc_allowed(false);
   utils::set_is_malloc_allowed(false);
   {
-    S.plus(z, x, p);
+    S.retractation(z, x, p);
     S.minus(d, x, y);
     S.invMap(d, x);
     S.applyDiffMap(J1, J0, x);

@@ -64,11 +64,11 @@ namespace pgs
     return ss.str();
   }
 
-  void CartesianProduct::plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
+  void CartesianProduct::retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      submanifolds_[i]->plus(getView<R>(out, i),
+      submanifolds_[i]->retractation(getView<R>(out, i),
                               getConstView<R>(x, i),
                               getConstView<T>(v, i));
     }

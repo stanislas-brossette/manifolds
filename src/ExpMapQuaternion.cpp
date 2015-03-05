@@ -12,7 +12,7 @@ namespace pgs
   typedef Eigen::Map< const Eigen::Quaterniond > toConstQuat;
   const double ExpMapQuaternion::prec = 1e-8; //TODO Should be sqrt(sqrt(machine precision))
 
-  void ExpMapQuaternion::plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v)
+  void ExpMapQuaternion::retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v)
   {
     OutputType q;
     exponential(q,v);

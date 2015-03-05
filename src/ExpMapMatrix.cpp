@@ -35,7 +35,7 @@ namespace pgs
 {
   const double ExpMapMatrix::prec = 1e-8;
 
-  void ExpMapMatrix::plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v)
+  void ExpMapMatrix::retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v)
   {
     OutputType E;
     exponential(E,v);

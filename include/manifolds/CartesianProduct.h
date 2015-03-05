@@ -32,7 +32,7 @@ namespace pgs
     virtual Index startR(size_t i) const;
     virtual Index startT(size_t i) const;
 
-    virtual void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
+    virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void invMap_(RefVec out, const ConstRefVec& x) const;
     virtual void setZero_(RefVec out) const;
