@@ -135,9 +135,9 @@ BOOST_AUTO_TEST_CASE(RealApplyInvDiff)
   Eigen::VectorXd x = Space.getZero().value();
   Space.retractation(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
-  expectedRes = Jf*Space.diffInvMap(x);
+  expectedRes = Jf*Space.diffPseudoLog0(x);
   Eigen::MatrixXd J(c,repDim);
-  Space.applyDiffInvMap(J, Jf, x);
+  Space.applyDiffPseudoLog0(J, Jf, x);
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(RealNoAllocation)
     R.pseudoLog(z, x, y);
     R.invMap(z, x);
     R.applyDiffRetractation(J1, J0, x);
-    R.applyDiffInvMap(J2, J0, x);
+    R.applyDiffPseudoLog0(J2, J0, x);
     R.applyTransport(H1, H0, x, v);
     R.applyInvTransport(H2, H0, x, v);
   }

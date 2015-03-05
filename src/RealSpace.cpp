@@ -63,12 +63,12 @@ namespace pgs
     out = in;
   }
 
-  Eigen::MatrixXd RealSpace::diffInvMap_(const ConstRefVec&) const
+  Eigen::MatrixXd RealSpace::diffPseudoLog0_(const ConstRefVec&) const
   {
     return Eigen::MatrixXd::Identity(representationDim(),dim());
   }
 
-  void RealSpace::applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& ) const
+  void RealSpace::applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in, const ConstRefVec& ) const
   {
     out = in;
   }

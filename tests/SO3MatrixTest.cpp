@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE(SO3invDiff)
   Eigen::Vector3d v(0.3403857, 0.58526775, 0.223811);
   Eigen::VectorXd x = S.getZero().value();
   S.retractation(x,x,v);
-  J = S.diffInvMap(x);
+  J = S.diffPseudoLog0(x);
   BOOST_CHECK(J.isApprox(Jtest));
 }
 
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE(SO3invDiff)
 //  Eigen::Vector3d v( 1.0e-08*0.081125768865785, 1.0e-08*0.929385970968730, 1.0e-08*0.775712678608402);
 //  Point x = S.getZero();
 //  x.increment(v);
-//  J = S.diffInvMap(x.value());
+//  J = S.diffPseudoLog0(x.value());
 //  std::cout << "J = " << J << std::endl; 
 //  BOOST_CHECK(J.isApprox(Jtest));
 //}
@@ -179,9 +179,9 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
   Eigen::VectorXd x = S.getZero().value();
   S.retractation(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
-  expectedRes = Jf*S.diffInvMap(x);
+  expectedRes = Jf*S.diffPseudoLog0(x);
   Eigen::MatrixXd J(c,repDim);
-  S.applyDiffInvMap(J, Jf, x);
+  S.applyDiffPseudoLog0(J, Jf, x);
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
   //However, subsequent calls should not require any allocation, what we check
   //after.
   S.applyDiffRetractation(J1, J0, x);
-  S.applyDiffInvMap(J2, J1, x);
+  S.applyDiffPseudoLog0(J2, J1, x);
 
   Eigen::internal::set_is_malloc_allowed(false);
   utils::set_is_malloc_allowed(false);
@@ -274,8 +274,8 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
     std::cout << "- method 'invMap' passed" << std::endl;
     S.applyDiffRetractation(J1, J0, x);
     std::cout << "- method 'applyDiffRetractation' passed" << std::endl;
-    S.applyDiffInvMap(J2, J1, x);
-    std::cout << "- method 'applyDiffInvMap' passed" << std::endl;
+    S.applyDiffPseudoLog0(J2, J1, x);
+    std::cout << "- method 'applyDiffPseudoLog0' passed" << std::endl;
     S.applyTransport(H1, H0, x, p);
     std::cout << "- method 'applyTransport' passed" << std::endl;
     S.applyInvTransport(H2, H0, x, p);

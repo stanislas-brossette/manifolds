@@ -34,8 +34,8 @@ namespace pgs
 
     static Eigen::Matrix<double, 4, 3> diffRetractation_(const ConstRefVec& x);
     static void applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);
-    static Eigen::Matrix<double, 3, 4> diffInvMap_(const ConstRefVec& x);
-    static void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);
+    static Eigen::Matrix<double, 3, 4> diffPseudoLog0_(const ConstRefVec& x);
+    static void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);
     static void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v, ReusableTemporaryMap& m);
     static void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v, ReusableTemporaryMap& m);
 

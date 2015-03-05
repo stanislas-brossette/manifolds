@@ -141,7 +141,7 @@ namespace pgs
     out = a;
   }
 
-  Eigen::Matrix<double, 3, 9> ExpMapMatrix::diffInvMap_(const ConstRefVec& R)
+  Eigen::Matrix<double, 3, 9> ExpMapMatrix::diffPseudoLog0_(const ConstRefVec& R)
   {
     Eigen::Matrix<double, 3, 9> J;
     J.setZero();
@@ -179,12 +179,12 @@ namespace pgs
     return J;
   }
 
-  void ExpMapMatrix::applyDiffInvMap_(
+  void ExpMapMatrix::applyDiffPseudoLog0_(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m)
   {
     pgs_assert(in.cols() == InputDim_ && "Dimensions mismatch" );
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),OutputDim_);
-    a.noalias() = in*diffInvMap_(x);
+    a.noalias() = in*diffPseudoLog0_(x);
     out = a;
   }
 

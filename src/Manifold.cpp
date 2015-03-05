@@ -118,14 +118,14 @@ namespace pgs
     applyDiffRetractation_(out, in, x);
   }
 
-  Eigen::MatrixXd Manifold::diffInvMap(const ConstRefVec& x) const
+  Eigen::MatrixXd Manifold::diffPseudoLog0(const ConstRefVec& x) const
   {
     pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(x.size() == representationDim_);
-    return diffInvMap_(x);
+    return diffPseudoLog0_(x);
   }
 
-  void Manifold::applyDiffInvMap(
+  void Manifold::applyDiffPseudoLog0(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
     pgs_assert(isValid() || seeMessageAbove());
@@ -133,7 +133,7 @@ namespace pgs
     pgs_assert(in.cols() == tangentDim_);
     pgs_assert(in.rows() == out.rows());
     pgs_assert(x.size() == representationDim_);
-    applyDiffInvMap_(out, in, x);
+    applyDiffPseudoLog0_(out, in, x);
   }
 
   void Manifold::applyTransport(

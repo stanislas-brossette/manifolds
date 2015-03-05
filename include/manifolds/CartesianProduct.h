@@ -38,8 +38,8 @@ namespace pgs
     virtual void setZero_(RefVec out) const;
     virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const;
     virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
-    virtual Eigen::MatrixXd diffInvMap_(const ConstRefVec& x) const;
-    virtual void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
+    virtual Eigen::MatrixXd diffPseudoLog0_(const ConstRefVec& x) const;
+    virtual void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
     virtual void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
     

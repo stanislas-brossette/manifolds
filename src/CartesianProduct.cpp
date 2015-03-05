@@ -120,22 +120,22 @@ namespace pgs
     }
   }
 
-  Eigen::MatrixXd CartesianProduct::diffInvMap_(const ConstRefVec& x) const
+  Eigen::MatrixXd CartesianProduct::diffPseudoLog0_(const ConstRefVec& x) const
   {
     Eigen::MatrixXd J(tangentDim(),representationDim());
     J.setZero();
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      getView<T, R>(J, i) = submanifolds_[i]->diffInvMap(getConstView<R>(x, i));
+      getView<T, R>(J, i) = submanifolds_[i]->diffPseudoLog0(getConstView<R>(x, i));
     }
     return J;
   }
 
-  void CartesianProduct::applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  void CartesianProduct::applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      submanifolds_[i]->applyDiffInvMap(getView<F,R>(out, i),
+      submanifolds_[i]->applyDiffPseudoLog0(getView<F,R>(out, i),
                                         getConstView<F, T>(in, i),
                                         getConstView<R>(x, i));
     }

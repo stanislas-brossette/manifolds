@@ -100,7 +100,7 @@ namespace pgs
     out = a;
   }
 
-  Eigen::Matrix<double, 3, 4> ExpMapQuaternion::diffInvMap_(const ConstRefVec& v)
+  Eigen::Matrix<double, 3, 4> ExpMapQuaternion::diffPseudoLog0_(const ConstRefVec& v)
   {
     const toConstQuat vQ(v.data());
     double n2 = vQ.vec().squaredNorm();
@@ -143,12 +143,12 @@ namespace pgs
     return J;
   }
 
-  void ExpMapQuaternion::applyDiffInvMap_(
+  void ExpMapQuaternion::applyDiffPseudoLog0_(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m)
   {
     pgs_assert(in.cols() == InputDim_ && "Dimensions mismatch" );
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),OutputDim_);
-    a.noalias() = in*diffInvMap_(x);
+    a.noalias() = in*diffPseudoLog0_(x);
     out = a;
   }
 

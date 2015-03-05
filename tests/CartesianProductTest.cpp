@@ -267,7 +267,7 @@ BOOST_AUTO_TEST_CASE(CardProdDiffInv)
   Eigen::VectorXd v(8);
   v << 243.27432598, -2314327.23748, 0.3403857, 0.58526775, 0.223811, 3.08, 0.00000001, 232.5;
   S.retractation(x, x, v);
-  J = S.diffInvMap(x);
+  J = S.diffPseudoLog0(x);
   BOOST_CHECK(J.isApprox(Jtest));
 }
 
@@ -287,9 +287,9 @@ BOOST_AUTO_TEST_CASE(CardProdApplyInvDiff)
   Eigen::VectorXd x = S.getZero().value();
   S.retractation(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
-  expectedRes = Jf*S.diffInvMap(x);
+  expectedRes = Jf*S.diffPseudoLog0(x);
   Eigen::MatrixXd J(c,repDim);
-  S.applyDiffInvMap(J, Jf, x);
+  S.applyDiffPseudoLog0(J, Jf, x);
   BOOST_CHECK(expectedRes.isApprox(J));
 }
 
@@ -441,7 +441,7 @@ BOOST_AUTO_TEST_CASE(CardProdNoAllocation)
   //However, subsequent calls should not require any allocation, what we check
   //after.
   S.applyDiffRetractation(J1, J0, x);
-  S.applyDiffInvMap(J2, J1, x);
+  S.applyDiffPseudoLog0(J2, J1, x);
 
   Eigen::internal::set_is_malloc_allowed(false);
   utils::set_is_malloc_allowed(false);
@@ -450,7 +450,7 @@ BOOST_AUTO_TEST_CASE(CardProdNoAllocation)
     S.pseudoLog(d, x, y);
     S.invMap(d, x);
     S.applyDiffRetractation(J1, J0, x);
-    S.applyDiffInvMap(J2, J1, x);
+    S.applyDiffPseudoLog0(J2, J1, x);
     S.applyTransport(H1, H0, x, p);
     S.applyInvTransport(H2, H0, x, p);
   }

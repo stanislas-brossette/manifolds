@@ -132,14 +132,14 @@ namespace pgs
     /// \f$\frac{\partial\phi^{-1}_0}{\partial x}(x)\f$
     /// \param x element of manifold \f$x\in\mathbb{M}\f$
     /// \return Matrix representing \f$\frac{\partial\phi^{-1}_0}{\partial x}(x)\f$
-    Eigen::MatrixXd diffInvMap(const ConstRefVec& x) const;
+    Eigen::MatrixXd diffPseudoLog0(const ConstRefVec& x) const;
 
     /// \brief Computes the product of a matrix in with the jacobian matrix of
     /// the inverse map on point x.\n \f$ out = in*\frac{\partial\phi^{-1}_0}{\partial x}(x)\f$
     /// \param out result of the operation
     /// \param in matrix to which the operation is applied
     /// \param x point of the manifold on which the map is taken
-    void applyDiffInvMap(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
+    void applyDiffPseudoLog0(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
 
     /// \brief applies a transport operation from point \f$x\in\mathcal{M}\f$ of
     /// direction \f$v\in T_x^\mathcal{M}\f$ on matrix in
@@ -216,8 +216,8 @@ namespace pgs
     virtual void setZero_(RefVec out) const = 0;
     virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const = 0;
     virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const = 0;
-    virtual Eigen::MatrixXd diffInvMap_(const ConstRefVec& x) const = 0;
-    virtual void applyDiffInvMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const = 0;
+    virtual Eigen::MatrixXd diffPseudoLog0_(const ConstRefVec& x) const = 0;
+    virtual void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const = 0;
     virtual void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const = 0;
     virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const = 0;
 
