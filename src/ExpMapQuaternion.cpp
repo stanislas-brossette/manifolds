@@ -45,7 +45,7 @@ namespace pgs
     toQuat q(tmp.data());
     const toConstQuat xQ(x.data());
     const toConstQuat yQ(y.data());
-    q = yQ.inverse()*xQ; //TODO double-check that formula
+    q = xQ.inverse()*yQ; //TODO double-check that formula
     logarithm(out,tmp);
   }
 

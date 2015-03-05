@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(RealPointSubstraction)
   x << 4,3.4,7;
   y << 1,2,3;
   Eigen::Vector3d z; 
-  R3.pseudoLog(z,y,x);
+  R3.pseudoLog(z,x,y);
   BOOST_CHECK_EQUAL(z[0], -3);
   BOOST_CHECK_EQUAL(z[1], -1.4);
   BOOST_CHECK_EQUAL(z[2], -4);

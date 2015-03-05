@@ -15,6 +15,7 @@
 #include <boost/test/unit_test.hpp>
 
 using namespace pgs;
+typedef Eigen::Map<Eigen::Matrix3d> toMat3;
 
 BOOST_AUTO_TEST_CASE(RotSpaceConstructor)
 {
@@ -62,15 +63,12 @@ BOOST_AUTO_TEST_CASE(SO3Addition)
   S.retractation(y, y, vy);
   S.retractation(y, y, vy);
   BOOST_CHECK_EQUAL(y.size(), 9);
-  BOOST_CHECK_CLOSE(y[0],  0.751909095300295, 1e-12);
-  BOOST_CHECK_CLOSE(y[1],  0.583715086608147, 1e-12);
-  BOOST_CHECK_CLOSE(y[2], -0.306446422838863, 1e-12);
-  BOOST_CHECK_CLOSE(y[3], -0.507379423623623, 1e-12);
-  BOOST_CHECK_CLOSE(y[4],  0.809160842538688, 1e-12);
-  BOOST_CHECK_CLOSE(y[5],  0.296352579515415, 1e-12);
-  BOOST_CHECK_CLOSE(y[6],  0.420949917315650, 1e-12);
-  BOOST_CHECK_CLOSE(y[7], -0.067345590561841, 1e-12);
-  BOOST_CHECK_CLOSE(y[8],  0.904580421269344, 1e-12);
+  Eigen::Matrix3d solution;
+  solution <<  0.751909095300295,-0.507379423623623, 0.420949917315650, 
+               0.583715086608147, 0.809160842538688,-0.067345590561841,
+              -0.306446422838863, 0.296352579515415, 0.904580421269344;
+  toMat3 yMat(y.data());
+  BOOST_CHECK(yMat.isApprox(solution));
 }
 
 BOOST_AUTO_TEST_CASE(SO3Substraction)
@@ -82,7 +80,7 @@ BOOST_AUTO_TEST_CASE(SO3Substraction)
   S.retractation(R1, R1, v);
   S.retractation(R2, R1, v);
   Eigen::Vector3d d;
-  S.pseudoLog(d,R2,R1);
+  S.pseudoLog(d,R1,R2);
   BOOST_CHECK_CLOSE(d[0], 0.2, 1e-8);
   BOOST_CHECK_CLOSE(d[1], 0.4, 1e-8);
   BOOST_CHECK_CLOSE(d[2], 0.6, 1e-8);
@@ -268,7 +266,7 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
     std::cout << "Memory allocation tests:" << std::endl;
     S.retractation(z, x, p);
     std::cout << "- method 'retractation' passed" << std::endl;
-    S.pseudoLog(d, x, y);
+    S.pseudoLog(d, y, x);
     std::cout << "- method 'pseudoLog' passed" << std::endl;
     S.pseudoLog0(d, x);
     std::cout << "- method 'pseudoLog0' passed" << std::endl;

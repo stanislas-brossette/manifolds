@@ -16,6 +16,7 @@
 #include <boost/test/unit_test.hpp>
 
 using namespace pgs;
+typedef Eigen::Map<Eigen::Quaterniond> toQuat;
 
 BOOST_AUTO_TEST_CASE(RotSpaceConstructor)
 {
@@ -29,7 +30,7 @@ BOOST_AUTO_TEST_CASE(SO3Zero)
 {
   SO3<ExpMapQuaternion> S;
   Point x = S.getZero();
-  Eigen::Map<Eigen::Quaterniond> xQ(x.value().data());
+  toQuat xQ(x.value().data());
   BOOST_CHECK(xQ.matrix().isApprox(Eigen::Matrix3d::Identity()));
 }
 
@@ -62,6 +63,7 @@ BOOST_AUTO_TEST_CASE(SO3Addition)
   vy << 0.1,0.2,0.3;
   S.retractation(x, x, vy);
   S.retractation(x, x, vy);
+
   Eigen::Matrix3d solution;
   solution <<  0.751909095300295,-0.507379423623623, 0.420949917315650, 
                0.583715086608147, 0.809160842538688,-0.067345590561841,
@@ -91,7 +93,7 @@ BOOST_AUTO_TEST_CASE(SO3Substraction)
   S.retractation(q1, q1, v);
   S.retractation(q2, q1, v);
   Eigen::Vector3d d;
-  S.pseudoLog(d,q2,q1);
+  S.pseudoLog(d,q1,q2);
   BOOST_CHECK_CLOSE(d[0], v(0), 1e-8);
   BOOST_CHECK_CLOSE(d[1], v(1), 1e-8);
   BOOST_CHECK_CLOSE(d[2], v(2), 1e-8);
@@ -387,7 +389,7 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
     std::cout << "Memory allocation tests:" << std::endl;
     S.retractation(z, x, p);
     std::cout << "- method 'retractation' passed" << std::endl;
-    S.pseudoLog(d, x, y);
+    S.pseudoLog(d, y, x);
     std::cout << "- method 'pseudoLog' passed" << std::endl;
     S.pseudoLog0(d, x);
     std::cout << "- method 'pseudoLog0' passed" << std::endl;

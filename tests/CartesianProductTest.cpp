@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE(CartProSubstraction)
   S.retractation(y, y, vy);
   Eigen::VectorXd z(16);
   Eigen::VectorXd d(10);
-  S.pseudoLog(d,y,x);
+  S.pseudoLog(d,x,y);
   S.retractation(z,x,d);
 
   BOOST_CHECK_EQUAL(z.size(), 16);
@@ -447,7 +447,7 @@ BOOST_AUTO_TEST_CASE(CardProdNoAllocation)
   utils::set_is_malloc_allowed(false);
   {
     S.retractation(z, x, p);
-    S.pseudoLog(d, x, y);
+    S.pseudoLog(d, y, x);
     S.pseudoLog0(d, x);
     S.applyDiffRetractation(J1, J0, x);
     S.applyDiffPseudoLog0(J2, J1, x);

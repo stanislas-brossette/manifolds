@@ -83,6 +83,20 @@ namespace pgs
     pgs_assert(isInTxM(x, v));
     retractation_(out, x, v);
   }
+  //void Manifold::retractation(RefVec out, const Point& x, const ConstRefVec& v) const
+  //{
+  //  retractation( out, x.value(), v);
+  //}
+  //Point Manifold::retractation(const ConstRefVec& x, const ConstRefVec& v) const
+  //{
+  //  Eigen::VectorXd out(representationDim_);
+  //  retractation(out, x, v);
+  //  return createPoint(out);
+  //}
+  //Point Manifold::retractation(const Point& x, const ConstRefVec& v) const
+  //{
+  //  return retractation(x.value(), v);
+  //}
 
   void Manifold::pseudoLog(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   {
@@ -92,6 +106,22 @@ namespace pgs
     pgs_assert(y.size() == representationDim_);
     pseudoLog_(out, x, y);
   }
+  //void Manifold::pseudoLog(RefVec out, const Point& x, const Point& y) const
+  //{
+  //  pseudoLog(out, x.value(), y.value());
+  //}
+  //RefVec Manifold::pseudoLog(const ConstRefVec& x, const ConstRefVec& y) const
+  //{
+  //  Eigen::VectorXd out(tangentDim_);
+  //  pseudoLog(out, x, y);
+  //  return out;
+  //}
+  //RefVec Manifold::pseudoLog(const Point& x, const Point& y) const
+  //{
+  //  Eigen::VectorXd out(tangentDim_);
+  //  pseudoLog(out, x.value(), y.value());
+  //  return out;
+  //}
 
   void Manifold::pseudoLog0(RefVec out, const ConstRefVec& x) const
   {
@@ -99,6 +129,22 @@ namespace pgs
     pgs_assert(x.size() == representationDim_);
     pseudoLog0_(out, x);
   }
+  //void Manifold::pseudoLog0(RefVec out, const Point& x) const
+  //{
+  //  pseudoLog0(out, x.value());
+  //}
+  //RefVec Manifold::pseudoLog0(const ConstRefVec& x) const
+  //{
+  //  Eigen::VectorXd out(tangentDim_);
+  //  pseudoLog0(out, x);
+  //  return out;
+  //}
+  //RefVec Manifold::pseudoLog0(const Point& x) const
+  //{
+  //  Eigen::VectorXd out(tangentDim_);
+  //  pseudoLog0(out, x.value());
+  //  return out;
+  //}
 
   Eigen::MatrixXd Manifold::diffRetractation(const ConstRefVec& x) const
   {

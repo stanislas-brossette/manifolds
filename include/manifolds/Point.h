@@ -106,7 +106,18 @@ namespace pgs
     /// \internal For now, we keep operations on Point only. ConstSubPoint and SubPoint
     /// are only intended for memory read/write, not Manifold operations. 
     Point& increment(const ConstRefVec& v);
-    Point & operator=(const Point& x);
+    Point& operator=(const Point& x);
+
+    /// \brief Computes a new point that is the result of a retractation of v 
+    /// at the current point x. \f$ out = \phi_x(v) \f$
+    Point retractation(const ConstRefVec& v);
+    /// \brief Computes a vector that is the pseudoLog of point y at the current point x
+    /// \f$ out = Log_x(y) \f$
+    RefVec pseudoLog(const Point& y);
+
+    /// \brief Computes a vector that is the pseudoLog0 of current point x at point 0
+    /// \f$ out = Log_0(x) \f$
+    RefVec pseudoLog0();
 
     friend class Manifold;
   };

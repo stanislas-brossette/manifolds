@@ -37,6 +37,15 @@ BOOST_AUTO_TEST_CASE(PointIncrement)
   BOOST_CHECK(v.isApprox(x.value()));
 }
 
+BOOST_AUTO_TEST_CASE(PointRetractation)
+{
+  RealSpace R3(3);
+  Eigen::Vector3d v(1,2,3);
+  Point x = R3.getZero();
+  Point y = x.retractation(v);
+  BOOST_CHECK(v.isApprox(y.value()));
+}
+
 BOOST_AUTO_TEST_CASE(PointAccessors)
 {
   RealSpace R3(3);
@@ -53,7 +62,7 @@ BOOST_AUTO_TEST_CASE(PointAccessors)
   BOOST_CHECK(v2.isApprox(x[1]));
 }
 
-BOOST_AUTO_TEST_CASE(PointRetractation)
+BOOST_AUTO_TEST_CASE(PointAddition)
 {
   RealSpace R3(3);
   Eigen::Vector3d v(1,2,3);

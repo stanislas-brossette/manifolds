@@ -139,6 +139,27 @@ namespace pgs
     return *this;
   }
 
+  Point Point::retractation(const ConstRefVec& v)
+  {
+    Eigen::VectorXd out(manifold_.representationDim());
+    manifold_.retractation(out, this->value_, v);
+    return manifold_.createPoint(out);
+  }
+   
+  RefVec Point::pseudoLog(const Point& y)
+  {
+    Eigen::VectorXd out(manifold_.tangentDim());
+    manifold_.pseudoLog(out, this->value_, y.value());
+    return out;
+  }
+  
+  RefVec Point::pseudoLog0()
+  {
+    Eigen::VectorXd out(manifold_.tangentDim());
+    manifold_.pseudoLog0(out, this->value_);
+    return out;
+  }
+
   Point & Point::operator=(const Point& x)
   {
     pgs_assert(this->manifold_.dim() == x.getManifold().dim());
@@ -155,7 +176,7 @@ namespace pgs
   Eigen::VectorXd operator-(const Point& x, const Point& y)
   {
     Eigen::VectorXd output(x.getManifold().dim());
-    x.getManifold().pseudoLog(output, x.value(), y.value());
+    x.getManifold().pseudoLog(output, y.value(), x.value());
     return output;
   }
 

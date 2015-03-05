@@ -73,7 +73,7 @@ namespace pgs
   void ExpMapMatrix::pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y)
   {
     typedef Eigen::Map<const Eigen::Matrix3d> ConstMapMat3;
-    OutputType R(((ConstMapMat3(y.data())).transpose())*(ConstMapMat3(x.data())));
+    OutputType R(((ConstMapMat3(x.data())).transpose())*(ConstMapMat3(y.data())));
     logarithm(out,R);
   }
 

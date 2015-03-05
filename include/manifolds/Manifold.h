@@ -99,14 +99,20 @@ namespace pgs
     /// \param v element of the tangent space of the manifold
     /// \f$v\in T_x^\mathcal{M}\f$
     void retractation(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
+    //void retractation(RefVec out, const Point& x, const ConstRefVec& v) const;
+    //Point retractation(const ConstRefVec& x, const ConstRefVec& v) const;
+    //Point retractation(const Point& x, const ConstRefVec& v) const;
 
-    /// \brief Internal substraction operation
-    /// \f$ out = x \ominus y = \phi_y^{-1}(x) \f$
+    /// \brief PseudoLog operation
+    /// \f$ out = {Log}_x(y) \f$
     /// \param out output reference on element of the tangent space of the
     /// manifold \f$out\in\mathbb{M}\f$
     /// \param x element of the manifold \f$x\in\mathbb{M}\f$
     /// \param y element of the manifold \f$y\in\mathbb{M}\f$
     void pseudoLog(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
+    //void pseudoLog(RefVec out, const Point& x, const Point& y) const;
+    //RefVec pseudoLog(const ConstRefVec& x, const ConstRefVec& y) const;
+    //RefVec pseudoLog(const Point& x, const Point& y) const;
 
     /// \brief computes the inverse of a point of the manifold through its map
     /// \f$ out = x \ominus 0 = \phi_0^{-1}(x) \f$
@@ -114,6 +120,9 @@ namespace pgs
     /// manifold\f$out\in\mathbb{M}\f$
     /// \param x element of the manifold\f$x\in\mathbb{M}\f$
     void pseudoLog0(RefVec out, const ConstRefVec& x) const;
+    //void pseudoLog0(RefVec out, const Point& x) const;
+    //RefVec pseudoLog0(const ConstRefVec& x) const;
+    //RefVec pseudoLog0(const Point& x) const;
 
     /// \brief Computes the Jacobian matrix of the map function
     /// \f$\frac{\partial\phi_x}{\partial v}(0)\f$
