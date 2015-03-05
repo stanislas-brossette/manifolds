@@ -48,7 +48,7 @@ namespace pgs
     out = x;
   }
 
-  void RealSpace::setIdentity_(RefVec out) const
+  void RealSpace::setZero_(RefVec out) const
   {
     out.setZero();
   }

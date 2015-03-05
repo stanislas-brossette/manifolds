@@ -47,12 +47,12 @@ namespace pgs
     return isValidInit_(val);
   }
 
-  Point Manifold::getIdentity() const
+  Point Manifold::getZero() const
   {
     pgs_assert(isValid() || seeMessageAbove());
     lock();
     Eigen::VectorXd id(representationDim_);
-    setIdentity(id);
+    setZero(id);
     return Point(*this, id);
   }
 
@@ -187,11 +187,11 @@ namespace pgs
   }
 
 
-  void Manifold::setIdentity(RefVec out) const
+  void Manifold::setZero(RefVec out) const
   {
     pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(out.size() == representationDim_);
-    setIdentity_(out);
+    setZero_(out);
   }
 
   void Manifold::tangentConstraint(RefMat out, const ConstRefVec& x) const

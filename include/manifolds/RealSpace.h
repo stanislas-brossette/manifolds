@@ -27,7 +27,7 @@ namespace pgs
     virtual void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void invMap_(RefVec out, const ConstRefVec& x) const;
-    virtual void setIdentity_(RefVec out) const;
+    virtual void setZero_(RefVec out) const;
     virtual Eigen::MatrixXd diffMap_(const ConstRefVec& x) const;
     virtual void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
     virtual Eigen::MatrixXd diffInvMap_(const ConstRefVec& x) const;

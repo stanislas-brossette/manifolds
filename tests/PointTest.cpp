@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(PointIncrement)
 {
   RealSpace R3(3);
   Eigen::Vector3d v(1,2,3);
-  Point x = R3.getIdentity();
+  Point x = R3.getZero();
   x.increment(v);
   BOOST_CHECK(v.isApprox(x.value()));
 }

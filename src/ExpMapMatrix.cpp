@@ -101,11 +101,9 @@ namespace pgs
     }
   }
 
-  void ExpMapMatrix::setIdentity_(RefVec out)
+  void ExpMapMatrix::setZero_(RefVec out)
   {
-    out << 1,0,0,
-           0,1,0,
-           0,0,1;
+    Eigen::Map<Eigen::Matrix3d>(out.data()) = Eigen::Matrix3d::Identity();
   }
 
   bool ExpMapMatrix::isValidInit_(const Eigen::VectorXd& val)

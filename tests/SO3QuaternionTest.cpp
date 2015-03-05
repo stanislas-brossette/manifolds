@@ -25,10 +25,10 @@ BOOST_AUTO_TEST_CASE(RotSpaceConstructor)
   BOOST_CHECK_EQUAL(S.numberOfSubmanifolds(), 1);
 }
 
-BOOST_AUTO_TEST_CASE(SO3Identity)
+BOOST_AUTO_TEST_CASE(SO3Zero)
 {
   SO3<ExpMapQuaternion> S;
-  Point x = S.getIdentity();
+  Point x = S.getZero();
   Eigen::Map<Eigen::Quaterniond> xQ(x.value().data());
   BOOST_CHECK(xQ.matrix().isApprox(Eigen::Matrix3d::Identity()));
 }
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(SO3Identity)
 BOOST_AUTO_TEST_CASE(SO3Constructor)
 {
   SO3<ExpMapQuaternion> S;
-  Point x = S.getIdentity();
+  Point x = S.getZero();
   Eigen::VectorXd v(4);
   v << 0,0,0,1;
   Point y = S.createPoint(v);
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(SO3Constructor)
 BOOST_AUTO_TEST_CASE(SO3Addition)
 {
   SO3<ExpMapQuaternion> S;
-  Eigen::Vector4d x = S.getIdentity().value();
+  Eigen::Vector4d x = S.getZero().value();
   Eigen::Map<Eigen::Quaterniond> xQ(x.data());
 
   Eigen::Vector3d vy;
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(SO3Addition)
 BOOST_AUTO_TEST_CASE(SO3InvMap)
 {
   SO3<ExpMapQuaternion> S;
-  Eigen::Vector4d x = S.getIdentity().value();
+  Eigen::Vector4d x = S.getZero().value();
 
   Eigen::Vector3d v;
   v << 0.12364,-0.2234234,0.325843516;
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(SO3Substraction)
 {
   SO3<ExpMapQuaternion> S;
   Eigen::Vector3d v( 0.268745647, -0.3544, 0.355546);
-  Eigen::VectorXd q1 = S.getIdentity().value();
+  Eigen::VectorXd q1 = S.getZero().value();
   Eigen::VectorXd q2(4);
   S.plus(q1, q1, v);
   S.plus(q2, q1, v);
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(SO3Diff)
   double prec = 1e-9;
   SO3<ExpMapQuaternion> S;
   Eigen::Vector3d v(0.680375, -0.211234, 0.566198);
-  Eigen::Vector4d q = S.getIdentity().value();
+  Eigen::Vector4d q = S.getZero().value();
   S.plus(q, q, v);
   Eigen::Matrix<double, 4, 3> J;
   Eigen::Vector4d dqdvx, dqdvy, dqdvz; 
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
   Index dim = S.dim();
   Index repDim = S.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
-  Eigen::VectorXd x = S.getIdentity().value();
+  Eigen::VectorXd x = S.getZero().value();
   S.plus(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
   expectedRes = Jf*S.diffMap(x);
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE(SO3InvDiff)
 {
   double prec = 1e-6;
   SO3<ExpMapQuaternion> S;
-  Eigen::Vector4d q = S.getIdentity().value();
+  Eigen::Vector4d q = S.getZero().value();
   Eigen::Vector4d qpdx, qpdy, qpdz, qpdw;
 
   Eigen::Vector3d v;
@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE(SO3InvDiff)
 //  -0.110117993664377,                 0, -0.545030346992499,                  0, -0.110117993664377,                 0, 0.545030346992499,                  0, -0.110117993664377,
 //  -0.042109988599266, 0.545030346992499,                  0, -0.545030346992499, -0.042109988599266,                 0,                 0,                  0, -0.042109988599266;
 //  Eigen::Vector3d v( 1.0e-08*0.081125768865785, 1.0e-08*0.929385970968730, 1.0e-08*0.775712678608402);
-//  Point x = S.getIdentity();
+//  Point x = S.getZero();
 //  x.increment(v);
 //  J = S.diffInvMap(x.value());
 //  std::cout << "J = " << J << std::endl; 
@@ -198,7 +198,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
   Index dim = S.dim();
   Index repDim = S.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,dim);
-  Eigen::VectorXd x = S.getIdentity().value();
+  Eigen::VectorXd x = S.getZero().value();
   S.plus(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
   expectedRes = Jf*S.diffInvMap(x);
@@ -221,7 +221,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
 //  Eigen::MatrixXd Hout(dim,c);
 //  Eigen::VectorXd v(dim);
 //  v <<  0.083549465660115, 0.164064455761495, 0.287252050630289;
-//  Eigen::VectorXd x = S.getIdentity().value();
+//  Eigen::VectorXd x = S.getZero().value();
 //  S.plus(x, x, Eigen::VectorXd::Random(3));
 //  Eigen::MatrixXd expectedRes(dim,c);
 //  expectedRes << 1.126248257109656, 1.969921592423433, 2.813594927737210, 3.657268263050987,
@@ -245,7 +245,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
 //  Eigen::MatrixXd Hout(r,dim);
 //  Eigen::VectorXd v(dim);
 //  v << 0.289466560559783, 0.047283924503264, 0.291177834528185;
-//  Eigen::VectorXd x = S.getIdentity().value();
+//  Eigen::VectorXd x = S.getZero().value();
 //  S.plus(x, x, Eigen::VectorXd::Random(3));
 //  Eigen::MatrixXd expectedRes(r,dim);
 //  expectedRes <<  0.667168954696934, 1.299987987788895,  3.444548855437121,
@@ -305,8 +305,8 @@ BOOST_AUTO_TEST_CASE(SO3CompareMatrixQuaternion)
 {
   SO3<ExpMapMatrix> SO3_M;
   SO3<ExpMapQuaternion> SO3_Q;
-  Point x_M = SO3_M.getIdentity();
-  Point x_Q = SO3_Q.getIdentity();
+  Point x_M = SO3_M.getZero();
+  Point x_Q = SO3_Q.getZero();
   Eigen::Vector3d v = Eigen::Vector3d::Random();
   Eigen::Vector3d v2 = Eigen::Vector3d::Random();
   SO3_M.plus(x_M.value(),x_M.value(),v);

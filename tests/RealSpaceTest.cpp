@@ -37,10 +37,10 @@ BOOST_AUTO_TEST_CASE(RealPointConstructor)
   BOOST_CHECK_EQUAL(y.value()[2], 3);
 }
 
-BOOST_AUTO_TEST_CASE(RealSpaceIdentity)
+BOOST_AUTO_TEST_CASE(RealSpaceZero)
 {
   RealSpace R3(3);
-  Point x = R3.getIdentity();
+  Point x = R3.getZero();
   for(long i = 0; i < x.value().size(); ++i)
   {
     BOOST_CHECK_EQUAL(x.value()[i], 0);
@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE(RealPointSubstraction)
 BOOST_AUTO_TEST_CASE(RealPointInvMap)
 {
   RealSpace Space(7);
-  Eigen::VectorXd x = Space.getIdentity().value();
+  Eigen::VectorXd x = Space.getZero().value();
   Eigen::VectorXd vy = Eigen::VectorXd::Random(Space.dim());;
   Space.plus(x, x, vy);
   Eigen::VectorXd z(Space.dim());
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(RealApplyDiff)
   Index dim = Space.dim();
   Index repDim = Space.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
-  Eigen::VectorXd x = Space.getIdentity().value();
+  Eigen::VectorXd x = Space.getZero().value();
   Space.plus(x,x,Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
   expectedRes = Jf*Space.diffMap(x);
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(RealApplyInvDiff)
   Index dim = Space.dim();
   Index repDim = Space.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,dim);
-  Eigen::VectorXd x = Space.getIdentity().value();
+  Eigen::VectorXd x = Space.getZero().value();
   Space.plus(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
   expectedRes = Jf*Space.diffInvMap(x);
@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE(RealTransport)
   Eigen::MatrixXd H = Eigen::MatrixXd::Random(dim,c);
   Eigen::MatrixXd Hout(dim,c);
   Eigen::VectorXd v = Eigen::VectorXd::Random(dim);
-  Eigen::VectorXd x = Space.getIdentity().value();
+  Eigen::VectorXd x = Space.getZero().value();
   Space.plus(x, x, v);
   Eigen::MatrixXd expectedRes = H;
   Space.applyTransport(Hout, H, x, v);
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE(RealInvTransport)
   Eigen::MatrixXd H = Eigen::MatrixXd::Random(c,dim);
   Eigen::MatrixXd Hout(c,dim);
   Eigen::VectorXd v = Eigen::VectorXd::Random(dim);
-  Eigen::VectorXd x = Space.getIdentity().value();
+  Eigen::VectorXd x = Space.getZero().value();
   Space.plus(x, x, v);
   Eigen::MatrixXd expectedRes = H;
   Space.applyInvTransport(Hout, H, x, v);

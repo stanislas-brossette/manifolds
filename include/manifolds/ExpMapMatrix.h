@@ -25,7 +25,7 @@ namespace pgs
     static void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v);
     static void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y);
     static void invMap_(RefVec out, const ConstRefVec& x);
-    static void setIdentity_(RefVec out);
+    static void setZero_(RefVec out);
 
     static void logarithm(RefVec out, const OutputType& M);
     static void exponential(OutputType& out, const ConstRefVec& v);

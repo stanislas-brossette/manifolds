@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(RotSpaceConstructor)
 BOOST_AUTO_TEST_CASE(SO3Constructor)
 {
   SO3<ExpMapMatrix> S;
-  Point x = S.getIdentity();
+  Point x = S.getZero();
   Eigen::VectorXd v(9);
   v << 1,0,0,0,1,0,0,0,1;
   Point y = S.createPoint(v);
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(SO3Constructor)
 BOOST_AUTO_TEST_CASE(SO3Addition)
 {
   SO3<ExpMapMatrix> S;
-  Eigen::VectorXd y = S.getIdentity().value();
+  Eigen::VectorXd y = S.getZero().value();
   Eigen::Vector3d vy;
   vy << 0.1,0.2,0.3;
   S.plus(y, y, vy);
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(SO3Substraction)
 {
   SO3<ExpMapMatrix> S;
   Eigen::Vector3d v( 0.2, 0.4, 0.6);
-  Eigen::VectorXd R1 = S.getIdentity().value();
+  Eigen::VectorXd R1 = S.getZero().value();
   Eigen::VectorXd R2(9);
   S.plus(R1, R1, v);
   S.plus(R2, R1, v);
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(SO3Substraction)
 BOOST_AUTO_TEST_CASE(SO3PointInvMap)
 {
   SO3<ExpMapMatrix> S;
-  Eigen::VectorXd x = S.getIdentity().value();
+  Eigen::VectorXd x = S.getZero().value();
   Eigen::VectorXd vy = Eigen::VectorXd::Random(S.dim());
   S.plus(x, x, vy);
   Eigen::VectorXd z(S.dim());
@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE(SO3Diff)
   -0.634553549147103,  0.424189774632061,                  0,
   -0.534497507539106,  0.362946363755562,                  0;
   Eigen::Vector3d v(0.680375, -0.211234, 0.566198);
-  Eigen::VectorXd x = S.getIdentity().value();
+  Eigen::VectorXd x = S.getZero().value();
   S.plus(x, x, v);
   J = S.diffMap(x);
   BOOST_CHECK(J.isApprox(Jtest));
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyDiff)
   Index dim = S.dim();
   Index repDim = S.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
-  Eigen::VectorXd x = S.getIdentity().value();
+  Eigen::VectorXd x = S.getZero().value();
   S.plus(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
   expectedRes = Jf*S.diffMap(x);
@@ -146,7 +146,7 @@ BOOST_AUTO_TEST_CASE(SO3invDiff)
   -0.110117993664377,                 0, -0.545030346992499,                  0, -0.110117993664377,                 0, 0.545030346992499,                  0, -0.110117993664377,
   -0.042109988599266, 0.545030346992499,                  0, -0.545030346992499, -0.042109988599266,                 0,                 0,                  0, -0.042109988599266;
   Eigen::Vector3d v(0.3403857, 0.58526775, 0.223811);
-  Eigen::VectorXd x = S.getIdentity().value();
+  Eigen::VectorXd x = S.getZero().value();
   S.plus(x,x,v);
   J = S.diffInvMap(x);
   BOOST_CHECK(J.isApprox(Jtest));
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE(SO3invDiff)
 //  -0.110117993664377,                 0, -0.545030346992499,                  0, -0.110117993664377,                 0, 0.545030346992499,                  0, -0.110117993664377,
 //  -0.042109988599266, 0.545030346992499,                  0, -0.545030346992499, -0.042109988599266,                 0,                 0,                  0, -0.042109988599266;
 //  Eigen::Vector3d v( 1.0e-08*0.081125768865785, 1.0e-08*0.929385970968730, 1.0e-08*0.775712678608402);
-//  Point x = S.getIdentity();
+//  Point x = S.getZero();
 //  x.increment(v);
 //  J = S.diffInvMap(x.value());
 //  std::cout << "J = " << J << std::endl; 
@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
   Index dim = S.dim();
   Index repDim = S.representationDim();
   Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,dim);
-  Eigen::VectorXd x = S.getIdentity().value();
+  Eigen::VectorXd x = S.getZero().value();
   S.plus(x, x, Eigen::VectorXd::Random(dim));
   Eigen::MatrixXd expectedRes;
   expectedRes = Jf*S.diffInvMap(x);
@@ -197,7 +197,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
 //  Eigen::MatrixXd Hout(dim,c);
 //  Eigen::VectorXd v(dim);
 //  v <<  0.083549465660115, 0.164064455761495, 0.287252050630289;
-//  Eigen::VectorXd x = S.getIdentity().value();
+//  Eigen::VectorXd x = S.getZero().value();
 //  S.plus(x, x, Eigen::VectorXd::Random(3));
 //  Eigen::MatrixXd expectedRes(dim,c);
 //  expectedRes << 1.126248257109656, 1.969921592423433, 2.813594927737210, 3.657268263050987,
@@ -220,7 +220,7 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
 //  Eigen::MatrixXd Hout(r,dim);
 //  Eigen::VectorXd v(dim);
 //  v << 0.289466560559783, 0.047283924503264, 0.291177834528185;
-//  Eigen::VectorXd x = S.getIdentity().value();
+//  Eigen::VectorXd x = S.getZero().value();
 //  S.plus(x, x, Eigen::VectorXd::Random(3));
 //  Eigen::MatrixXd expectedRes(r,dim);
 //  expectedRes <<  0.667168954696934, 1.299987987788895,  3.444548855437121,

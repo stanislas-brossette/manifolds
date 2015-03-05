@@ -31,7 +31,7 @@ CartesianProduct* buildProduct()
 
 BOOST_AUTO_TEST_CASE(ManifoldIsValid)
 {
-  CHECK_THROW_IN_DEBUG(buildProduct()->getIdentity(), pgs::pgs_exception);
+  CHECK_THROW_IN_DEBUG(buildProduct()->getZero(), pgs::pgs_exception);
 }
 
 Point createR3Point()

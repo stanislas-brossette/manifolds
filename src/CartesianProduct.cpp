@@ -93,10 +93,10 @@ namespace pgs
     }
   }
 
-  void CartesianProduct::setIdentity_(RefVec out) const
+  void CartesianProduct::setZero_(RefVec out) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
-      submanifolds_[i]->setIdentity(getView<R>(out, i));
+      submanifolds_[i]->setZero(getView<R>(out, i));
   }
 
   Eigen::MatrixXd CartesianProduct::diffMap_(const ConstRefVec& x ) const

@@ -66,9 +66,9 @@ namespace pgs
       out = atan2(2 * n * vQ.w(), vQ.w() * vQ.w() - n2) / n * vQ.vec(); 
   }
 
-  void ExpMapQuaternion::setIdentity_(RefVec out)
+  void ExpMapQuaternion::setZero_(RefVec out)
   {
-    out << 0,0,0,1;
+    toQuat(out.data()).setIdentity();
   }
 
   bool ExpMapQuaternion::isValidInit_(const Eigen::VectorXd& val)

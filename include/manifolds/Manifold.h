@@ -44,8 +44,8 @@ namespace pgs
     Point createPoint(const ConstRefVec& val) const;
 
     /// \brief Creates a point that represents the identity wrt the addition operation
-    ///defined in this manifold
-    Point getIdentity() const;
+    /// defined in this manifold (aka the zero)
+    Point getZero() const;
 
     /// \brief Checks the initialization values
     virtual bool isValidInit(const Eigen::VectorXd& val) const;
@@ -88,8 +88,8 @@ namespace pgs
     //The following operations are public and make call to their private version
     //that actually contain the implementation
 
-    /// \brief Sets vector out to identity
-    void setIdentity(RefVec out) const;
+    /// \brief Sets vector out to the zero of this manifold
+    void setZero(RefVec out) const;
 
     /// \brief External addition operation \f$ out = x \oplus v = \phi_x(v) \f$
     /// \param out output reference on element of the manifold
@@ -210,7 +210,7 @@ namespace pgs
     virtual void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
     virtual void invMap_(RefVec out, const ConstRefVec& x) const = 0;
-    virtual void setIdentity_(RefVec out) const = 0;
+    virtual void setZero_(RefVec out) const = 0;
     virtual Eigen::MatrixXd diffMap_(const ConstRefVec& x) const = 0;
     virtual void applyDiffMap_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const = 0;
     virtual Eigen::MatrixXd diffInvMap_(const ConstRefVec& x) const = 0;
