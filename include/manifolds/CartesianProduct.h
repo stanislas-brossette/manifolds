@@ -27,7 +27,7 @@ namespace pgs
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
 
   protected:
-    virtual bool isValidInit_(const Eigen::VectorXd& val) const;
+    virtual bool isInM_(const Eigen::VectorXd& val) const;
 
     virtual Index startR(size_t i) const;
     virtual Index startT(size_t i) const;

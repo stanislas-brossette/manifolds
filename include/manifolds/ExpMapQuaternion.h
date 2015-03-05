@@ -23,7 +23,7 @@ namespace pgs
     static const int InputDim_ = 3;
     typedef Eigen::Vector4d DisplayType; //display as q=(x, y, z, w)
     typedef Eigen::Vector4d OutputType;
-    static bool isValidInit_(const Eigen::VectorXd& val);
+    static bool isInM_(const Eigen::VectorXd& val);
     static void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v);
     static void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y);
     static void invMap_(RefVec out, const ConstRefVec& x);

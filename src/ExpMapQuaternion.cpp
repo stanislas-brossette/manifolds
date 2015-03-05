@@ -71,7 +71,7 @@ namespace pgs
     toQuat(out.data()).setIdentity();
   }
 
-  bool ExpMapQuaternion::isValidInit_(const Eigen::VectorXd& val)
+  bool ExpMapQuaternion::isInM_(const Eigen::VectorXd& val)
   {
     typedef Eigen::Map<const Eigen::Quaterniond> toQuat;
     bool out(val.size()==4);

@@ -20,7 +20,7 @@ namespace pgs
 
   protected:
     //map operations
-    virtual bool isValidInit_(const Eigen::VectorXd& val) const;
+    virtual bool isInM_(const Eigen::VectorXd& val) const;
     virtual void plus_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void minus_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void invMap_(RefVec out, const ConstRefVec& x) const;
@@ -47,9 +47,9 @@ namespace pgs
   }
 
   template<typename Map>
-  inline bool SO3<Map>::isValidInit_(const Eigen::VectorXd& val) const
+  inline bool SO3<Map>::isInM_(const Eigen::VectorXd& val) const
   {
-    return Map::isValidInit_(val);
+    return Map::isInM_(val);
   }
 
   template<typename Map>

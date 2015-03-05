@@ -259,7 +259,8 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
 Eigen::Vector3d rotatePointMatrix(Point& Rp, RefVec P)
 {
   Eigen::Map<Eigen::Matrix3d> R(Rp.value().data());
-  Eigen::Vector3d res = R*P;
+  Eigen::Vector3d res;
+  res = R*P;
   return res;
 }
 Eigen::Matrix<double,3,9> diffRotatePointMatrix(Point& , RefVec P)

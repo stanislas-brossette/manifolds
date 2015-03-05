@@ -47,8 +47,9 @@ namespace pgs
     /// defined in this manifold (aka the zero)
     Point getZero() const;
 
-    /// \brief Checks the initialization values
-    virtual bool isValidInit(const Eigen::VectorXd& val) const;
+    /// \brief Checks that the value val described in the representation space 
+    /// is an element of the manifold
+    virtual bool isInM(const Eigen::VectorXd& val) const;
 
     /// \brief Returns the dimension of the Manifold
     Index dim() const;
@@ -182,7 +183,7 @@ namespace pgs
 
     /// \brief Set manifolds representation space dimension to rd
     void setRepresentationDimension(Index rd);
-    virtual bool isValidInit_(const Eigen::VectorXd& val) const = 0;
+    virtual bool isInM_(const Eigen::VectorXd& val) const = 0;
 
     /// \brief Gets the manifolds dimension
     template<int D>

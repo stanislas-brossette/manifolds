@@ -29,7 +29,7 @@ namespace pgs
   Point Manifold::createPoint(const ConstRefVec& val) const
   {
     pgs_assert(isValid() || seeMessageAbove());
-    if (isValidInit(val))
+    if (isInM(val))
     {
       lock();
       return Point(*this, val);
@@ -40,11 +40,11 @@ namespace pgs
     }
   }
 
-  bool Manifold::isValidInit(const Eigen::VectorXd& val) const
+  bool Manifold::isInM(const Eigen::VectorXd& val) const
   {
     pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(val.size() == representationDim());
-    return isValidInit_(val);
+    return isInM_(val);
   }
 
   Point Manifold::getZero() const

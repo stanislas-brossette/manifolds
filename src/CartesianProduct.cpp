@@ -19,12 +19,12 @@ namespace pgs
     multiply(m2);
   }
 
-  bool CartesianProduct::isValidInit_(const Eigen::VectorXd& val) const
+  bool CartesianProduct::isInM_(const Eigen::VectorXd& val) const
   {
     bool out = true;
     for (std::size_t i = 0; i<numberOfSubmanifolds(); ++i)
     {
-      out = out && submanifolds_[i]->isValidInit(getConstView<R>(val, i));
+      out = out && submanifolds_[i]->isInM(getConstView<R>(val, i));
     }
     return out;
   }
