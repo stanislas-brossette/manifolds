@@ -113,7 +113,7 @@ namespace pgs
     /// \param out output reference on element of the tangent space of the
     /// manifold\f$out\in\mathbb{M}\f$
     /// \param x element of the manifold\f$x\in\mathbb{M}\f$
-    void invMap(RefVec out, const ConstRefVec& x) const;
+    void pseudoLog0(RefVec out, const ConstRefVec& x) const;
 
     /// \brief Computes the Jacobian matrix of the map function
     /// \f$\frac{\partial\phi_x}{\partial v}(0)\f$
@@ -128,7 +128,7 @@ namespace pgs
     /// \param x point of the manifold on which the map is taken
     void applyDiffRetractation(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
 
-    /// \brief Computes the Jacobian matrix of the invMap function
+    /// \brief Computes the Jacobian matrix of the pseudoLog0 function
     /// \f$\frac{\partial\phi^{-1}_0}{\partial x}(x)\f$
     /// \param x element of manifold \f$x\in\mathbb{M}\f$
     /// \return Matrix representing \f$\frac{\partial\phi^{-1}_0}{\partial x}(x)\f$
@@ -212,7 +212,7 @@ namespace pgs
 
     virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
     virtual void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
-    virtual void invMap_(RefVec out, const ConstRefVec& x) const = 0;
+    virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const = 0;
     virtual void setZero_(RefVec out) const = 0;
     virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const = 0;
     virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const = 0;

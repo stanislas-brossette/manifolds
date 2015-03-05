@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE(CartProSubstraction)
   }
 }
 
-BOOST_AUTO_TEST_CASE(CardProdPointInvMap)
+BOOST_AUTO_TEST_CASE(CardProdPointpseudoLog0)
 {
   RealSpace R2(2);
   RealSpace R3(3);
@@ -164,11 +164,11 @@ BOOST_AUTO_TEST_CASE(CardProdPointInvMap)
   Eigen::VectorXd vy = Eigen::VectorXd::Random(S.dim());;
   S.retractation(x, x, vy);
   Eigen::VectorXd z(S.dim());
-  S.invMap(z, x); 
+  S.pseudoLog0(z, x); 
   BOOST_CHECK(z.isApprox(vy));
 }
 
-BOOST_AUTO_TEST_CASE(CartProInvMap)
+BOOST_AUTO_TEST_CASE(CartPropseudoLog0)
 {
   RealSpace R2(2);
   RealSpace R3(3);
@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE(CartProInvMap)
   S.retractation(x,x,vx);
   S.retractation(x,x,vy);
   Eigen::VectorXd x0(10);
-  S.invMap(x0, x);
+  S.pseudoLog0(x0, x);
 
   Eigen::VectorXd newX(16);
   S.retractation(newX, Id, x0); 
@@ -448,7 +448,7 @@ BOOST_AUTO_TEST_CASE(CardProdNoAllocation)
   {
     S.retractation(z, x, p);
     S.pseudoLog(d, x, y);
-    S.invMap(d, x);
+    S.pseudoLog0(d, x);
     S.applyDiffRetractation(J1, J0, x);
     S.applyDiffPseudoLog0(J2, J1, x);
     S.applyTransport(H1, H0, x, p);

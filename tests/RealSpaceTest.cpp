@@ -89,14 +89,14 @@ BOOST_AUTO_TEST_CASE(RealPointSubstraction)
   BOOST_CHECK_EQUAL(z[2], -4);
 }
 
-BOOST_AUTO_TEST_CASE(RealPointInvMap)
+BOOST_AUTO_TEST_CASE(RealPointpseudoLog0)
 {
   RealSpace Space(7);
   Eigen::VectorXd x = Space.getZero().value();
   Eigen::VectorXd vy = Eigen::VectorXd::Random(Space.dim());;
   Space.retractation(x, x, vy);
   Eigen::VectorXd z(Space.dim());
-  Space.invMap(z, x); 
+  Space.pseudoLog0(z, x); 
   BOOST_CHECK(z.isApprox(vy));
 }
 
@@ -197,7 +197,7 @@ BOOST_AUTO_TEST_CASE(RealNoAllocation)
   {
     R.retractation(z, x, v);
     R.pseudoLog(z, x, y);
-    R.invMap(z, x);
+    R.pseudoLog0(z, x);
     R.applyDiffRetractation(J1, J0, x);
     R.applyDiffPseudoLog0(J2, J0, x);
     R.applyTransport(H1, H0, x, v);

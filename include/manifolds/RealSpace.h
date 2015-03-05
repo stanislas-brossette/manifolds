@@ -26,7 +26,7 @@ namespace pgs
     virtual bool isInM_(const Eigen::VectorXd& ) const;
     virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
-    virtual void invMap_(RefVec out, const ConstRefVec& x) const;
+    virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const;
     virtual void setZero_(RefVec out) const;
     virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const;
     virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;

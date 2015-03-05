@@ -84,11 +84,11 @@ namespace pgs
     }
   }
 
-  void CartesianProduct::invMap_(RefVec out, const ConstRefVec& x) const
+  void CartesianProduct::pseudoLog0_(RefVec out, const ConstRefVec& x) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
-      submanifolds_[i]->invMap(getView<T>(out,i),
+      submanifolds_[i]->pseudoLog0(getView<T>(out,i),
                                getConstView<R>(x, i));
     }
   }

@@ -49,7 +49,7 @@ namespace pgs
     logarithm(out,tmp);
   }
 
-  void ExpMapQuaternion::invMap_(RefVec out, const ConstRefVec& x)
+  void ExpMapQuaternion::pseudoLog0_(RefVec out, const ConstRefVec& x)
   {
     logarithm(out,x);
   }

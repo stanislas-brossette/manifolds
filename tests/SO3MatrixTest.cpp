@@ -88,14 +88,14 @@ BOOST_AUTO_TEST_CASE(SO3Substraction)
   BOOST_CHECK_CLOSE(d[2], 0.6, 1e-8);
 }
 
-BOOST_AUTO_TEST_CASE(SO3PointInvMap)
+BOOST_AUTO_TEST_CASE(SO3PointpseudoLog0)
 {
   SO3<ExpMapMatrix> S;
   Eigen::VectorXd x = S.getZero().value();
   Eigen::VectorXd vy = Eigen::VectorXd::Random(S.dim());
   S.retractation(x, x, vy);
   Eigen::VectorXd z(S.dim());
-  S.invMap(z, x); 
+  S.pseudoLog0(z, x); 
   BOOST_CHECK(z.isApprox(vy));
 }
 
@@ -270,8 +270,8 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
     std::cout << "- method 'retractation' passed" << std::endl;
     S.pseudoLog(d, x, y);
     std::cout << "- method 'pseudoLog' passed" << std::endl;
-    S.invMap(d, x);
-    std::cout << "- method 'invMap' passed" << std::endl;
+    S.pseudoLog0(d, x);
+    std::cout << "- method 'pseudoLog0' passed" << std::endl;
     S.applyDiffRetractation(J1, J0, x);
     std::cout << "- method 'applyDiffRetractation' passed" << std::endl;
     S.applyDiffPseudoLog0(J2, J1, x);

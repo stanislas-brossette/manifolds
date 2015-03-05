@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(SO3Addition)
   BOOST_CHECK(xQ.matrix().isApprox(solution));
 }
 
-BOOST_AUTO_TEST_CASE(SO3InvMap)
+BOOST_AUTO_TEST_CASE(SO3pseudoLog0)
 {
   SO3<ExpMapQuaternion> S;
   Eigen::Vector4d x = S.getZero().value();
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(SO3InvMap)
   v << 0.12364,-0.2234234,0.325843516;
   S.retractation(x, x, v);
   Eigen::Vector3d logX;
-  S.invMap(logX, x);
+  S.pseudoLog0(logX, x);
   BOOST_CHECK(logX.isApprox(v));
 }
 
@@ -158,11 +158,11 @@ BOOST_AUTO_TEST_CASE(SO3InvDiff)
   qpdw = q;
   qpdw(3) += prec;
   Eigen::Vector3d logQ, logQpdx, logQpdy, logQpdz, logQpdw;
-  S.invMap(logQ, q);
-  S.invMap(logQpdx, qpdx);
-  S.invMap(logQpdy, qpdy);
-  S.invMap(logQpdz, qpdz);
-  S.invMap(logQpdw, qpdw);
+  S.pseudoLog0(logQ, q);
+  S.pseudoLog0(logQpdx, qpdx);
+  S.pseudoLog0(logQpdy, qpdy);
+  S.pseudoLog0(logQpdz, qpdz);
+  S.pseudoLog0(logQpdw, qpdw);
 
   Eigen::Matrix<double, 3, 4> J;
   J.col(0) = (logQpdx-logQ)/prec;
@@ -322,8 +322,8 @@ BOOST_AUTO_TEST_CASE(SO3CompareMatrixQuaternion)
   BOOST_CHECK(xQ.matrix().isApprox(xM));
 
   Eigen::Vector3d logX_Q, logX_M;
-  SO3_Q.invMap(logX_Q,x_Q.value());
-  SO3_M.invMap(logX_M,x_M.value());
+  SO3_Q.pseudoLog0(logX_Q,x_Q.value());
+  SO3_M.pseudoLog0(logX_M,x_M.value());
   // Check that the logarithm for quaternion and 
   // rotation matrix are identical
   BOOST_CHECK(logX_Q.isApprox(logX_M));
@@ -389,8 +389,8 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
     std::cout << "- method 'retractation' passed" << std::endl;
     S.pseudoLog(d, x, y);
     std::cout << "- method 'pseudoLog' passed" << std::endl;
-    S.invMap(d, x);
-    std::cout << "- method 'invMap' passed" << std::endl;
+    S.pseudoLog0(d, x);
+    std::cout << "- method 'pseudoLog0' passed" << std::endl;
     S.applyDiffRetractation(J1, J0, x);
     std::cout << "- method 'applyDiffRetractation' passed" << std::endl;
     S.applyDiffPseudoLog0(J2, J1, x);

@@ -93,11 +93,11 @@ namespace pgs
     pseudoLog_(out, x, y);
   }
 
-  void Manifold::invMap(RefVec out, const ConstRefVec& x) const
+  void Manifold::pseudoLog0(RefVec out, const ConstRefVec& x) const
   {
     pgs_assert(out.size() == tangentDim_);
     pgs_assert(x.size() == representationDim_);
-    invMap_(out, x);
+    pseudoLog0_(out, x);
   }
 
   Eigen::MatrixXd Manifold::diffRetractation(const ConstRefVec& x) const

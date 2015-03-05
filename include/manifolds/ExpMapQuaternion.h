@@ -26,7 +26,7 @@ namespace pgs
     static bool isInM_(const Eigen::VectorXd& val);
     static void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v);
     static void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y);
-    static void invMap_(RefVec out, const ConstRefVec& x);
+    static void pseudoLog0_(RefVec out, const ConstRefVec& x);
     static void setZero_(RefVec out);
 
     static void logarithm(RefVec out, const OutputType& M);

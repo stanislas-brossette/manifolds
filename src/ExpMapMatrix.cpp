@@ -77,7 +77,7 @@ namespace pgs
     logarithm(out,R);
   }
 
-  void ExpMapMatrix::invMap_(RefVec out, const ConstRefVec& x)
+  void ExpMapMatrix::pseudoLog0_(RefVec out, const ConstRefVec& x)
   {
     typedef Eigen::Map<const Eigen::Matrix3d> ConstMapMat3;
     OutputType R(ConstMapMat3(x.data()));
