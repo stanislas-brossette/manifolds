@@ -120,14 +120,14 @@ namespace pgs
 
     /// \brief Computes a vector that is the pseudoLog of point y at the current point x
     /// \f$ out = Log_x(y) \f$
-    RefVec pseudoLog(const Point& y) const;
+    Eigen::VectorXd pseudoLog(const Point& y) const;
     /// \brief Fills vector out with a vector that is the pseudoLog of point y at the current point x
     /// \f$ out = Log_x(y) \f$
     void pseudoLog(RefVec out, const Point& y) const;
 
     /// \brief Computes a vector that is the pseudoLog0 of current point x at point 0
     /// \f$ out = Log_0(x) \f$
-    RefVec pseudoLog0() const;
+    Eigen::VectorXd pseudoLog0() const;
     /// \brief Fills a vector as the pseudoLog0 of current point x at point 0
     /// \f$ out = Log_0(x) \f$
     void pseudoLog0(RefVec v) const;

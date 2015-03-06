@@ -154,7 +154,7 @@ namespace pgs
     manifold_.retractation(out.value(), this->value_, v);
   }
    
-  RefVec Point::pseudoLog(const Point& y) const
+  Eigen::VectorXd Point::pseudoLog(const Point& y) const
   {
     Eigen::VectorXd out(manifold_.tangentDim());
     manifold_.pseudoLog(out, this->value_, y.value());
@@ -165,7 +165,7 @@ namespace pgs
     manifold_.pseudoLog(out, this->value_, y.value());
   }
   
-  RefVec Point::pseudoLog0() const
+  Eigen::VectorXd Point::pseudoLog0() const
   {
     Eigen::VectorXd out(manifold_.tangentDim());
     manifold_.pseudoLog0(out, this->value_);

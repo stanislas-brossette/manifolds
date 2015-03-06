@@ -73,6 +73,28 @@ BOOST_AUTO_TEST_CASE(PointAddition)
 }
 
 
+BOOST_AUTO_TEST_CASE(PointPseudoLog)
+{
+  RealSpace R3(3);
+  Eigen::Vector3d v(1,2,3);
+  Point x = R3.createPoint(v);
+  Point y = R3.createPoint(2*v);
+  Eigen::Vector3d res;
+  res.setZero();
+  res = y.pseudoLog(x);
+  BOOST_CHECK(res.isApprox(-v));
+}
+BOOST_AUTO_TEST_CASE(PointPseudoLog0)
+{
+  RealSpace R3(3);
+  Eigen::Vector3d v(1,2,3);
+
+  Point y = R3.createPoint(2*v);
+  Eigen::Vector3d res;
+
+  res = y.pseudoLog0();
+  BOOST_CHECK(res.isApprox(2*v));
+}
 BOOST_AUTO_TEST_CASE(PointMinus)
 {
   RealSpace R3(3);
