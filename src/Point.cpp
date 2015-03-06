@@ -139,35 +139,39 @@ namespace pgs
     return *this;
   }
 
-  Point Point::retractation(const ConstRefVec& v)
+  Point Point::retractation(const ConstRefVec& v) const
   {
     Eigen::VectorXd out(manifold_.representationDim());
     manifold_.retractation(out, this->value_, v);
     return manifold_.createPoint(out);
   }
-  void Point::retractation(RefVec out, const ConstRefVec& v)
+  void Point::retractation(RefVec out, const ConstRefVec& v) const
   {
     manifold_.retractation(out, this->value_, v);
   }
+  void Point::retractation(Point& out, const ConstRefVec& v) const
+  {
+    manifold_.retractation(out.value(), this->value_, v);
+  }
    
-  RefVec Point::pseudoLog(const Point& y)
+  RefVec Point::pseudoLog(const Point& y) const
   {
     Eigen::VectorXd out(manifold_.tangentDim());
     manifold_.pseudoLog(out, this->value_, y.value());
     return out;
   }
-  void Point::pseudoLog(RefVec out, const Point& y)
+  void Point::pseudoLog(RefVec out, const Point& y) const
   {
     manifold_.pseudoLog(out, this->value_, y.value());
   }
   
-  RefVec Point::pseudoLog0()
+  RefVec Point::pseudoLog0() const
   {
     Eigen::VectorXd out(manifold_.tangentDim());
     manifold_.pseudoLog0(out, this->value_);
     return out;
   }
-  void Point::pseudoLog0(RefVec out)
+  void Point::pseudoLog0(RefVec out) const
   {
     manifold_.pseudoLog0(out, this->value_);
   }

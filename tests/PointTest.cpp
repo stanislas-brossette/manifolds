@@ -144,3 +144,40 @@ BOOST_AUTO_TEST_CASE(SubPointManipulation)
   BOOST_CHECK(p2.value().head<5>() == v5);
   BOOST_CHECK(x.value().segment<5>(5) == v5);
 }
+
+#if   EIGEN_WORLD_VERSION > 3 \
+  || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) \
+  || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && EIGEN_MINOR_VERSION > 0)
+BOOST_AUTO_TEST_CASE(PointNoAllocation)
+{
+  //We only test here that the operations on the manifold do not create
+  //temporary. Passing arguments that are not recognize by the Eigen::Ref will
+  //create temporaries, but this is the user's fault.
+  RealSpace S(3);
+  //Index dim = S.dim();
+  //Index repDim = S.representationDim();
+
+  Point x = S.createPoint();
+  x.value() << 1, 2, 3;
+  Point y = S.createPoint();
+  y.value() << 4, 5, 6;
+  Eigen::Vector3d v(9, 8, 7);
+
+  Eigen::internal::set_is_malloc_allowed(false);
+  utils::set_is_malloc_allowed(false);
+  {
+    std::cout << "Memory allocation tests:" << std::endl;
+    x.retractation(y.value(),v);
+    x.retractation(y,v);
+    std::cout << "- method 'retractation' passed" << std::endl;
+    x.pseudoLog(v, y);
+    std::cout << "- method 'pseudoLog' passed" << std::endl;
+    x.pseudoLog0(v);
+    std::cout << "- method 'pseudoLog0' passed" << std::endl;
+  }
+  utils::set_is_malloc_allowed(true);
+  Eigen::internal::set_is_malloc_allowed(true);
+}
+
+#endif
+
