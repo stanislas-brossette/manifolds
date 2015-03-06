@@ -111,13 +111,23 @@ namespace pgs
     /// \brief Computes a new point that is the result of a retractation of v 
     /// at the current point x. \f$ out = \phi_x(v) \f$
     Point retractation(const ConstRefVec& v);
+    /// \brief Fills vector out with the value of a point that is the result of a retractation of v 
+    /// at the current point x. \f$ out = \phi_x(v) \f$
+    void retractation(RefVec out, const ConstRefVec& v);
+
     /// \brief Computes a vector that is the pseudoLog of point y at the current point x
     /// \f$ out = Log_x(y) \f$
     RefVec pseudoLog(const Point& y);
+    /// \brief Fills vector out with a vector that is the pseudoLog of point y at the current point x
+    /// \f$ out = Log_x(y) \f$
+    void pseudoLog(RefVec out, const Point& y);
 
     /// \brief Computes a vector that is the pseudoLog0 of current point x at point 0
     /// \f$ out = Log_0(x) \f$
     RefVec pseudoLog0();
+    /// \brief Fills a vector as the pseudoLog0 of current point x at point 0
+    /// \f$ out = Log_0(x) \f$
+    void pseudoLog0(RefVec v);
 
     friend class Manifold;
   };
