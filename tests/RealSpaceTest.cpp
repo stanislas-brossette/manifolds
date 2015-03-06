@@ -37,6 +37,15 @@ BOOST_AUTO_TEST_CASE(RealPointConstructor)
   BOOST_CHECK_EQUAL(y.value()[2], 3);
 }
 
+BOOST_AUTO_TEST_CASE(RandomRealPointConstructor)
+{
+  RealSpace R3(3);
+  Point y = R3.createRandomPoint();
+  std::cout << "y = \n" << y << std::endl;
+  BOOST_CHECK_EQUAL(y.value().size(), 3);
+  BOOST_CHECK(y.isInM());
+}
+
 BOOST_AUTO_TEST_CASE(RealSpaceZero)
 {
   RealSpace R3(3);

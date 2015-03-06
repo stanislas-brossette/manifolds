@@ -56,6 +56,15 @@ namespace pgs
     return Point(*this, id);
   }
 
+  Point Manifold::createRandomPoint(double coeff) const
+  {
+    pgs_assert(isValid() || seeMessageAbove());
+    lock();
+    Point res = getZero();
+    res.increment(coeff*Eigen::VectorXd::Random(tangentDim_));
+    return res;
+  }
+
   Index Manifold::dim() const
   {
     pgs_assert(isValid() || seeMessageAbove());

@@ -10,6 +10,8 @@
 #include <manifolds/utils.h>
 #include <manifolds/Point.h>
 #include <manifolds/RealSpace.h>
+#include <manifolds/SO3.h>
+#include <manifolds/ExpMapMatrix.h>
 #include <manifolds/CartesianProduct.h>
 
 using namespace pgs;
@@ -60,6 +62,15 @@ BOOST_AUTO_TEST_CASE(PointAccessors)
   BOOST_CHECK(v2.isApprox(x(1).value()));
   BOOST_CHECK(v3.isApprox(x[0]));
   BOOST_CHECK(v2.isApprox(x[1]));
+}
+
+BOOST_AUTO_TEST_CASE(PointDimensions)
+{
+  SO3<ExpMapMatrix> S;
+  Point p = S.createRandomPoint();
+  BOOST_CHECK_EQUAL(p.getDimM(),3);
+  BOOST_CHECK_EQUAL(p.getTangentDimM(),3);
+  BOOST_CHECK_EQUAL(p.getRepresentationDimM(),9);
 }
 
 BOOST_AUTO_TEST_CASE(PointAddition)

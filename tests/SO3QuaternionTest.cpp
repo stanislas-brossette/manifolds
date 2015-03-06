@@ -53,6 +53,23 @@ BOOST_AUTO_TEST_CASE(SO3Constructor)
   BOOST_CHECK_EQUAL(y.value()[3], 1);
 }
 
+BOOST_AUTO_TEST_CASE(RandomSO3PointConstructor)
+{
+  SO3<ExpMapQuaternion> S;
+  Point y = S.createRandomPoint();
+  BOOST_CHECK_EQUAL(y.value().size(), 4);
+  BOOST_CHECK(y.isInM());
+}
+
+BOOST_AUTO_TEST_CASE(RandomSO3IsInM)
+{
+  SO3<ExpMapQuaternion> S;
+  Point y = S.createRandomPoint();
+  BOOST_CHECK(y.isInM());
+  y.value() = Eigen::VectorXd::Random(S.representationDim());
+  BOOST_CHECK(!y.isInM());
+}
+
 BOOST_AUTO_TEST_CASE(SO3Addition)
 {
   SO3<ExpMapQuaternion> S;

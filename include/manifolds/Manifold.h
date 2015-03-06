@@ -47,6 +47,10 @@ namespace pgs
     /// defined in this manifold (aka the zero)
     Point getZero() const;
 
+    /// \brief Creates a random point on this manifold (aka the retractation from point 0 
+    /// of a random vector of the tangent space)
+    Point createRandomPoint(double coeff = 1.0) const;
+
     /// \brief Checks that the value val described in the representation space 
     /// is an element of the manifold
     virtual bool isInM(const Eigen::VectorXd& val) const;

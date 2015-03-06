@@ -132,6 +132,19 @@ namespace pgs
     /// \f$ out = Log_0(x) \f$
     void pseudoLog0(RefVec v) const;
 
+    /// \brief Checks that the current point's value represents a valid point of its Manifold
+    bool isInM() const;
+
+    /// \brief Checks that the current point's value represents a valid point of its Manifold
+    bool isInTxM(const ConstRefVec& v) const;
+
+    /// \brief Returns the Dimension of its Manifold
+    Index getDimM() const;
+    /// \brief Returns the Dimension of the tangent space of its Manifold
+    Index getTangentDimM() const;
+    /// \brief Returns the Dimension of the representation space of its Manifold
+    Index getRepresentationDimM() const;
+
     friend class Manifold;
   };
 
