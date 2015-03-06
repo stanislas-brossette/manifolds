@@ -44,6 +44,7 @@ namespace pgs
   inline SO3<Map>::SO3()
     : Manifold(3, Map::InputDim_, Map::OutputDim_)
   {
+    name() = "SO3";
   }
 
   template<typename Map>

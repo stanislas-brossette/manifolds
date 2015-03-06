@@ -8,6 +8,7 @@ namespace pgs
   {
     startIndexT_.push_back(0);
     startIndexR_.push_back(0);
+    name() = "";
   }
 
   CartesianProduct::CartesianProduct(const Manifold& m1, const Manifold& m2)
@@ -17,6 +18,7 @@ namespace pgs
     startIndexR_.push_back(0);
     multiply(m1);
     multiply(m2);
+    name() = m1.name() + "x" + m2.name();
   }
 
   bool CartesianProduct::isInM_(const Eigen::VectorXd& val) const
@@ -32,6 +34,9 @@ namespace pgs
   CartesianProduct& CartesianProduct::multiply(const Manifold& m)
   {
     m.lock();
+    if(dim() != 0)
+      name() += "x"; 
+    name() += m.name();
     setDimension(dim() + m.dim());
     setTangentDimension(tangentDim() + m.tangentDim());
     setRepresentationDimension(representationDim() + m.representationDim());

@@ -6,6 +6,7 @@
 #include <manifolds/SO3.h>
 #include <manifolds/RealSpace.h>
 #include <manifolds/CartesianProduct.h>
+#include <manifolds/CartesianPower.h>
 #include <manifolds/Point.h>
 #include <manifolds/ExpMapMatrix.h>
 
@@ -25,10 +26,16 @@ BOOST_AUTO_TEST_CASE(CartProdConstructor)
   CartesianProduct P(R2, R3);
   P.multiply(R2);
   CartesianProduct S(P, RotSpace);
+  CartesianPower PowS(S, 3);
   BOOST_CHECK_EQUAL(S.dim(), 10);
   BOOST_CHECK_EQUAL(S.representationDim(), 16);
   BOOST_CHECK_EQUAL(S.numberOfSubmanifolds(), 2);
   BOOST_CHECK_EQUAL(P.numberOfSubmanifolds(), 3);
+  BOOST_CHECK_EQUAL(PowS.dim(), 30);
+  BOOST_CHECK_EQUAL(PowS.representationDim(), 48);
+  BOOST_CHECK_EQUAL(PowS.numberOfSubmanifolds(), 3);
+  std::string solName("R2xR3xR2xSO3xR2xR3xR2xSO3xR2xR3xR2xSO3");
+  BOOST_CHECK(PowS.name().compare(solName) == 0);
 }
 
 BOOST_AUTO_TEST_CASE(CartProdZero)

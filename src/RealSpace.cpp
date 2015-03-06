@@ -6,6 +6,7 @@ namespace pgs
   RealSpace::RealSpace(Index n)
     : Manifold(n, n, n)
   {
+    name() = "R" + std::to_string( n );
   }
 
   bool RealSpace::isInM_(const Eigen::VectorXd& val ) const

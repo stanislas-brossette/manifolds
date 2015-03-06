@@ -187,6 +187,11 @@ namespace pgs
     /// manifold cannot be modified anymore.
     void lock() const;
 
+    /// \brief name_ getter
+    const std::string& name() const;
+    /// \brief name_ setter
+    std::string& name();
+
   protected:
     /// \brief Set manifold dimension to d
     void setDimension(Index d);
@@ -242,6 +247,9 @@ namespace pgs
     void testLock() const;
 
   private:
+    /// \brief Name of the Manifold
+    std::string name_;
+
     /// \brief dimension of the manifold
     Index dimension_;
 

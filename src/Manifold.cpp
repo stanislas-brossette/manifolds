@@ -287,4 +287,8 @@ namespace pgs
     if (lock_)
       throw std::runtime_error("Either a point or a compound manifold is relying on this manifold, you can't modify it anymore.");
   }
+
+  const std::string& Manifold::name() const { return name_;}
+  
+  std::string& Manifold::name() { return name_;}
 }
