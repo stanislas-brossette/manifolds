@@ -70,6 +70,18 @@ BOOST_AUTO_TEST_CASE(RandomSO3IsInM)
   BOOST_CHECK(!y.isInM());
 }
 
+BOOST_AUTO_TEST_CASE(SO3LimitMap)
+{
+  SO3<ExpMapMatrix> S;
+  Index dim = S.dim();
+  Eigen::VectorXd res(dim);
+  S.limitMap(res);
+  Eigen::VectorXd expectedRes(dim);
+  double i = M_PI/sqrt(3);
+  expectedRes << i,i,i;
+  BOOST_CHECK_EQUAL(expectedRes, res);
+}
+
 BOOST_AUTO_TEST_CASE(SO3Addition)
 {
   SO3<ExpMapMatrix> S;

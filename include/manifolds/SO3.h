@@ -35,6 +35,7 @@ namespace pgs
     virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const;
     virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
+    virtual void limitMap_(RefVec out) const;
 
     mutable ReusableTemporaryMap bufferMap_;
   };
@@ -152,6 +153,13 @@ namespace pgs
   void SO3<Map>::forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const
   {
     Map::forceOnTxM_(out, in, x);
+  }
+
+  template<typename Map>
+  void SO3<Map>::limitMap_(RefVec out) const
+  {
+    double limitExpMap = M_PI/sqrt(3);
+    out.setConstant(limitExpMap);
   }
 }
 #endif //_MANIFOLDS_SO3_H_

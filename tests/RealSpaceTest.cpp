@@ -41,7 +41,6 @@ BOOST_AUTO_TEST_CASE(RandomRealPointConstructor)
 {
   RealSpace R3(3);
   Point y = R3.createRandomPoint();
-  std::cout << "y = \n" << y << std::endl;
   BOOST_CHECK_EQUAL(y.value().size(), 3);
   BOOST_CHECK(y.isInM());
 }
@@ -178,6 +177,18 @@ BOOST_AUTO_TEST_CASE(RealInvTransport)
   Eigen::MatrixXd expectedRes = H;
   Space.applyInvTransport(Hout, H, x, v);
   BOOST_CHECK(expectedRes.isApprox(Hout));
+}
+
+BOOST_AUTO_TEST_CASE(RealLimitMap)
+{
+  RealSpace Space(9);
+  Index dim = Space.dim();
+  Eigen::VectorXd res(dim);
+  Space.limitMap(res);
+  Eigen::VectorXd expectedRes(dim);
+  double i = std::numeric_limits<double>::infinity();
+  expectedRes << i,i,i,i,i,i,i,i,i;
+  BOOST_CHECK_EQUAL(expectedRes, res);
 }
 
 #if   EIGEN_WORLD_VERSION > 3 \

@@ -192,6 +192,9 @@ namespace pgs
     /// \brief name_ setter
     std::string& name();
 
+    /// \brief fills the \a out vector with the limits of validity of the tangent map
+    void limitMap(RefVec out) const;
+
   protected:
     /// \brief Set manifold dimension to d
     void setDimension(Index d);
@@ -242,6 +245,8 @@ namespace pgs
     virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const = 0;
     virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const = 0;
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const = 0;
+
+    virtual void limitMap_(RefVec out) const = 0;
 
     /// \brief tests if the manifold is locked
     void testLock() const;

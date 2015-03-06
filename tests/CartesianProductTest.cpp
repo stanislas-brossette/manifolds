@@ -381,6 +381,25 @@ BOOST_AUTO_TEST_CASE(CardProdApplyInvDiff)
 //  BOOST_CHECK(expectedRes.isApprox(Hout));
 //}
 
+BOOST_AUTO_TEST_CASE(CartProdLimitMap)
+{
+  RealSpace R2(2);
+  RealSpace R3(3);
+  SO3<ExpMapMatrix> RotSpace;
+  CartesianProduct S(R3, RotSpace);
+  S.multiply(R2);
+  CartesianPower Space(S,3);
+  Index dim = Space.dim();
+  Eigen::VectorXd res(dim);
+  Space.limitMap(res);
+  Eigen::VectorXd expectedRes(dim);
+  double l = M_PI/sqrt(3);
+  double i = std::numeric_limits<double>::infinity();
+
+  expectedRes << i, i, i, l, l, l, i, i, i, i, i, l, l, l, i, i, i, i, i, l, l, l, i, i;
+  BOOST_CHECK_EQUAL(expectedRes, res);
+}
+
 BOOST_AUTO_TEST_CASE(CardProdGetView)
 {
   RealSpace R2(2);

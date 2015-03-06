@@ -1,3 +1,5 @@
+#include <limits>
+
 #include <manifolds/RealSpace.h>
 #include <manifolds/pgs_assert.h>
 
@@ -97,5 +99,10 @@ namespace pgs
   void RealSpace::forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec&) const
   {
     out = in;
+  }
+
+  void RealSpace::limitMap_(RefVec out) const
+  {
+    out.setConstant(std::numeric_limits<double>::infinity());
   }
 }

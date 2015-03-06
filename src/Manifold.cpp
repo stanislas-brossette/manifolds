@@ -275,7 +275,11 @@ namespace pgs
     forceOnTxM_(out, in, x);
   }
 
-
+  void Manifold::limitMap(RefVec out) const
+  {
+    pgs_assert(out.size() == tangentDim_);
+    limitMap_(out);
+  }
 
   void Manifold::lock() const
   {

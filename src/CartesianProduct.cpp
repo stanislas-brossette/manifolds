@@ -197,5 +197,10 @@ namespace pgs
                                    getConstView<T>(in, i),
                                    getConstView<R>(x, i));
   }
+  void CartesianProduct::limitMap_(RefVec out) const
+  {
+    for (size_t i = 0; i < submanifolds_.size(); ++i)
+      submanifolds_[i]->limitMap(getView<T>(out, i)); 
+  }
 }
 
