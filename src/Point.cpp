@@ -208,4 +208,34 @@ namespace pgs
   Index Point::getDimM() const{ return manifold_.dim(); }
   Index Point::getTangentDimM() const{ return manifold_.tangentDim(); }
   Index Point::getRepresentationDimM() const{ return manifold_.representationDim(); }
+
+  Eigen::MatrixXd Point::diffRetractation() const
+  {
+    return manifold_.diffRetractation(value_);
+  }
+
+  void Point::applyDiffRetractation(RefMat out, const ConstRefMat& in) const
+  {
+    manifold_.applyDiffRetractation(out, in, value_);
+  }
+
+  Eigen::MatrixXd Point::diffPseudoLog0() const
+  {
+    return manifold_.diffPseudoLog0(value_);
+  }
+
+  void Point::applyDiffPseudoLog0(RefMat out, const ConstRefMat& in) const
+  {
+    manifold_.applyDiffPseudoLog0(out, in, value_);
+  }
+
+  void Point::applyTransport(RefMat out, const ConstRefMat& in, const ConstRefVec& v) const
+  {
+    manifold_.applyTransport(out, in, value_, v);
+  }
+
+  void Point::applyInvTransport(RefMat out, const ConstRefMat& in, const ConstRefVec& v) const
+  {
+    manifold_.applyInvTransport(out, in, value_, v);
+  }
 }

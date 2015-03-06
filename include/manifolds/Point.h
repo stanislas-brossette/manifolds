@@ -22,7 +22,7 @@ namespace pgs
   public:
     ~ConstSubPoint();
 
-    //get the data of this point
+    //get the value vector of this point
     ConstRefVec value() const;
 
     //get a sub point
@@ -144,6 +144,19 @@ namespace pgs
     Index getTangentDimM() const;
     /// \brief Returns the Dimension of the representation space of its Manifold
     Index getRepresentationDimM() const;
+
+    /// \brief Proxy for Manifold::diffRetractation at current Point
+    Eigen::MatrixXd diffRetractation() const;
+    /// \brief Proxy for Manifold::applyDiffRetractation at current Point
+    void applyDiffRetractation(RefMat out, const ConstRefMat& in) const;
+    /// \brief Proxy for Manifold::diffPseudoLog0 at current Point
+    Eigen::MatrixXd diffPseudoLog0() const;
+    /// \brief Proxy for Manifold::applyDiffPseudoLog0 at current Point
+    void applyDiffPseudoLog0(RefMat out, const ConstRefMat& in) const;
+    /// \brief Proxy for Manifold::applyTransport at current Point
+    void applyTransport(RefMat out, const ConstRefMat& in, const ConstRefVec& v) const;
+    /// \brief Proxy for Manifold::applyInvTransport at current Point
+    void applyInvTransport(RefMat out, const ConstRefMat& in, const ConstRefVec& v) const;
 
     friend class Manifold;
   };

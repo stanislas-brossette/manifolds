@@ -178,6 +178,75 @@ BOOST_AUTO_TEST_CASE(SubPointManipulation)
   BOOST_CHECK(x.value().segment<5>(5) == v5);
 }
 
+BOOST_AUTO_TEST_CASE(PointDiffRetractation)
+{
+  SO3<ExpMapMatrix> S;
+  Eigen::MatrixXd J;
+  Eigen::MatrixXd Jtest(9,3);
+  Jtest <<         0,  0.003580526006716, -0.558259982176135,
+                   0,  0.646068748944272,  0.634553549147103,
+                   0, -0.763270824459509,  0.534497507539106,
+  -0.003580526006716,                  0, -0.829658346630838,
+  -0.646068748944272,                  0, -0.424189774632061,
+   0.763270824459509,                  0, -0.362946363755562,
+   0.558259982176135,  0.829658346630838,                  0,
+  -0.634553549147103,  0.424189774632061,                  0,
+  -0.534497507539106,  0.362946363755562,                  0;
+  Eigen::Vector3d v(0.680375, -0.211234, 0.566198);
+  Point x = S.getZero();
+  x.retractation(x, v);
+  J = x.diffRetractation();
+  BOOST_CHECK(J.isApprox(Jtest));
+}
+
+BOOST_AUTO_TEST_CASE(PointApplyDiff)
+{
+  int c = 5;
+  SO3<ExpMapMatrix> S;
+  Index dim = S.dim();
+  Index repDim = S.representationDim();
+  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,repDim);
+  Point x = S.getZero();
+  x.retractation(x, Eigen::VectorXd::Random(dim));
+  Eigen::MatrixXd expectedRes;
+  expectedRes = Jf*x.diffRetractation();
+  Eigen::MatrixXd J(c,dim);
+  x.applyDiffRetractation(J, Jf);
+  BOOST_CHECK(expectedRes.isApprox(J));
+}
+
+BOOST_AUTO_TEST_CASE(PointInvDiff)
+{
+  SO3<ExpMapMatrix> S;
+  Eigen::MatrixXd J;
+  Eigen::MatrixXd Jtest(3,9);
+  Jtest <<
+  -0.064043491813865,                 0,                  0,                  0, -0.064043491813865, 0.545030346992499,                 0, -0.545030346992499, -0.064043491813865,
+  -0.110117993664377,                 0, -0.545030346992499,                  0, -0.110117993664377,                 0, 0.545030346992499,                  0, -0.110117993664377,
+  -0.042109988599266, 0.545030346992499,                  0, -0.545030346992499, -0.042109988599266,                 0,                 0,                  0, -0.042109988599266;
+  Eigen::Vector3d v(0.3403857, 0.58526775, 0.223811);
+  Point x = S.getZero();
+  x.retractation(x,v);
+  J = x.diffPseudoLog0();
+  BOOST_CHECK(J.isApprox(Jtest));
+}
+
+BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
+{
+  int c = 5;
+  SO3<ExpMapMatrix> S;
+  Index dim = S.dim();
+  Index repDim = S.representationDim();
+  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c,dim);
+  Point x = S.getZero();
+  x.retractation(x, Eigen::VectorXd::Random(dim));
+  Eigen::MatrixXd expectedRes;
+  expectedRes = Jf*x.diffPseudoLog0();
+  Eigen::MatrixXd J(c,repDim);
+  x.applyDiffPseudoLog0(J, Jf);
+  BOOST_CHECK(expectedRes.isApprox(J));
+}
+
 #if   EIGEN_WORLD_VERSION > 3 \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && EIGEN_MINOR_VERSION > 0)
