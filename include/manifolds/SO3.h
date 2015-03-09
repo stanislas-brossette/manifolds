@@ -14,9 +14,14 @@ namespace pgs
   {
   public:
     SO3();
+    SO3(double magnitude);
+    SO3(const ConstRefVec& magnitude);
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
+    virtual void getTypicalMagnitude_(RefVec out) const;
+    void setTypicalMagnitude(double magnitude);
+    void setTypicalMagnitude(const ConstRefVec& out);
 
   protected:
     //map operations
@@ -36,8 +41,10 @@ namespace pgs
     virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
     virtual void limitMap_(RefVec out) const;
-
     mutable ReusableTemporaryMap bufferMap_;
+
+  private:
+    Eigen::Vector3d typicalMagnitude_;
   };
 
   //Implementations of the methods
@@ -46,6 +53,22 @@ namespace pgs
     : Manifold(3, Map::InputDim_, Map::OutputDim_)
   {
     name() = "SO3";
+    setTypicalMagnitude(Eigen::Vector3d::Constant(M_PI));
+  }
+  template<typename Map>
+  inline SO3<Map>::SO3(double magnitude)
+    : Manifold(3, Map::InputDim_, Map::OutputDim_)
+  {
+    name() = "SO3";
+    setTypicalMagnitude(Eigen::Vector3d::Constant(magnitude));
+  }
+  template<typename Map>
+  inline SO3<Map>::SO3(const ConstRefVec& magnitude)
+    : Manifold(3, Map::InputDim_, Map::OutputDim_)
+  {
+    pgs_assert(magnitude.size() == 3 && "magnitude on SO3 must be of size 3");
+    name() = "SO3";
+    setTypicalMagnitude(magnitude);
   }
 
   template<typename Map>
@@ -160,6 +183,24 @@ namespace pgs
   {
     double limitExpMap = M_PI/sqrt(3);
     out.setConstant(limitExpMap);
+  }
+
+  template<typename Map>
+  void SO3<Map>::getTypicalMagnitude_(RefVec out) const
+  {
+    out = typicalMagnitude_;
+  }
+
+  template<typename Map>
+  void SO3<Map>::setTypicalMagnitude(double magnitude)
+  {
+    setTypicalMagnitude (Eigen::Vector3d::Constant(magnitude));
+  }
+
+  template<typename Map>
+  void SO3<Map>::setTypicalMagnitude(const ConstRefVec& out)
+  {
+    typicalMagnitude_ = out;
   }
 }
 #endif //_MANIFOLDS_SO3_H_

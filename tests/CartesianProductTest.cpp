@@ -21,6 +21,7 @@ using namespace pgs;
 BOOST_AUTO_TEST_CASE(CartProdConstructor)
 {
   RealSpace R3(3);
+  R3.setTypicalMagnitude(2.0);
   RealSpace R2(2);
   SO3<ExpMapMatrix> RotSpace;
   CartesianProduct P(R2, R3);
@@ -36,6 +37,20 @@ BOOST_AUTO_TEST_CASE(CartProdConstructor)
   BOOST_CHECK_EQUAL(PowS.numberOfSubmanifolds(), 3);
   std::string solName("R2xR3xR2xSO3xR2xR3xR2xSO3xR2xR3xR2xSO3");
   BOOST_CHECK(PowS.name().compare(solName) == 0);
+  Eigen::VectorXd expectedTypicalMag(30);
+  expectedTypicalMag << 1, 1,
+                        2, 2, 2,
+                        1, 1,
+                        M_PI, M_PI, M_PI,
+                        1, 1,
+                        2, 2, 2,
+                        1, 1,
+                        M_PI, M_PI, M_PI,
+                        1, 1,
+                        2, 2, 2,
+                        1, 1,
+                        M_PI, M_PI, M_PI;
+  BOOST_CHECK_EQUAL(PowS.getTypicalMagnitude(), expectedTypicalMag);
 }
 
 BOOST_AUTO_TEST_CASE(CartProdZero)

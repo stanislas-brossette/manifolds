@@ -280,6 +280,19 @@ namespace pgs
     pgs_assert(out.size() == tangentDim_);
     limitMap_(out);
   }
+  
+  void Manifold::getTypicalMagnitude(RefVec out) const
+  {
+    pgs_assert(out.size() == tangentDim_);
+    getTypicalMagnitude_(out);
+  }
+
+  Eigen::VectorXd Manifold::getTypicalMagnitude() const  
+  {
+    Eigen::VectorXd out(tangentDim_);
+    getTypicalMagnitude_(out);
+    return out;
+  }
 
   void Manifold::lock() const
   {

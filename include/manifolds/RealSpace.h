@@ -15,11 +15,16 @@ namespace pgs
     /// \brief Constructor
     /// \param n the dimension of the realspace \f$\mathbb{R}^n\f$
     RealSpace(Index n);
+    RealSpace(Index n, double magnitude);
+    RealSpace(Index n, const ConstRefVec& magnitude);
 
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
 
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
+    virtual void getTypicalMagnitude_(RefVec out) const;
+    void setTypicalMagnitude(double magnitude);
+    void setTypicalMagnitude(const ConstRefVec& out);
 
   protected:
     //map operations
@@ -39,6 +44,9 @@ namespace pgs
     virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec&x) const;
     virtual void limitMap_(RefVec out) const;
+
+  private:
+    Eigen::VectorXd typicalMagnitude_;
 
   };
 }

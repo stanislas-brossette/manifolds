@@ -9,6 +9,24 @@ namespace pgs
     : Manifold(n, n, n)
   {
     name() = "R" + std::to_string( n );
+    typicalMagnitude_.resize(n);
+    setTypicalMagnitude(Eigen::VectorXd::Constant(n, 1.0));
+  }
+
+  RealSpace::RealSpace(Index n, double magnitude)
+    : Manifold(n, n, n)
+  {
+    name() = "R" + std::to_string( n );
+    typicalMagnitude_.resize(n);
+    setTypicalMagnitude(Eigen::VectorXd::Constant(n, magnitude));
+  }
+  RealSpace::RealSpace(Index n, const ConstRefVec& magnitude)
+    : Manifold(n, n, n)
+  {
+    pgs_assert(magnitude.size() == n && "magnitude on R^n must be of size n");
+    name() = "R" + std::to_string( n );
+    typicalMagnitude_.resize(n);
+    setTypicalMagnitude (magnitude);
   }
 
   bool RealSpace::isInM_(const Eigen::VectorXd& val ) const
@@ -104,5 +122,20 @@ namespace pgs
   void RealSpace::limitMap_(RefVec out) const
   {
     out.setConstant(std::numeric_limits<double>::infinity());
+  }
+
+  void RealSpace::getTypicalMagnitude_(RefVec out) const
+  {
+    out = typicalMagnitude_;
+  }
+
+  void RealSpace::setTypicalMagnitude(double magnitude)
+  {
+    setTypicalMagnitude (Eigen::VectorXd::Constant(tangentDim(), magnitude));
+  }
+
+  void RealSpace::setTypicalMagnitude(const ConstRefVec& out)
+  {
+    typicalMagnitude_ = out;
   }
 }

@@ -47,6 +47,7 @@ namespace pgs
     virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
     virtual void limitMap_(RefVec out) const;
+    virtual void getTypicalMagnitude_(RefVec out) const;
 
   private:
     /// \brief List of pointers on all the manifolds in the cartesian product

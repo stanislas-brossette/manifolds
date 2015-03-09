@@ -195,6 +195,11 @@ namespace pgs
     /// \brief fills the \a out vector with the limits of validity of the tangent map
     void limitMap(RefVec out) const;
 
+    /// \brief Gets the typical Magnitude of the manifold on its tangent space.
+    /// it is typically used for scaling of the trust regions
+    void getTypicalMagnitude(RefVec out) const;
+    Eigen::VectorXd getTypicalMagnitude() const;
+
   protected:
     /// \brief Set manifold dimension to d
     void setDimension(Index d);
@@ -247,6 +252,7 @@ namespace pgs
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const = 0;
 
     virtual void limitMap_(RefVec out) const = 0;
+    virtual void getTypicalMagnitude_(RefVec out) const = 0;
 
     /// \brief tests if the manifold is locked
     void testLock() const;
@@ -266,6 +272,7 @@ namespace pgs
 
     /// \brief if true, the manifold if locked
     mutable bool lock_;
+
   };
 
   template<int D>
