@@ -3,6 +3,7 @@
 
 #include <manifolds/defs.h>
 #include <manifolds/utils.h>
+#include <manifolds/S2.h>
 #include <manifolds/SO3.h>
 #include <manifolds/RealSpace.h>
 #include <manifolds/CartesianProduct.h>
@@ -79,6 +80,19 @@ BOOST_AUTO_TEST_CASE(CartProdZero)
   BOOST_CHECK_EQUAL(x.value()[13], 0);
   BOOST_CHECK_EQUAL(x.value()[14], 0);
   BOOST_CHECK_EQUAL(x.value()[15], 1);
+}
+
+BOOST_AUTO_TEST_CASE(CartProdRandom)
+{
+  RealSpace R3(3);
+  RealSpace R2(2);
+  S2 S2_;
+  SO3<ExpMapMatrix> RotSpace;
+  CartesianProduct P(R2, R3);
+  P.multiply(S2_);
+  CartesianProduct S(P, RotSpace);
+  Point x = S.createRandomPoint();
+  BOOST_CHECK(S.isInM(x.value()));
 }
 
 BOOST_AUTO_TEST_CASE(CartProdIncrement)

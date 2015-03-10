@@ -51,14 +51,9 @@ namespace pgs
     return ss.str();
   }
 
-  Point S2::createRandomPoint(double ) const
+  void S2::createRandomPoint_(RefVec out, double ) const
   {
-    pgs_assert(isValid() || seeMessageAbove());
-    lock();
-    Eigen::Vector3d valX;
-    rand(valX);
-    Point res = createPoint(valX);
-    return res;
+    rand(out);
   }
 
   void S2::retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const

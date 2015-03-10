@@ -69,6 +69,12 @@ namespace pgs
     return ss.str();
   }
 
+  void CartesianProduct::createRandomPoint_(RefVec out, double coeff) const
+  {
+    for (size_t i = 0; i < submanifolds_.size(); ++i)
+      submanifolds_[i]->createRandomPoint(getView<R>(out, i), coeff);
+  }
+
   void CartesianProduct::retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)

@@ -32,6 +32,7 @@ namespace pgs
     virtual Index startR(size_t i) const;
     virtual Index startT(size_t i) const;
 
+    virtual void createRandomPoint_(RefVec out, double coeff) const;
     virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const;

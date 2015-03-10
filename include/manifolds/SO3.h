@@ -22,6 +22,7 @@ namespace pgs
     virtual void getTypicalMagnitude_(RefVec out) const;
     void setTypicalMagnitude(double magnitude);
     void setTypicalMagnitude(const ConstRefVec& out);
+    virtual void createRandomPoint_(RefVec out, double coeff) const;
 
   protected:
     //map operations
@@ -98,6 +99,15 @@ namespace pgs
     std::stringstream ss;
     ss << (Eigen::Map<const typename Map::DisplayType>(val.data())).format(CleanFmt);
     return ss.str();
+  }
+
+  template<typename Map>
+  void SO3<Map>::createRandomPoint_(RefVec out, double coeff) const
+  {
+    std::cout << "In SO3<Map>::createRandomPoint_" << std::endl;
+    setZero_(out);
+    Eigen::Vector3d v(coeff*Eigen::Vector3d::Random());
+    retractation(out, out, v);
   }
 
   template<typename Map>

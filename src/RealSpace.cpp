@@ -54,6 +54,11 @@ namespace pgs
     return ss.str();
   }
 
+  void RealSpace::createRandomPoint_(RefVec out, double coeff) const
+  {
+    out = coeff*Eigen::VectorXd::Random(representationDim());
+  }
+
   void RealSpace::retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
     out = x + v;

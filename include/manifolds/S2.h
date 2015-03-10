@@ -19,7 +19,7 @@ namespace pgs
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
 
-    virtual Point createRandomPoint(double coeff = 1.0) const;
+    virtual void createRandomPoint_(RefVec out, double coeff) const;
 
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
     virtual void getTypicalMagnitude_(RefVec out) const;

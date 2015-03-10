@@ -49,7 +49,8 @@ namespace pgs
 
     /// \brief Creates a random point on this manifold (aka the retractation from point 0 
     /// of a random vector of the tangent space)
-    virtual Point createRandomPoint(double coeff = 1.0) const;
+    Point createRandomPoint(double coeff = 1.0) const;
+    void createRandomPoint(RefVec out, double coeff = 1.0) const;
 
     /// \brief Checks that the value val described in the representation space 
     /// is an element of the manifold
@@ -228,6 +229,7 @@ namespace pgs
     /// representing an element of the tangent space of the manifold
     virtual Index startT(size_t i) const;
 
+    virtual void createRandomPoint_(RefVec out, double coeff) const = 0;
     virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
     virtual void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
     virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const = 0;

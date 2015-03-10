@@ -58,12 +58,17 @@ namespace pgs
 
   Point Manifold::createRandomPoint(double coeff) const
   {
-    std::cout << "In Manifold::createRandomPoint" << std::endl;
     pgs_assert(isValid() || seeMessageAbove());
     lock();
-    Point res = getZero();
-    res.increment(coeff*Eigen::VectorXd::Random(tangentDim_));
-    return res;
+    Eigen::VectorXd val(representationDim_);
+    createRandomPoint(val, coeff);
+    return Point(*this, val);
+  }
+
+  void Manifold::createRandomPoint(RefVec out, double coeff) const
+  {
+    pgs_assert(out.size() == representationDim_ && "wrong dimension in Manifold::createRandomPoint");
+    createRandomPoint_(out, coeff);
   }
 
   Index Manifold::dim() const
