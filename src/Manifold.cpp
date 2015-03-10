@@ -61,9 +61,9 @@ namespace pgs
     std::cout << "In Manifold::createRandomPoint" << std::endl;
     pgs_assert(isValid() || seeMessageAbove());
     lock();
-    Point res = getZero();
-    res.increment(coeff*Eigen::VectorXd::Random(tangentDim_));
-    return res;
+    Eigen::VectorXd val(representationDim_);
+    createRandomPoint_(val);
+    return Point(*this, val);
   }
 
   Index Manifold::dim() const
