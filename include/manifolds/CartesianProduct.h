@@ -27,7 +27,7 @@ namespace pgs
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
 
   protected:
-    virtual bool isInM_(const Eigen::VectorXd& val) const;
+    virtual bool isInM_(const Eigen::VectorXd& val, const double& prec) const;
 
     virtual Index startR(size_t i) const;
     virtual Index startT(size_t i) const;
@@ -44,7 +44,7 @@ namespace pgs
     virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
     
     virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const;
-    virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const;
+    virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const;
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
     virtual void limitMap_(RefVec out) const;
     virtual void getTypicalMagnitude_(RefVec out) const;

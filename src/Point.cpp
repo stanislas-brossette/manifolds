@@ -196,13 +196,13 @@ namespace pgs
     return output;
   }
 
-  bool Point::isInM() const
+  bool Point::isInM(const double& prec) const
   {
-    return manifold_.isInM(value_);
+    return manifold_.isInM(value_, prec);
   }
-  bool Point::isInTxM(const ConstRefVec& v) const
+  bool Point::isInTxM(const ConstRefVec& v, const double& prec) const
   {
-    return manifold_.isInTxM(value_, v);
+    return manifold_.isInTxM(value_, v, prec);
   }
 
   Index Point::getDimM() const{ return manifold_.dim(); }

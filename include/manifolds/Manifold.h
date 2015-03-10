@@ -49,11 +49,11 @@ namespace pgs
 
     /// \brief Creates a random point on this manifold (aka the retractation from point 0 
     /// of a random vector of the tangent space)
-    Point createRandomPoint(double coeff = 1.0) const;
+    virtual Point createRandomPoint(double coeff = 1.0) const;
 
     /// \brief Checks that the value val described in the representation space 
     /// is an element of the manifold
-    virtual bool isInM(const Eigen::VectorXd& val) const;
+    virtual bool isInM(const Eigen::VectorXd& val, const double& prec = 1e-12) const;
 
     /// \brief Returns the dimension of the Manifold
     Index dim() const;
@@ -103,9 +103,6 @@ namespace pgs
     /// \param v element of the tangent space of the manifold
     /// \f$v\in T_x^\mathcal{M}\f$
     void retractation(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
-    //void retractation(RefVec out, const Point& x, const ConstRefVec& v) const;
-    //Point retractation(const ConstRefVec& x, const ConstRefVec& v) const;
-    //Point retractation(const Point& x, const ConstRefVec& v) const;
 
     /// \brief PseudoLog operation
     /// \f$ out = {Log}_x(y) \f$
@@ -114,9 +111,6 @@ namespace pgs
     /// \param x element of the manifold \f$x\in\mathbb{M}\f$
     /// \param y element of the manifold \f$y\in\mathbb{M}\f$
     void pseudoLog(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
-    //void pseudoLog(RefVec out, const Point& x, const Point& y) const;
-    //RefVec pseudoLog(const ConstRefVec& x, const ConstRefVec& y) const;
-    //RefVec pseudoLog(const Point& x, const Point& y) const;
 
     /// \brief computes the inverse of a point of the manifold through its map
     /// \f$ out = x \ominus 0 = \phi_0^{-1}(x) \f$
@@ -124,9 +118,6 @@ namespace pgs
     /// manifold\f$out\in\mathbb{M}\f$
     /// \param x element of the manifold\f$x\in\mathbb{M}\f$
     void pseudoLog0(RefVec out, const ConstRefVec& x) const;
-    //void pseudoLog0(RefVec out, const Point& x) const;
-    //RefVec pseudoLog0(const ConstRefVec& x) const;
-    //RefVec pseudoLog0(const Point& x) const;
 
     /// \brief Computes the Jacobian matrix of the map function
     /// \f$\frac{\partial\phi_x}{\partial v}(0)\f$
@@ -137,7 +128,8 @@ namespace pgs
     /// \brief Computes the product of a matrix in with the jacobian matrix of
     /// the map on point x.\n \f$ out = in*\frac{\partial\phi_x}{\partial v}(0)\f$
     /// \param out result of the operation
-    /// \param in matrix to which the operation is applied
+    /// \param in matrix to which the operation is applied, 
+    /// each row of in must be a vector of the ambient space
     /// \param x point of the manifold on which the map is taken
     void applyDiffRetractation(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
 
@@ -177,7 +169,7 @@ namespace pgs
 
     /// \brief checks if \a v belongs to \f$ T_x \mathbb{M} \f$.
     /// If \a t = \a d, return always true
-    bool isInTxM(const ConstRefVec& x, const ConstRefVec& v) const;
+    bool isInTxM(const ConstRefVec& x, const ConstRefVec& v, const double& prec = 1e-12) const;
 
     /// \brief finds the closest vector to \a in on \f$ T_x \mathbb{M} \f$.
     /// If \a t = \a d, \a out = \a in.
@@ -211,7 +203,7 @@ namespace pgs
     void setRepresentationDimension(Index rd);
 
     /// \brief Ensures that val in representation space in a point of M
-    virtual bool isInM_(const Eigen::VectorXd& val) const = 0;
+    virtual bool isInM_(const Eigen::VectorXd& val, const double& prec) const = 0;
 
     /// \brief Gets the manifolds dimension
     template<int D>
@@ -248,7 +240,7 @@ namespace pgs
     virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const = 0;
 
     virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const = 0;
-    virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const = 0;
+    virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const = 0;
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const = 0;
 
     virtual void limitMap_(RefVec out) const = 0;

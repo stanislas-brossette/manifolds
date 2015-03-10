@@ -133,10 +133,10 @@ namespace pgs
     void pseudoLog0(RefVec v) const;
 
     /// \brief Checks that the current point's value represents a valid point of its Manifold
-    bool isInM() const;
+    bool isInM(const double& prec = 1e-12) const;
 
     /// \brief Checks that the current point's value represents a valid point of its Manifold
-    bool isInTxM(const ConstRefVec& v) const;
+    bool isInTxM(const ConstRefVec& v, const double& prec = 1e-12) const;
 
     /// \brief Returns the Dimension of its Manifold
     Index getDimM() const;

@@ -40,11 +40,11 @@ namespace pgs
     }
   }
 
-  bool Manifold::isInM(const Eigen::VectorXd& val) const
+  bool Manifold::isInM(const Eigen::VectorXd& val, const double& prec) const
   {
     pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(val.size() == representationDim());
-    return isInM_(val);
+    return isInM_(val, prec);
   }
 
   Point Manifold::getZero() const
@@ -58,6 +58,7 @@ namespace pgs
 
   Point Manifold::createRandomPoint(double coeff) const
   {
+    std::cout << "In Manifold::createRandomPoint" << std::endl;
     pgs_assert(isValid() || seeMessageAbove());
     lock();
     Point res = getZero();
@@ -89,7 +90,7 @@ namespace pgs
     pgs_assert(out.size() == representationDim_);
     pgs_assert(x.size() == representationDim_);
     pgs_assert(v.size() == tangentDim_);
-    pgs_assert(isInTxM(x, v));
+    pgs_assert(isInTxM(x, v) && "Wrong tangent vector provided to retractation");
     retractation_(out, x, v);
   }
   //void Manifold::retractation(RefVec out, const Point& x, const ConstRefVec& v) const
@@ -199,7 +200,7 @@ namespace pgs
     pgs_assert(out.rows() == tangentDim_);
     pgs_assert(in.cols() == out.cols());
     pgs_assert(x.size() == representationDim());
-    pgs_assert(v.size() == dim());
+    pgs_assert(v.size() == tangentDim_);
     pgs_assert(isInTxM(x, v));
     applyTransport_(out, in, x, v);
   }
@@ -212,7 +213,7 @@ namespace pgs
     pgs_assert(out.cols() == tangentDim_);
     pgs_assert(in.rows() == out.rows());
     pgs_assert(x.size() == representationDim());
-    pgs_assert(v.size() == dim());
+    pgs_assert(v.size() == tangentDim_);
     pgs_assert(isInTxM(x, v));
     applyInvTransport_(out, in, x, v);
   }
@@ -258,12 +259,12 @@ namespace pgs
     tangentConstraint_(out, x);
   }
 
-  bool Manifold::isInTxM(const ConstRefVec& x, const ConstRefVec& v) const
+  bool Manifold::isInTxM(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const
   {
     pgs_assert(isValid() || seeMessageAbove());
     pgs_assert(v.size() == tangentDim_);
     pgs_assert(x.size() == representationDim());
-    return isInTxM_(x, v);
+    return isInTxM_(x, v, prec);
   }
 
   void Manifold::forceOnTxM(RefVec out, const ConstRefVec& in, const ConstRefVec&x) const

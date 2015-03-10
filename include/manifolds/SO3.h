@@ -25,7 +25,7 @@ namespace pgs
 
   protected:
     //map operations
-    virtual bool isInM_(const Eigen::VectorXd& val) const;
+    virtual bool isInM_(const Eigen::VectorXd& val, const double& prec) const;
     virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const;
@@ -38,7 +38,7 @@ namespace pgs
     virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
 
     virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const;
-    virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const;
+    virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const;
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
     virtual void limitMap_(RefVec out) const;
     mutable ReusableTemporaryMap bufferMap_;
@@ -72,9 +72,9 @@ namespace pgs
   }
 
   template<typename Map>
-  inline bool SO3<Map>::isInM_(const Eigen::VectorXd& val) const
+  inline bool SO3<Map>::isInM_(const Eigen::VectorXd& val, const double& prec) const
   {
-    return Map::isInM_(val);
+    return Map::isInM_(val, prec);
   }
 
   template<typename Map>
@@ -167,9 +167,9 @@ namespace pgs
   }
 
   template<typename Map>
-  bool SO3<Map>::isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const
+  bool SO3<Map>::isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const
   {
-    return Map::isInTxM_(x, v);
+    return Map::isInTxM_(x, v, prec);
   }
 
   template<typename Map>

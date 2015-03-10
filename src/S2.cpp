@@ -26,9 +26,9 @@ namespace pgs
     setTypicalMagnitude (magnitude);
   }
 
-  bool S2::isInM_(const Eigen::VectorXd& val ) const
+  bool S2::isInM_(const Eigen::VectorXd& val , const double& prec) const
   {
-    bool out(val.lpNorm<2>() == 1.0);
+    bool out(fabs(val.lpNorm<2>() - 1.0) < prec);
     return out;
   }
 
@@ -51,6 +51,16 @@ namespace pgs
     return ss.str();
   }
 
+  Point S2::createRandomPoint(double ) const
+  {
+    pgs_assert(isValid() || seeMessageAbove());
+    lock();
+    Eigen::Vector3d valX;
+    rand(valX);
+    Point res = createPoint(valX);
+    return res;
+  }
+
   void S2::retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
     Eigen::Vector3d sum;
@@ -65,72 +75,108 @@ namespace pgs
 
   void S2::logarithm (RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   {
-    Eigen::Vector3d projDiff;
-    proj(projDiff,x,y-x);
+    Eigen::Vector3d diff, projDiff;
+    diff = y-x;
+    projVec(projDiff, diff, x);
     out = distance(x,y)*projDiff/projDiff.lpNorm<2>();
   }
 
-  void S2::proj (RefMat out, const ConstRefVec& x, const ConstRefMat& y) const
-  {
-    out = y - (x.transpose()*y).trace()*x;
-  }
-    
   double S2::distance (const ConstRefVec& x, const ConstRefVec& y) const
   {
     return acos(x.dot(y));
   }
 
+  void S2::projRows(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  {
+    for (Index i = 0; i < in.rows(); ++i)
+      out.row(i) = in.row(i) - (x*in.row(i)).trace()*x.transpose();
+  }
+  void S2::projCols(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  {
+    for (Index i = 0; i < in.cols(); ++i)
+      projVec(out.col(i), in.col(i), x);
+  }
+  void S2::projVec(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const
+  {
+      out = in - (x.dot(in))*x;
+  }
+
+  void S2::rand(RefVec out) const
+  {
+    pgs_assert( out.size() == 3 && "Wrong size of output for S2::rand");
+    out = Eigen::Vector3d::Random();
+    double nout = out.lpNorm<2>();
+    out = out/nout;
+  }
+
+  void S2::randVec(RefVec out, const ConstRefVec& x) const
+  {
+    pgs_assert( out.size() == 3 && "Wrong size of output for S2::rand");
+    pgs_assert( x.size() == 3 && "Wrong size of output for S2::rand");
+    out = Eigen::Vector3d::Random();
+    projVec(out, out, x);
+    double nout = out.lpNorm<2>();
+    out = out/nout;
+  }
+  Eigen::Vector3d S2::randVec(const ConstRefVec& x) const
+  {
+    Eigen::Vector3d out;
+    randVec(out, x);
+    return out;
+  }
+    
   void S2::pseudoLog0_(RefVec , const ConstRefVec& ) const
   {
-    pgs_assert(1 && "Unimplemented method in S2");
+    throw std::runtime_error("Unimplemented method in S2");
   }
 
   void S2::setZero_(RefVec ) const
   {
-    pgs_assert(1 && "Unimplemented method in S2");
+    throw std::runtime_error("Unimplemented method in S2");
   }
 
   Eigen::MatrixXd S2::diffRetractation_(const ConstRefVec& out) const
   {
-    pgs_assert(1 && "Unimplemented method in S2");
+    throw std::runtime_error("Unimplemented method in S2");
     return out;
   }
 
   void S2::applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
-    proj(out, in, x);
+    projRows(out, in, x);
   }
 
   Eigen::MatrixXd S2::diffPseudoLog0_(const ConstRefVec& out) const
   {
-    pgs_assert(1 && "Unimplemented method in S2");
+    throw std::runtime_error("Unimplemented method in S2");
     return out;
   }
 
   void S2::applyDiffPseudoLog0_(RefMat , const ConstRefMat& , const ConstRefVec& ) const
   {
-    pgs_assert(1 && "Unimplemented method in S2");
+    throw std::runtime_error("Unimplemented method in S2");
   }
 
   void S2::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
     Eigen::Vector3d y;
     retractation(y, x, v);
-    proj(out, in, y);
+    projCols(out, in, y);
   }
 
   void S2::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& ) const
   {
-    proj(out, in, x);
+    projRows(out, in, x);
   }
 
-  void S2::tangentConstraint_(RefMat, const ConstRefVec&) const
+  void S2::tangentConstraint_(RefMat out, const ConstRefVec& x) const
   {
+    out = x.transpose();
   }
 
-  bool S2::isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const
+  bool S2::isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const
   {
-    bool out = (x.dot(v) == 0.0);
+    bool out = (fabs(x.dot(v)) < prec);
     return out;
   }
 

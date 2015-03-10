@@ -21,7 +21,7 @@ namespace pgs
     name() = m1.name() + "x" + m2.name();
   }
 
-  bool CartesianProduct::isInM_(const Eigen::VectorXd& val) const
+  bool CartesianProduct::isInM_(const Eigen::VectorXd& val, const double& ) const
   {
     bool out = true;
     for (std::size_t i = 0; i<numberOfSubmanifolds(); ++i)
@@ -182,7 +182,7 @@ namespace pgs
     }
   }
 
-  bool CartesianProduct::isInTxM_(const ConstRefVec& x, const ConstRefVec& v) const
+  bool CartesianProduct::isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& ) const
   {
     bool b = true;
     for (size_t i = 0; i < submanifolds_.size() && b; ++i)

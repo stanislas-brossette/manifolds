@@ -29,7 +29,7 @@ namespace pgs
     setTypicalMagnitude (magnitude);
   }
 
-  bool RealSpace::isInM_(const Eigen::VectorXd& val ) const
+  bool RealSpace::isInM_(const Eigen::VectorXd& val , const double& ) const
   {
     bool out( dim() == val.size());
     return out;
@@ -109,7 +109,7 @@ namespace pgs
     //matrix is 0xt, no need to fill it.
   }
 
-  bool RealSpace::isInTxM_(const ConstRefVec&, const ConstRefVec&) const
+  bool RealSpace::isInTxM_(const ConstRefVec&, const ConstRefVec&, const double& ) const
   {
     return true;
   }

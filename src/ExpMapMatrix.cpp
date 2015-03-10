@@ -106,7 +106,7 @@ namespace pgs
     Eigen::Map<Eigen::Matrix3d>(out.data()) = Eigen::Matrix3d::Identity();
   }
 
-  bool ExpMapMatrix::isInM_(const Eigen::VectorXd& val)
+  bool ExpMapMatrix::isInM_(const Eigen::VectorXd& val, const double& )
   {
     typedef Eigen::Map<const Eigen::Matrix3d> toMat3;
     bool out(val.size()==9);
@@ -217,7 +217,7 @@ namespace pgs
     //out is 0xt, no need to fill it
   }
 
-  bool ExpMapMatrix::isInTxM_(const ConstRefVec&, const ConstRefVec&)
+  bool ExpMapMatrix::isInTxM_(const ConstRefVec&, const ConstRefVec&, const double& )
   {
     return true;
   }

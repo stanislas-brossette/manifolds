@@ -23,7 +23,7 @@ namespace pgs
     static const int InputDim_ = 3;
     typedef Eigen::Vector4d DisplayType; //display as q=(x, y, z, w)
     typedef Eigen::Vector4d OutputType;
-    static bool isInM_(const Eigen::VectorXd& val);
+    static bool isInM_(const Eigen::VectorXd& val, const double& prec);
     static void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v);
     static void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y);
     static void pseudoLog0_(RefVec out, const ConstRefVec& x);
@@ -40,7 +40,7 @@ namespace pgs
     static void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v, ReusableTemporaryMap& m);
 
     static void tangentConstraint_(RefMat out, const ConstRefVec& x);
-    static bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v);
+    static bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec);
     static void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x);
 
   };
