@@ -104,7 +104,6 @@ namespace pgs
   template<typename Map>
   void SO3<Map>::createRandomPoint_(RefVec out, double coeff) const
   {
-    std::cout << "In SO3<Map>::createRandomPoint_" << std::endl;
     setZero_(out);
     Eigen::Vector3d v(coeff*Eigen::Vector3d::Random());
     retractation(out, out, v);
