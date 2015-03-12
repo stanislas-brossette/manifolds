@@ -1,5 +1,7 @@
 #include <iostream>
 #include <stdexcept>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #include <manifolds/defs.h>
 #include <manifolds/utils.h>
