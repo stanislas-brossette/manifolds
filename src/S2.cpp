@@ -177,7 +177,7 @@ namespace pgs
 
   void S2::forceOnTxM_(RefVec out, const ConstRefVec& v, const ConstRefVec& x) const
   {
-    out = v - x.dot(v)*v;
+    out = v - x.dot(v)*x;
   }
 
   void S2::limitMap_(RefVec out) const

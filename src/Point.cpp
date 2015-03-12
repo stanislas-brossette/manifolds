@@ -176,6 +176,11 @@ namespace pgs
     manifold_.pseudoLog0(out, this->value_);
   }
 
+  Eigen::VectorXd Point::typicalMagnitude() const
+  {
+    return manifold_.getTypicalMagnitude();
+  }
+
   Point & Point::operator=(const Point& x)
   {
     pgs_assert(this->manifold_.dim() == x.getManifold().dim());

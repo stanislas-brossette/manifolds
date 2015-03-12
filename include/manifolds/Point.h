@@ -131,6 +131,10 @@ namespace pgs
     /// \brief Fills a vector as the pseudoLog0 of current point x at point 0
     /// \f$ out = Log_0(x) \f$
     void pseudoLog0(RefVec v) const;
+  
+    /// \brief returns the typical Magnitude of the manifold
+    Eigen::VectorXd typicalMagnitude() const;
+
 
     /// \brief Checks that the current point's value represents a valid point of its Manifold
     bool isInM(const double& prec = 1e-12) const;

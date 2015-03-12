@@ -207,6 +207,7 @@ namespace pgs
     pgs_assert(x.size() == representationDim());
     pgs_assert(v.size() == tangentDim_);
     pgs_assert(isInTxM(x, v));
+
     applyTransport_(out, in, x, v);
   }
 
@@ -220,6 +221,7 @@ namespace pgs
     pgs_assert(x.size() == representationDim());
     pgs_assert(v.size() == tangentDim_);
     pgs_assert(isInTxM(x, v));
+
     applyInvTransport_(out, in, x, v);
   }
 
