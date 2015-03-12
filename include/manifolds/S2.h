@@ -9,7 +9,7 @@ namespace pgs
   /// \brief Manifold representing the 3-dimensional Sphere, also
   /// known as S2.
   /// All the equations in this class are provided by Manopt
-  class S2: public Manifold
+  class MANIFOLDS_API S2 : public Manifold
   {
   public:
     S2();

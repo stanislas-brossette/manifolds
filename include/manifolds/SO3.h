@@ -1,5 +1,7 @@
 #ifndef _MANIFOLDS_SO3_H_
 #define _MANIFOLDS_SO3_H_
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #include <manifolds/defs.h>
 #include <manifolds/Manifold.h>

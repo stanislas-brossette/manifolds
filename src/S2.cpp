@@ -1,4 +1,6 @@
 #include <limits>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #include <manifolds/S2.h>
 #include <manifolds/pgs_assert.h>
