@@ -24,7 +24,7 @@ namespace pgs
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
 
-    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
+    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", int prec = 6) const;
 
   protected:
     virtual bool isInM_(const Eigen::VectorXd& val, const double& prec) const;

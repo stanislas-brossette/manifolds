@@ -21,7 +21,7 @@ namespace pgs
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
 
-    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
+    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", int prec = 6) const;
     virtual void getTypicalMagnitude_(RefVec out) const;
     void setTypicalMagnitude(double magnitude);
     void setTypicalMagnitude(const ConstRefVec& out);

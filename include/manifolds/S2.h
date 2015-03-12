@@ -21,7 +21,7 @@ namespace pgs
 
     virtual void createRandomPoint_(RefVec out, double coeff) const;
 
-    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
+    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", int prec = 6) const;
     virtual void getTypicalMagnitude_(RefVec out) const;
     void setTypicalMagnitude(double magnitude);
     void setTypicalMagnitude(const ConstRefVec& out);

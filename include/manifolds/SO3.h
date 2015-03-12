@@ -20,7 +20,7 @@ namespace pgs
     SO3(const ConstRefVec& magnitude);
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
-    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "") const;
+    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", int prec = 6) const;
     virtual void getTypicalMagnitude_(RefVec out) const;
     void setTypicalMagnitude(double magnitude);
     void setTypicalMagnitude(const ConstRefVec& out);
@@ -94,10 +94,10 @@ namespace pgs
   }
 
   template<typename Map>
-  inline std::string SO3<Map>::toString(const ConstRefVec& val, const std::string& prefix) const
+  inline std::string SO3<Map>::toString(const ConstRefVec& val, const std::string& prefix, int prec) const
   {
     std::string matPrefix = prefix + '[';
-    Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", matPrefix, "]");
+    Eigen::IOFormat CleanFmt(prec, 0, ", ", "\n", matPrefix, "]");
     std::stringstream ss;
     ss << (Eigen::Map<const typename Map::DisplayType>(val.data())).format(CleanFmt);
     return ss.str();

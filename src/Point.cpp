@@ -53,9 +53,9 @@ namespace pgs
     return manifold_;
   }
 
-  std::string ConstSubPoint::toString(std::string& prefix) const
+  std::string ConstSubPoint::toString(std::string& prefix, int prec) const
   {
-    return manifold_.toString(value_, prefix);
+    return manifold_.toString(value_, prefix, prec);
   }
 
   void ConstSubPoint::registerPoint()

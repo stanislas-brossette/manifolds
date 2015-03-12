@@ -34,7 +34,7 @@ namespace pgs
 
     const Manifold& getManifold() const;
 
-    std::string toString(std::string& prefix) const; //Dislays point in representation space
+    std::string toString(std::string& prefix, int prec=6) const; //Dislays point in representation space
 
   private:
     void registerPoint();
@@ -171,7 +171,7 @@ namespace pgs
   inline std::ostream& operator<< (std::ostream& os, const ConstSubPoint& x)
   {
     std::string prefix("");
-    os << x.toString(prefix);
+    os << x.toString(prefix, static_cast<int>(os.precision()));
     return os;
   }
 }

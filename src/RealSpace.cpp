@@ -45,10 +45,10 @@ namespace pgs
     return *this;
   }
 
-  std::string RealSpace::toString(const ConstRefVec& val, const std::string& prefix) const
+  std::string RealSpace::toString(const ConstRefVec& val, const std::string& prefix, int prec) const
   {
     std::string matPrefix = prefix + '[';
-    Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", matPrefix, "]");
+    Eigen::IOFormat CleanFmt(prec, 0, ", ", "\n", matPrefix, "]");
     std::stringstream ss;
     ss << val.transpose().format(CleanFmt);
     return ss.str();
