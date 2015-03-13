@@ -12,6 +12,7 @@
 #include <manifolds/CartesianPower.h>
 #include <manifolds/Point.h>
 #include <manifolds/ExpMapMatrix.h>
+#include <manifolds/ExpMapQuaternion.h>
 
 #ifndef _WIN32
 #define BOOST_TEST_MODULE PGSolver 
@@ -95,6 +96,60 @@ BOOST_AUTO_TEST_CASE(CartProdRandom)
   CartesianProduct S(P, RotSpace);
   Point x = S.createRandomPoint();
   BOOST_CHECK(S.isInM(x.value()));
+}
+
+BOOST_AUTO_TEST_CASE(testForceOnCartProd)
+{
+  SO3<ExpMapQuaternion> SQuat;
+  SO3<ExpMapMatrix> SMat;
+  S2 S2_;
+  RealSpace R4(4);
+  CartesianProduct S(SQuat,S2_);
+  S.multiply(SMat);
+  S.multiply(R4);
+  Eigen::VectorXd rotValue(S.representationDim());
+  Eigen::VectorXd perturbedRotVec(S.representationDim());
+  Eigen::VectorXd randM(S.representationDim());
+  rotValue << 
+    0.128118982404792,
+  -0.1344265650552301,
+  0.01332271791121291,
+   0.9825159185186115,
+   0.7185061970884602,
+   0.6612540461438763,
+   0.2156198766436694,
+   0.7372382151024582,
+  0.04195040037727407,
+   0.6743292801745508,
+  -0.3345142787413762,
+   0.8898165249745245,
+     0.31036550903797,
+   -0.587009379406052,
+  -0.4543860867043001,
+   0.6700397545660062,
+   45, -89374, 2, -1.3;
+  randM << 
+  -0.009673988567513409,
+  -0.005142264587405261,
+  -0.007255368464279626,
+   0.006083535084539808,
+  -0.006866418214918309,
+   -0.00198111211507633,
+  -0.007404191064370885,
+  -0.007823823959484616,
+   0.009978490360071179,
+  -0.005634861893781862,
+  0.0002586478880879684,
+   0.006782244693852144,
+   0.002252796651913225,
+  -0.004079367646053139,
+   0.002751045354060384,
+  0.0004857438013356852,
+   45, -89374, 2, -1.3;
+  Point rot = S.createPoint(rotValue);
+  perturbedRotVec = rot.value() + randM;
+  S.forceOnM(perturbedRotVec,perturbedRotVec);
+  BOOST_CHECK(S.isInM(perturbedRotVec));
 }
 
 BOOST_AUTO_TEST_CASE(CartProdIncrement)

@@ -10,6 +10,9 @@
 #include <manifolds/Point.h>
 #include <manifolds/ExpMapMatrix.h>
 
+#include <Eigen/Core>
+#include <Eigen/LU>
+
 #ifndef _WIN32
 #define BOOST_TEST_MODULE PGSolver 
 #endif
@@ -70,6 +73,36 @@ BOOST_AUTO_TEST_CASE(RandomSO3IsInM)
   BOOST_CHECK(y.isInM());
   y.value() = Eigen::VectorXd::Random(S.representationDim());
   BOOST_CHECK(!y.isInM());
+}
+
+BOOST_AUTO_TEST_CASE(testForceOnSo3)
+{
+  SO3<ExpMapMatrix> S;
+  Eigen::VectorXd rotValue(9);
+  rotValue <<  0.8788530623517696,
+               0.4728751994675595,
+              -0.06329565959394243,
+              -0.2643699005034564,
+               0.5931297977727257,
+               0.7604640679886711,
+               0.3971471396129008,
+              -0.6516027077311767,
+               0.6462879085784368;
+  Eigen::VectorXd randM(9);
+  randM <<  0.008323901360074014,
+            0.002714234559198019,
+            0.004345938588653662,
+           -0.007167948892883933,
+            0.002139377525141173,
+           -0.009673988567513409,
+           -0.005142264587405261,
+           -0.007255368464279626,
+            0.006083535084539808;
+  Point rot = S.createPoint(rotValue);
+  Eigen::VectorXd perturbedRotVec;
+  perturbedRotVec = rot.value() + randM;
+  S.forceOnM(perturbedRotVec,perturbedRotVec);
+  BOOST_CHECK(S.isInM(perturbedRotVec));
 }
 
 BOOST_AUTO_TEST_CASE(SO3LimitMap)

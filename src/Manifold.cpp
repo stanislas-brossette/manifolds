@@ -47,6 +47,15 @@ namespace pgs
     return isInM_(val, prec);
   }
 
+  void Manifold::forceOnM(RefVec out, const ConstRefVec& in) const
+  {
+    pgs_assert(isValid() || seeMessageAbove());
+    pgs_assert(out.size() == representationDim());
+    pgs_assert(in.size() == representationDim());
+    return forceOnM_(out, in);
+  }
+  
+
   Point Manifold::getZero() const
   {
     pgs_assert(isValid() || seeMessageAbove());

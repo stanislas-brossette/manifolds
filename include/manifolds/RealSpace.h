@@ -29,6 +29,7 @@ namespace pgs
   protected:
     //map operations
     virtual bool isInM_(const Eigen::VectorXd& , const double& prec) const;
+    virtual void forceOnM_(RefVec out, const ConstRefVec& in) const;
     virtual void createRandomPoint_(RefVec out, double coeff) const;
     virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;

@@ -28,6 +28,7 @@ namespace pgs
 
   protected:
     virtual bool isInM_(const Eigen::VectorXd& val, const double& prec) const;
+    virtual void forceOnM_(RefVec out, const ConstRefVec& in) const;
 
     virtual Index startR(size_t i) const;
     virtual Index startT(size_t i) const;

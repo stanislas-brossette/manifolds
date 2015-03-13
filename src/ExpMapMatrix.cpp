@@ -1,6 +1,7 @@
 #include <iostream>
 #include <boost/math/special_functions/sinc.hpp>
 #include <Eigen/Dense>
+#include <Eigen/LU>
 #include <manifolds/defs.h>
 #include <manifolds/ExpMapMatrix.h>
 #include <manifolds/pgs_assert.h>
@@ -34,12 +35,14 @@ namespace utility
 namespace pgs
 {
   const double ExpMapMatrix::prec = 1e-8;
+  typedef Eigen::Map<const Eigen::Matrix3d> toConstMat3;
+  typedef Eigen::Map<Eigen::Matrix3d> toMat3;
 
   void ExpMapMatrix::retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v)
   {
     OutputType E;
     exponential(E,v);
-    Eigen::Map<OutputType>(out.data()) = (Eigen::Map<const OutputType>(x.data()))*E;
+    toMat3(out.data()) = (toConstMat3(x.data()))*E;
   }
 
   void ExpMapMatrix::exponential(OutputType& E, const ConstRefVec& v)
@@ -72,15 +75,13 @@ namespace pgs
 
   void ExpMapMatrix::pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y)
   {
-    typedef Eigen::Map<const Eigen::Matrix3d> ConstMapMat3;
-    OutputType R(((ConstMapMat3(x.data())).transpose())*(ConstMapMat3(y.data())));
+    OutputType R(((toConstMat3(x.data())).transpose())*(toConstMat3(y.data())));
     logarithm(out,R);
   }
 
   void ExpMapMatrix::pseudoLog0_(RefVec out, const ConstRefVec& x)
   {
-    typedef Eigen::Map<const Eigen::Matrix3d> ConstMapMat3;
-    OutputType R(ConstMapMat3(x.data()));
+    OutputType R(toConstMat3(x.data()));
     logarithm(out,R);
   }
 
@@ -103,18 +104,50 @@ namespace pgs
 
   void ExpMapMatrix::setZero_(RefVec out)
   {
-    Eigen::Map<Eigen::Matrix3d>(out.data()) = Eigen::Matrix3d::Identity();
+    toMat3(out.data()) = Eigen::Matrix3d::Identity();
   }
 
   bool ExpMapMatrix::isInM_(const Eigen::VectorXd& val, const double& )
   {
-    typedef Eigen::Map<const Eigen::Matrix3d> toMat3;
     bool out(val.size()==9);
-    double det = toMat3(val.data()).determinant();
+    toConstMat3 valMat(val.data());
+    double det = valMat.determinant();
     out = out && (fabs(det - 1) < prec);
     out = out &&
-      ((toMat3(val.data()).transpose())*toMat3(val.data())).isIdentity(prec);
+      ((valMat.transpose())*valMat).isIdentity(prec);
     return out;
+  }
+
+  void ExpMapMatrix::forceOnM_(RefVec out, const ConstRefVec& in)
+  {
+    toConstMat3 inMat(in.data());
+    pgs_assert((inMat.transpose()*inMat).isApprox(Eigen::Matrix3d::Identity(), 0.1) 
+        && fabs(inMat.determinant() - 1.0) < 0.1 
+        && "Provided matrix is too far from being a rotation matrix. You should use createRandomPoint instead of forceOnM" );
+    Eigen::Matrix3d A(inMat); //TODO it is bad to copy it here. Maybe in shouldn't be const???
+    toMat3 Q(out.data());
+    Eigen::Matrix3d R;
+    //the following scope contains the code to compute a QR on R3x3
+    {
+      //k = 0
+      R(0,0) = A.col(0).norm();
+      Q.col(0) = A.col(0)/R(0,0);
+      //j = 1
+      R(0,1) = Q.col(0).dot(A.col(1));
+      A.col(1) = A.col(1) - Q.col(0)*R(0,1);
+      //j = 2
+      R(0,2) = Q.col(0).dot(A.col(2));
+      A.col(2) = A.col(2) - Q.col(0)*R(0,2);
+      //k = 1
+      R(1,1) = A.col(1).norm();
+      Q.col(1) = A.col(1)/R(1,1);
+      //j = 2
+      R(1,2) = Q.col(1).dot(A.col(2));
+      A.col(2) = A.col(2) - Q.col(1)*R(1,2);
+      //k = 2
+      R(2,2) = A.col(2).norm();
+      Q.col(2) = A.col(2)/R(2,2);
+    }
   }
 
   Eigen::Matrix<double, 9, 3> ExpMapMatrix::diffRetractation_(const ConstRefVec& x)

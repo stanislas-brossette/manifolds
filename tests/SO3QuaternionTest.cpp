@@ -70,6 +70,33 @@ BOOST_AUTO_TEST_CASE(RandomSO3IsInM)
   BOOST_CHECK(!y.isInM());
 }
 
+BOOST_AUTO_TEST_CASE(testForceOnSo3)
+{
+  //std::cout.precision(16);
+  SO3<ExpMapQuaternion> S;
+  Eigen::VectorXd rotValue(4);
+  Eigen::VectorXd perturbedRotVec(4);
+  Eigen::VectorXd randM(4);
+  rotValue << 
+  -0.02246981965305121,
+    0.1281118914339608,
+    -0.134419124980123,
+    0.9823512352094593;
+  randM << 
+  0.0002680182039123102,
+   0.009044594503494256,
+   0.008323901360074014,
+   0.002714234559198019;
+  //Point rot = S.createRandomPoint();
+  Point rot = S.createPoint(rotValue);
+  //std::cout << "rot.value() = \n" << rot.value() << std::endl;
+  //randM = 0.01*Eigen::VectorXd::Random(4);
+  //std::cout << "randM = \n" << randM << std::endl;
+  perturbedRotVec = rot.value() + randM;
+  S.forceOnM(perturbedRotVec,perturbedRotVec);
+  BOOST_CHECK(S.isInM(perturbedRotVec));
+}
+
 BOOST_AUTO_TEST_CASE(SO3LimitMap)
 {
   SO3<ExpMapQuaternion> S;

@@ -73,11 +73,18 @@ namespace pgs
 
   bool ExpMapQuaternion::isInM_(const Eigen::VectorXd& val, const double& )
   {
-    typedef Eigen::Map<const Eigen::Quaterniond> toQuat;
     bool out(val.size()==4);
-    double norm = toQuat(val.data()).norm();
+    double norm = toConstQuat(val.data()).norm();
     out = out && (fabs(norm - 1) < prec);
     return out;
+  }
+
+  void ExpMapQuaternion::forceOnM_(RefVec out, const ConstRefVec& in)
+  {
+    toConstQuat inQuat(in.data());
+    toQuat outQuat(out.data());
+    outQuat = inQuat;
+    out.normalize();
   }
 
   Eigen::Matrix<double, 4, 3> ExpMapQuaternion::diffRetractation_(const ConstRefVec& x)

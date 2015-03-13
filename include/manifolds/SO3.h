@@ -29,6 +29,7 @@ namespace pgs
   protected:
     //map operations
     virtual bool isInM_(const Eigen::VectorXd& val, const double& prec) const;
+    virtual void forceOnM_(RefVec out, const ConstRefVec& in) const;
     virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const;
@@ -78,6 +79,12 @@ namespace pgs
   inline bool SO3<Map>::isInM_(const Eigen::VectorXd& val, const double& prec) const
   {
     return Map::isInM_(val, prec);
+  }
+
+  template<typename Map>
+  inline void SO3<Map>::forceOnM_(RefVec out, const ConstRefVec& in) const
+  {
+    return Map::forceOnM_(out, in);
   }
 
   template<typename Map>

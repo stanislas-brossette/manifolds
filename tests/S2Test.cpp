@@ -50,6 +50,27 @@ BOOST_AUTO_TEST_CASE(RandomS2Constructor)
   BOOST_CHECK(y.isInM());
 }
 
+BOOST_AUTO_TEST_CASE(RandomS2IsInM)
+{
+  S2 S;
+  Point y = S.createRandomPoint();
+  BOOST_CHECK(y.isInM());
+  y.value() = Eigen::VectorXd::Random(S.representationDim());
+  BOOST_CHECK(!y.isInM());
+}
+
+BOOST_AUTO_TEST_CASE(testForceOnSo3)
+{
+  S2 S;
+  Eigen::VectorXd perturbedRotVec(3);
+  Eigen::VectorXd randM(3);
+  Point rot = S.createRandomPoint();
+  randM = 0.01*Eigen::VectorXd::Random(3);
+  perturbedRotVec = rot.value() + randM;
+  S.forceOnM(perturbedRotVec,perturbedRotVec);
+  BOOST_CHECK(S.isInM(perturbedRotVec));
+}
+
 BOOST_AUTO_TEST_CASE(RandomTangentS2)
 {
   S2 Space;

@@ -56,6 +56,9 @@ namespace pgs
     /// is an element of the manifold
     virtual bool isInM(const Eigen::VectorXd& val, const double& prec = 1e-12) const;
 
+    /// \brief finds the closest point to \a in on \f$ \mathbb{M} \f$.
+    virtual void forceOnM(RefVec out, const ConstRefVec& in) const;
+
     /// \brief Returns the dimension of the Manifold
     Index dim() const;
 
@@ -205,6 +208,9 @@ namespace pgs
 
     /// \brief Ensures that val in representation space in a point of M
     virtual bool isInM_(const Eigen::VectorXd& val, const double& prec) const = 0;
+
+    /// \brief finds the closest point to \a in on \f$ \mathbb{M} \f$.
+    virtual void forceOnM_(RefVec out, const ConstRefVec& in) const = 0;
 
     /// \brief Gets the manifolds dimension
     template<int D>

@@ -30,6 +30,12 @@ namespace pgs
     }
     return out;
   }
+   
+  void CartesianProduct::forceOnM_(RefVec out, const ConstRefVec& in) const
+  {
+    for (std::size_t i = 0; i<numberOfSubmanifolds(); ++i)
+      submanifolds_[i]->forceOnM(getView<R>(out,i), getConstView<R>(in,i));
+  }
 
   CartesianProduct& CartesianProduct::multiply(const Manifold& m)
   {

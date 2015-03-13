@@ -35,6 +35,11 @@ namespace pgs
     return out;
   }
 
+  void RealSpace::forceOnM_(RefVec out, const ConstRefVec& in) const
+  {
+    out = in;
+  }
+
   size_t RealSpace::numberOfSubmanifolds() const
   {
     return 1;

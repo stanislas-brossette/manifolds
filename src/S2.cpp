@@ -34,6 +34,11 @@ namespace pgs
     return out;
   }
 
+  void S2::forceOnM_(RefVec out, const ConstRefVec& in) const
+  {
+    out = in/in.lpNorm<2>();
+  }
+
   size_t S2::numberOfSubmanifolds() const
   {
     return 1;
