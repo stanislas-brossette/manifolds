@@ -25,6 +25,7 @@ namespace pgs
     void setTypicalMagnitude(double magnitude);
     void setTypicalMagnitude(const ConstRefVec& out);
     virtual void createRandomPoint_(RefVec out, double coeff) const;
+    virtual bool isElementary() const;
 
   protected:
     //map operations
@@ -91,6 +92,12 @@ namespace pgs
   inline size_t SO3<Map>::numberOfSubmanifolds() const
   {
     return 1;
+  }
+
+  template<typename Map>
+  inline bool SO3<Map>::isElementary() const
+  {
+    return true;
   }
 
   template<typename Map>

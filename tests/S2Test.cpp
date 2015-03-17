@@ -25,6 +25,7 @@ BOOST_AUTO_TEST_CASE(S2Constructor)
   BOOST_CHECK_EQUAL(S.tangentDim(), 3);
   BOOST_CHECK_EQUAL(S.representationDim(), 3);
   BOOST_CHECK_EQUAL(S.numberOfSubmanifolds(), 1);
+  BOOST_CHECK(S.isElementary());
 }
 
 BOOST_AUTO_TEST_CASE(S2PointConstructor)

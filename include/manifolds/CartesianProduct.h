@@ -26,6 +26,8 @@ namespace pgs
 
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", int prec = 6) const;
 
+    virtual bool isElementary() const;
+
   protected:
     virtual bool isInM_(const Eigen::VectorXd& val, const double& prec) const;
     virtual void forceOnM_(RefVec out, const ConstRefVec& in) const;

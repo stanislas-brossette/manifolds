@@ -43,6 +43,12 @@ namespace pgs
   {
     return 1;
   }
+
+  bool S2::isElementary() const
+  {
+    return true;
+  }
+  
   const Manifold& S2::operator()(size_t i) const
   {
     pgs_assert(i < 1 && "invalid index");

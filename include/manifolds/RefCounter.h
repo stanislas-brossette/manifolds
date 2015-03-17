@@ -26,6 +26,7 @@ namespace pgs
       {
       }
 
+      // In C++ 11, by default, a destructor cannot launch an exception, setting noexcet to false allows it.
       ~RefCounter() NOEXCEPT(false)
       {
 #ifndef NDEBUG

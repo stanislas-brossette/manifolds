@@ -69,6 +69,9 @@ namespace pgs
     /// \brief Returns the dimension of the representation space of the manifold
     Index representationDim() const;
 
+    /// \brief Returns True if the manifold is an elementary manyfold, false otherwise
+    virtual bool isElementary() const = 0;
+
     /// \brief Returns the number of submanifolds that compose the manifold
     virtual size_t numberOfSubmanifolds() const = 0;
 

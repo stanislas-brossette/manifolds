@@ -21,6 +21,7 @@ BOOST_AUTO_TEST_CASE(RealSpaceConstructor)
   BOOST_CHECK_EQUAL(R5.dim(), 5);
   BOOST_CHECK_EQUAL(R5.representationDim(), 5);
   BOOST_CHECK_EQUAL(R5.numberOfSubmanifolds(), 1);
+  BOOST_CHECK(R5.isElementary());
 }
 
 BOOST_AUTO_TEST_CASE(RealPointConstructor)

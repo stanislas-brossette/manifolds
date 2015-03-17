@@ -36,6 +36,7 @@ namespace pgs
     void rand(RefVec out) const;
     void randVec(RefVec out, const ConstRefVec& x) const;
     Eigen::Vector3d randVec(const ConstRefVec& x) const;
+    virtual bool isElementary() const;
 
   protected:
     //map operations

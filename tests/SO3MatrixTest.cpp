@@ -28,6 +28,7 @@ BOOST_AUTO_TEST_CASE(RotSpaceConstructor)
   BOOST_CHECK_EQUAL(S.dim(), 3);
   BOOST_CHECK_EQUAL(S.representationDim(), 9);
   BOOST_CHECK_EQUAL(S.numberOfSubmanifolds(), 1);
+  BOOST_CHECK(S.isElementary());
 }
 
 BOOST_AUTO_TEST_CASE(SO3Constructor)

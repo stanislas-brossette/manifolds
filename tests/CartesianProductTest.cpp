@@ -55,6 +55,9 @@ BOOST_AUTO_TEST_CASE(CartProdConstructor)
                         1, 1,
                         M_PI, M_PI, M_PI;
   BOOST_CHECK_EQUAL(PowS.getTypicalMagnitude(), expectedTypicalMag);
+  BOOST_CHECK(!S.isElementary());
+  BOOST_CHECK(!P.isElementary());
+  BOOST_CHECK(!PowS.isElementary());
 }
 
 BOOST_AUTO_TEST_CASE(CartProdZero)

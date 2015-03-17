@@ -57,6 +57,11 @@ namespace pgs
     return submanifolds_.size();
   }
 
+  bool CartesianProduct::isElementary() const
+  {
+    return false;
+  }
+
   const Manifold& CartesianProduct::operator()(size_t i) const
   {
     pgs_assert(i < submanifolds_.size() && "invalid index");

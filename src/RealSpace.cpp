@@ -44,6 +44,12 @@ namespace pgs
   {
     return 1;
   }
+
+  bool RealSpace::isElementary() const
+  {
+    return true;
+  }
+
   const Manifold& RealSpace::operator()(size_t i) const
   {
     pgs_assert(i < 1 && "invalid index");
