@@ -98,6 +98,11 @@ namespace pgs
     return representationDim_;
   }
 
+  void Manifold::display(std::string prefix) const
+  {
+    std::cout << prefix << name() << std::endl;
+  }
+
   void Manifold::retractation(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
     pgs_assert(isValid() || seeMessageAbove());

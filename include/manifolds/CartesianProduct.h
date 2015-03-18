@@ -31,6 +31,8 @@ namespace pgs
 
     virtual bool isElementary() const;
 
+    virtual void display(std::string prefix = "") const;
+
   protected:
     virtual bool isInM_(const Eigen::VectorXd& val, const double& prec) const;
     virtual void forceOnM_(RefVec out, const ConstRefVec& in) const;

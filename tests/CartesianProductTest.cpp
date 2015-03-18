@@ -59,6 +59,25 @@ BOOST_AUTO_TEST_CASE(CartProdConstructor)
   BOOST_CHECK(!P.isElementary());
   BOOST_CHECK(!PowS.isElementary());
 }
+ 
+BOOST_AUTO_TEST_CASE(displayTest)
+{
+  RealSpace R5(5);
+  R5.display();
+  RealSpace R2(2);
+  S2 Sphere;
+  SO3<ExpMapMatrix> RotSpace;
+  std::vector<Manifold*> m {&R5, &Sphere, &R2, &Sphere, &RotSpace, &R5};
+  CartesianProduct S(m);
+  CartesianProduct S2(S,R2);
+  CartesianProduct S3(S,S2);
+  std::cout << "S.name() = \n" << S.name() << std::endl;
+  S.display();
+  std::cout << "S2.name() = \n" << S2.name() << std::endl;
+  S2.display();
+  std::cout << "S3.name() = \n" << S3.name() << std::endl;
+  S3.display();
+}
 
 BOOST_AUTO_TEST_CASE(CartProdVecConstructor)
 {

@@ -72,6 +72,21 @@ namespace pgs
     return false;
   }
 
+  void CartesianProduct::display(std::string prefix) const
+  {
+    for (size_t i = 0; i < submanifolds_.size(); ++i)
+    {
+      if(submanifolds_[i]->isElementary())
+        std::cout << prefix << submanifolds_[i]->name()<< std::endl;
+      else
+      {
+        std::cout << prefix << "|----------------------------------"<< std::endl;
+        submanifolds_[i]->display(prefix + "| ");
+        std::cout << prefix << "|----------------------------------"<< std::endl;
+      }
+    }
+  }
+
   const Manifold& CartesianProduct::operator()(size_t i) const
   {
     pgs_assert(i < submanifolds_.size() && "invalid index");

@@ -72,6 +72,9 @@ namespace pgs
     /// \brief Returns True if the manifold is an elementary manyfold, false otherwise
     virtual bool isElementary() const = 0;
 
+    /// \brief Displays a description of the manifold
+    virtual void display(std::string prefix = "") const;
+
     /// \brief Returns the number of submanifolds that compose the manifold
     virtual size_t numberOfSubmanifolds() const = 0;
 
