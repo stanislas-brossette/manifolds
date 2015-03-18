@@ -80,9 +80,9 @@ namespace pgs
         std::cout << prefix << submanifolds_[i]->name()<< std::endl;
       else
       {
-        std::cout << prefix << "|----------------------------------"<< std::endl;
+        std::cout << prefix << "/----------------------------------"<< std::endl;
         submanifolds_[i]->display(prefix + "| ");
-        std::cout << prefix << "|----------------------------------"<< std::endl;
+        std::cout << prefix << "\\----------------------------------"<< std::endl;
       }
     }
   }

@@ -66,6 +66,7 @@ BOOST_AUTO_TEST_CASE(displayTest)
   R5.display();
   RealSpace R2(2);
   S2 Sphere;
+  Sphere.display();
   SO3<ExpMapMatrix> RotSpace;
   std::vector<Manifold*> m {&R5, &Sphere, &R2, &Sphere, &RotSpace, &R5};
   CartesianProduct S(m);
