@@ -14,6 +14,9 @@ namespace pgs
     /// \brief Default constructor
     CartesianProduct();
 
+    /// \brief Constructor of the manifold from a list of manifolds
+    CartesianProduct(std::vector<Manifold*> m);
+
     /// \brief Constructor of the manifold composed of \f$ m1\times m2\f$
     CartesianProduct(const Manifold& m1, const Manifold& m2);
 

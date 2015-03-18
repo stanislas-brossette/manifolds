@@ -60,6 +60,30 @@ BOOST_AUTO_TEST_CASE(CartProdConstructor)
   BOOST_CHECK(!PowS.isElementary());
 }
 
+BOOST_AUTO_TEST_CASE(CartProdVecConstructor)
+{
+  RealSpace R5(5);
+  RealSpace R2(2);
+  S2 Sphere;
+  SO3<ExpMapMatrix> RotSpace;
+  std::vector<Manifold*> m {&R5, &Sphere, &R2, &Sphere, &RotSpace, &R5};
+  CartesianProduct S(m);
+  BOOST_CHECK(!S.isElementary());
+  BOOST_CHECK_EQUAL(S.dim(), 19);
+  BOOST_CHECK_EQUAL(S.representationDim(), 27);
+  BOOST_CHECK_EQUAL(S.numberOfSubmanifolds(), 6);
+}
+
+BOOST_AUTO_TEST_CASE(CartProdVecEmptyConstructor)
+{
+  std::vector<Manifold*> mEmpty {};
+  CartesianProduct SEmpty(mEmpty);
+  BOOST_CHECK(!SEmpty.isElementary());
+  BOOST_CHECK_EQUAL(SEmpty.dim(), 0);
+  BOOST_CHECK_EQUAL(SEmpty.representationDim(), 0);
+  BOOST_CHECK_EQUAL(SEmpty.numberOfSubmanifolds(), 0);
+}
+
 BOOST_AUTO_TEST_CASE(CartProdZero)
 {
   RealSpace R3(3);
@@ -107,9 +131,8 @@ BOOST_AUTO_TEST_CASE(testForceOnCartProd)
   SO3<ExpMapMatrix> SMat;
   S2 S2_;
   RealSpace R4(4);
-  CartesianProduct S(SQuat,S2_);
-  S.multiply(SMat);
-  S.multiply(R4);
+  std::vector<Manifold*> m {&SQuat, &S2_, &SMat, &R4};
+  CartesianProduct S(m);
   Eigen::VectorXd rotValue(S.representationDim());
   Eigen::VectorXd perturbedRotVec(S.representationDim());
   Eigen::VectorXd randM(S.representationDim());
