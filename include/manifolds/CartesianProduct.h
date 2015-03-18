@@ -2,6 +2,7 @@
 #define _MANIFOLDS_CARTESIAN_PRODUCT_H_
 
 #include <vector>
+#include <initializer_list>
 #include <manifolds/defs.h>
 #include <manifolds/Manifold.h>
 
@@ -15,7 +16,7 @@ namespace pgs
     CartesianProduct();
 
     /// \brief Constructor of the manifold from a list of manifolds
-    CartesianProduct(std::vector<Manifold*> m);
+    CartesianProduct(std::initializer_list<Manifold*> m);
 
     /// \brief Constructor of the manifold composed of \f$ m1\times m2\f$
     CartesianProduct(const Manifold& m1, const Manifold& m2);

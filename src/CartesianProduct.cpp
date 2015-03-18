@@ -11,14 +11,14 @@ namespace pgs
     name() = "";
   }
 
-  CartesianProduct::CartesianProduct(std::vector<Manifold*> m)
+  CartesianProduct::CartesianProduct(std::initializer_list<Manifold*> m)
     : Manifold(0,0,0)
   {
     startIndexT_.push_back(0);
     startIndexR_.push_back(0);
     name() = "";
-    for (size_t i = 0; i < m.size(); ++i)
-      multiply(*(m[i]));
+    for (auto mi : m)
+      multiply(*(mi));
   }
 
   CartesianProduct::CartesianProduct(const Manifold& m1, const Manifold& m2)

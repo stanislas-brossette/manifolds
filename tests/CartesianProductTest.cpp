@@ -68,8 +68,7 @@ BOOST_AUTO_TEST_CASE(displayTest)
   S2 Sphere;
   Sphere.display();
   SO3<ExpMapMatrix> RotSpace;
-  std::vector<Manifold*> m {&R5, &Sphere, &R2, &Sphere, &RotSpace, &R5};
-  CartesianProduct S(m);
+  CartesianProduct S{ &R5, &Sphere, &R2, &Sphere, &RotSpace, &R5 };
   CartesianProduct S2(S,R2);
   CartesianProduct S3(S,S2);
   std::cout << "S.name() = \n" << S.name() << std::endl;
@@ -86,8 +85,7 @@ BOOST_AUTO_TEST_CASE(CartProdVecConstructor)
   RealSpace R2(2);
   S2 Sphere;
   SO3<ExpMapMatrix> RotSpace;
-  std::vector<Manifold*> m {&R5, &Sphere, &R2, &Sphere, &RotSpace, &R5};
-  CartesianProduct S(m);
+  CartesianProduct S{ &R5, &Sphere, &R2, &Sphere, &RotSpace, &R5 };
   BOOST_CHECK(!S.isElementary());
   BOOST_CHECK_EQUAL(S.dim(), 19);
   BOOST_CHECK_EQUAL(S.representationDim(), 27);
@@ -96,8 +94,7 @@ BOOST_AUTO_TEST_CASE(CartProdVecConstructor)
 
 BOOST_AUTO_TEST_CASE(CartProdVecEmptyConstructor)
 {
-  std::vector<Manifold*> mEmpty {};
-  CartesianProduct SEmpty(mEmpty);
+  CartesianProduct SEmpty{};
   BOOST_CHECK(!SEmpty.isElementary());
   BOOST_CHECK_EQUAL(SEmpty.dim(), 0);
   BOOST_CHECK_EQUAL(SEmpty.representationDim(), 0);
@@ -151,8 +148,7 @@ BOOST_AUTO_TEST_CASE(testForceOnCartProd)
   SO3<ExpMapMatrix> SMat;
   S2 S2_;
   RealSpace R4(4);
-  std::vector<Manifold*> m {&SQuat, &S2_, &SMat, &R4};
-  CartesianProduct S(m);
+  CartesianProduct S{ &SQuat, &S2_, &SMat, &R4 };
   Eigen::VectorXd rotValue(S.representationDim());
   Eigen::VectorXd perturbedRotVec(S.representationDim());
   Eigen::VectorXd randM(S.representationDim());
