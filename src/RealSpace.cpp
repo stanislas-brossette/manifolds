@@ -10,7 +10,8 @@ namespace pgs
   {
     name() = "R" + std::to_string( n );
     typicalMagnitude_.resize(n);
-    setTypicalMagnitude(Eigen::VectorXd::Constant(n, 1.0));
+    Eigen::VectorXd temp = Eigen::VectorXd::Constant(n, 1.0);
+    setTypicalMagnitude(temp);
   }
 
   RealSpace::RealSpace(Index n, double magnitude)
@@ -18,7 +19,8 @@ namespace pgs
   {
     name() = "R" + std::to_string( n );
     typicalMagnitude_.resize(n);
-    setTypicalMagnitude(Eigen::VectorXd::Constant(n, magnitude));
+    Eigen::VectorXd temp = Eigen::VectorXd::Constant(n, magnitude);
+    setTypicalMagnitude(temp);
   }
   RealSpace::RealSpace(Index n, const ConstRefVec& magnitude)
     : Manifold(n, n, n)
@@ -147,7 +149,8 @@ namespace pgs
 
   void RealSpace::setTypicalMagnitude(double magnitude)
   {
-    setTypicalMagnitude (Eigen::VectorXd::Constant(tangentDim(), magnitude));
+    Eigen::VectorXd temp = Eigen::VectorXd::Constant(tangentDim(), magnitude);
+    setTypicalMagnitude(temp);
   }
 
   void RealSpace::setTypicalMagnitude(const ConstRefVec& out)
