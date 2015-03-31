@@ -4,6 +4,8 @@
 
 namespace pgs
 {
+  long Manifold::manifoldCounter_ = 0;
+
   Manifold::Manifold(Index dimension, Index tangentDimension, Index representationDimension)
     : dimension_(dimension)
     , tangentDim_(tangentDimension)
@@ -13,8 +15,9 @@ namespace pgs
     pgs_assert(0 <= dimension && "Negative dimension not accepted");
     pgs_assert(dimension <= tangentDimension);
     pgs_assert(tangentDimension <= representationDimension);
+    this->instanceId_ = manifoldCounter_++;
   }
-  
+
   Manifold::~Manifold()
   {
   }
@@ -54,7 +57,7 @@ namespace pgs
     pgs_assert(in.size() == representationDim());
     return forceOnM_(out, in);
   }
-  
+
 
   Point Manifold::getZero() const
   {
@@ -302,14 +305,14 @@ namespace pgs
     pgs_assert(out.size() == tangentDim_);
     limitMap_(out);
   }
-  
+
   void Manifold::getTypicalMagnitude(RefVec out) const
   {
     pgs_assert(out.size() == tangentDim_);
     getTypicalMagnitude_(out);
   }
 
-  Eigen::VectorXd Manifold::getTypicalMagnitude() const  
+  Eigen::VectorXd Manifold::getTypicalMagnitude() const
   {
     Eigen::VectorXd out(tangentDim_);
     getTypicalMagnitude_(out);
@@ -328,6 +331,11 @@ namespace pgs
   }
 
   const std::string& Manifold::name() const { return name_;}
-  
+
   std::string& Manifold::name() { return name_;}
+
+  long Manifold::getInstanceId() const
+  {
+    return this->instanceId_;
+  }
 }

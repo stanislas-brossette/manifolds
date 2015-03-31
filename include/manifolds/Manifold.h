@@ -21,7 +21,7 @@ namespace pgs
   /// space and by the map to go from a vector of the tangent space to a point
   /// of the manifold.
   /// We denote the a manifold as \f$ \mathcal{M}\f$, its tangent space at point
-  /// \f$ x \f$ is \f$ T_x^\mathcal{M} \f$ seen as subspace of \f$\mathbb{R}^t \f$ and its 
+  /// \f$ x \f$ is \f$ T_x^\mathcal{M} \f$ seen as subspace of \f$\mathbb{R}^t \f$ and its
   /// representation space is denoted \f$\mathbb{E}\f$\n
   /// The map function is \f$ \phi:\mathbb{M},T^\mathbb{M}\to\mathbb{M}
   /// \f$ and the map function on a point \f$x\f$ is \f$ \phi_x:T_x^\mathbb{M}\to\mathbb{M}\f$
@@ -47,12 +47,12 @@ namespace pgs
     /// defined in this manifold (aka the zero)
     Point getZero() const;
 
-    /// \brief Creates a random point on this manifold (aka the retractation from point 0 
+    /// \brief Creates a random point on this manifold (aka the retractation from point 0
     /// of a random vector of the tangent space)
     Point createRandomPoint(double coeff = 1.0) const;
     void createRandomPoint(RefVec out, double coeff = 1.0) const;
 
-    /// \brief Checks that the value val described in the representation space 
+    /// \brief Checks that the value val described in the representation space
     /// is an element of the manifold
     virtual bool isInM(const Eigen::VectorXd& val, const double& prec = 1e-12) const;
 
@@ -138,7 +138,7 @@ namespace pgs
     /// \brief Computes the product of a matrix in with the jacobian matrix of
     /// the map on point x.\n \f$ out = in*\frac{\partial\phi_x}{\partial v}(0)\f$
     /// \param out result of the operation
-    /// \param in matrix to which the operation is applied, 
+    /// \param in matrix to which the operation is applied,
     /// each row of in must be a vector of the ambient space
     /// \param x point of the manifold on which the map is taken
     void applyDiffRetractation(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
@@ -263,6 +263,9 @@ namespace pgs
     /// \brief tests if the manifold is locked
     void testLock() const;
 
+    /// \brief returns a value unique to each instance of a manifold
+    long getInstanceId() const;
+
   private:
     /// \brief Name of the Manifold
     std::string name_;
@@ -275,6 +278,13 @@ namespace pgs
 
     /// \brief dimension of the representation space of the manifold
     Index representationDim_;
+
+    /// \brief a static counter used to generate the instanceId value
+    /// TODO: currently not used in a thread-safe way!
+    static long manifoldCounter_;
+
+    /// \brief a value used to identify different instances at runtime
+    long instanceId_;
 
     /// \brief if true, the manifold if locked
     mutable bool lock_;
@@ -443,4 +453,3 @@ namespace pgs
 }
 
 #endif //_MANIFOLDS_MANIFOLD_H_
-
