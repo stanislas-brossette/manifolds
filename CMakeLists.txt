@@ -25,11 +25,6 @@ if(CMAKE_BUILD_TYPE MATCHES Rel)
   endif()
 endif()
 
-# Add main library to pkg-config file.
-PKG_CONFIG_APPEND_LIBS(manifolds)
-#
-#search_for_boost()
-
 # Require Eigen >= 3.2.1 for Eigen::Ref
 IF(NOT WIN32)
   SET(Eigen_REQUIRED "eigen3 >= 3.2.1")
