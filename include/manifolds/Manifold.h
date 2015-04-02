@@ -202,6 +202,18 @@ namespace pgs
     void getTypicalMagnitude(RefVec out) const;
     Eigen::VectorXd getTypicalMagnitude() const;
 
+    /// \brief returns a value unique to each instance of a manifold
+    long getInstanceId() const;
+
+    /// \brief Compares this manifold to another one using the identifier
+    /// unique to each class implemented in getTypeId().
+    virtual bool isSameType(Manifold& other);
+
+    /// \brief returns an id that should be unique to each manifold class.
+    /// Use utils::hash::computeHash("some_string") to generate an ID at
+    /// compile-time.
+    virtual long getTypeId() = 0;
+
   protected:
     /// \brief Set manifold dimension to d
     void setDimension(Index d);
@@ -262,9 +274,6 @@ namespace pgs
 
     /// \brief tests if the manifold is locked
     void testLock() const;
-
-    /// \brief returns a value unique to each instance of a manifold
-    long getInstanceId() const;
 
   private:
     /// \brief Name of the Manifold

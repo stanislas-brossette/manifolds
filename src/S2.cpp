@@ -48,7 +48,7 @@ namespace pgs
   {
     return true;
   }
-  
+
   const Manifold& S2::operator()(size_t i) const
   {
     pgs_assert(i < 1 && "invalid index");
@@ -132,7 +132,7 @@ namespace pgs
     randVec(out, x);
     return out;
   }
-    
+
   void S2::pseudoLog0_(RefVec , const ConstRefVec& ) const
   {
     throw std::runtime_error("Unimplemented method in S2");
@@ -212,5 +212,10 @@ namespace pgs
   {
     typicalMagnitude_ = out;
   }
-}
 
+  long S2::getTypeId()
+  {
+    long typeId = utils::hash::computeHash("S2");
+    return typeId;
+  }
+}

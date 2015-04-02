@@ -31,3 +31,10 @@ add_test(PointTest PointTest)
 add_executable(ManifoldTest ManifoldTest.cpp)
 target_link_libraries(ManifoldTest manifoldsTest ${Boost_LIBRARIES})
 add_test(ManifoldTest ManifoldTest)
+
+add_executable(Manifail Manifail.cpp)
+target_link_libraries(Manifail manifolds)
+
+add_executable(TypeIdTest typeId.cpp)
+target_link_libraries(TypeIdTest manifoldsTest ${Boost_LIBRARIES})
+add_test(TypeIdTest TypeIdTest)

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <manifolds/defs.h>
 #include <manifolds/Manifold.h>
+#include <manifolds/utils.h>
 
 namespace pgs
 {
@@ -26,6 +27,7 @@ namespace pgs
     void setTypicalMagnitude(double magnitude);
     void setTypicalMagnitude(const ConstRefVec& out);
     virtual bool isElementary() const;
+    virtual long getTypeId();
 
   protected:
     //map operations
@@ -55,4 +57,3 @@ namespace pgs
 }
 
 #endif //_MANIFOLDS_REAL_SPACE_H_
-

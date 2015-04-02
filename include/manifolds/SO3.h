@@ -6,6 +6,7 @@
 #include <manifolds/defs.h>
 #include <manifolds/Manifold.h>
 #include <manifolds/ReusableTemporaryMap.h>
+#include <manifolds/utils.h>
 
 namespace pgs
 {
@@ -26,6 +27,7 @@ namespace pgs
     void setTypicalMagnitude(const ConstRefVec& out);
     virtual void createRandomPoint_(RefVec out, double coeff) const;
     virtual bool isElementary() const;
+    virtual long getTypeId();
 
   protected:
     //map operations
@@ -227,6 +229,12 @@ namespace pgs
   {
     typicalMagnitude_ = out;
   }
+
+  template<typename Map>
+  long SO3<Map>::getTypeId()
+  {
+    constexpr long typeId = utils::hash::computeHash("SO3", Map::hashName);
+    return typeId;
+  }
 }
 #endif //_MANIFOLDS_SO3_H_
-

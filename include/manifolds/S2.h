@@ -3,6 +3,7 @@
 
 #include <manifolds/defs.h>
 #include <manifolds/Manifold.h>
+#include <manifolds/utils.h>
 
 namespace pgs
 {
@@ -37,6 +38,7 @@ namespace pgs
     void randVec(RefVec out, const ConstRefVec& x) const;
     Eigen::Vector3d randVec(const ConstRefVec& x) const;
     virtual bool isElementary() const;
+    virtual long getTypeId();
 
   protected:
     //map operations

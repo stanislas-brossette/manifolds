@@ -157,4 +157,10 @@ namespace pgs
   {
     typicalMagnitude_ = out;
   }
+
+  long RealSpace::getTypeId()
+  {
+    long typeId = utils::hash::computeHash("RealSpace");
+    return typeId;
+  }
 }

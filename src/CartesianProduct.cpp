@@ -40,7 +40,7 @@ namespace pgs
     }
     return out;
   }
-   
+
   void CartesianProduct::forceOnM_(RefVec out, const ConstRefVec& in) const
   {
     for (std::size_t i = 0; i<numberOfSubmanifolds(); ++i)
@@ -51,7 +51,7 @@ namespace pgs
   {
     m.lock();
     if(dim() != 0)
-      name() += "x"; 
+      name() += "x";
     name() += m.name();
     setDimension(dim() + m.dim());
     setTangentDimension(tangentDim() + m.tangentDim());
@@ -235,7 +235,7 @@ namespace pgs
   void CartesianProduct::forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
-      submanifolds_[i]->forceOnTxM(getView<T>(out, i), 
+      submanifolds_[i]->forceOnTxM(getView<T>(out, i),
                                    getConstView<T>(in, i),
                                    getConstView<R>(x, i));
   }
@@ -243,13 +243,17 @@ namespace pgs
   void CartesianProduct::limitMap_(RefVec out) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
-      submanifolds_[i]->limitMap(getView<T>(out, i)); 
+      submanifolds_[i]->limitMap(getView<T>(out, i));
   }
 
   void CartesianProduct::getTypicalMagnitude_(RefVec out) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
-      submanifolds_[i]->getTypicalMagnitude(getView<T>(out, i)); 
+      submanifolds_[i]->getTypicalMagnitude(getView<T>(out, i));
+  }
+
+  long CartesianProduct::getTypeId()
+  {
+    return utils::hash::computeHash("CartesianProduct");
   }
 }
-

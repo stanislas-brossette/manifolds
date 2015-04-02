@@ -338,4 +338,10 @@ namespace pgs
   {
     return this->instanceId_;
   }
+
+  bool Manifold::isSameType(Manifold& other)
+  {
+    return this->getTypeId() == other.getTypeId();
+  }
+
 }

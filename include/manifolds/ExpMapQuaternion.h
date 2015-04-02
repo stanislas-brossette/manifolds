@@ -16,10 +16,10 @@ namespace pgs
     /// \brief precision constant
     static const double prec;
 
-    /// \brief dimension of \f$ \mathbb{H}=4 \f$ 
+    /// \brief dimension of \f$ \mathbb{H}=4 \f$
     static const int OutputDim_ = 4;
 
-    /// \brief dimension of \f$ \mathbb{R}^3=3 \f$ 
+    /// \brief dimension of \f$ \mathbb{R}^3=3 \f$
     static const int InputDim_ = 3;
     typedef Eigen::Vector4d DisplayType; //display as q=(x, y, z, w)
     typedef Eigen::Vector4d OutputType;
@@ -44,9 +44,8 @@ namespace pgs
     static bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec);
     static void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x);
 
+    constexpr static char hashName[] = "ExpMapQuaternion";
   };
 }
 
 #endif //_MANIFOLDS_EXPMAPQUATERNION_H_
-
-

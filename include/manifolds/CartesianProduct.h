@@ -5,6 +5,7 @@
 #include <initializer_list>
 #include <manifolds/defs.h>
 #include <manifolds/Manifold.h>
+#include <manifolds/utils.h>
 
 namespace pgs
 {
@@ -52,12 +53,13 @@ namespace pgs
     virtual void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
     virtual void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
-    
+
     virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const;
     virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const;
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
     virtual void limitMap_(RefVec out) const;
     virtual void getTypicalMagnitude_(RefVec out) const;
+    virtual long getTypeId();
 
   private:
     /// \brief List of pointers on all the manifolds in the cartesian product
@@ -86,4 +88,3 @@ namespace pgs
 }
 
 #endif //_MANIFOLDS_CARTESIAN_PRODUCT_H_
-
