@@ -207,12 +207,12 @@ namespace pgs
 
     /// \brief Compares this manifold to another one using the identifier
     /// unique to each class implemented in getTypeId().
-    virtual bool isSameType(Manifold& other);
+    virtual bool isSameType(const Manifold& other) const;
 
     /// \brief returns an id that should be unique to each manifold class.
     /// Use utils::hash::computeHash("some_string") to generate an ID at
     /// compile-time.
-    virtual long getTypeId() = 0;
+    virtual long getTypeId() const = 0;
 
   protected:
     /// \brief Set manifold dimension to d

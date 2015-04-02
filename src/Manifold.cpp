@@ -339,7 +339,7 @@ namespace pgs
     return this->instanceId_;
   }
 
-  bool Manifold::isSameType(Manifold& other)
+  bool Manifold::isSameType(const Manifold& other) const
   {
     return this->getTypeId() == other.getTypeId();
   }

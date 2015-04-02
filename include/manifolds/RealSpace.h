@@ -27,7 +27,7 @@ namespace pgs
     void setTypicalMagnitude(double magnitude);
     void setTypicalMagnitude(const ConstRefVec& out);
     virtual bool isElementary() const;
-    virtual long getTypeId();
+    virtual long getTypeId() const;
 
   protected:
     //map operations

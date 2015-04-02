@@ -38,7 +38,7 @@ namespace pgs
     void randVec(RefVec out, const ConstRefVec& x) const;
     Eigen::Vector3d randVec(const ConstRefVec& x) const;
     virtual bool isElementary() const;
-    virtual long getTypeId();
+    virtual long getTypeId() const;
 
   protected:
     //map operations

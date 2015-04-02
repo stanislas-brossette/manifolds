@@ -27,7 +27,7 @@ namespace pgs
     void setTypicalMagnitude(const ConstRefVec& out);
     virtual void createRandomPoint_(RefVec out, double coeff) const;
     virtual bool isElementary() const;
-    virtual long getTypeId();
+    virtual long getTypeId() const;
 
   protected:
     //map operations
@@ -231,7 +231,7 @@ namespace pgs
   }
 
   template<typename Map>
-  long SO3<Map>::getTypeId()
+  long SO3<Map>::getTypeId() const
   {
     constexpr long typeId = utils::hash::computeHash("SO3", Map::hashName);
     return typeId;

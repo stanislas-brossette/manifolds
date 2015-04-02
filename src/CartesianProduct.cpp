@@ -252,7 +252,7 @@ namespace pgs
       submanifolds_[i]->getTypicalMagnitude(getView<T>(out, i));
   }
 
-  long CartesianProduct::getTypeId()
+  long CartesianProduct::getTypeId() const
   {
     return utils::hash::computeHash("CartesianProduct");
   }

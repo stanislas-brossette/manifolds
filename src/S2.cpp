@@ -213,7 +213,7 @@ namespace pgs
     typicalMagnitude_ = out;
   }
 
-  long S2::getTypeId()
+  long S2::getTypeId() const
   {
     long typeId = utils::hash::computeHash("S2");
     return typeId;
