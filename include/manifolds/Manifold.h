@@ -179,7 +179,7 @@ namespace pgs
 
     /// \brief checks if \a v belongs to \f$ T_x \mathbb{M} \f$.
     /// If \a t = \a d, return always true
-    bool isInTxM(const ConstRefVec& x, const ConstRefVec& v, const double& prec = 1e-12) const;
+    bool isInTxM(const ConstRefVec& x, const ConstRefVec& v, const double& prec = 1e-8) const;
 
     /// \brief finds the closest vector to \a in on \f$ T_x \mathbb{M} \f$.
     /// If \a t = \a d, \a out = \a in.

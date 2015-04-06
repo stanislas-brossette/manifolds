@@ -224,11 +224,11 @@ namespace pgs
     }
   }
 
-  bool CartesianProduct::isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& ) const
+  bool CartesianProduct::isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const
   {
     bool b = true;
     for (size_t i = 0; i < submanifolds_.size() && b; ++i)
-      b = submanifolds_[i]->isInTxM(getConstView<R>(x, i), getConstView<T>(v, i));
+      b = submanifolds_[i]->isInTxM(getConstView<R>(x, i), getConstView<T>(v, i), prec);
     return b;
   }
 

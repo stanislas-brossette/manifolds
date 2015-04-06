@@ -140,7 +140,7 @@ namespace pgs
     bool isInM(const double& prec = 1e-12) const;
 
     /// \brief Checks that the current point's value represents a valid point of its Manifold
-    bool isInTxM(const ConstRefVec& v, const double& prec = 1e-12) const;
+    bool isInTxM(const ConstRefVec& v, const double& prec = 1e-8) const;
 
     /// \brief Returns the Dimension of its Manifold
     Index getDimM() const;
