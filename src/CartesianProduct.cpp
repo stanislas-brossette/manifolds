@@ -254,6 +254,6 @@ namespace pgs
 
   long CartesianProduct::getTypeId() const
   {
-    return utils::hash::computeHash("CartesianProduct");
+    return ::utils::hash::computeHash("CartesianProduct");
   }
 }

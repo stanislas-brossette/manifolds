@@ -215,7 +215,7 @@ namespace pgs
 
   long S2::getTypeId() const
   {
-    long typeId = utils::hash::computeHash("S2");
+    long typeId = ::utils::hash::computeHash("S2");
     return typeId;
   }
 }

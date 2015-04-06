@@ -160,7 +160,7 @@ namespace pgs
 
   long RealSpace::getTypeId() const
   {
-    long typeId = utils::hash::computeHash("RealSpace");
+    long typeId = ::utils::hash::computeHash("RealSpace");
     return typeId;
   }
 }

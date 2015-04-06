@@ -233,7 +233,7 @@ namespace pgs
   template<typename Map>
   long SO3<Map>::getTypeId() const
   {
-    constexpr long typeId = utils::hash::computeHash("SO3", Map::hashName);
+    constexpr long typeId = ::utils::hash::computeHash("SO3", Map::hashName);
     return typeId;
   }
 }
