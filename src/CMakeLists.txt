@@ -1,5 +1,4 @@
 set(SOURCES
-  main.cpp
   CartesianProduct.cpp
   CartesianPower.cpp
   ExpMapMatrix.cpp
