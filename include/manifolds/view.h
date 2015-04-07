@@ -10,7 +10,7 @@ namespace pgs
   {
     R,  //representation space
     T,  //tangent space
-    F,  //full space
+    F  //full space
   };
 
   template<int Dr, int Dc> struct ViewReturnType { typedef Eigen::Block<RefMat> Type; };
