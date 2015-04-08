@@ -1,5 +1,6 @@
 #ifndef _MANIFOLDS_S2_H_
 #define _MANIFOLDS_S2_H_
+#include <stdexcept>
 
 #include <manifolds/defs.h>
 #include <manifolds/Manifold.h>
