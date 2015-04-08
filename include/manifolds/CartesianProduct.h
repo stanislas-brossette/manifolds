@@ -19,6 +19,7 @@
 #define _MANIFOLDS_CARTESIAN_PRODUCT_H_
 
 #include <vector>
+#include <stdexcept>
 #include <initializer_list>
 #include <manifolds/defs.h>
 #include <manifolds/Manifold.h>

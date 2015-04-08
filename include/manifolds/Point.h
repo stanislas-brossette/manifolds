@@ -27,7 +27,6 @@ namespace pgs
   class MANIFOLDS_API ConstSubPoint
   {
   protected:
-    ConstSubPoint(const Manifold& M, RefVec val);
     ConstSubPoint(const Manifold& M, const ConstRefVec& val);
 
   public:
