@@ -5,14 +5,6 @@
 
 namespace pgs
 {
-  ConstSubPoint::ConstSubPoint(const Manifold& M, RefVec val)
-    : manifold_(M)
-    , value_(val)
-  {
-    pgs_assert(M.representationDim() == val.size());
-    registerPoint();
-  }
-  
   ConstSubPoint::ConstSubPoint(const Manifold& M, const ConstRefVec& val)
     : manifold_(M)
     , value_(Eigen::Map<Eigen::VectorXd>(const_cast<double*>(val.data()), val.size()))
