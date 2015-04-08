@@ -85,10 +85,10 @@ namespace utils
 		computeHash_recurse(str,
 				    index+4,
 				    computeRound(hash,
-						 assembleBytes((index<N?static_cast<uint8_t>(str[index]):0),
-							       (index+1<N?static_cast<uint8_t>(str[index+1]):0),
-							       (index+2<N?static_cast<uint8_t>(str[index+2]):0),
-							       (index+3<N?static_cast<uint8_t>(str[index+3]):0)))));
+						 assembleBytes(static_cast<uint8_t>(index<N?str[index]:0),
+							       static_cast<uint8_t>(index+1<N?str[index+1]:0),
+							       static_cast<uint8_t>(index+2<N?str[index+2]:0),
+							       static_cast<uint8_t>(index+3<N?str[index+3]:0)))));
       }
 
     template<int N>
