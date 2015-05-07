@@ -20,7 +20,7 @@
 
 #include <manifolds/defs.h>
 
-namespace pgs
+namespace mnf
 {
   class Manifold;
 

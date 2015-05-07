@@ -21,7 +21,7 @@
 #include <Eigen/Core>
 #include <manifolds/defs.h>
 
-namespace pgs
+namespace mnf
 {
   enum eDimension
   {

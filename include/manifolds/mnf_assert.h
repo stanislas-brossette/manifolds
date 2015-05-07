@@ -21,27 +21,27 @@
 #include <cassert>
 #include <string>
 
-namespace pgs
+namespace mnf
 {
-  struct pgs_exception
+  struct mnf_exception
   {
   };
 
-#ifdef PGS_ASSERT_THROW 
+#ifdef MNF_ASSERT_THROW 
 #  ifndef NDEBUG
-  inline void pgs_assert(bool value)
+  inline void mnf_assert(bool value)
   {
     if(!value)
     {
-      throw pgs_exception();
+      throw mnf_exception();
     }
   }
 #  else
-#    define pgs_assert(expr) assert(expr);
+#    define mnf_assert(expr) assert(expr);
 #  endif
 #else
-#  define pgs_assert(expr) assert(expr);
-#endif //_PGS_ASSERT_THROW_
+#  define mnf_assert(expr) assert(expr);
+#endif //_MNF_ASSERT_THROW_
 }
 
 #endif //_MANIFOLDS_ASSERT_

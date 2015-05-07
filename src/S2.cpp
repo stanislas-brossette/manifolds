@@ -20,9 +20,9 @@
 #include <math.h>
 
 #include <manifolds/S2.h>
-#include <manifolds/pgs_assert.h>
+#include <manifolds/mnf_assert.h>
 
-namespace pgs
+namespace mnf
 {
   S2::S2()
     : Manifold(2, 3, 3)
@@ -40,7 +40,7 @@ namespace pgs
   S2::S2(const ConstRefVec& magnitude)
     : Manifold(2, 3, 3)
   {
-    pgs_assert(magnitude.size() == 3 && "magnitude on R^n must be of size n");
+    mnf_assert(magnitude.size() == 3 && "magnitude on R^n must be of size n");
     name() = "S2";
     setTypicalMagnitude (magnitude);
   }
@@ -68,7 +68,7 @@ namespace pgs
 
   const Manifold& S2::operator()(size_t i) const
   {
-    pgs_assert(i < 1 && "invalid index");
+    mnf_assert(i < 1 && "invalid index");
     return *this;
   }
 
@@ -128,7 +128,7 @@ namespace pgs
 
   void S2::rand(RefVec out) const
   {
-    pgs_assert( out.size() == 3 && "Wrong size of output for S2::rand");
+    mnf_assert( out.size() == 3 && "Wrong size of output for S2::rand");
     out = Eigen::Vector3d::Random();
     double nout = out.lpNorm<2>();
     out = out/nout;
@@ -136,8 +136,8 @@ namespace pgs
 
   void S2::randVec(RefVec out, const ConstRefVec& x) const
   {
-    pgs_assert( out.size() == 3 && "Wrong size of output for S2::rand");
-    pgs_assert( x.size() == 3 && "Wrong size of output for S2::rand");
+    mnf_assert( out.size() == 3 && "Wrong size of output for S2::rand");
+    mnf_assert( x.size() == 3 && "Wrong size of output for S2::rand");
     out = Eigen::Vector3d::Random();
     projVec(out, out, x);
     double nout = out.lpNorm<2>();

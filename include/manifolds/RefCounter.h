@@ -20,7 +20,7 @@
 
 #include <manifolds/defs.h>
 #include <manifolds/Point.h>
-#include <manifolds/pgs_assert.h>
+#include <manifolds/mnf_assert.h>
 
 //180021114 is a version number for which noexcept works, not sure about noexcept(false)
 #if defined(_MSC_FULL_VER) && _MSC_FULL_VER < 180021114
@@ -29,7 +29,7 @@
 #define NOEXCEPT(x) noexcept(x)
 #endif
 
-namespace pgs
+namespace mnf
 {
   /// \brief object containing a counter and that cannot be destroyed if the
   /// counter is not at 0.
@@ -47,7 +47,7 @@ namespace pgs
       ~RefCounter() NOEXCEPT(false)
       {
 #ifndef NDEBUG
-        pgs_assert(count_ == 0 && "You cannot destroy this manifold because some points still depend on it");
+        mnf_assert(count_ == 0 && "You cannot destroy this manifold because some points still depend on it");
 #endif
       }
 
@@ -61,7 +61,7 @@ namespace pgs
       void decrementRefCounter() const
       {
 #ifndef NDEBUG
-        pgs_assert(count_>0 && "You cannot decrement when no point exist");
+        mnf_assert(count_>0 && "You cannot decrement when no point exist");
         count_--;
 #endif
       }

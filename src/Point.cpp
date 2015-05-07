@@ -18,15 +18,15 @@
 #include <iostream>
 #include <manifolds/Point.h>
 #include <manifolds/Manifold.h>
-#include <manifolds/pgs_assert.h>
+#include <manifolds/mnf_assert.h>
 
-namespace pgs
+namespace mnf
 {
   ConstSubPoint::ConstSubPoint(const Manifold& M, const ConstRefVec& val)
     : manifold_(M)
     , value_(Eigen::Map<Eigen::VectorXd>(const_cast<double*>(val.data()), val.size()))
   {
-    pgs_assert(M.representationDim() == val.size());
+    mnf_assert(M.representationDim() == val.size());
     registerPoint();
   }
 
@@ -112,7 +112,7 @@ namespace pgs
 
   Eigen::VectorXd& PointMemory::getMem()
   {
-    pgs_assert(mem_.size() > 0);
+    mnf_assert(mem_.size() > 0);
     return mem_;
   }
 
@@ -192,8 +192,8 @@ namespace pgs
 
   Point & Point::operator=(const Point& x)
   {
-    pgs_assert(this->manifold_.dim() == x.getManifold().dim());
-    pgs_assert(this->manifold_.representationDim() == x.getManifold().representationDim());
+    mnf_assert(this->manifold_.dim() == x.getManifold().dim());
+    mnf_assert(this->manifold_.representationDim() == x.getManifold().representationDim());
     this->value_ = x.value();
     return *this;
   }

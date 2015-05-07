@@ -22,7 +22,7 @@
 
 #include <Eigen/Core>
 
-namespace pgs
+namespace mnf
 {
   typedef Eigen::Ref<Eigen::VectorXd> RefVec;
   typedef Eigen::Ref<const Eigen::VectorXd> ConstRefVec;

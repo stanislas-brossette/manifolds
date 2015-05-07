@@ -25,7 +25,7 @@
 
 #include <Eigen/Core>
 
-#include <manifolds/pgs_assert.h>
+#include <manifolds/mnf_assert.h>
 #include <manifolds/RealSpace.h>
 #include <manifolds/SO3.h>
 #include <manifolds/CartesianProduct.h>
@@ -33,7 +33,7 @@
 #include <manifolds/ExpMapMatrix.h>
 #include <manifolds/ReusableTemporaryMap.h>
 
-using namespace pgs;
+using namespace mnf;
 
 void LifeAndDeathOfAPoint()
 {

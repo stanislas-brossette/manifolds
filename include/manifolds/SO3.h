@@ -25,7 +25,7 @@
 #include <manifolds/ReusableTemporaryMap.h>
 #include <manifolds/utils.h>
 
-namespace pgs
+namespace mnf
 {
   /// \brief Manifold representing the space of 3-dimensional rotations, also
   /// known as SO(3). It is templated by its map
@@ -90,7 +90,7 @@ namespace pgs
   inline SO3<Map>::SO3(const ConstRefVec& magnitude)
     : Manifold(3, Map::InputDim_, Map::OutputDim_)
   {
-    pgs_assert(magnitude.size() == 3 && "magnitude on SO3 must be of size 3");
+    mnf_assert(magnitude.size() == 3 && "magnitude on SO3 must be of size 3");
     name() = "SO3";
     setTypicalMagnitude(magnitude);
   }
@@ -122,7 +122,7 @@ namespace pgs
   template<typename Map>
   inline const Manifold& SO3<Map>::operator()(size_t i) const
   {
-    pgs_assert(i < 1 && "invalid index");
+    mnf_assert(i < 1 && "invalid index");
     return *this;
   }
 

@@ -25,7 +25,7 @@
 #include <manifolds/Manifold.h>
 #include <manifolds/utils.h>
 
-namespace pgs
+namespace mnf
 {
   /// \brief Manifold representing the cartesian product of several submanifolds
   class MANIFOLDS_API CartesianProduct : public Manifold
@@ -94,13 +94,13 @@ namespace pgs
 
   inline Index CartesianProduct::startR(size_t i) const
   {
-    pgs_assert(i < numberOfSubmanifolds() && "invalid index");
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
     return startIndexR_[i];
   }
 
   inline Index CartesianProduct::startT(size_t i) const
   {
-    pgs_assert(i < numberOfSubmanifolds() && "invalid index");
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
     return startIndexT_[i];
   }
 }

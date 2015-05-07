@@ -20,19 +20,19 @@
 
 #include <manifolds/defs.h>
 #include <manifolds/utils.h>
-#include <manifolds/pgs_assert.h>
+#include <manifolds/mnf_assert.h>
 #include <manifolds/SO3.h>
 #include <manifolds/Point.h>
 #include <manifolds/ExpMapMatrix.h>
 #include <manifolds/ExpMapQuaternion.h>
 
 #ifndef _WIN32
-#define BOOST_TEST_MODULE PGSolver 
+#define BOOST_TEST_MODULE Manifolds 
 #endif
 
 #include <boost/test/unit_test.hpp>
 
-using namespace pgs;
+using namespace mnf;
 typedef Eigen::Map<Eigen::Quaterniond> toQuat;
 
 BOOST_AUTO_TEST_CASE(RotSpaceConstructor)

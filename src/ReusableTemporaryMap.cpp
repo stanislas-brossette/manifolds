@@ -16,15 +16,15 @@
 // <http://www.gnu.org/licenses/>.
 
 #include <manifolds/ReusableTemporaryMap.h>
-#include <manifolds/pgs_assert.h>
+#include <manifolds/mnf_assert.h>
 
-namespace pgs
+namespace mnf
 {
   ReusableTemporaryMap::ReusableTemporaryMap(size_t size)
     : size_(0)
     , buffer_(0x0)
   {
-    pgs_assert(size > 0 && "size must be at least one");
+    mnf_assert(size > 0 && "size must be at least one");
     allocate_(size);
   }
 
@@ -37,13 +37,13 @@ namespace pgs
 
   ReusableTemporaryMap::~ReusableTemporaryMap()
   {
-    pgs_assert(buffer_ != 0x0);
+    mnf_assert(buffer_ != 0x0);
     allocator_.deallocate(buffer_, size_);
   }
 
   void ReusableTemporaryMap::allocate_(size_t size)
   {
-    pgs_assert(buffer_ == 0x0);
+    mnf_assert(buffer_ == 0x0);
     buffer_ = allocator_.allocate(size);
     size_ = size;
   }

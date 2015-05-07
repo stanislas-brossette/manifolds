@@ -16,9 +16,9 @@
 // <http://www.gnu.org/licenses/>.
 
 #include <manifolds/CartesianProduct.h>
-#include <manifolds/pgs_assert.h>
+#include <manifolds/mnf_assert.h>
 
-namespace pgs
+namespace mnf
 {
   CartesianProduct::CartesianProduct()
     : Manifold(0,0,0)
@@ -106,7 +106,7 @@ namespace pgs
 
   const Manifold& CartesianProduct::operator()(size_t i) const
   {
-    pgs_assert(i < submanifolds_.size() && "invalid index");
+    mnf_assert(i < submanifolds_.size() && "invalid index");
     return *submanifolds_[i];
   }
 

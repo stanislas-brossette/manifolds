@@ -27,7 +27,7 @@
 #include <manifolds/ValidManifold.h>
 
 
-namespace pgs
+namespace mnf
 {
   /// \brief The Manifold Class represents a manifold. It contains the implementations of
   /// the basic operations on it, like external addition, internal substraction,
@@ -320,30 +320,30 @@ namespace pgs
   template<int D>
   inline Segment Manifold::getView(RefVec val, size_t i) const
   {
-    pgs_assert(i < numberOfSubmanifolds() && "invalid index");
-    pgs_assert(val.size() == getDim<D>());
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+    mnf_assert(val.size() == getDim<D>());
     return val.segment(getStart<D>(i), getDim<D>(i));
   }
 
   template<int D>
   inline ConstSegment Manifold::getConstView(const ConstRefVec& val, size_t i) const
   {
-    pgs_assert(i < numberOfSubmanifolds() && "invalid index");
-    pgs_assert(val.size() == getDim<D>());
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+    mnf_assert(val.size() == getDim<D>());
     return val.segment(getStart<D>(i), getDim<D>(i));
   }
 
   template<>
   inline Index Manifold::getStart<R>(size_t i) const
   {
-    pgs_assert(i < numberOfSubmanifolds() && "invalid index");
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
     return startR(i);
   }
 
   template<>
   inline Index Manifold::getStart<T>(size_t i) const
   {
-    pgs_assert(i < numberOfSubmanifolds() && "invalid index");
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
     return startT(i);
   }
 
@@ -362,26 +362,26 @@ namespace pgs
   template<>
   inline Index Manifold::getDim<R>(size_t i) const
   {
-    pgs_assert(i < numberOfSubmanifolds() && "invalid index");
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
     return this->operator()(i).representationDim();
   }
 
   template<>
   inline Index Manifold::getDim<T>(size_t i) const
   {
-    pgs_assert(i < numberOfSubmanifolds() && "invalid index");
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
     return this->operator()(i).tangentDim();
   }
 
   inline Index Manifold::startR(size_t i) const
   {
-    pgs_assert(i < numberOfSubmanifolds() && "invalid index");
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
     return 0;
   }
 
   inline Index Manifold::startT(size_t i) const
   {
-    pgs_assert(i < numberOfSubmanifolds() && "invalid index");
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
     return 0;
   }
 

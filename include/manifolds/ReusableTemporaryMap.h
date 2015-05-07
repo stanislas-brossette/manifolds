@@ -22,7 +22,7 @@
 
 #include <manifolds/defs.h>
 
-namespace pgs
+namespace mnf
 {
   class MANIFOLDS_API ReusableTemporaryMap
   {

@@ -22,7 +22,7 @@
 #include <manifolds/defs.h>
 #include <manifolds/ReusableTemporaryMap.h>
 
-namespace pgs
+namespace mnf
 {
   /// \brief Structure representing the exponential map going from
   /// \f$ \mathbb{R}^3 \f$ to SO(3) represented in \f$ \mathbb{R}^{3\times3} \f$

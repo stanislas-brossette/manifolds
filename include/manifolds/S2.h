@@ -23,7 +23,7 @@
 #include <manifolds/Manifold.h>
 #include <manifolds/utils.h>
 
-namespace pgs
+namespace mnf
 {
   /// \brief Manifold representing the 3-dimensional Sphere, also
   /// known as S2.

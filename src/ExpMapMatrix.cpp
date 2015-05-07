@@ -21,7 +21,7 @@
 #include <Eigen/LU>
 #include <manifolds/defs.h>
 #include <manifolds/ExpMapMatrix.h>
-#include <manifolds/pgs_assert.h>
+#include <manifolds/mnf_assert.h>
 
 namespace utility
 {
@@ -30,7 +30,7 @@ namespace utility
   // TODO, explain more.
   // This function assumes that there wasn't any copies of a or b before the
   // call.
-  bool areOverlappingData(const pgs::ConstRefVec& a, const pgs::ConstRefVec& b)
+  bool areOverlappingData(const mnf::ConstRefVec& a, const mnf::ConstRefVec& b)
   {
     bool res = false;
     if (&a.coeff(a.rows()-1) < &b.coeff(0) || &b.coeff(b.rows()-1) < &a.coeff(0))
@@ -49,7 +49,7 @@ namespace utility
   }
 }
 
-namespace pgs
+namespace mnf
 {
   const double ExpMapMatrix::prec = 1e-8;
   typedef Eigen::Map<const Eigen::Matrix3d> toConstMat3;
@@ -64,9 +64,9 @@ namespace pgs
 
   void ExpMapMatrix::exponential(OutputType& E, const ConstRefVec& v)
   {
-    pgs_assert(v.size() == 3 && "Increment for expMap must be of size 3");
+    mnf_assert(v.size() == 3 && "Increment for expMap must be of size 3");
     double n = v.squaredNorm();
-    pgs_assert(sqrt(n) < M_PI && "Increment for expMap must be of norm at most pi");
+    mnf_assert(sqrt(n) < M_PI && "Increment for expMap must be of norm at most pi");
     double c, s;
     if (n < prec)
     {
@@ -138,7 +138,7 @@ namespace pgs
   void ExpMapMatrix::forceOnM_(RefVec out, const ConstRefVec& in)
   {
     toConstMat3 inMat(in.data());
-    pgs_assert((inMat.transpose()*inMat).isApprox(Eigen::Matrix3d::Identity(), 0.1) 
+    mnf_assert((inMat.transpose()*inMat).isApprox(Eigen::Matrix3d::Identity(), 0.1) 
         && fabs(inMat.determinant() - 1.0) < 0.1 
         && "Provided matrix is too far from being a rotation matrix. You should use createRandomPoint instead of forceOnM" );
     Eigen::Matrix3d A(inMat); //TODO it is bad to copy it here. Maybe in shouldn't be const???
@@ -185,7 +185,7 @@ namespace pgs
   void ExpMapMatrix::applyDiffRetractation_(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m)
   {
-    pgs_assert(in.cols() == OutputDim_ && "Dimensions mismatch" );
+    mnf_assert(in.cols() == OutputDim_ && "Dimensions mismatch" );
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),3);
     a.noalias() = in*diffRetractation_(x);
     out = a;
@@ -232,7 +232,7 @@ namespace pgs
   void ExpMapMatrix::applyDiffPseudoLog0_(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m)
   {
-    pgs_assert(in.cols() == InputDim_ && "Dimensions mismatch" );
+    mnf_assert(in.cols() == InputDim_ && "Dimensions mismatch" );
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),OutputDim_);
     a.noalias() = in*diffPseudoLog0_(x);
     out = a;

@@ -24,12 +24,12 @@
 #include <manifolds/ExpMapQuaternion.h>
 
 #ifndef _WIN32
-#define BOOST_TEST_MODULE PGSolver
+#define BOOST_TEST_MODULE Manifolds
 #endif
 
 #include <boost/test/unit_test.hpp>
 
-using namespace pgs;
+using namespace mnf;
 
 BOOST_AUTO_TEST_CASE(typeIdEqualTest)
 {
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(typeIdEqualTest)
 
 BOOST_AUTO_TEST_CASE(typeIdDifferentTest)
 {
-  std::vector<pgs::Manifold*> manifolds;
+  std::vector<mnf::Manifold*> manifolds;
 
   manifolds.push_back(new RealSpace(5));
   manifolds.push_back(new S2());

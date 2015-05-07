@@ -18,7 +18,7 @@
 #include <iostream>
 
 #ifndef _WIN32
-#define BOOST_TEST_MODULE PGSolver 
+#define BOOST_TEST_MODULE Manifold 
 #endif
 
 #include <boost/test/unit_test.hpp>
@@ -31,7 +31,7 @@
 #include <manifolds/ExpMapMatrix.h>
 #include <manifolds/CartesianProduct.h>
 
-using namespace pgs;
+using namespace mnf;
 
 //
 //All the calculations are tested in the manifolds. Here we only test that the

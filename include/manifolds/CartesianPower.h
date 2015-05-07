@@ -21,7 +21,7 @@
 #include <manifolds/defs.h>
 #include <manifolds/CartesianProduct.h>
 
-namespace pgs
+namespace mnf
 {
   /// \brief Manifold representing the cartesian product of n times the same manifold
   class MANIFOLDS_API CartesianPower : public CartesianProduct

@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 
 #ifndef _WIN32
-#define BOOST_TEST_MODULE PGSolver 
+#define BOOST_TEST_MODULE Manifolds 
 #endif
 
 #include <boost/test/unit_test.hpp>
@@ -27,7 +27,7 @@
 #include <manifolds/RealSpace.h>
 #include <manifolds/CartesianProduct.h>
 
-using namespace pgs;
+using namespace mnf;
 
 // Asserts with exception throwing are performed only in debug
 #ifdef NDEBUG
@@ -48,7 +48,7 @@ CartesianProduct* buildProduct()
 
 BOOST_AUTO_TEST_CASE(ManifoldIsValid)
 {
-  CHECK_THROW_IN_DEBUG(buildProduct()->getZero(), pgs::pgs_exception);
+  CHECK_THROW_IN_DEBUG(buildProduct()->getZero(), mnf::mnf_exception);
 }
 
 Point createR3Point()
@@ -59,5 +59,5 @@ Point createR3Point()
 
 BOOST_AUTO_TEST_CASE(ManifoldRefCounter)
 {
-  CHECK_THROW_IN_DEBUG(createR3Point(), pgs::pgs_exception);
+  CHECK_THROW_IN_DEBUG(createR3Point(), mnf::mnf_exception);
 }

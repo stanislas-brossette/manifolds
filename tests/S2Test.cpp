@@ -21,17 +21,17 @@
 
 #include <manifolds/defs.h>
 #include <manifolds/utils.h>
-#include <manifolds/pgs_assert.h>
+#include <manifolds/mnf_assert.h>
 #include <manifolds/S2.h>
 #include <manifolds/Point.h>
 
 #ifndef _WIN32
-#define BOOST_TEST_MODULE PGSolver 
+#define BOOST_TEST_MODULE Manifolds 
 #endif
 
 #include <boost/test/unit_test.hpp>
 
-using namespace pgs;
+using namespace mnf;
 using namespace Eigen;
 
 BOOST_AUTO_TEST_CASE(S2Constructor)

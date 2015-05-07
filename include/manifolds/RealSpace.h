@@ -23,7 +23,7 @@
 #include <manifolds/Manifold.h>
 #include <manifolds/utils.h>
 
-namespace pgs
+namespace mnf
 {
   /// \brief Manifold representing the space of real numbers of dimension n
   /// \f$\mathbb{R}^n\f$

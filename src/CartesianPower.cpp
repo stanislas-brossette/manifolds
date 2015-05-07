@@ -17,7 +17,7 @@
 
 #include <manifolds/CartesianPower.h>
 
-namespace pgs
+namespace mnf
 {
   CartesianPower::CartesianPower(const Manifold& M, int n)
     : CartesianProduct()

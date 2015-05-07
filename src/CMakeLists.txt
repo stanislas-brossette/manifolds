@@ -34,7 +34,7 @@ set(HEADERS
   ../include/manifolds/ExpMapMatrix.h
   ../include/manifolds/ExpMapQuaternion.h
   ../include/manifolds/Manifold.h
-  ../include/manifolds/pgs_assert.h
+  ../include/manifolds/mnf_assert.h
   ../include/manifolds/Point.h
   ../include/manifolds/RealSpace.h
   ../include/manifolds/ReusableTemporaryMap.h
@@ -73,9 +73,9 @@ add_library(manifoldsTest SHARED ${SOURCES} ${HEADERS})
 set_target_properties(manifoldsTest PROPERTIES
 	                  VERSION ${PROJECT_VERSION}
                       SOVERSION 0.1)
-#target_compile_definitions(manifoldsTest PRIVATE -DMANIFOLDS_EXPORT -DPGS_ASSERT_THROW -DEIGEN_RUNTIME_NO_MALLOC)
+#target_compile_definitions(manifoldsTest PRIVATE -DMANIFOLDS_EXPORT -DMNF_ASSERT_THROW -DEIGEN_RUNTIME_NO_MALLOC)
 set_target_properties(manifoldsTest PROPERTIES
-                    COMPILE_DEFINITIONS "PRIVATE -DMANIFOLDS_EXPORT -DPGS_ASSERT_THROW")
+                    COMPILE_DEFINITIONS "PRIVATE -DMANIFOLDS_EXPORT -DMNF_ASSERT_THROW")
 
 install(TARGETS manifolds
   RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}

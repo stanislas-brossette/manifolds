@@ -21,9 +21,9 @@
 #include <Eigen/Geometry>
 #include <manifolds/defs.h>
 #include <manifolds/ExpMapQuaternion.h>
-#include <manifolds/pgs_assert.h>
+#include <manifolds/mnf_assert.h>
 
-namespace pgs
+namespace mnf
 {
   typedef Eigen::Map< Eigen::Quaterniond > toQuat;
   typedef Eigen::Map< const Eigen::Quaterniond > toConstQuat;
@@ -38,9 +38,9 @@ namespace pgs
 
   void ExpMapQuaternion::exponential(OutputType& q, const ConstRefVec& v)
   {
-    pgs_assert(v.size() == 3 && "Increment for expMap must be of size 3");
+    mnf_assert(v.size() == 3 && "Increment for expMap must be of size 3");
     double n2 = v.squaredNorm(); // (theta)^2 (in Grassia)
-    pgs_assert(sqrt(n2) < M_PI && "Increment for expMap must be of norm at most pi");
+    mnf_assert(sqrt(n2) < M_PI && "Increment for expMap must be of norm at most pi");
     double s; // sin(theta/2)/theta in Grassia
     if (n2 < prec)
     {
@@ -118,7 +118,7 @@ namespace pgs
   void ExpMapQuaternion::applyDiffRetractation_(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m)
   {
-    pgs_assert(in.cols() == OutputDim_ && "Dimensions mismatch" );
+    mnf_assert(in.cols() == OutputDim_ && "Dimensions mismatch" );
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),3);
     a.noalias() = in*diffRetractation_(x);
     out = a;
@@ -170,7 +170,7 @@ namespace pgs
   void ExpMapQuaternion::applyDiffPseudoLog0_(
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m)
   {
-    pgs_assert(in.cols() == InputDim_ && "Dimensions mismatch" );
+    mnf_assert(in.cols() == InputDim_ && "Dimensions mismatch" );
     Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(),OutputDim_);
     a.noalias() = in*diffPseudoLog0_(x);
     out = a;

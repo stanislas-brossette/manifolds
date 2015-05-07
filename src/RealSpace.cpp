@@ -18,9 +18,9 @@
 #include <limits>
 
 #include <manifolds/RealSpace.h>
-#include <manifolds/pgs_assert.h>
+#include <manifolds/mnf_assert.h>
 
-namespace pgs
+namespace mnf
 {
   RealSpace::RealSpace(Index n)
     : Manifold(n, n, n)
@@ -42,7 +42,7 @@ namespace pgs
   RealSpace::RealSpace(Index n, const ConstRefVec& magnitude)
     : Manifold(n, n, n)
   {
-    pgs_assert(magnitude.size() == n && "magnitude on R^n must be of size n");
+    mnf_assert(magnitude.size() == n && "magnitude on R^n must be of size n");
     name() = "R" + std::to_string( n );
     typicalMagnitude_.resize(n);
     setTypicalMagnitude (magnitude);
@@ -71,7 +71,7 @@ namespace pgs
 
   const Manifold& RealSpace::operator()(size_t i) const
   {
-    pgs_assert(i < 1 && "invalid index");
+    mnf_assert(i < 1 && "invalid index");
     return *this;
   }
 
