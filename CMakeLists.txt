@@ -73,6 +73,8 @@ include_directories(include)
 FIND_PACKAGE(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 
+set(CMAKE_DEBUG_POSTFIX "_d")
+
 # add_subdirectory(bin)
 # add_subdirectory(share)
 add_subdirectory(src)
