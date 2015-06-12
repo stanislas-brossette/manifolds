@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -25,8 +25,43 @@
 
 namespace mnf
 {
-  typedef Eigen::Map< Eigen::Quaterniond > toQuat;
-  typedef Eigen::Map< const Eigen::Quaterniond > toConstQuat;
+  namespace utils {
+    ReverseQuaternion::ReverseQuaternion(double* data)
+      : Eigen::Quaterniond(data[0], data[1], data[2], data[3]),
+	refData_(data)
+    {
+    }
+
+    void ReverseQuaternion::writeChanges()
+    {
+      refData_[0] = w();
+      refData_[1] = x();
+      refData_[2] = y();
+      refData_[3] = z();
+    }
+
+    ReverseQuaternion::~ReverseQuaternion()
+    {
+      writeChanges();
+    }
+
+    ReverseQuaternion& ReverseQuaternion::operator=(Eigen::Quaterniond quat)
+    {
+      w() = quat.w();
+      vec() = quat.vec();
+      return *this;
+    }
+
+    ConstReverseQuaternion::ConstReverseQuaternion(const double* data)
+      : Eigen::Quaterniond(data[0], data[1], data[2], data[3])
+    {}
+
+  }
+
+  typedef utils::ReverseQuaternion toQuat;
+  typedef utils::ConstReverseQuaternion toConstQuat;
+  //typedef Eigen::Map< Eigen::Quaterniond > toQuat;
+  //typedef Eigen::Map< const Eigen::Quaterniond > toConstQuat;
   const double ExpMapQuaternion::prec = 1e-8; //TODO Should be sqrt(sqrt(machine precision))
 
   void ExpMapQuaternion::retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v)
@@ -63,6 +98,7 @@ namespace mnf
     const toConstQuat xQ(x.data());
     const toConstQuat yQ(y.data());
     q = xQ.inverse()*yQ; //TODO double-check that formula
+    q.writeChanges();
     logarithm(out,tmp);
   }
 
@@ -80,7 +116,7 @@ namespace mnf
     if (n < prec && vQ.w()!=0 )
       out = (2/vQ.w())*vQ.vec();
     else
-      out = atan2(2 * n * vQ.w(), vQ.w() * vQ.w() - n2) / n * vQ.vec(); 
+      out = atan2(2 * n * vQ.w(), vQ.w() * vQ.w() - n2) / n * vQ.vec();
   }
 
   void ExpMapQuaternion::setZero_(RefVec out)
@@ -101,17 +137,21 @@ namespace mnf
     toConstQuat inQuat(in.data());
     toQuat outQuat(out.data());
     outQuat = inQuat;
-    out.normalize();
+    outQuat.normalize();
+    outQuat.writeChanges();
   }
 
   Eigen::Matrix<double, 4, 3> ExpMapQuaternion::diffRetractation_(const ConstRefVec& x)
   {
-    const Eigen::Map<const Eigen::Quaterniond> xQ(x.data());
+    toConstQuat xQ(x.data());
     Eigen::Matrix<double, 4, 3> J;
-    J <<  0.5*xQ.w(), -0.5*xQ.z(),  0.5*xQ.y(),
-          0.5*xQ.z(),  0.5*xQ.w(), -0.5*xQ.x(),
-         -0.5*xQ.y(),  0.5*xQ.x(),  0.5*xQ.w(),
-         -0.5*xQ.x(), -0.5*xQ.y(), -0.5*xQ.z();
+    // This matrix is written in the (w, x, y, z) convention
+    // for quaternion notation.
+    J <<
+      -0.5*xQ.x(), -0.5*xQ.y(), -0.5*xQ.z(),
+       0.5*xQ.w(), -0.5*xQ.z(),  0.5*xQ.y(),
+       0.5*xQ.z(),  0.5*xQ.w(), -0.5*xQ.x(),
+      -0.5*xQ.y(),  0.5*xQ.x(),  0.5*xQ.w();
     return J;
   }
 
@@ -135,18 +175,20 @@ namespace mnf
     {
       double a = 2/vQ.w();
       double b = -2/(vQ.w()*vQ.w());
-      J <<  a, 0, 0, b*vQ.x(),
-            0, a, 0, b*vQ.y(),
-            0, 0, a, b*vQ.z();
+      // This matrix is written in the (w, x, y, z) convention
+      // for quaternion notation.
+      J <<  b*vQ.x(), a, 0, 0,
+            b*vQ.y(), 0, a, 0,
+	    b*vQ.z(), 0, 0, a;
     }
     else
     {
       // log(x,y,z,w) = f(x,y,z,w)*[x;y;z]
-      double f = atan2(2 * n * vQ.w(), vQ.w() * vQ.w() - n2) / n; 
+      double f = atan2(2 * n * vQ.w(), vQ.w() * vQ.w() - n2) / n;
       // df/dx = (x*atan((2*w*(x^2 + y^2 + z^2)^(1/2))/(- w^2 + x^2 + y^2 + z^2)))/(x^2 + y^2 + z^2)^(3/2) - ((2*w*x)/((x^2 + y^2 + z^2)^(1/2)*(- w^2 + x^2 + y^2 + z^2)) - (4*w*x*(x^2 + y^2 + z^2)^(1/2))/(- w^2 + x^2 + y^2 + z^2)^2)/(((4*w^2*(x^2 + y^2 + z^2))/(- w^2 + x^2 + y^2 + z^2)^2 + 1)*(x^2 + y^2 + z^2)^(1/2))
       // df/dy = (y*atan((2*w*(x^2 + y^2 + z^2)^(1/2))/(- w^2 + x^2 + y^2 + z^2)))/(x^2 + y^2 + z^2)^(3/2) - ((2*w*y)/((x^2 + y^2 + z^2)^(1/2)*(- w^2 + x^2 + y^2 + z^2)) - (4*w*y*(x^2 + y^2 + z^2)^(1/2))/(- w^2 + x^2 + y^2 + z^2)^2)/(((4*w^2*(x^2 + y^2 + z^2))/(- w^2 + x^2 + y^2 + z^2)^2 + 1)*(x^2 + y^2 + z^2)^(1/2))
       // df/dz = (z*atan((2*w*(x^2 + y^2 + z^2)^(1/2))/(- w^2 + x^2 + y^2 + z^2)))/(x^2 + y^2 + z^2)^(3/2) - ((2*w*z)/((x^2 + y^2 + z^2)^(1/2)*(- w^2 + x^2 + y^2 + z^2)) - (4*w*z*(x^2 + y^2 + z^2)^(1/2))/(- w^2 + x^2 + y^2 + z^2)^2)/(((4*w^2*(x^2 + y^2 + z^2))/(- w^2 + x^2 + y^2 + z^2)^2 + 1)*(x^2 + y^2 + z^2)^(1/2))
-      
+
       // g = (atan((2*w*n)/(- w^2 + n2)))/(n2)^(3/2) - ((2*w)/(n*(- w^2 + n2)) - (4*w*n)/(- w^2 + n2)^2)/(((4*w^2*n2)/(- w^2 + n2)^2 + 1)*n)
       // g = (atan((2*w*n)/(- w^2 + n2)))/(n2*n) - ((2*w/n2)*(- w^2 + n2) - 4*w)/(4*w^2*n2+(- w^2 + n2)^2)
       // df/dx = g*x = (x*atan((2*w*n)/(- w^2 + n2)))/(n2)^(3/2) - ((2*w*x)/(n*(- w^2 + n2)) - (4*w*x*n)/(- w^2 + n2)^2)/(((4*w^2*n2)/(- w^2 + n2)^2 + 1)*n)
@@ -160,9 +202,11 @@ namespace mnf
        *     [ g.x.y, g.y²+f, g.z.y, df/dw.y]
        *     [ g.x.z, g.y.z, g.z²+f, df/dw.z]
       */
-      J << g*vQ.x()*vQ.x()+f, g*vQ.y()*vQ.x(), g*vQ.z()*vQ.x(), dfdw*vQ.x(),
-           g*vQ.x()*vQ.y(), g*vQ.y()*vQ.y()+f, g*vQ.z()*vQ.y(), dfdw*vQ.y(),
-           g*vQ.x()*vQ.z(), g*vQ.y()*vQ.z(), g*vQ.z()*vQ.z()+f, dfdw*vQ.z();
+      // This matrix is written in the (w, x, y, z) convention
+      // for quaternion notation.
+      J << dfdw*vQ.x(), g*vQ.x()*vQ.x()+f, g*vQ.y()*vQ.x(), g*vQ.z()*vQ.x(),
+	   dfdw*vQ.y(), g*vQ.x()*vQ.y(), g*vQ.y()*vQ.y()+f, g*vQ.z()*vQ.y(),
+	   dfdw*vQ.z(), g*vQ.x()*vQ.z(), g*vQ.y()*vQ.z(), g*vQ.z()*vQ.z()+f;
     }
     return J;
   }
@@ -216,5 +260,3 @@ namespace mnf
   }
 
 }
-
-

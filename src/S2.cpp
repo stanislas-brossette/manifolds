@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -232,7 +232,7 @@ namespace mnf
 
   long S2::getTypeId() const
   {
-    long typeId = ::utils::hash::computeHash("S2");
+    long typeId = utils::hash::computeHash("S2");
     return typeId;
   }
 }

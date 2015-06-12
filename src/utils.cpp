@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -20,6 +20,9 @@
 
 #include <Eigen/Core>
 
+namespace mnf
+{
+
 namespace utils
 {
   bool set_is_malloc_allowed(bool allow)
@@ -31,4 +34,6 @@ namespace utils
     return true;
 #endif
   }
+}
+
 }

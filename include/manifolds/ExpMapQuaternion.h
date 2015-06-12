@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -25,6 +25,28 @@
 
 namespace mnf
 {
+  namespace utils {
+    class ReverseQuaternion : public Eigen::Quaterniond
+    {
+      double* refData_;
+    public:
+      ReverseQuaternion(double* data);
+      void writeChanges();
+      ~ReverseQuaternion();
+
+      ReverseQuaternion& operator=(Eigen::Quaterniond quat);
+
+    };
+
+    class ConstReverseQuaternion : public Eigen::Quaterniond
+    {
+    public:
+      ConstReverseQuaternion(const double* data);
+      ~ConstReverseQuaternion(){}
+    };
+
+  }
+
   /// \brief Structure representing the exponential map going from
   /// \f$ \mathbb{R}^3 \f$ to SO(3) represented in the quaternion space
   /// as a vector, the quaternions are represented as q = (x, y, z, w);
@@ -64,5 +86,7 @@ namespace mnf
     constexpr static char hashName[] = "ExpMapQuaternion";
   };
 }
+
+
 
 #endif //_MANIFOLDS_EXPMAPQUATERNION_H_

@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -19,6 +19,9 @@
 #define _MANIFOLDS_UTILS_H_
 
 #include <manifolds/defs.h>
+
+namespace mnf
+{
 
 namespace utils
 {
@@ -121,6 +124,8 @@ namespace utils
     }
 
   }
+}
+
 }
 
 #endif //_MANIFOLDS_UTILS_H_

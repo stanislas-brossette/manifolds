@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -177,7 +177,7 @@ namespace mnf
 
   long RealSpace::getTypeId() const
   {
-    long typeId = ::utils::hash::computeHash("RealSpace");
+    long typeId = utils::hash::computeHash("RealSpace");
     return typeId;
   }
 }
