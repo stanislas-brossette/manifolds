@@ -155,9 +155,10 @@ namespace mnf
     throw std::runtime_error("Unimplemented method in S2");
   }
 
-  void S2::setZero_(RefVec ) const
+  void S2::setZero_(RefVec out) const
   {
-    throw std::runtime_error("Unimplemented method in S2");
+    std::cout << "Warning, you are using SetZero on S2. Returning an arbitrary point on S2, which is (1, 0, 0)" << std::endl;
+    out << 1.0, 0.0, 0.0;
   }
 
   Eigen::MatrixXd S2::diffRetractation_(const ConstRefVec& out) const
