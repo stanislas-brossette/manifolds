@@ -124,7 +124,7 @@ namespace mnf
     toQuat(out.data()).setIdentity();
   }
 
-  bool ExpMapQuaternion::isInM_(const Eigen::VectorXd& val, const double& )
+  bool ExpMapQuaternion::isInM_(const Eigen::VectorXd& val, const double& prec)
   {
     bool out(val.size()==4);
     double norm = toConstQuat(val.data()).norm();

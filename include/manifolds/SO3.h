@@ -77,7 +77,7 @@ namespace mnf
     : Manifold(3, Map::InputDim_, Map::OutputDim_)
   {
     name() = "SO3";
-    setTypicalMagnitude(Eigen::Vector3d::Constant(M_PI));
+    setTypicalMagnitude(Eigen::Vector3d::Constant(M_PI/10));
   }
   template<typename Map>
   inline SO3<Map>::SO3(double magnitude)

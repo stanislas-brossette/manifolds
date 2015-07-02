@@ -71,7 +71,7 @@ namespace mnf
 
     /// \brief Checks that the value val described in the representation space
     /// is an element of the manifold
-    virtual bool isInM(const Eigen::VectorXd& val, const double& prec = 1e-12) const;
+    virtual bool isInM(const Eigen::VectorXd& val, const double& prec = 1e-8) const;
 
     /// \brief finds the closest point to \a in on \f$ \mathbb{M} \f$.
     virtual void forceOnM(RefVec out, const ConstRefVec& in) const;
