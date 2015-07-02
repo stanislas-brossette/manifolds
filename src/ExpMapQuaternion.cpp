@@ -195,8 +195,8 @@ namespace mnf
       // df/dy = g*y = (y*atan((2*w*n)/(- w^2 + n2)))/(n2)^(3/2) - ((2*w*y)/(n*(- w^2 + n2)) - (4*w*y*n)/(- w^2 + n2)^2)/(((4*w^2*n2)/(- w^2 + n2)^2 + 1)*n)
       // df/dz = g*z = (z*atan((2*w*n)/(- w^2 + n2)))/(n2)^(3/2) - ((2*w*z)/(n*(- w^2 + n2)) - (4*w*z*n)/(- w^2 + n2)^2)/(((4*w^2*n2)/(- w^2 + n2)^2 + 1)*n)
       // df/dw = -2/(w²+x²+y²+z²)
-      double g = (atan((2*vQ.w()*n)/(- vQ.w()*vQ.w() + n2)))/(n2*n) - ((2*vQ.w()/n2)*(- vQ.w()*vQ.w() + n2) - 4*vQ.w())/(4*vQ.w()*vQ.w()*n2+(- vQ.w()*vQ.w() + n2)*(- vQ.w()*vQ.w() + n2));
-      double dfdw = -2/(vQ.w()*vQ.w() + n2);
+      double g = (2 * vQ.w() - f)/n2;
+      double dfdw = -2;
       /*
        * J = [ g.x²+f, g.y.x, g.z.x, df/dw.x]
        *     [ g.x.y, g.y²+f, g.z.y, df/dw.y]
@@ -204,9 +204,13 @@ namespace mnf
       */
       // This matrix is written in the (w, x, y, z) convention
       // for quaternion notation.
-      J << dfdw*vQ.x(), g*vQ.x()*vQ.x()+f, g*vQ.y()*vQ.x(), g*vQ.z()*vQ.x(),
-	   dfdw*vQ.y(), g*vQ.x()*vQ.y(), g*vQ.y()*vQ.y()+f, g*vQ.z()*vQ.y(),
-	   dfdw*vQ.z(), g*vQ.x()*vQ.z(), g*vQ.y()*vQ.z(), g*vQ.z()*vQ.z()+f;
+      // J << dfdw*vQ.x(), g*vQ.x()*vQ.x()+f, g*vQ.y()*vQ.x(), g*vQ.z()*vQ.x(),
+      // 	   dfdw*vQ.y(), g*vQ.x()*vQ.y(), g*vQ.y()*vQ.y()+f, g*vQ.z()*vQ.y(),
+      // 	   dfdw*vQ.z(), g*vQ.x()*vQ.z(), g*vQ.y()*vQ.z(), g*vQ.z()*vQ.z()+f;
+
+      J.col(0) = dfdw * vQ.vec();
+      J.rightCols<3>() = f * Eigen::Matrix3d::Identity();
+      J.rightCols<3>().noalias() += g * vQ.vec() * vQ.vec().transpose();
     }
     return J;
   }
