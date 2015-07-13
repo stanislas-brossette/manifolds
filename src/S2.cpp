@@ -19,6 +19,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#include <manifolds/utils.h>
 #include <manifolds/S2.h>
 #include <manifolds/mnf_assert.h>
 
@@ -187,12 +188,40 @@ namespace mnf
   {
     Eigen::Vector3d y;
     retractation(y, x, v);
-    projCols(out, in, y);
+    Eigen::Matrix3d R = utils::computeRotBetweenVec(x,y);
+    out.noalias() = R*in;
+    Eigen::Vector3d tmp;
+    for (Index i = 0; i < in.cols(); ++i)
+    {
+      tmp = R*in.col(i);
+      out.col(i) = tmp;
+    }
   }
 
-  void S2::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& ) const
+  void S2::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
-    projRows(out, in, x);
+    Eigen::Vector3d y;
+    retractation(y, x, v);
+    Eigen::Matrix3d R = utils::computeRotBetweenVec(x,y);
+    Eigen::Vector3d tmp;
+    for (Index i = 0; i < in.cols(); ++i)
+    {
+      tmp = R.transpose()*in.col(i);
+      out.col(i) = tmp;
+    }
+  }
+
+  void S2::applyInvTransportOnTheRight_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
+  {
+    Eigen::Vector3d y;
+    retractation(y, x, v);
+    Eigen::Matrix3d R = utils::computeRotBetweenVec(x,y);
+    Eigen::Matrix<double, 3, 1> tmp;
+    for (Index i = 0; i < in.rows(); ++i)
+    {
+      tmp = in.row(i)*R.transpose();
+      out.row(i) = tmp;
+    }
   }
 
   void S2::tangentConstraint_(RefMat out, const ConstRefVec& x) const

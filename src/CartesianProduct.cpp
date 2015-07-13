@@ -227,6 +227,17 @@ namespace mnf
     }
   }
 
+  void CartesianProduct::applyInvTransportOnTheRight_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
+  {
+    for (size_t i = 0; i < submanifolds_.size(); ++i)
+    {
+      submanifolds_[i]->applyInvTransportOnTheRight(getView<F, T>(out, i),
+                                          getConstView<F, T>(in, i),
+                                          getConstView<R>(x, i),
+                                          getConstView<T>(v, i));
+    }
+  }
+
   void CartesianProduct::tangentConstraint_(RefMat out, const ConstRefVec& x) const
   {
     Index k = 0;

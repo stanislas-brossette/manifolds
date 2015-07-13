@@ -76,8 +76,9 @@ namespace mnf
     static void applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);
     static Eigen::Matrix<double, 3, 4> diffPseudoLog0_(const ConstRefVec& x);
     static void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);
-    static void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v, ReusableTemporaryMap& m);
-    static void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v, ReusableTemporaryMap& m);
+    static void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v);
+    static void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v);
+    static void applyInvTransportOnTheRight_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v);
 
     static void tangentConstraint_(RefMat out, const ConstRefVec& x);
     static bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec);

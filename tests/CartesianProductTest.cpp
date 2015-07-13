@@ -61,15 +61,15 @@ BOOST_AUTO_TEST_CASE(CartProdConstructor)
   expectedTypicalMag << 1, 1,
                         2, 2, 2,
                         1, 1,
-                        M_PI, M_PI, M_PI,
+                        M_PI/10, M_PI/10, M_PI/10,
                         1, 1,
                         2, 2, 2,
                         1, 1,
-                        M_PI, M_PI, M_PI,
+                        M_PI/10, M_PI/10, M_PI/10,
                         1, 1,
                         2, 2, 2,
                         1, 1,
-                        M_PI, M_PI, M_PI;
+                        M_PI/10, M_PI/10, M_PI/10;
   BOOST_CHECK_EQUAL(PowS.getTypicalMagnitude(), expectedTypicalMag);
   BOOST_CHECK(!S.isElementary());
   BOOST_CHECK(!P.isElementary());
@@ -622,7 +622,7 @@ BOOST_AUTO_TEST_CASE(CardProdNoAllocation)
     S.applyDiffRetractation(J1, J0, x);
     S.applyDiffPseudoLog0(J2, J1, x);
     S.applyTransport(H1, H0, x, p);
-    S.applyInvTransport(H2, H0, x, p);
+    S.applyInvTransportOnTheRight(H2, H0, x, p);
   }
   utils::set_is_malloc_allowed(true);
   Eigen::internal::set_is_malloc_allowed(true);

@@ -139,6 +139,11 @@ namespace mnf
     out = in;
   }
 
+  void RealSpace::applyInvTransportOnTheRight_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec&) const
+  {
+    out = in;
+  }
+
   void RealSpace::tangentConstraint_(RefMat, const ConstRefVec&) const
   {
     //matrix is 0xt, no need to fill it.

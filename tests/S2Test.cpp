@@ -167,38 +167,47 @@ BOOST_AUTO_TEST_CASE(S2Transport)
   MatrixXd H = MatrixXd::Random(tangentDim,c);
   MatrixXd Hout(tangentDim,c);
   Point x = Space.createRandomPoint();
+  for (Index i = 0; i < H.cols(); ++i)
+  {
+    Space.forceOnTxM(H.col(i), H.col(i), x.value());
+  }
   VectorXd v = Space.randVec(x.value());
-  MatrixXd expectedRes = H;
   Space.applyTransport(Hout, H, x.value(), v);
   
   Eigen::Vector3d y;
   Space.retractation(y, x.value(), v);
   for (Index i = 0; i < Hout.cols(); ++i)
-    BOOST_CHECK(Space.isInTxM(Hout.col(i).transpose(),y));
+  {
+    BOOST_CHECK(Space.isInTxM(Hout.col(i),y));
+  }
 
   H = MatrixXd::Zero(tangentDim,c);
   Space.applyTransport(Hout, H, x.value(), v);
-  BOOST_CHECK_EQUAL(Hout, H);
 }
 
 BOOST_AUTO_TEST_CASE(S2InvTransport)
 {
-  int r = 7;
+  int c = 7;
   S2 Space;
   Index tangentDim = Space.tangentDim();
-  MatrixXd H = MatrixXd::Random(r, tangentDim);
-  MatrixXd Hout(r, tangentDim);
+  MatrixXd H = MatrixXd::Random(tangentDim, c);
+  MatrixXd Hout(tangentDim, c);
   Point x = Space.createRandomPoint();
   VectorXd v = Space.randVec(x.value());
-  MatrixXd expectedRes = H;
-  Space.applyInvTransport(Hout, H, x.value(), v);
-  
-  for (Index i = 0; i < Hout.rows(); ++i)
-    BOOST_CHECK(Space.isInTxM(Hout.row(i).transpose(),x.value()));
+  Eigen::Vector3d y;
+  Space.retractation(y, x.value(), v);
+  for (Index i = 0; i < H.cols(); ++i)
+  {
+    Space.forceOnTxM(H.col(i), H.col(i), y);
+    BOOST_CHECK(Space.isInTxM(H.col(i),y));
+  }
 
-  H = MatrixXd::Zero(r, tangentDim);
   Space.applyInvTransport(Hout, H, x.value(), v);
-  BOOST_CHECK(Hout == H);
+
+  for (Index i = 0; i < Hout.cols(); ++i)
+  {
+    BOOST_CHECK(Space.isInTxM(Hout.col(i),x.value()));
+  }
 }
 
 BOOST_AUTO_TEST_CASE(S2LimitMap)

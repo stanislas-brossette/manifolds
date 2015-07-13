@@ -249,6 +249,20 @@ namespace mnf
       RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
     mnf_assert(isValid() || seeMessageAbove());
+    mnf_assert(in.rows() == tangentDim_);
+    mnf_assert(out.rows() == tangentDim_);
+    mnf_assert(in.cols() == out.cols());
+    mnf_assert(x.size() == representationDim());
+    mnf_assert(v.size() == tangentDim_);
+    mnf_assert(isInTxM(x, v));
+
+    applyInvTransport_(out, in, x, v);
+  }
+
+  void Manifold::applyInvTransportOnTheRight(
+      RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
+  {
+    mnf_assert(isValid() || seeMessageAbove());
     mnf_assert(in.cols() == tangentDim_);
     mnf_assert(out.cols() == tangentDim_);
     mnf_assert(in.rows() == out.rows());
@@ -256,7 +270,7 @@ namespace mnf
     mnf_assert(v.size() == tangentDim_);
     mnf_assert(isInTxM(x, v));
 
-    applyInvTransport_(out, in, x, v);
+    applyInvTransportOnTheRight_(out, in, x, v);
   }
 
   void Manifold::setDimension(Index d)

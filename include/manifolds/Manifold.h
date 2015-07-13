@@ -189,6 +189,14 @@ namespace mnf
     /// \param v element of the tangent space of the manifold
     void applyInvTransport(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
 
+    /// \brief applies an inverse transport operation from point \f$x\in\mathcal{M}\f$ on the right side of a matrix
+    /// direction \f$v\in T_x^\mathcal{M}\f$ on matrix in
+    /// \param out result of the operation
+    /// \param in matrix to which the operation is applied
+    /// \param x element of manifold \f$x\in\mathbb{M}\f$
+    /// \param v element of the tangent space of the manifold
+    void applyInvTransportOnTheRight(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
+
     /// \brief returns the constraint matrix to test that a vector \f$v \in \mathbb{R}^t \f$
     /// belongs to \f$ T_x \mathbb{M} \f$. This is the case if \f$out v = 0\f$.
     /// Returns a (\a t - \a d) by \a t matrix.
@@ -281,6 +289,7 @@ namespace mnf
     virtual void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const = 0;
     virtual void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const = 0;
     virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const = 0;
+    virtual void applyInvTransportOnTheRight_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const = 0;
 
     virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const = 0;
     virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const = 0;

@@ -225,7 +225,7 @@ namespace mnf
   }
 
   //void ExpMapQuaternion::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
-  void ExpMapQuaternion::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& , ReusableTemporaryMap& )
+  void ExpMapQuaternion::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& )
   {
     //OutputType E;
     //exponential(E,v);
@@ -237,7 +237,7 @@ namespace mnf
   }
 
   //void ExpMapQuaternion::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
-  void ExpMapQuaternion::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& , ReusableTemporaryMap&)
+  void ExpMapQuaternion::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec&)
   {
     //OutputType E;
     //exponential(E,v);
@@ -245,6 +245,11 @@ namespace mnf
     //a.noalias() = in*(E.transpose());
     //out = a;
     //TODO Make sure that out=in is OK here...
+    out = in;
+  }
+
+  void ExpMapQuaternion::applyInvTransportOnTheRight_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec&)
+  {
     out = in;
   }
 

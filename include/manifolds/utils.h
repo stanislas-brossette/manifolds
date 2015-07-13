@@ -25,6 +25,9 @@ namespace mnf
 
 namespace utils
 {
+  void hat(Eigen::Matrix3d& M, const Eigen::Vector3d& v);
+  void hat2(Eigen::Matrix3d& M, const Eigen::Vector3d& v);
+  Eigen::Matrix3d computeRotBetweenVec(const Eigen::Vector3d& x, const Eigen::Vector3d& y);
   bool MANIFOLDS_API set_is_malloc_allowed(bool allow);
 
   namespace hash {

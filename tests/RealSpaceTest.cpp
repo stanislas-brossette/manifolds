@@ -187,13 +187,28 @@ BOOST_AUTO_TEST_CASE(RealInvTransport)
   int c = 3;
   RealSpace Space(9);
   Index dim = Space.dim();
-  Eigen::MatrixXd H = Eigen::MatrixXd::Random(c,dim);
-  Eigen::MatrixXd Hout(c,dim);
+  Eigen::MatrixXd H = Eigen::MatrixXd::Random(dim,c);
+  Eigen::MatrixXd Hout(dim,c);
   Eigen::VectorXd v = Eigen::VectorXd::Random(dim);
   Eigen::VectorXd x = Space.getZero().value();
   Space.retractation(x, x, v);
   Eigen::MatrixXd expectedRes = H;
   Space.applyInvTransport(Hout, H, x, v);
+  BOOST_CHECK(expectedRes.isApprox(Hout));
+}
+
+BOOST_AUTO_TEST_CASE(RealInvTransportOnTheRight)
+{
+  int c = 3;
+  RealSpace Space(9);
+  Index dim = Space.dim();
+  Eigen::MatrixXd H = Eigen::MatrixXd::Random(c, dim);
+  Eigen::MatrixXd Hout(c, dim);
+  Eigen::VectorXd v = Eigen::VectorXd::Random(dim);
+  Eigen::VectorXd x = Space.getZero().value();
+  Space.retractation(x, x, v);
+  Eigen::MatrixXd expectedRes = H;
+  Space.applyInvTransportOnTheRight(Hout, H, x, v);
   BOOST_CHECK(expectedRes.isApprox(Hout));
 }
 
