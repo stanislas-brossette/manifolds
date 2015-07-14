@@ -210,6 +210,9 @@ namespace mnf
     /// If \a t = \a d, \a out = \a in.
     void forceOnTxM(RefVec out, const ConstRefVec& in, const ConstRefVec&x) const;
 
+    /// @brief Computes the Identity on TxM. Such that Id.v=v and every column is in TxM
+    void getIdentityOnTxM(RefMat out, const ConstRefVec& x) const;
+
     /// \brief Locks the manifold\n Once a point of the manifold is created, the
     /// manifold cannot be modified anymore.
     void lock() const;
@@ -294,6 +297,7 @@ namespace mnf
     virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const = 0;
     virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const = 0;
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const = 0;
+    virtual void getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const = 0;
 
     virtual void limitMap_(RefVec out) const = 0;
     virtual void getTypicalMagnitude_(RefVec out) const = 0;
@@ -413,7 +417,7 @@ namespace mnf
     return val.block(getStart<Dr>(ir),
                      getStart<Dc>(ic),
                      getDim<Dr>(ir),
-                     getDim<Dc>(ir));
+                     getDim<Dc>(ic));
   }
 
   template<int Dr, int Dc>
@@ -422,7 +426,7 @@ namespace mnf
     return val.block(getStart<Dr>(ir),
                      getStart<Dc>(ic),
                      getDim<Dr>(ir),
-                     getDim<Dc>(ir));
+                     getDim<Dc>(ic));
   }
 
   template<>

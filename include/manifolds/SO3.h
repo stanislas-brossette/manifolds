@@ -65,6 +65,7 @@ namespace mnf
     virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const;
     virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const;
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
+    virtual void getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const;
     virtual void limitMap_(RefVec out) const;
     mutable ReusableTemporaryMap bufferMap_;
 
@@ -227,6 +228,12 @@ namespace mnf
   void SO3<Map>::forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const
   {
     Map::forceOnTxM_(out, in, x);
+  }
+
+  template<typename Map>
+  void SO3<Map>::getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const
+  {
+    Map::getIdentityOnTxM_(out, x);
   }
 
   template<typename Map>

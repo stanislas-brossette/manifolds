@@ -59,6 +59,11 @@ namespace mnf
     out = in;
   }
 
+  void RealSpace::getIdentityOnTxM_(RefMat out, const ConstRefVec&) const
+  {
+    out.setIdentity();
+  }
+
   size_t RealSpace::numberOfSubmanifolds() const
   {
     return 1;

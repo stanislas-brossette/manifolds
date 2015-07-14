@@ -64,6 +64,7 @@ namespace mnf
     typedef Eigen::Vector4d OutputType;
     static bool isInM_(const Eigen::VectorXd& val, const double& prec);
     static void forceOnM_(RefVec out, const ConstRefVec& in);
+    static void getIdentityOnTxM_(RefMat out, const ConstRefVec& x);
     static void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v);
     static void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y);
     static void pseudoLog0_(RefVec out, const ConstRefVec& x);

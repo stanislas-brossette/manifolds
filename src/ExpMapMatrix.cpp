@@ -167,6 +167,11 @@ namespace mnf
     }
   }
 
+  void ExpMapMatrix::getIdentityOnTxM_(RefMat out, const ConstRefVec&)
+  {
+    out.setIdentity();
+  }
+
   Eigen::Matrix<double, 9, 3> ExpMapMatrix::diffRetractation_(const ConstRefVec& x)
   {
     Eigen::Matrix<double, 9, 3> J;

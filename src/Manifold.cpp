@@ -331,6 +331,14 @@ namespace mnf
     forceOnTxM_(out, in, x);
   }
 
+  void Manifold::getIdentityOnTxM(RefMat out, const ConstRefVec& x) const
+  {
+    mnf_assert(out.rows() == tangentDim_);
+    mnf_assert(out.cols() == tangentDim_);
+    mnf_assert(x.size() == representationDim());
+    getIdentityOnTxM_(out, x);
+  }
+
   void Manifold::limitMap(RefVec out) const
   {
     mnf_assert(out.size() == tangentDim_);

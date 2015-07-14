@@ -64,6 +64,19 @@ namespace mnf
       submanifolds_[i]->forceOnM(getView<R>(out,i), getConstView<R>(in,i));
   }
 
+  void CartesianProduct::getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const
+  {
+    for (std::size_t i = 0; i<numberOfSubmanifolds(); ++i)
+    {
+      submanifolds_[i]->getIdentityOnTxM(getView<T, T>(out,i), getConstView<R>(x,i));
+      for (std::size_t j = 0; j<i; ++j)
+      {
+        getView<T, T>(out,i,j).setZero();
+        getView<T, T>(out,j,i).setZero();
+      }
+    }
+  }
+
   CartesianProduct& CartesianProduct::multiply(const Manifold& m)
   {
     m.lock();

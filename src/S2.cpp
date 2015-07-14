@@ -57,6 +57,12 @@ namespace mnf
     out = in/in.lpNorm<2>();
   }
 
+  void S2::getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const
+  {
+    out.setIdentity();
+    out -= x*x.transpose();
+  }
+
   size_t S2::numberOfSubmanifolds() const
   {
     return 1;
@@ -189,7 +195,6 @@ namespace mnf
     Eigen::Vector3d y;
     retractation(y, x, v);
     Eigen::Matrix3d R = utils::computeRotBetweenVec(x,y);
-    out.noalias() = R*in;
     Eigen::Vector3d tmp;
     for (Index i = 0; i < in.cols(); ++i)
     {

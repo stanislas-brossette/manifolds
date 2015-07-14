@@ -222,6 +222,18 @@ BOOST_AUTO_TEST_CASE(S2LimitMap)
   BOOST_CHECK_EQUAL(expectedRes, res);
 }
 
+BOOST_AUTO_TEST_CASE(S2IdentityTxM)
+{
+  S2 Space;
+  VectorXd x = Space.createRandomPoint().value();
+  VectorXd vx = Space.randVec(x);
+  MatrixXd H0 = MatrixXd::Random(Space.tangentDim(), Space.tangentDim());
+  Space.getIdentityOnTxM(H0, x);
+  BOOST_CHECK((H0*vx).isApprox(vx, 1e-12));
+  Eigen::Vector3d res = H0*x;
+  BOOST_CHECK(res.isZero(1e-12));
+}
+
 #if   EIGEN_WORLD_VERSION > 3 \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) \
   || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && EIGEN_MINOR_VERSION > 0)
@@ -253,6 +265,7 @@ BOOST_AUTO_TEST_CASE(S2NoAllocation)
     Space.applyDiffRetractation(J1, J0, x);
     Space.applyTransport(H1, H0, x, vx);
     Space.applyInvTransport(H2, H0, x, vx);
+    Space.getIdentityOnTxM(H0, x);
   }
   utils::set_is_malloc_allowed(true);
   internal::set_is_malloc_allowed(true);

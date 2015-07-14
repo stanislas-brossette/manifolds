@@ -141,6 +141,11 @@ namespace mnf
     outQuat.writeChanges();
   }
 
+  void ExpMapQuaternion::getIdentityOnTxM_(RefMat out, const ConstRefVec&)
+  {
+    out.setIdentity();
+  }
+
   Eigen::Matrix<double, 4, 3> ExpMapQuaternion::diffRetractation_(const ConstRefVec& x)
   {
     toConstQuat xQ(x.data());
