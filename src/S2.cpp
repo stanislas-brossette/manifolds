@@ -60,7 +60,9 @@ namespace mnf
   void S2::getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const
   {
     out.setIdentity();
-    out -= x*x.transpose();
+    Eigen::Matrix3d xxt;
+    xxt.noalias()= x*x.transpose();
+    out -= xxt;
   }
 
   size_t S2::numberOfSubmanifolds() const
