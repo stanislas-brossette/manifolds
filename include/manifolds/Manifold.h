@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -305,6 +305,17 @@ namespace mnf
     /// \brief tests if the manifold is locked
     void testLock() const;
 
+    /// \brief return a new copy of this manifold, including its instanceId.
+    /// Should only be used within the CartesianProduct to store a copy of
+    /// the manifold inside the std::vector.
+    virtual Manifold* getNewCopy() const = 0;
+
+    /// \brief call the getNewCopy() method from any Manifold subclass.
+    static Manifold* copyManifold(const Manifold& m);
+
+    /// \brief a value used to identify different instances at runtime
+    mutable long instanceId_;
+
   private:
     /// \brief Name of the Manifold
     std::string name_;
@@ -322,10 +333,7 @@ namespace mnf
     /// TODO: currently not used in a thread-safe way!
     static long manifoldCounter_;
 
-    /// \brief a value used to identify different instances at runtime
-    long instanceId_;
-
-    /// \brief if true, the manifold if locked
+    /// \brief if true, the manifold is locked
     mutable bool lock_;
 
   };

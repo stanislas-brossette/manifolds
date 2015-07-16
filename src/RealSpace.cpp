@@ -182,6 +182,7 @@ namespace mnf
 
   void RealSpace::setTypicalMagnitude(const ConstRefVec& out)
   {
+    testLock();
     typicalMagnitude_ = out;
   }
 
@@ -189,5 +190,13 @@ namespace mnf
   {
     long typeId = utils::hash::computeHash("RealSpace");
     return typeId;
+  }
+
+  Manifold* RealSpace::getNewCopy() const
+  {
+    RealSpace* copy = new RealSpace(*this);
+    copy->instanceId_ = this->instanceId_;
+
+    return copy;
   }
 }

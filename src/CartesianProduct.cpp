@@ -79,6 +79,7 @@ namespace mnf
 
   CartesianProduct& CartesianProduct::multiply(const Manifold& m)
   {
+    testLock();
     m.lock();
     if(dim() != 0)
       name() += "x";
@@ -86,7 +87,7 @@ namespace mnf
     setDimension(dim() + m.dim());
     setTangentDimension(tangentDim() + m.tangentDim());
     setRepresentationDimension(representationDim() + m.representationDim());
-    submanifolds_.push_back(&m);
+    submanifolds_.push_back(std::shared_ptr<const Manifold>(copyManifold(m)));
     startIndexT_.push_back(startIndexT_.back() + m.tangentDim());
     startIndexR_.push_back(startIndexR_.back() + m.representationDim());
     return *this;
@@ -296,5 +297,13 @@ namespace mnf
   long CartesianProduct::getTypeId() const
   {
     return utils::hash::computeHash("CartesianProduct");
+  }
+
+  Manifold* CartesianProduct::getNewCopy() const
+  {
+    CartesianProduct* copy = new CartesianProduct(*this);
+    copy->instanceId_ = this->instanceId_;
+
+    return copy;
   }
 }

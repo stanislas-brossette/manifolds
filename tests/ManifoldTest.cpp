@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 
 #ifndef _WIN32
-#define BOOST_TEST_MODULE Manifolds 
+#define BOOST_TEST_MODULE Manifolds
 #endif
 
 #include <boost/test/unit_test.hpp>
@@ -35,9 +35,16 @@ using namespace mnf;
 #else
 # define CHECK_THROW_IN_DEBUG(expression, exception) BOOST_CHECK_THROW(expression, exception)
 #endif
+#ifdef NDEBUG
+# define CHECK_NO_THROW_IN_DEBUG(expression, exception) ((void)0)
+#else
+# define CHECK_NO_THROW_IN_DEBUG(expression, exception) BOOST_CHECK_NO_THROW(expression)
+#endif
 
-// A bugged helper function with some statically created variables that will
-// be used outside of the function scope.
+
+// This function is not bugged anymore; since the manifolds stored
+// in the CartesianProduct are copies of the original manifold, it
+// will create the Point without any issues.
 CartesianProduct* buildProduct()
 {
   RealSpace R3(3);
@@ -48,7 +55,7 @@ CartesianProduct* buildProduct()
 
 BOOST_AUTO_TEST_CASE(ManifoldIsValid)
 {
-  CHECK_THROW_IN_DEBUG(buildProduct()->getZero(), mnf::mnf_exception);
+  CHECK_NO_THROW_IN_DEBUG(buildProduct()->getZero(), mnf::mnf_exception);
 }
 
 Point createR3Point()

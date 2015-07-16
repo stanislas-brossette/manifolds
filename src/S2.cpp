@@ -264,6 +264,7 @@ namespace mnf
 
   void S2::setTypicalMagnitude(const ConstRefVec& out)
   {
+    testLock();
     typicalMagnitude_ = out;
   }
 
@@ -271,5 +272,13 @@ namespace mnf
   {
     long typeId = utils::hash::computeHash("S2");
     return typeId;
+  }
+
+  Manifold* S2::getNewCopy() const
+  {
+    S2* copy = new S2(*this);
+    copy->instanceId_ = this->instanceId_;
+
+    return copy;
   }
 }

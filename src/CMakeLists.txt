@@ -1,5 +1,5 @@
 ## Copyright (c) 2015 CNRS
-## Authors: Stanislas Brossette, Adrien Escande, Pierre Gergondet 
+## Authors: Stanislas Brossette, Adrien Escande, Pierre Gergondet
 
 ## This file is part of manifolds
 ## manifolds is free software: you can redistribute it
@@ -75,7 +75,7 @@ set_target_properties(manifoldsTest PROPERTIES
                       SOVERSION 0.1)
 #target_compile_definitions(manifoldsTest PRIVATE -DMANIFOLDS_EXPORT -DMNF_ASSERT_THROW -DEIGEN_RUNTIME_NO_MALLOC)
 set_target_properties(manifoldsTest PROPERTIES
-                    COMPILE_DEFINITIONS "PRIVATE -DMANIFOLDS_EXPORT")# -DMNF_ASSERT_THROW")
+                    COMPILE_DEFINITIONS "PRIVATE -DMANIFOLDS_EXPORT -DMNF_ASSERT_THROW")
 
 install(TARGETS manifolds
   RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}

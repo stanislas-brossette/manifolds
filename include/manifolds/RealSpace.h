@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -68,6 +68,8 @@ namespace mnf
     virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const;
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec&x) const;
     virtual void limitMap_(RefVec out) const;
+
+    virtual Manifold* getNewCopy() const;
 
   private:
     Eigen::VectorXd typicalMagnitude_;

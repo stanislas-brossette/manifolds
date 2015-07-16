@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -18,7 +18,7 @@
 #include <iostream>
 
 #ifndef _WIN32
-#define BOOST_TEST_MODULE Manifold 
+#define BOOST_TEST_MODULE Manifold
 #endif
 
 #include <boost/test/unit_test.hpp>
@@ -171,15 +171,15 @@ BOOST_AUTO_TEST_CASE(SubPointManipulation)
   ConstSubPoint r13 = p3(1);//const subpoint of a non-const subpoint
 
   //Correct submanifold
-  BOOST_CHECK(&x.getManifold() == &P);
-  BOOST_CHECK(&r2.getManifold() == &R2);
-  BOOST_CHECK(&r3.getManifold() == &R3);
-  BOOST_CHECK(&r5.getManifold() == &R5);
-  BOOST_CHECK(&r8.getManifold() == &R8);
-  BOOST_CHECK(&r13.getManifold() == &R13);
-  BOOST_CHECK(&p1.getManifold() == &P1);
-  BOOST_CHECK(&p2.getManifold() == &P2);
-  BOOST_CHECK(&p3.getManifold() == &P3);
+  BOOST_CHECK(x.getManifold().getInstanceId() == P.getInstanceId());
+  BOOST_CHECK(r2.getManifold().getInstanceId() == R2.getInstanceId());
+  BOOST_CHECK(r3.getManifold().getInstanceId() == R3.getInstanceId());
+  BOOST_CHECK(r5.getManifold().getInstanceId() == R5.getInstanceId());
+  BOOST_CHECK(r8.getManifold().getInstanceId() == R8.getInstanceId());
+  BOOST_CHECK(r13.getManifold().getInstanceId() == R13.getInstanceId());
+  BOOST_CHECK(p1.getManifold().getInstanceId() == P1.getInstanceId());
+  BOOST_CHECK(p2.getManifold().getInstanceId() == P2.getInstanceId());
+  BOOST_CHECK(p3.getManifold().getInstanceId() == P3.getInstanceId());
 
   //Changing values of a subpoint
   Eigen::VectorXd v5(5); v5 << 0, 0, 7, 0, 0;
@@ -299,4 +299,3 @@ BOOST_AUTO_TEST_CASE(PointNoAllocation)
 }
 
 #endif
-

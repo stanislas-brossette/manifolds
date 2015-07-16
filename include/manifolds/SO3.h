@@ -69,6 +69,8 @@ namespace mnf
     virtual void limitMap_(RefVec out) const;
     mutable ReusableTemporaryMap bufferMap_;
 
+    virtual Manifold* getNewCopy() const;
+
   private:
     Eigen::Vector3d typicalMagnitude_;
   };
@@ -258,6 +260,7 @@ namespace mnf
   template<typename Map>
   void SO3<Map>::setTypicalMagnitude(const ConstRefVec& out)
   {
+    testLock();
     typicalMagnitude_ = out;
   }
 
@@ -266,6 +269,15 @@ namespace mnf
   {
     constexpr long typeId = utils::hash::computeHash("SO3", Map::hashName);
     return typeId;
+  }
+
+  template<typename Map>
+  Manifold* SO3<Map>::getNewCopy() const
+  {
+    SO3<Map>* copy = new SO3<Map>(*this);
+    copy->instanceId_ = this->instanceId_;
+
+    return copy;
   }
 }
 #endif //_MANIFOLDS_SO3_H_

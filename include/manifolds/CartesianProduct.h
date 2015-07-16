@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -21,6 +21,8 @@
 #include <vector>
 #include <stdexcept>
 #include <initializer_list>
+#include <memory>
+
 #include <manifolds/defs.h>
 #include <manifolds/Manifold.h>
 #include <manifolds/utils.h>
@@ -81,9 +83,11 @@ namespace mnf
     virtual void getTypicalMagnitude_(RefVec out) const;
     virtual long getTypeId() const;
 
+    virtual Manifold* getNewCopy() const;
+
   private:
     /// \brief List of pointers on all the manifolds in the cartesian product
-    std::vector<const Manifold* > submanifolds_;
+    std::vector<std::shared_ptr<const Manifold>> submanifolds_;
 
     /// \brief List of start index of submanifolds in a vector of the
     /// tangent space
