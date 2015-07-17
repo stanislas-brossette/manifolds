@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -29,6 +29,7 @@ namespace mnf
     static const int FLAG = 1736274519; //a random number
   public:
     ValidManifold() : flag_(FLAG) {}
+    ValidManifold(const ValidManifold&) : flag_(FLAG) {}
     ~ValidManifold() { flag_ = -271828182; }
 
 #ifdef NDEBUG
@@ -46,7 +47,7 @@ namespace mnf
 #  ifndef MNF_ASSERT_THROW
       printf("It appears that you're trying to call a method from a manifold that does not exist \
              anymore. Possible cause: the manifold was statically created in a scope (e.g. a function) which was \
-             left since then. For Stan: https://www.youtube.com/watch?v=Yy8MUnlT9Oo\n"); 
+             left since then. For Stan: https://www.youtube.com/watch?v=Yy8MUnlT9Oo\n");
 #  endif
         return false;
     }
