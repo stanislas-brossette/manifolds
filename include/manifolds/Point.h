@@ -49,8 +49,9 @@ namespace mnf
     ConstSegment operator[](size_t i) const;
 
     const Manifold& getManifold() const;
+    const Eigen::IOFormat& format() const;
 
-    std::string toString(std::string& prefix, int prec=6) const; //Dislays point in representation space
+    std::string toString(std::string& prefix, const Eigen::IOFormat fmt) const; //Dislays point in representation space
 
   private:
     void registerPoint();
@@ -63,6 +64,7 @@ namespace mnf
     /// This require a const_cast upon building ConstSubPoint, however we honor the
     /// constness in this class.
     RefVec value_;
+    mutable Eigen::IOFormat format_;
 
     friend inline std::ostream& operator<< (std::ostream& os, const ConstSubPoint& x);
     friend class RefCounter;
@@ -178,6 +180,8 @@ namespace mnf
     /// \brief Proxy for Manifold::applyInvTransport at current Point
     void applyInvTransport(RefMat out, const ConstRefMat& in, const ConstRefVec& v) const;
 
+    virtual const Point& format(const Eigen::IOFormat& fmt) const;
+
     friend class Manifold;
   };
 
@@ -187,7 +191,7 @@ namespace mnf
   inline std::ostream& operator<< (std::ostream& os, const ConstSubPoint& x)
   {
     std::string prefix("");
-    os << x.toString(prefix, static_cast<int>(os.precision()));
+    os << x.toString(prefix, x.format());
     return os;
   }
 }

@@ -38,7 +38,7 @@ namespace mnf
     SO3(const ConstRefVec& magnitude);
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
-    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", int prec = 6) const;
+    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat fmt = mnf::defaultFormat) const;
     virtual void getTypicalMagnitude_(RefVec out) const;
     void setTypicalMagnitude(double magnitude);
     void setTypicalMagnitude(const ConstRefVec& out);
@@ -131,12 +131,11 @@ namespace mnf
   }
 
   template<typename Map>
-  inline std::string SO3<Map>::toString(const ConstRefVec& val, const std::string& prefix, int prec) const
+  inline std::string SO3<Map>::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat fmt) const
   {
     std::string matPrefix = prefix + '[';
-    Eigen::IOFormat CleanFmt(prec, 0, ", ", "\n", matPrefix, "]");
     std::stringstream ss;
-    ss << (Eigen::Map<const typename Map::DisplayType>(val.data())).format(CleanFmt);
+    ss << matPrefix << (Eigen::Map<const typename Map::DisplayType>(val.data())).format(fmt);
     return ss.str();
   }
 
