@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -43,6 +43,13 @@ namespace mnf
       {
       }
 
+  RefCounter(const RefCounter&)
+#ifndef NDEBUG
+    :count_(0)
+#endif
+      {
+      }
+
       // In C++ 11, by default, a destructor cannot launch an exception, setting noexcet to false allows it.
       ~RefCounter() NOEXCEPT(false)
       {
@@ -76,4 +83,3 @@ namespace mnf
 }
 
 #endif //_MANIFOLDS_REF_COUNTER_H_
-
