@@ -16,6 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 
 #include <iostream>
+#include <manifolds/defs.h>
 #include <manifolds/Point.h>
 #include <manifolds/Manifold.h>
 #include <manifolds/mnf_assert.h>
@@ -25,6 +26,7 @@ namespace mnf
   ConstSubPoint::ConstSubPoint(const Manifold& M, const ConstRefVec& val)
     : manifold_(M)
     , value_(Eigen::Map<Eigen::VectorXd>(const_cast<double*>(val.data()), val.size()))
+    , format_(mnf::defaultFormat)
   {
     mnf_assert(M.representationDim() == val.size());
     registerPoint();
@@ -62,9 +64,14 @@ namespace mnf
     return manifold_;
   }
 
-  std::string ConstSubPoint::toString(std::string& prefix, int prec) const
+  const Eigen::IOFormat& ConstSubPoint::format() const
   {
-    return manifold_.toString(value_, prefix, prec);
+    return format_;
+  }
+
+  std::string ConstSubPoint::toString(std::string& prefix, const Eigen::IOFormat fmt) const
+  {
+    return manifold_.toString(value_, prefix, fmt);
   }
 
   void ConstSubPoint::registerPoint()
@@ -251,5 +258,11 @@ namespace mnf
   void Point::applyInvTransport(RefMat out, const ConstRefMat& in, const ConstRefVec& v) const
   {
     manifold_.applyInvTransport(out, in, value_, v);
+  }
+
+  const Point& Point::format(const Eigen::IOFormat& fmt) const
+  {
+    format_ = fmt;
+    return *this;
   }
 }

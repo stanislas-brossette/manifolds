@@ -124,15 +124,15 @@ namespace mnf
     return *submanifolds_[i];
   }
 
-  std::string CartesianProduct::toString(const ConstRefVec& val, const std::string& prefix, int prec) const
+  std::string CartesianProduct::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat fmt) const
   {
     std::stringstream ss;
     size_t n = numberOfSubmanifolds();
     for (std::size_t i = 0; i<n-1; ++i)
     {
-      ss << submanifolds_[i]->toString(getConstView<R>(val, i), prefix + "  ", prec) << std::endl;;
+      ss << submanifolds_[i]->toString(getConstView<R>(val, i), prefix + "  ", fmt) << std::endl;;
     }
-    ss << submanifolds_.back()->toString(getConstView<R>(val, n - 1), prefix + "  ", prec);
+    ss << submanifolds_.back()->toString(getConstView<R>(val, n - 1), prefix + "  ", fmt);
     return ss.str();
   }
 

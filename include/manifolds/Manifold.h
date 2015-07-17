@@ -114,7 +114,7 @@ namespace mnf
     template<int Dr, int Dc> typename ConstViewReturnType<Dr, Dc>::Type getConstView(const ConstRefMat& val, size_t ir, size_t ic) const;
 
     /// \brief Converts val to string for pretty printing
-    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", int prec=6) const = 0;
+    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat fmt = mnf::defaultFormat) const = 0;
 
     //map operations
     //The following operations are public and make call to their private version

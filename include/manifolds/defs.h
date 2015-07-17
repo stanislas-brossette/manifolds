@@ -31,6 +31,7 @@ namespace mnf
   typedef Eigen::Ref<Eigen::VectorXd>::SegmentReturnType Segment;
   typedef Eigen::Ref<const Eigen::VectorXd>::ConstSegmentReturnType ConstSegment;
   typedef Eigen::VectorXd::Index Index;
+  const Eigen::IOFormat defaultFormat(4, 0, ", ", "\n", "[", "]");
 }
 
 #include <manifolds/manifolds_api.h>

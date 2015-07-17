@@ -80,12 +80,10 @@ namespace mnf
     return *this;
   }
 
-  std::string RealSpace::toString(const ConstRefVec& val, const std::string& prefix, int prec) const
+  std::string RealSpace::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat fmt) const
   {
-    std::string matPrefix = prefix + '[';
-    Eigen::IOFormat CleanFmt(prec, 0, ", ", "\n", matPrefix, "]");
     std::stringstream ss;
-    ss << val.transpose().format(CleanFmt);
+    ss << prefix << val.transpose().format(fmt);
     return ss.str();
   }
 
