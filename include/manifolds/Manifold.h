@@ -394,15 +394,15 @@ namespace mnf
     return this->operator()(i).tangentDim();
   }
 
-  inline Index Manifold::startR(size_t i) const
+  inline Index Manifold::startR(size_t /*i*/) const
   {
-    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+    //mnf_assert(i < numberOfSubmanifolds() && "invalid index");
     return 0;
   }
 
-  inline Index Manifold::startT(size_t i) const
+  inline Index Manifold::startT(size_t /*i*/) const
   {
-    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+    //mnf_assert(i < numberOfSubmanifolds() && "invalid index");
     return 0;
   }
 
