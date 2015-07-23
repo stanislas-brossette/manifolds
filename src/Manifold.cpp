@@ -385,6 +385,10 @@ namespace mnf
 
   Manifold* Manifold::copyManifold(const Manifold& m)
   {
-    return m.getNewCopy();
+    Manifold* copy = m.getNewCopy();
+
+    copy->instanceId_ = m.instanceId_;
+
+    return copy;
   }
 }
