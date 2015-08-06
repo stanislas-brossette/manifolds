@@ -32,6 +32,7 @@ include(cmake/pkg-config.cmake)
 set(PROJECT_NAME manifolds)
 set(PROJECT_DESCRIPTION manifolds)
 set(PROJECT_URL https://brossette@idh.lirmm.fr/././././pgsolver.git)
+set(PROJECT_DEBUG_POSTFIX "_d")
 
 set(HEADERS )
 
@@ -72,8 +73,6 @@ include_directories(include)
 
 FIND_PACKAGE(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
-
-set(CMAKE_DEBUG_POSTFIX "_d")
 
 # add_subdirectory(bin)
 # add_subdirectory(share)

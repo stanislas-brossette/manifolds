@@ -67,6 +67,7 @@ set_target_properties(manifolds PROPERTIES
                       SOVERSION 0.1)
 set_target_properties(manifolds PROPERTIES
                     COMPILE_DEFINITIONS "PRIVATE -DMANIFOLDS_EXPORT")
+PKG_CONFIG_APPEND_LIBS(manifolds)
 
 # manifoldsTest library
 add_library(manifoldsTest SHARED ${SOURCES} ${HEADERS})
