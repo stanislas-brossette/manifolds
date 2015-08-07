@@ -113,6 +113,9 @@ namespace mnf
     template<int Dr, int Dc> typename ViewReturnType<Dr, Dc>::Type getView(RefMat val, size_t ir, size_t ic) const;
     template<int Dr, int Dc> typename ConstViewReturnType<Dr, Dc>::Type getConstView(const ConstRefMat& val, size_t ir, size_t ic) const;
 
+    /// \brief returns a boolean indicating whether this manifold is currently locked
+    bool isLocked() const;
+
     /// \brief Converts val to string for pretty printing
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat fmt = mnf::defaultFormat) const = 0;
 
@@ -302,7 +305,7 @@ namespace mnf
     virtual void limitMap_(RefVec out) const = 0;
     virtual void getTypicalMagnitude_(RefVec out) const = 0;
 
-    /// \brief tests if the manifold is locked
+    /// \brief tests if the manifold is locked, throwing an error if it is
     void testLock() const;
 
     /// \brief return a new copy of this manifold, including its instanceId.

@@ -369,6 +369,11 @@ namespace mnf
       throw std::runtime_error("Either a point or a compound manifold is relying on this manifold, you can't modify it anymore.");
   }
 
+  bool Manifold::isLocked() const
+  {
+    return lock_;
+  }
+
   const std::string& Manifold::name() const { return name_;}
 
   std::string& Manifold::name() { return name_;}
