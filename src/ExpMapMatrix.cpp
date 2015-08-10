@@ -54,6 +54,9 @@ namespace mnf
   const double ExpMapMatrix::prec = 1e-8;
   typedef Eigen::Map<const Eigen::Matrix3d> toConstMat3;
   typedef Eigen::Map<Eigen::Matrix3d> toMat3;
+#if defined(_MSC_FULL_VER) && _MSC_VER < 1900
+  char ExpMapMatrix::hashName[] = "ExpMapMatrix";
+#endif
 
   void ExpMapMatrix::retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v)
   {

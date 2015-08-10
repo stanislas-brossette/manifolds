@@ -61,7 +61,11 @@ namespace mnf
     static bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec);
     static void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x);
 
-    constexpr static char hashName[] = "ExpMapMatrix";
+#if defined(_MSC_FULL_VER) && _MSC_VER < 1900
+    static char hashName[];
+#else
+	constexpr static char hashName[] = "ExpMapMatrix";
+#endif
   };
 }
 

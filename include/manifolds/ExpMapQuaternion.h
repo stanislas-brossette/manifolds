@@ -26,7 +26,7 @@
 namespace mnf
 {
   namespace utils {
-    class ReverseQuaternion : public Eigen::Quaterniond
+    class MANIFOLDS_API ReverseQuaternion : public Eigen::Quaterniond
     {
       double* refData_;
     public:
@@ -34,11 +34,11 @@ namespace mnf
       void writeChanges();
       ~ReverseQuaternion();
 
-      ReverseQuaternion& operator=(Eigen::Quaterniond quat);
+      ReverseQuaternion& operator=(const Eigen::Quaterniond& quat);
 
     };
 
-    class ConstReverseQuaternion : public Eigen::Quaterniond
+    class MANIFOLDS_API ConstReverseQuaternion : public Eigen::Quaterniond
     {
     public:
       ConstReverseQuaternion(const double* data);
@@ -85,7 +85,11 @@ namespace mnf
     static bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec);
     static void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x);
 
-    constexpr static char hashName[] = "ExpMapQuaternion";
+#if defined(_MSC_FULL_VER) && _MSC_VER < 1900
+	static char hashName[];
+#else
+	constexpr static char hashName[] = "ExpMapQuaternion";
+#endif
   };
 }
 

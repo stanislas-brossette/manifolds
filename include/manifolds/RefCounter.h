@@ -22,8 +22,9 @@
 #include <manifolds/Point.h>
 #include <manifolds/mnf_assert.h>
 
-//180021114 is a version number for which noexcept works, not sure about noexcept(false)
-#if defined(_MSC_FULL_VER) && _MSC_FULL_VER < 180021114
+// The operator version of noexcept is available starting Visual Studio 2015
+// https://msdn.microsoft.com/en-us/library/dn956976.aspx
+#if defined(_MSC_FULL_VER) && _MSC_VER < 1900
 #define NOEXCEPT(x)
 #else
 #define NOEXCEPT(x) noexcept(x)

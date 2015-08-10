@@ -22,6 +22,11 @@
 
 #include <Eigen/Core>
 
+#if defined(_MSC_FULL_VER)
+typedef unsigned int uint;
+#include <cstdint>
+#endif
+
 namespace mnf
 {
   typedef Eigen::Ref<Eigen::VectorXd> RefVec;

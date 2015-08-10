@@ -45,7 +45,7 @@ namespace mnf
       writeChanges();
     }
 
-    ReverseQuaternion& ReverseQuaternion::operator=(Eigen::Quaterniond quat)
+    ReverseQuaternion& ReverseQuaternion::operator=(const Eigen::Quaterniond& quat)
     {
       w() = quat.w();
       vec() = quat.vec();
@@ -63,6 +63,9 @@ namespace mnf
   //typedef Eigen::Map< Eigen::Quaterniond > toQuat;
   //typedef Eigen::Map< const Eigen::Quaterniond > toConstQuat;
   const double ExpMapQuaternion::prec = 1e-8; //TODO Should be sqrt(sqrt(machine precision))
+#if defined(_MSC_FULL_VER) && _MSC_VER < 1900
+  char ExpMapQuaternion::hashName[] = "ExpMapQuaternion";
+#endif
 
   void ExpMapQuaternion::retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v)
   {

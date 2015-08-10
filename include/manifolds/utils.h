@@ -20,6 +20,28 @@
 
 #include <manifolds/defs.h>
 
+#if defined(_MSC_FULL_VER) && _MSC_VER < 1900
+#define constexpr const
+#endif
+
+namespace mnf
+{
+namespace utils
+{
+    constexpr static uint c1 = 0xcc9e2d51;
+    constexpr static uint c2 = 0x1b873593;
+    constexpr static uint r1 = 15;
+    constexpr static uint r2 = 12;
+    constexpr static uint m = 5;
+    constexpr static uint n = 0xe6546b64;
+    constexpr static uint seed = 39;
+}
+}
+
+#if defined(_MSC_FULL_VER) && _MSC_VER < 1900
+#define constexpr inline
+#endif
+
 namespace mnf
 {
 
@@ -35,14 +57,6 @@ namespace utils
     {
       return uint(b0) | uint(b1 << 8) | uint(b2 << 16) | uint(b3 << 24);
     }
-
-    constexpr static uint c1 = 0xcc9e2d51;
-    constexpr static uint c2 = 0x1b873593;
-    constexpr static uint r1 = 15;
-    constexpr static uint r2 = 12;
-    constexpr static uint m = 5;
-    constexpr static uint n = 0xe6546b64;
-    constexpr static uint seed = 39;
 
     constexpr uint computeK_1(uint k)
     {
@@ -99,7 +113,29 @@ namespace utils
     {
       return finalize_1(finalize_4(finalize_3(finalize_2(finalize_1(hash)))));
     }
+#if defined(_MSC_FULL_VER) && _MSC_VER < 1900
+    inline uint computeHash_recurse(const char * str, int N, int index = 0, uint hash = 0)
+    {
+      return (index > N+3?
+        hash:
+        computeHash_recurse(str, N, index+4,
+          computeRound(hash,
+                        assembleBytes(static_cast<uint8_t>(index<N?str[index]:0),
+                          static_cast<uint8_t>(index+1<N?str[index+1]:0),
+                          static_cast<uint8_t>(index+2<N?str[index+2]:0),
+                          static_cast<uint8_t>(index+3<N?str[index+3]:0)))));
+    }
 
+    inline uint computeHash(const char * str)
+    {
+      return finalize(computeHash_recurse(str, strlen(str), 0, 0));
+    }
+
+    inline uint computeHash(const char * str, const char * str2)
+    {
+      return finalize(computeHash_recurse(str2, strlen(str2), 0, computeHash_recurse(str, strlen(str), 0, 0)));
+    }
+#else
     template<int N>
       constexpr uint computeHash_recurse(const char (&str)[N], int index = 0, uint hash = 0)
       {
@@ -125,10 +161,15 @@ namespace utils
     {
       return finalize(computeHash_recurse(str2, 0, computeHash_recurse(str, 0, 0)));
     }
+#endif
 
   }
 }
 
 }
+
+#if defined(_MSC_FULL_VER) && _MSC_VER < 1900
+#define constexpr
+#endif
 
 #endif //_MANIFOLDS_UTILS_H_
