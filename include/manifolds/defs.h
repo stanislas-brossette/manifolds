@@ -18,8 +18,6 @@
 #ifndef _MANIFOLDS_DEFS_H_
 #define _MANIFOLDS_DEFS_H_
 
-#define EIGEN_RUNTIME_NO_MALLOC
-
 #include <Eigen/Core>
 
 #if defined(_MSC_FULL_VER)

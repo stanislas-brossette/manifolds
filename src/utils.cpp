@@ -60,7 +60,7 @@ namespace utils
     return R;
   }
 
-  bool set_is_malloc_allowed(bool allow)
+  bool set_is_malloc_allowed(bool allow __attribute__((unused)) )
   {
 #ifdef EIGEN_RUNTIME_NO_MALLOC
     return Eigen::internal::set_is_malloc_allowed(allow);
