@@ -44,7 +44,7 @@ if(CMAKE_BUILD_TYPE MATCHES Rel)
 endif()
 
 # Require Eigen >= 3.2.1 for Eigen::Ref
-IF(NOT WIN32)
+IF(PKG_CONFIG_FOUND)
   SET(Eigen_REQUIRED "eigen3 >= 3.2.1")
   SEARCH_FOR_EIGEN()
 ELSE()
