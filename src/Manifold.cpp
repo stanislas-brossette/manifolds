@@ -358,6 +358,19 @@ namespace mnf
     return out;
   }
 
+  void Manifold::getTrustMagnitude(RefVec out) const
+  {
+    mnf_assert(out.size() == tangentDim_);
+    getTrustMagnitude_(out);
+  }
+
+  Eigen::VectorXd Manifold::getTrustMagnitude() const
+  {
+    Eigen::VectorXd out(tangentDim_);
+    getTrustMagnitude_(out);
+    return out;
+  }
+
   void Manifold::lock() const
   {
     lock_ = true;

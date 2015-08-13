@@ -294,6 +294,12 @@ namespace mnf
       submanifolds_[i]->getTypicalMagnitude(getView<T>(out, i));
   }
 
+  void CartesianProduct::getTrustMagnitude_(RefVec out) const
+  {
+    for (size_t i = 0; i < submanifolds_.size(); ++i)
+      submanifolds_[i]->getTrustMagnitude(getView<T>(out, i));
+  }
+
   long CartesianProduct::getTypeId() const
   {
     return utils::hash::computeHash("CartesianProduct");

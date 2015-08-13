@@ -229,9 +229,14 @@ namespace mnf
     void limitMap(RefVec out) const;
 
     /// \brief Gets the typical Magnitude of the manifold on its tangent space.
-    /// it is typically used for scaling of the trust regions
+    /// it is typically used for scaling of the variables
     void getTypicalMagnitude(RefVec out) const;
     Eigen::VectorXd getTypicalMagnitude() const;
+
+    /// \brief Gets the trust Magnitude of the manifold on its tangent space.
+    /// it is typically used for scaling of the trust regions
+    void getTrustMagnitude(RefVec out) const;
+    Eigen::VectorXd getTrustMagnitude() const;
 
     /// \brief returns a value unique to each instance of a manifold
     long getInstanceId() const;
@@ -304,6 +309,7 @@ namespace mnf
 
     virtual void limitMap_(RefVec out) const = 0;
     virtual void getTypicalMagnitude_(RefVec out) const = 0;
+    virtual void getTrustMagnitude_(RefVec out) const = 0;
 
     /// \brief tests if the manifold is locked, throwing an error if it is
     void testLock() const;

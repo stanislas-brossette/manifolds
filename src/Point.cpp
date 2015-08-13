@@ -197,6 +197,11 @@ namespace mnf
     return manifold_.getTypicalMagnitude();
   }
 
+  Eigen::VectorXd Point::trustMagnitude() const
+  {
+    return manifold_.getTrustMagnitude();
+  }
+
   Point & Point::operator=(const Point& x)
   {
     mnf_assert(this->manifold_.dim() == x.getManifold().dim());

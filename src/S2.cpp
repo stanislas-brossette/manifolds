@@ -30,6 +30,7 @@ namespace mnf
   {
     name() = "S2";
     setTypicalMagnitude(Eigen::Vector3d::Constant(M_PI));
+    setTrustMagnitude(Eigen::Vector3d::Constant(M_PI));
   }
 
   S2::S2(double magnitude)
@@ -37,6 +38,7 @@ namespace mnf
   {
     name() = "S2";
     setTypicalMagnitude(Eigen::Vector3d::Constant( magnitude));
+    setTrustMagnitude(Eigen::Vector3d::Constant( magnitude));
   }
   S2::S2(const ConstRefVec& magnitude)
     : Manifold(2, 3, 3)
@@ -44,6 +46,7 @@ namespace mnf
     mnf_assert(magnitude.size() == 3 && "magnitude on R^n must be of size n");
     name() = "S2";
     setTypicalMagnitude (magnitude);
+    setTrustMagnitude (magnitude);
   }
 
   bool S2::isInM_(const Eigen::VectorXd& val , const double& prec) const
@@ -264,6 +267,22 @@ namespace mnf
   {
     testLock();
     typicalMagnitude_ = out;
+  }
+
+  void S2::getTrustMagnitude_(RefVec out) const
+  {
+    out = trustMagnitude_;
+  }
+
+  void S2::setTrustMagnitude(const double& magnitude)
+  {
+    setTrustMagnitude (Eigen::VectorXd::Constant(tangentDim(), magnitude));
+  }
+
+  void S2::setTrustMagnitude(const ConstRefVec& out)
+  {
+    testLock();
+    trustMagnitude_ = out;
   }
 
   long S2::getTypeId() const

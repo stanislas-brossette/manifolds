@@ -43,6 +43,9 @@ namespace mnf
     virtual void getTypicalMagnitude_(RefVec out) const;
     void setTypicalMagnitude(double magnitude);
     void setTypicalMagnitude(const ConstRefVec& out);
+    virtual void getTrustMagnitude_(RefVec out) const;
+    void setTrustMagnitude(const double& magnitude);
+    void setTrustMagnitude(const ConstRefVec& out);
     virtual bool isElementary() const;
     virtual long getTypeId() const;
 
@@ -73,6 +76,7 @@ namespace mnf
 
   private:
     Eigen::VectorXd typicalMagnitude_;
+    Eigen::VectorXd trustMagnitude_;
 
   };
 }

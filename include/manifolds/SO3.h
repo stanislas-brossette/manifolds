@@ -42,6 +42,9 @@ namespace mnf
     virtual void getTypicalMagnitude_(RefVec out) const;
     void setTypicalMagnitude(double magnitude);
     void setTypicalMagnitude(const ConstRefVec& out);
+    virtual void getTrustMagnitude_(RefVec out) const;
+    void setTrustMagnitude(const double& magnitude);
+    void setTrustMagnitude(const ConstRefVec& out);
     virtual void createRandomPoint_(RefVec out, double coeff) const;
     virtual bool isElementary() const;
     virtual long getTypeId() const;
@@ -73,6 +76,7 @@ namespace mnf
 
   private:
     Eigen::Vector3d typicalMagnitude_;
+    Eigen::Vector3d trustMagnitude_;
   };
 
   //Implementations of the methods
@@ -81,7 +85,8 @@ namespace mnf
     : Manifold(3, Map::InputDim_, Map::OutputDim_)
   {
     name() = "SO3";
-    setTypicalMagnitude(Eigen::Vector3d::Constant(M_PI/10));
+    setTypicalMagnitude(Eigen::Vector3d::Constant(M_PI));
+    setTrustMagnitude(Eigen::Vector3d::Constant(M_PI));
   }
   template<typename Map>
   inline SO3<Map>::SO3(double magnitude)
@@ -89,6 +94,7 @@ namespace mnf
   {
     name() = "SO3";
     setTypicalMagnitude(Eigen::Vector3d::Constant(magnitude));
+    setTrustMagnitude(Eigen::Vector3d::Constant(magnitude));
   }
   template<typename Map>
   inline SO3<Map>::SO3(const ConstRefVec& magnitude)
@@ -97,6 +103,7 @@ namespace mnf
     mnf_assert(magnitude.size() == 3 && "magnitude on SO3 must be of size 3");
     name() = "SO3";
     setTypicalMagnitude(magnitude);
+    setTrustMagnitude(magnitude);
   }
 
   template<typename Map>
@@ -261,6 +268,25 @@ namespace mnf
   {
     testLock();
     typicalMagnitude_ = out;
+  }
+
+  template<typename Map>
+  void SO3<Map>::getTrustMagnitude_(RefVec out) const
+  {
+    out = trustMagnitude_;
+  }
+
+  template<typename Map>
+  void SO3<Map>::setTrustMagnitude(const double& magnitude)
+  {
+    setTrustMagnitude (Eigen::Vector3d::Constant(magnitude));
+  }
+
+  template<typename Map>
+  void SO3<Map>::setTrustMagnitude(const ConstRefVec& out)
+  {
+    testLock();
+    trustMagnitude_ = out;
   }
 
   template<typename Map>

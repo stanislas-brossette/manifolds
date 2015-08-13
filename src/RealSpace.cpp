@@ -27,8 +27,10 @@ namespace mnf
   {
     name() = "R" + std::to_string( n );
     typicalMagnitude_.resize(n);
+    trustMagnitude_.resize(n);
     Eigen::VectorXd temp = Eigen::VectorXd::Constant(n, 1.0);
     setTypicalMagnitude(temp);
+    setTrustMagnitude(temp);
   }
 
   RealSpace::RealSpace(Index n, double magnitude)
@@ -36,8 +38,10 @@ namespace mnf
   {
     name() = "R" + std::to_string( n );
     typicalMagnitude_.resize(n);
+    trustMagnitude_.resize(n);
     Eigen::VectorXd temp = Eigen::VectorXd::Constant(n, magnitude);
     setTypicalMagnitude(temp);
+    setTrustMagnitude(temp);
   }
   RealSpace::RealSpace(Index n, const ConstRefVec& magnitude)
     : Manifold(n, n, n)
@@ -46,6 +50,8 @@ namespace mnf
     name() = "R" + std::to_string( n );
     typicalMagnitude_.resize(n);
     setTypicalMagnitude (magnitude);
+    trustMagnitude_.resize(n);
+    setTrustMagnitude (magnitude);
   }
 
   bool RealSpace::isInM_(const Eigen::VectorXd& val , const double& ) const
@@ -182,6 +188,23 @@ namespace mnf
   {
     testLock();
     typicalMagnitude_ = out;
+  }
+
+  void RealSpace::getTrustMagnitude_(RefVec out) const
+  {
+    out = trustMagnitude_;
+  }
+
+  void RealSpace::setTrustMagnitude(const double& magnitude)
+  {
+    Eigen::VectorXd temp = Eigen::VectorXd::Constant(tangentDim(), magnitude);
+    setTrustMagnitude(temp);
+  }
+
+  void RealSpace::setTrustMagnitude(const ConstRefVec& out)
+  {
+    testLock();
+    trustMagnitude_ = out;
   }
 
   long RealSpace::getTypeId() const

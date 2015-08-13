@@ -153,6 +153,9 @@ namespace mnf
     /// \brief returns the typical Magnitude of the manifold
     Eigen::VectorXd typicalMagnitude() const;
 
+    /// \brief returns the Trust Magnitude of the manifold
+    Eigen::VectorXd trustMagnitude() const;
+
 
     /// \brief Checks that the current point's value represents a valid point of its Manifold
     bool isInM(const double& prec = 1e-12) const;

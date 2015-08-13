@@ -81,6 +81,7 @@ namespace mnf
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
     virtual void limitMap_(RefVec out) const;
     virtual void getTypicalMagnitude_(RefVec out) const;
+    virtual void getTrustMagnitude_(RefVec out) const;
     virtual long getTypeId() const;
 
     virtual Manifold* getNewCopy() const;

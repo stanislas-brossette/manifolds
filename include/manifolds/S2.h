@@ -32,8 +32,8 @@ namespace mnf
   {
   public:
     S2();
-    S2(double magnitude);
-    S2(const ConstRefVec& magnitude);
+    S2(double trustMagnitude);
+    S2(const ConstRefVec& trustMagnitude);
 
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
@@ -44,6 +44,9 @@ namespace mnf
     virtual void getTypicalMagnitude_(RefVec out) const;
     void setTypicalMagnitude(double magnitude);
     void setTypicalMagnitude(const ConstRefVec& out);
+    virtual void getTrustMagnitude_(RefVec out) const;
+    void setTrustMagnitude(const double& magnitude);
+    void setTrustMagnitude(const ConstRefVec& out);
     void logarithm (RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     double distance (const ConstRefVec& x, const ConstRefVec& y) const;
     /// \brief projects each row of \ in on TxM
@@ -84,6 +87,7 @@ namespace mnf
 
   private:
     Eigen::Vector3d typicalMagnitude_;
+    Eigen::Vector3d trustMagnitude_;
   };
 }
 #endif //_MANIFOLDS_S2_H_
