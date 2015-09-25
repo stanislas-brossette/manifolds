@@ -53,7 +53,7 @@ set_target_properties(manifolds PROPERTIES
 	                  VERSION ${PROJECT_VERSION}
                       SOVERSION 0.1)
 set_target_properties(manifolds PROPERTIES
-                    COMPILE_DEFINITIONS MANIFOLDS_EXPORT)
+  COMPILE_DEFINITIONS "MANIFOLDS_EXPORT;EIGEN_RUNTIME_NO_MALLOC")
 PKG_CONFIG_APPEND_LIBS(manifolds)
 
 # manifoldsTest library
@@ -62,7 +62,7 @@ set_target_properties(manifoldsTest PROPERTIES
 	                  VERSION ${PROJECT_VERSION}
                       SOVERSION 0.1)
 set_target_properties(manifoldsTest PROPERTIES
-                    COMPILE_DEFINITIONS MANIFOLDS_EXPORT MNF_ASSERT_THROW EIGEN_RUNTIME_NO_MALLOC)
+  COMPILE_DEFINITIONS "MANIFOLDS_EXPORT;MNF_ASSERT_THROW;EIGEN_RUNTIME_NO_MALLOC")
 
 install(TARGETS manifolds
   RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
