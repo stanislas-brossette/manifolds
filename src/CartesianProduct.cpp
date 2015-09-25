@@ -28,7 +28,7 @@ namespace mnf
     name() = "";
   }
 
-  CartesianProduct::CartesianProduct(std::initializer_list<Manifold*> m)
+  CartesianProduct::CartesianProduct(const std::initializer_list<Manifold*> m)
     : Manifold(0,0,0)
   {
     startIndexT_.push_back(0);
@@ -103,7 +103,7 @@ namespace mnf
     return false;
   }
 
-  void CartesianProduct::display(std::string prefix) const
+  void CartesianProduct::display(const std::string prefix) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
@@ -118,7 +118,7 @@ namespace mnf
     }
   }
 
-  const Manifold& CartesianProduct::operator()(size_t i) const
+  const Manifold& CartesianProduct::operator()(const size_t i) const
   {
     mnf_assert(i < submanifolds_.size() && "invalid index");
     return *submanifolds_[i];
@@ -136,7 +136,7 @@ namespace mnf
     return ss.str();
   }
 
-  void CartesianProduct::createRandomPoint_(RefVec out, double coeff) const
+  void CartesianProduct::createRandomPoint_(RefVec out, const double coeff) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
       submanifolds_[i]->createRandomPoint(getView<R>(out, i), coeff);

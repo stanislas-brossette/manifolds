@@ -28,7 +28,7 @@ namespace mnf
   {
   public:
     /// \brief Constructor of the \f$ M^n m2\f$
-    CartesianPower(const Manifold& M, int n);
+    CartesianPower(const Manifold& M, const int n);
   };
 
 }

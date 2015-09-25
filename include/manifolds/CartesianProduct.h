@@ -37,7 +37,7 @@ namespace mnf
     CartesianProduct();
 
     /// \brief Constructor of the manifold from a list of manifolds
-    CartesianProduct(std::initializer_list<Manifold*> m);
+    CartesianProduct(const std::initializer_list<Manifold*> m);
 
     /// \brief Constructor of the manifold composed of \f$ m1\times m2\f$
     CartesianProduct(const Manifold& m1, const Manifold& m2);
@@ -47,23 +47,23 @@ namespace mnf
     CartesianProduct& multiply(const Manifold& m);
 
     virtual size_t numberOfSubmanifolds() const;
-    virtual const Manifold& operator()(size_t i) const;
+    virtual const Manifold& operator()(const size_t i) const;
 
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat fmt = mnf::defaultFormat) const;
 
     virtual bool isElementary() const;
 
-    virtual void display(std::string prefix = "") const;
+    virtual void display(const std::string prefix = "") const;
 
   protected:
     virtual bool isInM_(const Eigen::VectorXd& val, const double& prec) const;
     virtual void forceOnM_(RefVec out, const ConstRefVec& in) const;
     virtual void getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const;
 
-    virtual Index startR(size_t i) const;
-    virtual Index startT(size_t i) const;
+    virtual Index startR(const size_t i) const;
+    virtual Index startT(const size_t i) const;
 
-    virtual void createRandomPoint_(RefVec out, double coeff) const;
+    virtual void createRandomPoint_(RefVec out, const double coeff) const;
     virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const;
@@ -99,13 +99,13 @@ namespace mnf
     std::vector<Index> startIndexR_;
   };
 
-  inline Index CartesianProduct::startR(size_t i) const
+  inline Index CartesianProduct::startR(const size_t i) const
   {
     mnf_assert(i < numberOfSubmanifolds() && "invalid index");
     return startIndexR_[i];
   }
 
-  inline Index CartesianProduct::startT(size_t i) const
+  inline Index CartesianProduct::startT(const size_t i) const
   {
     mnf_assert(i < numberOfSubmanifolds() && "invalid index");
     return startIndexT_[i];
