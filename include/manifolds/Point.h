@@ -51,7 +51,7 @@ namespace mnf
     const Manifold& getManifold() const;
     const Eigen::IOFormat& format() const;
 
-    std::string toString(std::string& prefix, const Eigen::IOFormat fmt) const; //Dislays point in representation space
+    std::string toString(std::string& prefix, const Eigen::IOFormat& fmt) const; //Dislays point in representation space
 
   private:
     void registerPoint();
@@ -158,7 +158,7 @@ namespace mnf
 
 
     /// \brief Checks that the current point's value represents a valid point of its Manifold
-    bool isInM(const double& prec = 1e-12) const;
+    bool isInM(double prec = 1e-12) const;
 
     /// \brief Checks that the current point's value represents a valid point of its Manifold
     bool isInTxM(const ConstRefVec& v, const double& prec = 1e-8) const;

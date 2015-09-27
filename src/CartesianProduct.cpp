@@ -48,7 +48,7 @@ namespace mnf
     name() = m1.name() + "x" + m2.name();
   }
 
-  bool CartesianProduct::isInM_(const Eigen::VectorXd& val, const double& ) const
+  bool CartesianProduct::isInM_(const Eigen::VectorXd& val, double ) const
   {
     bool out = true;
     for (std::size_t i = 0; i<numberOfSubmanifolds(); ++i)
@@ -103,7 +103,7 @@ namespace mnf
     return false;
   }
 
-  void CartesianProduct::display(const std::string prefix) const
+  void CartesianProduct::display(const std::string& prefix) const
   {
     for (size_t i = 0; i < submanifolds_.size(); ++i)
     {
@@ -124,7 +124,7 @@ namespace mnf
     return *submanifolds_[i];
   }
 
-  std::string CartesianProduct::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat fmt) const
+  std::string CartesianProduct::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const
   {
     std::stringstream ss;
     size_t n = numberOfSubmanifolds();

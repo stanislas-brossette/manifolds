@@ -69,7 +69,7 @@ namespace mnf
     return format_;
   }
 
-  std::string ConstSubPoint::toString(std::string& prefix, const Eigen::IOFormat fmt) const
+  std::string ConstSubPoint::toString(std::string& prefix, const Eigen::IOFormat& fmt) const
   {
     return manifold_.toString(value_, prefix, fmt);
   }
@@ -222,7 +222,7 @@ namespace mnf
     return output;
   }
 
-  bool Point::isInM(const double& prec) const
+  bool Point::isInM(double prec) const
   {
     return manifold_.isInM(value_, prec);
   }

@@ -38,7 +38,7 @@ namespace mnf
     SO3(const ConstRefVec& magnitude);
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
-    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat fmt = mnf::defaultFormat) const;
+    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
     virtual void getTypicalMagnitude_(RefVec out) const;
     void setTypicalMagnitude(double magnitude);
     void setTypicalMagnitude(const ConstRefVec& out);
@@ -51,7 +51,7 @@ namespace mnf
 
   protected:
     //map operations
-    virtual bool isInM_(const Eigen::VectorXd& val, const double& prec) const;
+    virtual bool isInM_(const Eigen::VectorXd& val, double prec) const;
     virtual void forceOnM_(RefVec out, const ConstRefVec& in) const;
     virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
     virtual void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
@@ -107,7 +107,7 @@ namespace mnf
   }
 
   template<typename Map>
-  inline bool SO3<Map>::isInM_(const Eigen::VectorXd& val, const double& prec) const
+  inline bool SO3<Map>::isInM_(const Eigen::VectorXd& val, double prec) const
   {
     return Map::isInM_(val, prec);
   }
@@ -138,7 +138,7 @@ namespace mnf
   }
 
   template<typename Map>
-  inline std::string SO3<Map>::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat fmt) const
+  inline std::string SO3<Map>::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const
   {
     std::string matPrefix = prefix + '[';
     std::stringstream ss;

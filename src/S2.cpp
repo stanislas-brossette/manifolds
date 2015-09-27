@@ -49,7 +49,7 @@ namespace mnf
     setTrustMagnitude (magnitude);
   }
 
-  bool S2::isInM_(const Eigen::VectorXd& val , const double& prec) const
+  bool S2::isInM_(const Eigen::VectorXd& val , double prec) const
   {
     bool out(fabs(val.lpNorm<2>() - 1.0) < prec);
     return out;
@@ -84,7 +84,7 @@ namespace mnf
     return *this;
   }
 
-  std::string S2::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat fmt) const
+  std::string S2::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const
   {
     std::stringstream ss;
     ss << prefix << val.transpose().format(fmt);

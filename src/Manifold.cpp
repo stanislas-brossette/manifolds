@@ -60,7 +60,7 @@ namespace mnf
     }
   }
 
-  bool Manifold::isInM(const Eigen::VectorXd& val, const double& prec) const
+  bool Manifold::isInM(const Eigen::VectorXd& val, double prec) const
   {
     mnf_assert(isValid() || seeMessageAbove());
     mnf_assert(val.size() == representationDim());
@@ -118,7 +118,7 @@ namespace mnf
     return representationDim_;
   }
 
-  void Manifold::display(std::string prefix) const
+  void Manifold::display(const std::string& prefix) const
   {
     std::cout << prefix << name() << std::endl;
   }

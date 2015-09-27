@@ -71,7 +71,7 @@ namespace mnf
 
     /// \brief Checks that the value val described in the representation space
     /// is an element of the manifold
-    virtual bool isInM(const Eigen::VectorXd& val, const double& prec = 1e-8) const;
+    virtual bool isInM(const Eigen::VectorXd& val, double prec = 1e-8) const;
 
     /// \brief finds the closest point to \a in on \f$ \mathbb{M} \f$.
     virtual void forceOnM(RefVec out, const ConstRefVec& in) const;
@@ -90,7 +90,7 @@ namespace mnf
     virtual bool isElementary() const = 0;
 
     /// \brief Displays a description of the manifold
-    virtual void display(std::string prefix = "") const;
+    virtual void display(const std::string& prefix = "") const;
 
     /// \brief Returns the number of submanifolds that compose the manifold
     virtual size_t numberOfSubmanifolds() const = 0;
@@ -117,7 +117,7 @@ namespace mnf
     bool isLocked() const;
 
     /// \brief Converts val to string for pretty printing
-    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat fmt = mnf::defaultFormat) const = 0;
+    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const = 0;
 
     //map operations
     //The following operations are public and make call to their private version
@@ -261,7 +261,7 @@ namespace mnf
     void setRepresentationDimension(Index rd);
 
     /// \brief Ensures that val in representation space in a point of M
-    virtual bool isInM_(const Eigen::VectorXd& val, const double& prec) const = 0;
+    virtual bool isInM_(const Eigen::VectorXd& val, double prec) const = 0;
 
     /// \brief finds the closest point to \a in on \f$ \mathbb{M} \f$.
     virtual void forceOnM_(RefVec out, const ConstRefVec& in) const = 0;

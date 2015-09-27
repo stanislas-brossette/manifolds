@@ -54,7 +54,7 @@ namespace mnf
     setTrustMagnitude (magnitude);
   }
 
-  bool RealSpace::isInM_(const Eigen::VectorXd& val , const double& ) const
+  bool RealSpace::isInM_(const Eigen::VectorXd& val , double ) const
   {
     bool out( dim() == val.size());
     return out;
@@ -86,7 +86,7 @@ namespace mnf
     return *this;
   }
 
-  std::string RealSpace::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat fmt) const
+  std::string RealSpace::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const
   {
     std::stringstream ss;
     ss << prefix << val.transpose().format(fmt);

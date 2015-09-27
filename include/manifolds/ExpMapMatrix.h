@@ -38,7 +38,7 @@ namespace mnf
     static const int InputDim_ = 3;
     typedef Eigen::Matrix3d DisplayType;
     typedef Eigen::Matrix3d OutputType;
-    static bool isInM_(const Eigen::VectorXd& val, const double& prec);
+    static bool isInM_(const Eigen::VectorXd& val, double prec);
     static void forceOnM_(RefVec out, const ConstRefVec& in);
     static void getIdentityOnTxM_(RefMat out, const ConstRefVec& x);
     static void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v);

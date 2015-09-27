@@ -127,7 +127,7 @@ namespace mnf
     toMat3(out.data()) = Eigen::Matrix3d::Identity();
   }
 
-  bool ExpMapMatrix::isInM_(const Eigen::VectorXd& val, const double& )
+  bool ExpMapMatrix::isInM_(const Eigen::VectorXd& val, double )
   {
     bool out(val.size()==9);
     toConstMat3 valMat(val.data());
