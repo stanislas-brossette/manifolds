@@ -291,9 +291,9 @@ namespace mnf
     return typeId;
   }
 
-  Manifold* S2::getNewCopy() const
+  Manifold_ptr S2::getNewCopy() const
   {
-    S2* copy = new S2(*this);
+    S2_ptr copy(new S2(*this));
     copy->instanceId_ = this->instanceId_;
 
     return copy;

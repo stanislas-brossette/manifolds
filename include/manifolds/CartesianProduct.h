@@ -84,7 +84,7 @@ namespace mnf
     virtual void getTrustMagnitude_(RefVec out) const;
     virtual long getTypeId() const;
 
-    virtual Manifold* getNewCopy() const;
+    virtual Manifold_ptr getNewCopy() const;
 
   private:
     /// \brief List of pointers on all the manifolds in the cartesian product

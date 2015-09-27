@@ -72,7 +72,7 @@ namespace mnf
     virtual void limitMap_(RefVec out) const;
     mutable ReusableTemporaryMap bufferMap_;
 
-    virtual Manifold* getNewCopy() const;
+    virtual Manifold_ptr getNewCopy() const;
 
   private:
     Eigen::Vector3d typicalMagnitude_;
@@ -297,12 +297,12 @@ namespace mnf
   }
 
   template<typename Map>
-  Manifold* SO3<Map>::getNewCopy() const
+  Manifold_ptr SO3<Map>::getNewCopy() const
   {
-    SO3<Map>* copy = new SO3<Map>(*this);
-    copy->instanceId_ = this->instanceId_;
+    std::shared_ptr<SO3<Map> > copySO3(new SO3<Map>(*this));
+    copySO3->instanceId_ = this->instanceId_;
 
-    return copy;
+    return copySO3;
   }
 }
 #endif //_MANIFOLDS_SO3_H_

@@ -15,6 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
+#include <manifolds/defs.h>
 #include <manifolds/CartesianProduct.h>
 #include <manifolds/mnf_assert.h>
 
@@ -305,9 +306,9 @@ namespace mnf
     return utils::hash::computeHash("CartesianProduct");
   }
 
-  Manifold* CartesianProduct::getNewCopy() const
+  Manifold_ptr CartesianProduct::getNewCopy() const
   {
-    CartesianProduct* copy = new CartesianProduct(*this);
+    CartesianProduct_ptr copy(new CartesianProduct(*this));
     copy->instanceId_ = this->instanceId_;
 
     return copy;

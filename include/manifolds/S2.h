@@ -83,7 +83,7 @@ namespace mnf
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
     virtual void limitMap_(RefVec out) const;
 
-    virtual Manifold* getNewCopy() const;
+    virtual Manifold_ptr getNewCopy() const;
 
   private:
     Eigen::Vector3d typicalMagnitude_;

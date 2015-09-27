@@ -401,9 +401,9 @@ namespace mnf
     return this->getTypeId() == other.getTypeId();
   }
 
-  Manifold* Manifold::copyManifold(const Manifold& m)
+  Manifold_ptr Manifold::copyManifold(const Manifold& m)
   {
-    Manifold* copy = m.getNewCopy();
+    Manifold_ptr copy = m.getNewCopy();
 
     copy->instanceId_ = m.instanceId_;
 

@@ -213,9 +213,9 @@ namespace mnf
     return typeId;
   }
 
-  Manifold* RealSpace::getNewCopy() const
+  Manifold_ptr RealSpace::getNewCopy() const
   {
-    RealSpace* copy = new RealSpace(*this);
+    RealSpace_ptr copy(new RealSpace(*this));
     copy->instanceId_ = this->instanceId_;
 
     return copy;

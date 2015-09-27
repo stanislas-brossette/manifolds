@@ -18,6 +18,7 @@
 #ifndef _MANIFOLDS_DEFS_H_
 #define _MANIFOLDS_DEFS_H_
 
+#include <memory>
 #include <Eigen/Core>
 
 #if defined(_MSC_FULL_VER)
@@ -34,6 +35,16 @@ namespace mnf
   typedef Eigen::Ref<Eigen::VectorXd>::SegmentReturnType Segment;
   typedef Eigen::Ref<const Eigen::VectorXd>::ConstSegmentReturnType ConstSegment;
   typedef Eigen::VectorXd::Index Index;
+
+  class Manifold;
+  typedef std::shared_ptr<Manifold> Manifold_ptr;
+  class CartesianProduct;
+  typedef std::shared_ptr<CartesianProduct> CartesianProduct_ptr;
+  class RealSpace;
+  typedef std::shared_ptr<RealSpace> RealSpace_ptr;
+  class S2;
+  typedef std::shared_ptr<S2> S2_ptr;
+
   const Eigen::IOFormat defaultFormat(4, 0, ", ", "\n", "[", "]");
 }
 
