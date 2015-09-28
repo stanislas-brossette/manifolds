@@ -49,35 +49,6 @@ namespace mnf
     virtual bool isElementary() const;
     virtual long getTypeId() const;
 
-  protected:
-    //map operations
-    virtual bool isInM_(const Eigen::VectorXd& , double prec) const;
-    virtual void forceOnM_(RefVec out, const ConstRefVec& in) const;
-    virtual void getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const;
-    virtual void createRandomPoint_(RefVec out, double coeff) const;
-    virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
-    virtual void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
-    virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const;
-    virtual void setZero_(RefVec out) const;
-    virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const;
-    virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
-    virtual Eigen::MatrixXd diffPseudoLog0_(const ConstRefVec& x) const;
-    virtual void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
-    virtual void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
-    virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
-    virtual void applyInvTransportOnTheRight_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
-
-    virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const;
-    virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const;
-    virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec&x) const;
-    virtual void limitMap_(RefVec out) const;
-
-    virtual Manifold_ptr getNewCopy() const;
-
-  private:
-    Eigen::VectorXd typicalMagnitude_;
-    Eigen::VectorXd trustMagnitude_;
-
   };
 }
 

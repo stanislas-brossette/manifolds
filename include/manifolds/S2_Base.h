@@ -20,7 +20,8 @@
 #include <stdexcept>
 
 #include <manifolds/defs.h>
-#include <manifolds/Manifold.h>
+#include <manifolds/Manifold_Base.h>
+#include <manifolds/S2.h>
 #include <manifolds/utils.h>
 
 namespace mnf
@@ -28,12 +29,13 @@ namespace mnf
   /// \brief Manifold representing the 3-dimensional Sphere, also
   /// known as S2.
   /// All the equations in this class are provided by Manopt
-  class MANIFOLDS_API S2 : public Manifold
+  class S2_Base : public Manifold
   {
+    friend S2;
   public:
-    S2();
-    S2(double trustMagnitude);
-    S2(const ConstRefVec& trustMagnitude);
+    S2_Base();
+    S2_Base(double trustMagnitude);
+    S2_Base(const ConstRefVec& trustMagnitude);
 
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(size_t i) const;
@@ -61,6 +63,33 @@ namespace mnf
     virtual bool isElementary() const;
     virtual long getTypeId() const;
 
+  protected:
+    //map operations
+    virtual bool isInM_(const Eigen::VectorXd& val, double prec) const;
+    virtual void forceOnM_(RefVec out, const ConstRefVec& in) const;
+    virtual void getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const;
+    virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
+    virtual void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
+    virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const;
+    virtual void setZero_(RefVec out) const;
+    virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const;
+    virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
+    virtual Eigen::MatrixXd diffPseudoLog0_(const ConstRefVec& x) const;
+    virtual void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
+    virtual void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
+    virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
+    virtual void applyInvTransportOnTheRight_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
+
+    virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const;
+    virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const;
+    virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
+    virtual void limitMap_(RefVec out) const;
+
+    virtual Manifold_ptr getNewCopy() const;
+
+  private:
+    Eigen::Vector3d typicalMagnitude_;
+    Eigen::Vector3d trustMagnitude_;
   };
 }
 #endif //_MANIFOLDS_S2_H_

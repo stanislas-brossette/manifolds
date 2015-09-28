@@ -21,19 +21,10 @@
 
 namespace mnf
 {
-  long Manifold::manifoldCounter_ = 0;
-
   Manifold::Manifold(Index dimension, Index tangentDimension, Index representationDimension)
-    : dimension_(dimension)
-    , tangentDim_(tangentDimension)
-    , representationDim_(representationDimension)
-    , lock_(false)
-  {
-    mnf_assert(0 <= dimension && "Negative dimension not accepted");
-    mnf_assert(dimension <= tangentDimension);
-    mnf_assert(tangentDimension <= representationDimension);
-    this->instanceId_ = manifoldCounter_++;
-  }
+    :   
+      manifoldBase_(make_shared<Manifold_Base>(dimension, tangentDimension, representationDimension))
+  {}
 
   Manifold::~Manifold()
   {
@@ -41,372 +32,186 @@ namespace mnf
 
   Point Manifold::createPoint() const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    lock();
-    return Point(*this);
+    return manifoldBase_->createPoint();
   }
 
   Point Manifold::createPoint(const ConstRefVec& val) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    if (isInM(val))
-    {
-      lock();
-      return Point(*this, val);
-    }
-    else
-    {
-      throw std::runtime_error("Bad Point Initialization");
-    }
+    return manifoldBase_->createPoint(val);
   }
 
   bool Manifold::isInM(const Eigen::VectorXd& val, double prec) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(val.size() == representationDim());
-    return isInM_(val, prec);
+    return manifoldBase_->isInM(val, prec);
   }
 
   void Manifold::forceOnM(RefVec out, const ConstRefVec& in) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(out.size() == representationDim());
-    mnf_assert(in.size() == representationDim());
-    return forceOnM_(out, in);
+    return manifoldBase_->forceOnM(out, in);
   }
-
 
   Point Manifold::getZero() const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    lock();
-    Eigen::VectorXd id(representationDim_);
-    setZero(id);
-    return Point(*this, id);
+    return manifoldBase_->getZero();
   }
 
   Point Manifold::createRandomPoint(double coeff) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    lock();
-    Eigen::VectorXd val(representationDim_);
-    createRandomPoint(val, coeff);
-    return Point(*this, val);
+    return manifoldBase_->createRandomPoint(coeff);
   }
 
   void Manifold::createRandomPoint(RefVec out, double coeff) const
   {
-    mnf_assert(out.size() == representationDim_ && "wrong dimension in Manifold::createRandomPoint");
-    createRandomPoint_(out, coeff);
+    return manifoldBase_->createRandomPoint(out, coeff);
   }
 
   Index Manifold::dim() const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    return dimension_;
+    return manifoldBase_->dim();
   }
 
   Index Manifold::tangentDim() const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    return tangentDim_;
+    return manifoldBase_->tangentDim();
   }
 
   Index Manifold::representationDim() const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    return representationDim_;
+    return manifoldBase_->representationDim();
   }
 
   void Manifold::display(const std::string& prefix) const
   {
-    std::cout << prefix << name() << std::endl;
+    return manifoldBase_->display(prefix);
   }
 
   void Manifold::retractation(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(out.size() == representationDim_);
-    mnf_assert(x.size() == representationDim_);
-    mnf_assert(v.size() == tangentDim_);
-    mnf_assert(isInTxM(x, v) && "Wrong tangent vector provided to retractation");
-    retractation_(out, x, v);
+    return manifoldBase_->retractation(out, x, v);
   }
-  //void Manifold::retractation(RefVec out, const Point& x, const ConstRefVec& v) const
-  //{
-  //  retractation( out, x.value(), v);
-  //}
-  //Point Manifold::retractation(const ConstRefVec& x, const ConstRefVec& v) const
-  //{
-  //  Eigen::VectorXd out(representationDim_);
-  //  retractation(out, x, v);
-  //  return createPoint(out);
-  //}
-  //Point Manifold::retractation(const Point& x, const ConstRefVec& v) const
-  //{
-  //  return retractation(x.value(), v);
-  //}
 
   void Manifold::pseudoLog(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(out.size() == tangentDim_);
-    mnf_assert(x.size() == representationDim_);
-    mnf_assert(y.size() == representationDim_);
-    pseudoLog_(out, x, y);
+    return manifoldBase_->pseudoLog(out, x, y);
   }
-  //void Manifold::pseudoLog(RefVec out, const Point& x, const Point& y) const
-  //{
-  //  pseudoLog(out, x.value(), y.value());
-  //}
-  //RefVec Manifold::pseudoLog(const ConstRefVec& x, const ConstRefVec& y) const
-  //{
-  //  Eigen::VectorXd out(tangentDim_);
-  //  pseudoLog(out, x, y);
-  //  return out;
-  //}
-  //RefVec Manifold::pseudoLog(const Point& x, const Point& y) const
-  //{
-  //  Eigen::VectorXd out(tangentDim_);
-  //  pseudoLog(out, x.value(), y.value());
-  //  return out;
-  //}
 
   void Manifold::pseudoLog0(RefVec out, const ConstRefVec& x) const
   {
-    mnf_assert(out.size() == tangentDim_);
-    mnf_assert(x.size() == representationDim_);
-    pseudoLog0_(out, x);
+    return manifoldBase_->pseudoLog0(out, x);
   }
-  //void Manifold::pseudoLog0(RefVec out, const Point& x) const
-  //{
-  //  pseudoLog0(out, x.value());
-  //}
-  //RefVec Manifold::pseudoLog0(const ConstRefVec& x) const
-  //{
-  //  Eigen::VectorXd out(tangentDim_);
-  //  pseudoLog0(out, x);
-  //  return out;
-  //}
-  //RefVec Manifold::pseudoLog0(const Point& x) const
-  //{
-  //  Eigen::VectorXd out(tangentDim_);
-  //  pseudoLog0(out, x.value());
-  //  return out;
-  //}
 
   Eigen::MatrixXd Manifold::diffRetractation(const ConstRefVec& x) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(x.size() == representationDim_);
-    return diffRetractation_(x);
+    return manifoldBase_->diffRetractation(x);
   }
 
-  void Manifold::applyDiffRetractation(
-      RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  void Manifold::applyDiffRetractation( RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(in.cols() == representationDim_);
-    mnf_assert(out.cols() == tangentDim_);
-    mnf_assert(in.rows() == out.rows());
-    mnf_assert(x.size() == representationDim_);
-    applyDiffRetractation_(out, in, x);
+    return manifoldBase_->applyDiffRetractation(out, in, x);
   }
 
   Eigen::MatrixXd Manifold::diffPseudoLog0(const ConstRefVec& x) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(x.size() == representationDim_);
-    return diffPseudoLog0_(x);
+    return manifoldBase_->diffPseudoLog0(x);
   }
 
-  void Manifold::applyDiffPseudoLog0(
-      RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+  void Manifold::applyDiffPseudoLog0(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(out.cols() == representationDim_);
-    mnf_assert(in.cols() == tangentDim_);
-    mnf_assert(in.rows() == out.rows());
-    mnf_assert(x.size() == representationDim_);
-    applyDiffPseudoLog0_(out, in, x);
+    return manifoldBase_->applyDiffPseudoLog0(out, in, x);
   }
 
-  void Manifold::applyTransport(
-      RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
+  void Manifold::applyTransport(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(in.rows() == tangentDim_);
-    mnf_assert(out.rows() == tangentDim_);
-    mnf_assert(in.cols() == out.cols());
-    mnf_assert(x.size() == representationDim());
-    mnf_assert(v.size() == tangentDim_);
-    mnf_assert(isInTxM(x, v));
-
-    applyTransport_(out, in, x, v);
+    return manifoldBase_->applyTransport(out, in, x, v);
   }
 
-  void Manifold::applyInvTransport(
-      RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
+  void Manifold::applyInvTransport(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(in.rows() == tangentDim_);
-    mnf_assert(out.rows() == tangentDim_);
-    mnf_assert(in.cols() == out.cols());
-    mnf_assert(x.size() == representationDim());
-    mnf_assert(v.size() == tangentDim_);
-    mnf_assert(isInTxM(x, v));
-
-    applyInvTransport_(out, in, x, v);
+    return manifoldBase_->applyInvTransport(out, in, x, v);
   }
 
-  void Manifold::applyInvTransportOnTheRight(
-      RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
+  void Manifold::applyInvTransportOnTheRight(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(in.cols() == tangentDim_);
-    mnf_assert(out.cols() == tangentDim_);
-    mnf_assert(in.rows() == out.rows());
-    mnf_assert(x.size() == representationDim());
-    mnf_assert(v.size() == tangentDim_);
-    mnf_assert(isInTxM(x, v));
-
-    applyInvTransportOnTheRight_(out, in, x, v);
+    return manifoldBase_->applyInvTransportOnTheRight(out, in, x, v);
   }
-
-  void Manifold::setDimension(Index d)
-  {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(d>=0 && "Negative dimension not accepted");
-    testLock();
-    dimension_ = d;
-  }
-
-  void Manifold::setTangentDimension(Index td)
-  {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(td >= 0 && "Negative dimension not accepted");
-    testLock();
-    tangentDim_ = td;
-  }
-
-  void Manifold::setRepresentationDimension(Index rd)
-  {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(rd>=0 && "Negative dimension not accepted");
-    testLock();
-    representationDim_ = rd;
-  }
-
 
   void Manifold::setZero(RefVec out) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(out.size() == representationDim_);
-    setZero_(out);
+    return manifoldBase_->setZero(out);
   }
 
   void Manifold::tangentConstraint(RefMat out, const ConstRefVec& x) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(out.rows() == tangentDim_ - dimension_);
-    mnf_assert(out.cols() == tangentDim_);
-    mnf_assert(x.size() == representationDim());
-    tangentConstraint_(out, x);
+    return manifoldBase_->tangentConstraint(out, x);
   }
 
   bool Manifold::isInTxM(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(v.size() == tangentDim_);
-    mnf_assert(x.size() == representationDim());
-    return isInTxM_(x, v, prec);
+    return manifoldBase_->isInTxM(x, v, prec);
   }
 
   void Manifold::forceOnTxM(RefVec out, const ConstRefVec& in, const ConstRefVec&x) const
   {
-    mnf_assert(isValid() || seeMessageAbove());
-    mnf_assert(out.size() == tangentDim_);
-    mnf_assert(x.size() == representationDim());
-    mnf_assert(in.size() == tangentDim_);
-    forceOnTxM_(out, in, x);
+    return manifoldBase_->forceOnTxM(out, in, x);
   }
 
   void Manifold::getIdentityOnTxM(RefMat out, const ConstRefVec& x) const
   {
-    mnf_assert(out.rows() == tangentDim_);
-    mnf_assert(out.cols() == tangentDim_);
-    mnf_assert(x.size() == representationDim());
-    getIdentityOnTxM_(out, x);
+    return manifoldBase_->getIdentityOnTxM(out, x);
   }
 
   void Manifold::limitMap(RefVec out) const
   {
-    mnf_assert(out.size() == tangentDim_);
-    limitMap_(out);
+    return manifoldBase_->limitMap(out);
   }
 
   void Manifold::getTypicalMagnitude(RefVec out) const
   {
-    mnf_assert(out.size() == tangentDim_);
-    getTypicalMagnitude_(out);
+    return manifoldBase_->getTypicalMagnitude(out);
   }
 
   Eigen::VectorXd Manifold::getTypicalMagnitude() const
   {
-    Eigen::VectorXd out(tangentDim_);
-    getTypicalMagnitude_(out);
-    return out;
+    return manifoldBase_->VectorXd Manifold::getTypicalMagnitude();
   }
 
   void Manifold::getTrustMagnitude(RefVec out) const
   {
-    mnf_assert(out.size() == tangentDim_);
-    getTrustMagnitude_(out);
+    return manifoldBase_->getTrustMagnitude(out);
   }
 
   Eigen::VectorXd Manifold::getTrustMagnitude() const
   {
-    Eigen::VectorXd out(tangentDim_);
-    getTrustMagnitude_(out);
-    return out;
+    return manifoldBase_->VectorXd Manifold::getTrustMagnitude();
   }
 
   void Manifold::lock() const
   {
-    lock_ = true;
-  }
-
-  void Manifold::testLock() const
-  {
-    if (lock_)
-      throw std::runtime_error("Either a point or a compound manifold is relying on this manifold, you can't modify it anymore.");
+    return manifoldBase_->lock();
   }
 
   bool Manifold::isLocked() const
   {
-    return lock_;
+    return manifoldBase_->isLocked();
   }
 
-  const std::string& Manifold::name() const { return name_;}
+  const std::string& Manifold::name() const 
+  {
+    return manifoldBase_->name();
+  }
 
-  std::string& Manifold::name() { return name_;}
+  std::string& Manifold::name() 
+  {
+    return manifoldBase_->name();
+  }
 
   long Manifold::getInstanceId() const
   {
-    return this->instanceId_;
+    return manifoldBase_->getInstanceId();
   }
 
   bool Manifold::isSameType(const Manifold& other) const
   {
-    return this->getTypeId() == other.getTypeId();
-  }
-
-  Manifold_ptr Manifold::copyManifold(const Manifold& m)
-  {
-    Manifold_ptr copy = m.getNewCopy();
-
-    copy->instanceId_ = m.instanceId_;
-
-    return copy;
+    return manifoldBase_->isSameType(other);
   }
 }

@@ -25,7 +25,6 @@
 #include <manifolds/RefCounter.h>
 #include <manifolds/Point.h>
 #include <manifolds/ValidManifold.h>
-#include <manifolds/Manifold_Base.h>
 
 
 namespace mnf
@@ -43,17 +42,17 @@ namespace mnf
   /// representation space is denoted \f$\mathbb{E}\f$\n
   /// The map function is \f$ \phi:\mathbb{M},T^\mathbb{M}\to\mathbb{M}
   /// \f$ and the map function on a point \f$x\f$ is \f$ \phi_x:T_x^\mathbb{M}\to\mathbb{M}\f$
-  class Manifold_Base;
 
-  class MANIFOLDS_API Manifold  
+  class Manifold_Base : public RefCounter, public ValidManifold
   {
+    friend Manifold;
   public:
     /// \brief Default Constructor that sets the dimensions of the manifold and of its
     /// representation space
-    Manifold(Index dimension, Index tangentDimension, Index representationDimension);
+    Manifold_Base(Index dimension, Index tangentDimension, Index representationDimension);
 
     /// \brief The destructor
-    virtual ~Manifold();
+    virtual ~Manifold_Base();
 
     /// \brief CreatePoint allows to create a point that belongs to a manifold and that
     /// behaves according to the manifolds operations
@@ -252,9 +251,262 @@ namespace mnf
     /// compile-time.
     virtual long getTypeId() const = 0;
 
+  protected:
+    /// \brief Set manifold dimension to d
+    void setDimension(Index d);
+
+    /// \brief Set manifolds tangent space dimension to td
+    void setTangentDimension(Index td);
+
+    /// \brief Set manifolds representation space dimension to rd
+    void setRepresentationDimension(Index rd);
+
+    /// \brief Ensures that val in representation space in a point of M
+    virtual bool isInM_(const Eigen::VectorXd& val, double prec) const = 0;
+
+    /// \brief finds the closest point to \a in on \f$ \mathbb{M} \f$.
+    virtual void forceOnM_(RefVec out, const ConstRefVec& in) const = 0;
+
+    /// \brief Gets the manifolds dimension
+    template<int D>
+    Index getDim() const;
+
+    /// \brief Gets the dimension of submanifold of index i
+    template<int D>
+    Index getDim(size_t i) const;
+
+    /// \brief Gets the start index of submanifold of index i in a vector
+    /// representing an element of the manifold
+    /// templated by the type of view we want: Tangent space or representation
+    /// space
+    template<int D>
+    Index getStart(size_t i) const;
+
+    /// \brief Gets the start index of submanifold of index i in a vector
+    /// representing an element of the representation space of the manifold
+    virtual Index startR(size_t i) const;
+
+    /// \brief Gets the start index of submanifold of index i in a vector
+    /// representing an element of the tangent space of the manifold
+    virtual Index startT(size_t i) const;
+
+    virtual void createRandomPoint_(RefVec out, double coeff) const = 0;
+    virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
+    virtual void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const = 0;
+    virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const = 0;
+    virtual void setZero_(RefVec out) const = 0;
+    virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const = 0;
+    virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const = 0;
+    virtual Eigen::MatrixXd diffPseudoLog0_(const ConstRefVec& x) const = 0;
+    virtual void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const = 0;
+    virtual void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const = 0;
+    virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const = 0;
+    virtual void applyInvTransportOnTheRight_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const = 0;
+
+    virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const = 0;
+    virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const = 0;
+    virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const = 0;
+    virtual void getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const = 0;
+
+    virtual void limitMap_(RefVec out) const = 0;
+    virtual void getTypicalMagnitude_(RefVec out) const = 0;
+    virtual void getTrustMagnitude_(RefVec out) const = 0;
+
+    /// \brief tests if the manifold is locked, throwing an error if it is
+    void testLock() const;
+
+    /// \brief return a new copy of this manifold, including its instanceId.
+    /// Should only be used within the CartesianProduct to store a copy of
+    /// the manifold inside the std::vector.
+    virtual Manifold_ptr getNewCopy() const = 0;
+
+    /// \brief call the getNewCopy() method from any Manifold subclass.
+    static Manifold_ptr copyManifold(const Manifold& m);
+
+    /// \brief a value used to identify different instances at runtime
+    mutable long instanceId_;
+
   private:
-    std::shared_ptr<Manifold_Base> manifoldBase_;
+    /// \brief Name of the Manifold
+    std::string name_;
+
+    /// \brief dimension of the manifold
+    Index dimension_;
+
+    /// \brief dimension of the tangent space of the manifold
+    Index tangentDim_;
+
+    /// \brief dimension of the representation space of the manifold
+    Index representationDim_;
+
+    /// \brief a static counter used to generate the instanceId value
+    /// TODO: currently not used in a thread-safe way!
+    static long manifoldCounter_;
+
+    /// \brief if true, the manifold is locked
+    mutable bool lock_;
 
   };
+
+  template<int D>
+  inline Segment Manifold_Base::getView(RefVec val, size_t i) const
+  {
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+    mnf_assert(val.size() == getDim<D>());
+    return val.segment(getStart<D>(i), getDim<D>(i));
+  }
+
+  template<int D>
+  inline ConstSegment Manifold_Base::getConstView(const ConstRefVec& val, size_t i) const
+  {
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+    mnf_assert(val.size() == getDim<D>());
+    return val.segment(getStart<D>(i), getDim<D>(i));
+  }
+
+  template<>
+  inline Index Manifold_Base::getStart<R>(size_t i) const
+  {
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+    return startR(i);
+  }
+
+  template<>
+  inline Index Manifold_Base::getStart<T>(size_t i) const
+  {
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+    return startT(i);
+  }
+
+  template<>
+  inline Index Manifold_Base::getDim<R>() const
+  {
+    return representationDim();
+  }
+
+  template<>
+  inline Index Manifold_Base::getDim<T>() const
+  {
+    return tangentDim();
+  }
+
+  template<>
+  inline Index Manifold_Base::getDim<R>(size_t i) const
+  {
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+    return this->operator()(i).representationDim();
+  }
+
+  template<>
+  inline Index Manifold_Base::getDim<T>(size_t i) const
+  {
+    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+    return this->operator()(i).tangentDim();
+  }
+
+  inline Index Manifold_Base::startR(size_t /*i*/) const
+  {
+    //mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+    return 0;
+  }
+
+  inline Index Manifold_Base::startT(size_t /*i*/) const
+  {
+    //mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+    return 0;
+  }
+
+
+  template<int Dr, int Dc>
+  inline typename ViewReturnType<Dr, Dc>::Type Manifold_Base::getView(RefMat val, size_t i) const
+  {
+    return getView<Dr, Dc>(val, i, i);
+  }
+
+  template<int Dr, int Dc>
+  inline typename ConstViewReturnType<Dr, Dc>::Type Manifold_Base::getConstView(const ConstRefMat& val, size_t i) const
+  {
+    return getConstView<Dr, Dc>(val, i, i);
+  }
+
+  template<int Dr, int Dc>
+  inline typename ViewReturnType<Dr, Dc>::Type Manifold_Base::getView(RefMat val, size_t ir, size_t ic) const
+  {
+    return val.block(getStart<Dr>(ir),
+                     getStart<Dc>(ic),
+                     getDim<Dr>(ir),
+                     getDim<Dc>(ic));
+  }
+
+  template<int Dr, int Dc>
+  inline typename ConstViewReturnType<Dr, Dc>::Type Manifold_Base::getConstView(const ConstRefMat& val, size_t ir, size_t ic) const
+  {
+    return val.block(getStart<Dr>(ir),
+                     getStart<Dc>(ic),
+                     getDim<Dr>(ir),
+                     getDim<Dc>(ic));
+  }
+
+  template<>
+  inline typename ViewReturnType<F, R>::Type Manifold_Base::getView<F, R>(RefMat val, size_t, size_t ic) const
+  {
+    return val.middleCols(getStart<R>(ic), getDim<R>(ic));
+  }
+
+  template<>
+  inline typename ConstViewReturnType<F, R>::Type Manifold_Base::getConstView<F, R>(const ConstRefMat& val, size_t, size_t ic) const
+  {
+    return val.middleCols(getStart<R>(ic), getDim<R>(ic));
+  }
+
+  template<>
+  inline typename ViewReturnType<F, T>::Type Manifold_Base::getView<F, T>(RefMat val, size_t, size_t ic) const
+  {
+    return val.middleCols(getStart<T>(ic), getDim<T>(ic));
+  }
+
+  template<>
+  inline typename ConstViewReturnType<F, T>::Type Manifold_Base::getConstView<F, T>(const ConstRefMat& val, size_t, size_t ic) const
+  {
+    return val.middleCols(getStart<T>(ic), getDim<T>(ic));
+  }
+
+  template<>
+  inline typename ViewReturnType<R, F>::Type Manifold_Base::getView<R, F>(RefMat val, size_t ir, size_t) const
+  {
+    return val.middleRows(getStart<R>(ir), getDim<R>(ir));
+  }
+
+  template<>
+  inline typename ConstViewReturnType<R, F>::Type Manifold_Base::getConstView<R, F>(const ConstRefMat& val, size_t ir, size_t) const
+  {
+    return val.middleRows(getStart<R>(ir), getDim<R>(ir));
+  }
+
+  template<>
+  inline typename ViewReturnType<T, F>::Type Manifold_Base::getView<T, F>(RefMat val, size_t ir, size_t) const
+  {
+    return val.middleRows(getStart<T>(ir), getDim<T>(ir));
+  }
+
+  template<>
+  inline typename ConstViewReturnType<T, F>::Type Manifold_Base::getConstView<T, F>(const ConstRefMat& val, size_t ir, size_t) const
+  {
+    return val.middleRows(getStart<T>(ir), getDim<T>(ir));
+  }
+
+  template<>
+  inline typename ViewReturnType<F, F>::Type Manifold_Base::getView<F, F>(RefMat val, size_t, size_t) const
+  {
+    return val;
+  }
+
+  template<>
+  inline typename ConstViewReturnType<F, F>::Type Manifold_Base::getConstView<F, F>(const ConstRefMat& val, size_t, size_t) const
+  {
+    return val;
+  }
+
+}
 
 #endif //_MANIFOLDS_MANIFOLD_H_

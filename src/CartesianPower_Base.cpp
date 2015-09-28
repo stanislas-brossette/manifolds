@@ -19,9 +19,11 @@
 
 namespace mnf
 {
-  CartesianPower::CartesianPower(const Manifold& M, const int n)
-    : CartesianProduct()
+  CartesianPower_Base::CartesianPower_Base(const Manifold& M, const int n)
+    : CartesianProduct_Base()
   {
+    for (int i = 0; i < n; ++i)
+      this->multiply(M);
   }
 }
 
