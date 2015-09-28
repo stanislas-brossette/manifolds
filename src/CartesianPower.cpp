@@ -20,7 +20,7 @@
 namespace mnf
 {
   CartesianPower::CartesianPower(const Manifold& M, const int n)
-    : CartesianProduct()
+    : CartesianProduct(std::make_shared<CartesianPower_Base>(M, n))
   {
   }
 }

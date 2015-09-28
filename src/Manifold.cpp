@@ -26,6 +26,11 @@ namespace mnf
       manifoldBase_(make_shared<Manifold_Base>(dimension, tangentDimension, representationDimension))
   {}
 
+  Manifold(std::shared_ptr<Manifold_Base> m)
+    :
+      manifoldBase_(m)
+  {}
+
   Manifold::~Manifold()
   {
   }

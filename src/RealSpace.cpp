@@ -23,140 +23,71 @@
 namespace mnf
 {
   RealSpace::RealSpace(Index n)
-    : Manifold(n, n, n)
+    : Manifold(std::make_shared<RealSpace_Base>(n, n, n))
   {
   }
 
   RealSpace::RealSpace(Index n, double magnitude)
-    : Manifold(n, n, n)
+    : Manifold(std::make_shared<RealSpace_Base>(n, magnitude))
   {
   }
   RealSpace::RealSpace(Index n, const ConstRefVec& magnitude)
-    : Manifold(n, n, n)
-  {
-  }
-
-  bool RealSpace::isInM_(const Eigen::VectorXd& val , double ) const
-  {
-  }
-
-  void RealSpace::forceOnM_(RefVec out, const ConstRefVec& in) const
-  {
-  }
-
-  void RealSpace::getIdentityOnTxM_(RefMat out, const ConstRefVec&) const
+    : Manifold(std::make_shared<RealSpace_Base>(n, magnitude))
   {
   }
 
   size_t RealSpace::numberOfSubmanifolds() const
   {
+    return std::static_pointer_cast<RealSpace_Base>(manifoldBase_)->numberOfSubmanifolds();
   }
 
   bool RealSpace::isElementary() const
   {
+    return std::static_pointer_cast<RealSpace_Base>(manifoldBase_)->isElementary();
   }
 
   const Manifold& RealSpace::operator()(size_t i) const
   {
+    return std::static_pointer_cast<RealSpace_Base>(manifoldBase_)->operator()(i);
   }
 
   std::string RealSpace::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const
   {
-  }
-
-  void RealSpace::createRandomPoint_(RefVec out, double coeff) const
-  {
-  }
-
-  void RealSpace::retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
-  {
-  }
-
-  void RealSpace::pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
-  {
-  }
-
-  void RealSpace::pseudoLog0_(RefVec out, const ConstRefVec& x) const
-  {
-  }
-
-  void RealSpace::setZero_(RefVec out) const
-  {
-  }
-
-  Eigen::MatrixXd RealSpace::diffRetractation_(const ConstRefVec& ) const
-  {
-  }
-
-  void RealSpace::applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& ) const
-  {
-  }
-
-  Eigen::MatrixXd RealSpace::diffPseudoLog0_(const ConstRefVec&) const
-  {
-  }
-
-  void RealSpace::applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in, const ConstRefVec& ) const
-  {
-  }
-
-  void RealSpace::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& ) const
-  {
-  }
-
-  void RealSpace::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& ) const
-  {
-  }
-
-  void RealSpace::applyInvTransportOnTheRight_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec&) const
-  {
-  }
-
-  void RealSpace::tangentConstraint_(RefMat, const ConstRefVec&) const
-  {
-  }
-
-  bool RealSpace::isInTxM_(const ConstRefVec&, const ConstRefVec&, const double& ) const
-  {
-  }
-
-  void RealSpace::forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec&) const
-  {
-  }
-
-  void RealSpace::limitMap_(RefVec out) const
-  {
+    return std::static_pointer_cast<RealSpace_Base>(manifoldBase_)->toString(val, prefix, fmt);
   }
 
   void RealSpace::getTypicalMagnitude_(RefVec out) const
   {
+    return std::static_pointer_cast<RealSpace_Base>(manifoldBase_)->getTypicalMagnitude_(out);
   }
 
   void RealSpace::setTypicalMagnitude(double magnitude)
   {
+    return std::static_pointer_cast<RealSpace_Base>(manifoldBase_)->setTypicalMagnitude(magnitude);
   }
 
   void RealSpace::setTypicalMagnitude(const ConstRefVec& out)
   {
+    return std::static_pointer_cast<RealSpace_Base>(manifoldBase_)->setTypicalMagnitude(out);
   }
 
   void RealSpace::getTrustMagnitude_(RefVec out) const
   {
+    return std::static_pointer_cast<RealSpace_Base>(manifoldBase_)->getTrustMagnitude_(out);
   }
 
   void RealSpace::setTrustMagnitude(const double& magnitude)
   {
+    return std::static_pointer_cast<RealSpace_Base>(manifoldBase_)->setTrustMagnitude(magnitude);
   }
 
   void RealSpace::setTrustMagnitude(const ConstRefVec& out)
   {
+    return std::static_pointer_cast<RealSpace_Base>(manifoldBase_)->setTrustMagnitude(out);
   }
 
   long RealSpace::getTypeId() const
   {
-  }
-
-  Manifold_ptr RealSpace::getNewCopy() const
-  {
+    return std::static_pointer_cast<RealSpace_Base>(manifoldBase_)->getTypeId();
   }
 }

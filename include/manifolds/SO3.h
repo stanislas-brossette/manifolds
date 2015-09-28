@@ -27,6 +27,8 @@
 
 namespace mnf
 {
+  template<typename Map>
+  class SO3_Base<Map>;
   /// \brief Manifold representing the space of 3-dimensional rotations, also
   /// known as SO(3). It is templated by its map
   template<typename Map>
@@ -53,78 +55,90 @@ namespace mnf
   //Implementations of the methods
   template<typename Map>
   inline SO3<Map>::SO3()
-    : Manifold(3, Map::InputDim_, Map::OutputDim_)
+    : Manifold(std::make_shared<SO3_Base<Map> >())
   {
   }
   template<typename Map>
   inline SO3<Map>::SO3(double magnitude)
-    : Manifold(3, Map::InputDim_, Map::OutputDim_)
+    : Manifold(std::make_shared<SO3_Base<Map> >(magnitude))
   {
   }
   template<typename Map>
   inline SO3<Map>::SO3(const ConstRefVec& magnitude)
-    : Manifold(3, Map::InputDim_, Map::OutputDim_)
+    : Manifold(std::make_shared<SO3_Base<Map> >(magnitude))
   {
   }
 
   template<typename Map>
   inline size_t SO3<Map>::numberOfSubmanifolds() const
   {
+    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->numberOfSubmanifolds();
   }
 
   template<typename Map>
   inline bool SO3<Map>::isElementary() const
   {
+    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->isElementary();
   }
 
   template<typename Map>
   inline const Manifold& SO3<Map>::operator()(size_t i) const
   {
+    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->operator()(i);
   }
 
   template<typename Map>
   inline std::string SO3<Map>::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const
   {
+    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->toString(val, prefix, fmt);
   }
 
   template<typename Map>
   void SO3<Map>::createRandomPoint_(RefVec out, double coeff) const
   {
+    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->createRandomPoint_(out, coeff);
   }
 
   template<typename Map>
   void SO3<Map>::getTypicalMagnitude_(RefVec out) const
   {
+    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->getTypicalMagnitude_(out);
   }
 
   template<typename Map>
   void SO3<Map>::setTypicalMagnitude(double magnitude)
   {
+    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->setTypicalMagnitude(magnitude);
   }
 
   template<typename Map>
   void SO3<Map>::setTypicalMagnitude(const ConstRefVec& out)
   {
+    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->setTypicalMagnitude(out);
   }
 
   template<typename Map>
   void SO3<Map>::getTrustMagnitude_(RefVec out) const
   {
+    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->getTrustMagnitude_(out);
   }
 
   template<typename Map>
   void SO3<Map>::setTrustMagnitude(const double& magnitude)
   {
+    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->setTrustMagnitude(magnitude);
   }
 
   template<typename Map>
   void SO3<Map>::setTrustMagnitude(const ConstRefVec& out)
   {
+    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->setTrustMagnitude(out);
   }
 
   template<typename Map>
   long SO3<Map>::getTypeId() const
   {
+    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->getTypeId();
   }
 }
 #endif //_MANIFOLDS_SO3_H_

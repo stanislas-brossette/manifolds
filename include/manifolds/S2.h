@@ -25,6 +25,8 @@
 
 namespace mnf
 {
+  class S2_Base;
+
   /// \brief Manifold representing the 3-dimensional Sphere, also
   /// known as S2.
   /// All the equations in this class are provided by Manopt

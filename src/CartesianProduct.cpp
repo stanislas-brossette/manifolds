@@ -22,45 +22,52 @@
 namespace mnf
 {
   CartesianProduct::CartesianProduct()
-    : Manifold(0,0,0)
+    : Manifold(std::make_shared<CartesianProduct_Base>())
   {
   }
 
   CartesianProduct::CartesianProduct(const std::initializer_list<Manifold*> m)
-    : Manifold(0,0,0)
+    : Manifold(std::make_shared<CartesianProduct_Base>(m))
   {
   }
 
   CartesianProduct::CartesianProduct(const Manifold& m1, const Manifold& m2)
-    : Manifold(0,0,0)
+    : Manifold(std::make_shared<CartesianProduct_Base>(m1, m2))
   {
   }
 
   void CartesianProduct::getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const
   {
+    return std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->getIdentityOnTxM_(out, x);
   }
 
   CartesianProduct& CartesianProduct::multiply(const Manifold& m)
   {
+    return std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->multiply(m);
   }
 
   size_t CartesianProduct::numberOfSubmanifolds() const
   {
+    return std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->numberOfSubmanifolds();
   }
 
   bool CartesianProduct::isElementary() const
   {
+    return std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->isElementary();
   }
 
   void CartesianProduct::display(const std::string& prefix) const
   {
+    return std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->display(prefix);
   }
 
   const Manifold& CartesianProduct::operator()(const size_t i) const
   {
+    return std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->operator();
   }
 
   std::string CartesianProduct::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const
   {
+    return std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->toString(val, prefix, fmt);
   }
 }

@@ -23,6 +23,7 @@
 
 namespace mnf
 {
+  class CartesianPower_Base;
   /// \brief Manifold representing the cartesian product of n times the same manifold
   class MANIFOLDS_API CartesianPower : public CartesianProduct
   {

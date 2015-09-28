@@ -25,6 +25,7 @@
 
 namespace mnf
 {
+  class RealSpace_Base;
   /// \brief Manifold representing the space of real numbers of dimension n
   /// \f$\mathbb{R}^n\f$
   class MANIFOLDS_API RealSpace: public Manifold

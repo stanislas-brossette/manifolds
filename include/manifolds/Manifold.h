@@ -30,6 +30,8 @@
 
 namespace mnf
 {
+  class Manifold_Base;
+
   /// \brief The Manifold Class represents a manifold. It contains the implementations of
   /// the basic operations on it, like external addition, internal substraction,
   /// Translation from tangent space to representation space and back, derivatives
@@ -43,14 +45,14 @@ namespace mnf
   /// representation space is denoted \f$\mathbb{E}\f$\n
   /// The map function is \f$ \phi:\mathbb{M},T^\mathbb{M}\to\mathbb{M}
   /// \f$ and the map function on a point \f$x\f$ is \f$ \phi_x:T_x^\mathbb{M}\to\mathbb{M}\f$
-  class Manifold_Base;
-
   class MANIFOLDS_API Manifold  
   {
   public:
     /// \brief Default Constructor that sets the dimensions of the manifold and of its
     /// representation space
     Manifold(Index dimension, Index tangentDimension, Index representationDimension);
+
+    Manifold(std::shared_ptr<Manifold_Base> m);
 
     /// \brief The destructor
     virtual ~Manifold();
