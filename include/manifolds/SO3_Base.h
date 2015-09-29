@@ -26,6 +26,8 @@
 
 namespace mnf
 {
+  class SO3;
+
   /// \brief Manifold representing the space of 3-dimensional rotations, also
   /// known as SO(3). It is templated by its map
   template<typename Map>

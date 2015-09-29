@@ -17,22 +17,23 @@
 
 #include <manifolds/defs.h>
 #include <manifolds/CartesianProduct.h>
+#include <manifolds/CartesianProduct_Base.h>
 #include <manifolds/mnf_assert.h>
 
 namespace mnf
 {
   CartesianProduct::CartesianProduct()
-    : Manifold(std::make_shared<CartesianProduct_Base>())
+    : Manifold(new CartesianProduct_Base)
   {
   }
 
   CartesianProduct::CartesianProduct(const std::initializer_list<Manifold*> m)
-    : Manifold(std::make_shared<CartesianProduct_Base>(m))
+    : Manifold(new CartesianProduct_Base(m))
   {
   }
 
   CartesianProduct::CartesianProduct(const Manifold& m1, const Manifold& m2)
-    : Manifold(std::make_shared<CartesianProduct_Base>(m1, m2))
+    : Manifold(new CartesianProduct_Base(m1, m2))
   {
   }
 

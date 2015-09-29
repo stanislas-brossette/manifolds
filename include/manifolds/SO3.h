@@ -141,3 +141,4 @@ namespace mnf
     return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->getTypeId();
   }
 }
+

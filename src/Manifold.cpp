@@ -16,17 +16,13 @@
 // <http://www.gnu.org/licenses/>.
 
 #include <stdexcept>
+
 #include <manifolds/Manifold.h>
 #include <manifolds/mnf_assert.h>
 
 namespace mnf
 {
-  Manifold::Manifold(Index dimension, Index tangentDimension, Index representationDimension)
-    :   
-      manifoldBase_(make_shared<Manifold_Base>(dimension, tangentDimension, representationDimension))
-  {}
-
-  Manifold(std::shared_ptr<Manifold_Base> m)
+  Manifold::Manifold(std::shared_ptr<Manifold_Base> m)
     :
       manifoldBase_(m)
   {}
@@ -177,7 +173,7 @@ namespace mnf
 
   Eigen::VectorXd Manifold::getTypicalMagnitude() const
   {
-    return manifoldBase_->VectorXd Manifold::getTypicalMagnitude();
+    return manifoldBase_->getTypicalMagnitude();
   }
 
   void Manifold::getTrustMagnitude(RefVec out) const
@@ -187,7 +183,7 @@ namespace mnf
 
   Eigen::VectorXd Manifold::getTrustMagnitude() const
   {
-    return manifoldBase_->VectorXd Manifold::getTrustMagnitude();
+    return manifoldBase_->getTrustMagnitude();
   }
 
   void Manifold::lock() const
@@ -217,6 +213,32 @@ namespace mnf
 
   bool Manifold::isSameType(const Manifold& other) const
   {
-    return manifoldBase_->isSameType(other);
+    return manifoldBase_->isSameType(*(other.manifoldBase_));
   }
+ 
+  bool Manifold::isElementary() const
+  {
+    return manifoldBase_->isElementary();
+  }
+
+  size_t Manifold::numberOfSubmanifolds() const
+  {
+    return manifoldBase_->numberOfSubmanifolds();
+  }
+
+  Manifold Manifold::operator()(size_t i) const
+  {
+    return Manifold(std::const_pointer_cast<Manifold_Base>(manifoldBase_->operator()(i)));
+  }
+
+  long Manifold::getTypeId() const
+  {
+    return manifoldBase_->getTypeId();
+  }
+
+  std::string Manifold::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const
+  {
+  return manifoldBase_->toString(val, prefix, fmt);
+  }
+
 }

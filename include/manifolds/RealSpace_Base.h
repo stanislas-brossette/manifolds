@@ -24,6 +24,8 @@
 
 namespace mnf
 {
+  class RealSpace;
+
   /// \brief Manifold representing the space of real numbers of dimension n
   /// \f$\mathbb{R}^n\f$
   class RealSpace_Base: public Manifold_Base
@@ -37,7 +39,7 @@ namespace mnf
     RealSpace_Base(Index n, const ConstRefVec& magnitude);
 
     virtual size_t numberOfSubmanifolds() const;
-    virtual const Manifold_Base& operator()(size_t i) const;
+    virtual std::shared_ptr<const Manifold_Base> operator()(size_t i) const;
 
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
     virtual void getTypicalMagnitude_(RefVec out) const;

@@ -28,6 +28,8 @@
 
 namespace mnf
 {
+  class CartesianProduct;
+
   /// \brief Manifold representing the cartesian product of several submanifolds
   class CartesianProduct_Base : public Manifold_Base
   {

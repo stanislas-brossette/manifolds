@@ -53,10 +53,10 @@ CartesianProduct* buildProduct()
   return M;
 }
 
-BOOST_AUTO_TEST_CASE(ManifoldIsValid)
-{
-  CHECK_NO_THROW_IN_DEBUG(buildProduct()->getZero(), mnf::mnf_exception);
-}
+//BOOST_AUTO_TEST_CASE(ManifoldIsValid)
+//{
+  //CHECK_NO_THROW_IN_DEBUG(buildProduct()->getZero(), mnf::mnf_exception);
+//}
 
 Point createR3Point()
 {
@@ -64,7 +64,7 @@ Point createR3Point()
   return R3.createPoint();
 }
 
-BOOST_AUTO_TEST_CASE(ManifoldRefCounter)
-{
-  CHECK_THROW_IN_DEBUG(createR3Point(), mnf::mnf_exception);
-}
+//BOOST_AUTO_TEST_CASE(ManifoldRefCounter)
+//{
+  //CHECK_THROW_IN_DEBUG(createR3Point(), mnf::mnf_exception);
+//}

@@ -23,16 +23,16 @@
 namespace mnf
 {
   RealSpace::RealSpace(Index n)
-    : Manifold(std::make_shared<RealSpace_Base>(n, n, n))
+    : Manifold(std::shared_ptr<Manifold_Base>(new RealSpace_Base(n)))
   {
   }
 
   RealSpace::RealSpace(Index n, double magnitude)
-    : Manifold(std::make_shared<RealSpace_Base>(n, magnitude))
+    : Manifold(std::shared_ptr<Manifold_Base>(new RealSpace_Base(n, magnitude)))
   {
   }
   RealSpace::RealSpace(Index n, const ConstRefVec& magnitude)
-    : Manifold(std::make_shared<RealSpace_Base>(n, magnitude))
+    : Manifold(std::shared_ptr<Manifold_Base>(new RealSpace_Base(n, magnitude)))
   {
   }
 
@@ -46,9 +46,9 @@ namespace mnf
     return std::static_pointer_cast<RealSpace_Base>(manifoldBase_)->isElementary();
   }
 
-  const Manifold& RealSpace::operator()(size_t i) const
+  Manifold RealSpace::operator()(size_t i) const
   {
-    return std::static_pointer_cast<RealSpace_Base>(manifoldBase_)->operator()(i);
+    return makeManifold(std::const_pointer_cast<Manifold_Base>(manifoldBase_->operator()(i)));;
   }
 
   std::string RealSpace::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const

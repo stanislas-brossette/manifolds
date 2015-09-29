@@ -20,11 +20,11 @@
 #include <iostream>
 #include <manifolds/defs.h>
 #include <manifolds/Manifold.h>
+#include <manifolds/RealSpace_Base.h>
 #include <manifolds/utils.h>
 
 namespace mnf
 {
-  class RealSpace_Base;
   /// \brief Manifold representing the space of real numbers of dimension n
   /// \f$\mathbb{R}^n\f$
   class MANIFOLDS_API RealSpace: public Manifold
@@ -37,7 +37,7 @@ namespace mnf
     RealSpace(Index n, const ConstRefVec& magnitude);
 
     virtual size_t numberOfSubmanifolds() const;
-    virtual const Manifold& operator()(size_t i) const;
+    virtual Manifold operator()(size_t i) const;
 
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
     virtual void getTypicalMagnitude_(RefVec out) const;

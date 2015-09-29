@@ -21,12 +21,13 @@
 
 namespace mnf
 {
+  class Manifold;
   class Manifold_Base;
 
   class MANIFOLDS_API ConstSubPoint
   {
   protected:
-    ConstSubPoint(const Manifold_Base& M, const ConstRefVec& val);
+    ConstSubPoint(std::shared_ptr<const Manifold_Base> M, const ConstRefVec& val);
 
   public:
     ConstSubPoint(const ConstSubPoint&);
@@ -47,17 +48,17 @@ namespace mnf
     //P[i] is equivalent to P(i).value()
     ConstSegment operator[](size_t i) const;
 
-    const Manifold_Base& getManifold() const;
+    std::shared_ptr<const Manifold_Base> getManifold() const;
     const Eigen::IOFormat& format() const;
 
     std::string toString(std::string& prefix, const Eigen::IOFormat& fmt) const; //Dislays point in representation space
 
-  private:
-    void registerPoint();
-    void unregisterPoint();
+  //private:
+    //void registerPoint();
+    //void unregisterPoint();
 
   protected:
-    const Manifold_Base& manifold_;
+    std::shared_ptr<const Manifold_Base> manifold_;
 
     /// \internal We keep value as a non const reference here for easy use in SubPoint. 
     /// This require a const_cast upon building ConstSubPoint, however we honor the
@@ -66,13 +67,13 @@ namespace mnf
     mutable Eigen::IOFormat format_;
 
     friend inline std::ostream& operator<< (std::ostream& os, const ConstSubPoint& x);
-    friend class RefCounter;
+    //friend class RefCounter;
   };
 
   class MANIFOLDS_API SubPoint : public ConstSubPoint
   {
   protected:
-    SubPoint(const Manifold_Base& M, RefVec val);
+    SubPoint(std::shared_ptr<const Manifold_Base> M, RefVec val);
 
   public:
     SubPoint(const SubPoint&);
@@ -112,9 +113,11 @@ namespace mnf
 
   class MANIFOLDS_API Point : public PointMemory, public SubPoint
   {
+    friend class Manifold_Base;
+
   private:  //only Manifold can create Point
-    Point(const Manifold_Base& M);
-    Point(const Manifold_Base& M, const ConstRefVec& val);
+    Point(std::shared_ptr<const Manifold_Base> M);
+    Point(std::shared_ptr<const Manifold_Base> M, const ConstRefVec& val);
 
   public:
     Point(const Point& other);
@@ -183,8 +186,6 @@ namespace mnf
     void applyInvTransport(RefMat out, const ConstRefMat& in, const ConstRefVec& v) const;
 
     virtual const Point& format(const Eigen::IOFormat& fmt) const;
-
-    friend class Manifold_Base;
   };
 
   MANIFOLDS_API Point operator+(const Point& x, const ConstRefVec& v);

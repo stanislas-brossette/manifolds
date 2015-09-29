@@ -26,9 +26,9 @@
 #include <Eigen/Core>
 
 #include <manifolds/mnf_assert.h>
-#include <manifolds/RealSpace.h>
-#include <manifolds/SO3.h>
-#include <manifolds/CartesianProduct.h>
+#include <manifolds/RealSpace_Base.h>
+#include <manifolds/SO3_Base.h>
+#include <manifolds/CartesianProduct_Base.h>
 #include <manifolds/Point.h>
 #include <manifolds/ExpMapMatrix.h>
 #include <manifolds/ReusableTemporaryMap.h>
@@ -37,7 +37,7 @@ using namespace mnf;
 
 void LifeAndDeathOfAPoint()
 {
-  RealSpace R3(3);
+  RealSpace_Base R3(3);
   Point x = R3.createPoint();
 }
 

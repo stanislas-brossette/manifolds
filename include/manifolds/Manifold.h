@@ -18,19 +18,18 @@
 #pragma once
 
 #include <iostream>
+
 #include <Eigen/Core>
+
 #include <manifolds/defs.h>
 #include <manifolds/view.h>
-#include <manifolds/RefCounter.h>
+//#include <manifolds/RefCounter.h>
 #include <manifolds/Point.h>
-#include <manifolds/ValidManifold.h>
+//#include <manifolds/ValidManifold.h>
 #include <manifolds/Manifold_Base.h>
-
 
 namespace mnf
 {
-  class Manifold_Base;
-
   /// \brief The Manifold Class represents a manifold. It contains the implementations of
   /// the basic operations on it, like external addition, internal substraction,
   /// Translation from tangent space to representation space and back, derivatives
@@ -47,11 +46,11 @@ namespace mnf
   class MANIFOLDS_API Manifold  
   {
   protected:
-    /// \brief Default Constructor that sets the dimensions of the manifold and of its
-    /// representation space
-    Manifold(Index dimension, Index tangentDimension, Index representationDimension);
-
     Manifold(std::shared_ptr<Manifold_Base> m);
+    static Manifold makeManifold(std::shared_ptr<Manifold_Base> m)
+    {
+      return Manifold(m);
+    }
 
   public:
     /// \brief The destructor
@@ -91,17 +90,17 @@ namespace mnf
     Index representationDim() const;
 
     /// \brief Returns True if the manifold is an elementary manyfold, false otherwise
-    virtual bool isElementary() const = 0;
+    virtual bool isElementary() const;
 
     /// \brief Displays a description of the manifold
     virtual void display(const std::string& prefix = "") const;
 
     /// \brief Returns the number of submanifolds that compose the manifold
-    virtual size_t numberOfSubmanifolds() const = 0;
+    virtual size_t numberOfSubmanifolds() const;
 
     /// \brief Returns a pointer on the submanifold of index i if it exists
     /// Only useful with composed Manifolds
-    virtual const Manifold& operator()(size_t i) const = 0;
+    virtual Manifold operator()(size_t i) const;
 
     //view
     /// \brief Returns a view of vector val as seen as an element of submanifold i.
@@ -121,7 +120,7 @@ namespace mnf
     bool isLocked() const;
 
     /// \brief Converts val to string for pretty printing
-    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const = 0;
+    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
 
     //map operations
     //The following operations are public and make call to their private version
@@ -252,9 +251,9 @@ namespace mnf
     /// \brief returns an id that should be unique to each manifold class.
     /// Use utils::hash::computeHash("some_string") to generate an ID at
     /// compile-time.
-    virtual long getTypeId() const = 0;
+    virtual long getTypeId() const;
 
-  private:
+  protected:
     std::shared_ptr<Manifold_Base> manifoldBase_;
 
   };

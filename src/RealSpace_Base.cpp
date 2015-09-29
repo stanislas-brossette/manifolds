@@ -23,7 +23,7 @@
 namespace mnf
 {
   RealSpace_Base::RealSpace_Base(Index n)
-    : Manifold(n, n, n)
+    : Manifold_Base(n, n, n)
   {
     name() = "R" + std::to_string( n );
     typicalMagnitude_.resize(n);
@@ -34,7 +34,7 @@ namespace mnf
   }
 
   RealSpace_Base::RealSpace_Base(Index n, double magnitude)
-    : Manifold(n, n, n)
+    : Manifold_Base(n, n, n)
   {
     name() = "R" + std::to_string( n );
     typicalMagnitude_.resize(n);
@@ -44,7 +44,7 @@ namespace mnf
     setTrustMagnitude(temp);
   }
   RealSpace_Base::RealSpace_Base(Index n, const ConstRefVec& magnitude)
-    : Manifold(n, n, n)
+    : Manifold_Base(n, n, n)
   {
     mnf_assert(magnitude.size() == n && "magnitude on R^n must be of size n");
     name() = "R" + std::to_string( n );
@@ -80,10 +80,9 @@ namespace mnf
     return true;
   }
 
-  const Manifold& RealSpace_Base::operator()(size_t i) const
+  std::shared_ptr<const Manifold_Base> RealSpace_Base::operator()(size_t ) const
   {
-    mnf_assert(i < 1 && "invalid index");
-    return *this;
+    return shared_from_this();
   }
 
   std::string RealSpace_Base::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const
@@ -213,9 +212,9 @@ namespace mnf
     return typeId;
   }
 
-  Manifold_ptr RealSpace_Base::getNewCopy() const
+  Manifold_Base_ptr RealSpace_Base::getNewCopy() const
   {
-    RealSpace_ptr copy(new RealSpace_Base(*this));
+    RealSpace_Base_ptr copy(new RealSpace_Base(*this));
     copy->instanceId_ = this->instanceId_;
 
     return copy;

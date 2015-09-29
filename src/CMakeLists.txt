@@ -16,27 +16,27 @@
 ## <http://www.gnu.org/licenses/>.
 
 set(SOURCES
-  CartesianProduct.cpp
-  CartesianProduct_Base.cpp
-  CartesianPower.cpp
-  CartesianPower_Base.cpp
-  ExpMapMatrix.cpp
-  ExpMapQuaternion.cpp
+  #CartesianProduct.cpp
+  #CartesianProduct_Base.cpp
+  #CartesianPower.cpp
+  #CartesianPower_Base.cpp
+  #ExpMapMatrix.cpp
+  #ExpMapQuaternion.cpp
   Manifold.cpp
   Manifold_Base.cpp
   Point.cpp
   RealSpace.cpp
   RealSpace_Base.cpp
   ReusableTemporaryMap.cpp
-  S2.cpp
-  S2_Base.cpp
+  #S2.cpp
+  #S2_Base.cpp
   utils.cpp
   )
 set(HEADERS
-  ../include/manifolds/CartesianProduct.h
-  ../include/manifolds/CartesianProduct_Base.h
-  ../include/manifolds/CartesianPower.h
-  ../include/manifolds/CartesianPower_Base.h
+  #../include/manifolds/CartesianProduct.h
+  #../include/manifolds/CartesianProduct_Base.h
+  #../include/manifolds/CartesianPower.h
+  #../include/manifolds/CartesianPower_Base.h
   ../include/manifolds/defs.h
   ../include/manifolds/ExpMapMatrix.h
   ../include/manifolds/ExpMapQuaternion.h
@@ -47,14 +47,14 @@ set(HEADERS
   ../include/manifolds/RealSpace.h
   ../include/manifolds/RealSpace_Base.h
   ../include/manifolds/ReusableTemporaryMap.h
-  ../include/manifolds/SO3.h
-  ../include/manifolds/SO3_Base.h
-  ../include/manifolds/S2.h
-  ../include/manifolds/S2_Base.h
+  #../include/manifolds/SO3.h
+  #../include/manifolds/SO3_Base.h
+  #../include/manifolds/S2.h
+  #../include/manifolds/S2_Base.h
   ../include/manifolds/utils.h
   ../include/manifolds/view.h
-  ../include/manifolds/RefCounter.h
-  ../include/manifolds/ValidManifold.h
+  #../include/manifolds/RefCounter.h
+  #../include/manifolds/ValidManifold.h
   ../include/manifolds/manifolds_api.h
 )
 
@@ -90,5 +90,5 @@ endif()
 
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/manifolds)
 
-add_executable(ManifoldsExe main.cpp)
-target_link_libraries(ManifoldsExe manifolds)
+#add_executable(ManifoldsExe main.cpp)
+#target_link_libraries(ManifoldsExe manifolds)

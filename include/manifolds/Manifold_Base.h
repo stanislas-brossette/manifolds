@@ -21,13 +21,17 @@
 #include <Eigen/Core>
 #include <manifolds/defs.h>
 #include <manifolds/view.h>
-#include <manifolds/RefCounter.h>
 #include <manifolds/Point.h>
-#include <manifolds/ValidManifold.h>
+#include <manifolds/mnf_assert.h>
+//#include <manifolds/RefCounter.h>
+//#include <manifolds/ValidManifold.h>
 
 
 namespace mnf
 {
+  class Manifold;
+  class RealSpace;
+
   /// \brief The Manifold Class represents a manifold. It contains the implementations of
   /// the basic operations on it, like external addition, internal substraction,
   /// Translation from tangent space to representation space and back, derivatives
@@ -41,10 +45,21 @@ namespace mnf
   /// representation space is denoted \f$\mathbb{E}\f$\n
   /// The map function is \f$ \phi:\mathbb{M},T^\mathbb{M}\to\mathbb{M}
   /// \f$ and the map function on a point \f$x\f$ is \f$ \phi_x:T_x^\mathbb{M}\to\mathbb{M}\f$
-
-  class Manifold_Base : public RefCounter, public ValidManifold
+  class Manifold_Base : public std::enable_shared_from_this<Manifold_Base>
+                          // : public RefCounter, public ValidManifold
   {
     friend Manifold;
+    friend RealSpace;
+    friend ConstSubPoint;
+    friend SubPoint;
+    friend Point;
+    friend Point operator+(const Point& x, const ConstRefVec& v);
+    friend Eigen::VectorXd operator-(const Point& x, const Point& y);
+
+  public:
+    /// \brief Returns the dimension of the representation space of the manifold
+    Index representationDim() const;
+
   protected:
     /// \brief Default Constructor that sets the dimensions of the manifold and of its
     /// representation space
@@ -83,9 +98,6 @@ namespace mnf
     /// i.e. T_x\mathbb{M} is seen as a subspace of \f$ \mathbb{R}^t \f$
     Index tangentDim() const;
 
-    /// \brief Returns the dimension of the representation space of the manifold
-    Index representationDim() const;
-
     /// \brief Returns True if the manifold is an elementary manyfold, false otherwise
     virtual bool isElementary() const = 0;
 
@@ -97,7 +109,7 @@ namespace mnf
 
     /// \brief Returns a pointer on the submanifold of index i if it exists
     /// Only useful with composed Manifolds
-    virtual const Manifold_Base& operator()(size_t i) const = 0;
+    virtual std::shared_ptr<const Manifold_Base> operator()(size_t i) const = 0;
 
     //view
     /// \brief Returns a view of vector val as seen as an element of submanifold i.
@@ -393,14 +405,14 @@ namespace mnf
   inline Index Manifold_Base::getDim<R>(size_t i) const
   {
     mnf_assert(i < numberOfSubmanifolds() && "invalid index");
-    return this->operator()(i).representationDim();
+    return this->operator()(i)->representationDim();
   }
 
   template<>
   inline Index Manifold_Base::getDim<T>(size_t i) const
   {
     mnf_assert(i < numberOfSubmanifolds() && "invalid index");
-    return this->operator()(i).tangentDim();
+    return this->operator()(i)->tangentDim();
   }
 
   inline Index Manifold_Base::startR(size_t /*i*/) const
