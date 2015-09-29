@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_UTILS_H_
-#define _MANIFOLDS_UTILS_H_
+#pragma once
 
 #include <manifolds/defs.h>
 
@@ -172,4 +171,3 @@ namespace utils
 #define constexpr
 #endif
 
-#endif //_MANIFOLDS_UTILS_H_

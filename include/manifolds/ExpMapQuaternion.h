@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_EXPMAPQUATERNION_H_
-#define _MANIFOLDS_EXPMAPQUATERNION_H_
+#pragma once
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
@@ -95,4 +94,3 @@ namespace mnf
 
 
 
-#endif //_MANIFOLDS_EXPMAPQUATERNION_H_

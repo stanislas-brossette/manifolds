@@ -15,13 +15,11 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_S2_H_
-#define _MANIFOLDS_S2_H_
+#pragma once
 #include <stdexcept>
 
 #include <manifolds/defs.h>
 #include <manifolds/Manifold_Base.h>
-#include <manifolds/S2.h>
 #include <manifolds/utils.h>
 
 namespace mnf
@@ -29,16 +27,16 @@ namespace mnf
   /// \brief Manifold representing the 3-dimensional Sphere, also
   /// known as S2.
   /// All the equations in this class are provided by Manopt
-  class S2_Base : public Manifold
+  class S2_Base : public Manifold_Base
   {
     friend S2;
-  public:
+  private:
     S2_Base();
     S2_Base(double trustMagnitude);
     S2_Base(const ConstRefVec& trustMagnitude);
 
     virtual size_t numberOfSubmanifolds() const;
-    virtual const Manifold& operator()(size_t i) const;
+    virtual const Manifold_Base& operator()(size_t i) const;
 
     virtual void createRandomPoint_(RefVec out, double coeff) const;
 
@@ -85,11 +83,10 @@ namespace mnf
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
     virtual void limitMap_(RefVec out) const;
 
-    virtual Manifold_ptr getNewCopy() const;
+    virtual Manifold_Base_ptr getNewCopy() const;
 
   private:
     Eigen::Vector3d typicalMagnitude_;
     Eigen::Vector3d trustMagnitude_;
   };
 }
-#endif //_MANIFOLDS_S2_H_

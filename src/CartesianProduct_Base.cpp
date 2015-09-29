@@ -22,15 +22,15 @@
 namespace mnf
 {
   CartesianProduct_Base::CartesianProduct_Base()
-    : Manifold(0,0,0)
+    : Manifold_Base(0,0,0)
   {
     startIndexT_.push_back(0);
     startIndexR_.push_back(0);
     name() = "";
   }
 
-  CartesianProduct_Base::CartesianProduct_Base(const std::initializer_list<Manifold*> m)
-    : Manifold(0,0,0)
+  CartesianProduct_Base::CartesianProduct_Base(const std::initializer_list<Manifold_Base*> m)
+    : Manifold_Base(0,0,0)
   {
     startIndexT_.push_back(0);
     startIndexR_.push_back(0);
@@ -39,8 +39,8 @@ namespace mnf
       multiply(*(mi));
   }
 
-  CartesianProduct_Base::CartesianProduct_Base(const Manifold& m1, const Manifold& m2)
-    : Manifold(0,0,0)
+  CartesianProduct_Base::CartesianProduct_Base(const Manifold_Base& m1, const Manifold_Base& m2)
+    : Manifold_Base(0,0,0)
   {
     startIndexT_.push_back(0);
     startIndexR_.push_back(0);
@@ -78,7 +78,7 @@ namespace mnf
     }
   }
 
-  CartesianProduct_Base& CartesianProduct_Base::multiply(const Manifold& m)
+  CartesianProduct_Base& CartesianProduct_Base::multiply(const Manifold_Base& m)
   {
     testLock();
     m.lock();
@@ -88,7 +88,7 @@ namespace mnf
     setDimension(dim() + m.dim());
     setTangentDimension(tangentDim() + m.tangentDim());
     setRepresentationDimension(representationDim() + m.representationDim());
-    submanifolds_.push_back(std::shared_ptr<const Manifold>(copyManifold(m)));
+    submanifolds_.push_back(std::shared_ptr<const Manifold_Base>(copyManifold(m)));
     startIndexT_.push_back(startIndexT_.back() + m.tangentDim());
     startIndexR_.push_back(startIndexR_.back() + m.representationDim());
     return *this;
@@ -119,7 +119,7 @@ namespace mnf
     }
   }
 
-  const Manifold& CartesianProduct_Base::operator()(const size_t i) const
+  const Manifold_Base& CartesianProduct_Base::operator()(const size_t i) const
   {
     mnf_assert(i < submanifolds_.size() && "invalid index");
     return *submanifolds_[i];
@@ -306,9 +306,9 @@ namespace mnf
     return utils::hash::computeHash("CartesianProduct_Base");
   }
 
-  Manifold_ptr CartesianProduct_Base::getNewCopy() const
+  Manifold_Base_ptr CartesianProduct_Base::getNewCopy() const
   {
-    CartesianProduct_ptr copy(new CartesianProduct_Base(*this));
+    CartesianProduct_Base_ptr copy(new CartesianProduct_Base(*this));
     copy->instanceId_ = this->instanceId_;
 
     return copy;

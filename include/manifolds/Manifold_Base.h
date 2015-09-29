@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_MANIFOLD_H_
-#define _MANIFOLDS_MANIFOLD_H_
+#pragma once
 
 #include <iostream>
 #include <Eigen/Core>
@@ -46,7 +45,7 @@ namespace mnf
   class Manifold_Base : public RefCounter, public ValidManifold
   {
     friend Manifold;
-  public:
+  protected:
     /// \brief Default Constructor that sets the dimensions of the manifold and of its
     /// representation space
     Manifold_Base(Index dimension, Index tangentDimension, Index representationDimension);
@@ -98,7 +97,7 @@ namespace mnf
 
     /// \brief Returns a pointer on the submanifold of index i if it exists
     /// Only useful with composed Manifolds
-    virtual const Manifold& operator()(size_t i) const = 0;
+    virtual const Manifold_Base& operator()(size_t i) const = 0;
 
     //view
     /// \brief Returns a view of vector val as seen as an element of submanifold i.
@@ -244,7 +243,7 @@ namespace mnf
 
     /// \brief Compares this manifold to another one using the identifier
     /// unique to each class implemented in getTypeId().
-    virtual bool isSameType(const Manifold& other) const;
+    virtual bool isSameType(const Manifold_Base& other) const;
 
     /// \brief returns an id that should be unique to each manifold class.
     /// Use utils::hash::computeHash("some_string") to generate an ID at
@@ -318,10 +317,10 @@ namespace mnf
     /// \brief return a new copy of this manifold, including its instanceId.
     /// Should only be used within the CartesianProduct to store a copy of
     /// the manifold inside the std::vector.
-    virtual Manifold_ptr getNewCopy() const = 0;
+    virtual Manifold_Base_ptr getNewCopy() const = 0;
 
     /// \brief call the getNewCopy() method from any Manifold subclass.
-    static Manifold_ptr copyManifold(const Manifold& m);
+    static Manifold_Base_ptr copyManifold(const Manifold_Base& m);
 
     /// \brief a value used to identify different instances at runtime
     mutable long instanceId_;
@@ -509,4 +508,3 @@ namespace mnf
 
 }
 
-#endif //_MANIFOLDS_MANIFOLD_H_

@@ -15,12 +15,10 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_REAL_SPACE_H_
-#define _MANIFOLDS_REAL_SPACE_H_
+#pragma once
 
 #include <iostream>
 #include <manifolds/defs.h>
-#include <manifolds/RealSpace.h>
 #include <manifolds/Manifold_Base.h>
 #include <manifolds/utils.h>
 
@@ -31,7 +29,7 @@ namespace mnf
   class RealSpace_Base: public Manifold_Base
   {
     friend RealSpace;
-  public:
+  private:
     /// \brief Constructor
     /// \param n the dimension of the realspace \f$\mathbb{R}^n\f$
     RealSpace_Base(Index n);
@@ -39,7 +37,7 @@ namespace mnf
     RealSpace_Base(Index n, const ConstRefVec& magnitude);
 
     virtual size_t numberOfSubmanifolds() const;
-    virtual const Manifold& operator()(size_t i) const;
+    virtual const Manifold_Base& operator()(size_t i) const;
 
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
     virtual void getTypicalMagnitude_(RefVec out) const;
@@ -74,7 +72,7 @@ namespace mnf
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec&x) const;
     virtual void limitMap_(RefVec out) const;
 
-    virtual Manifold_ptr getNewCopy() const;
+    virtual Manifold_Base_ptr getNewCopy() const;
 
   private:
     Eigen::VectorXd typicalMagnitude_;
@@ -83,4 +81,3 @@ namespace mnf
   };
 }
 
-#endif //_MANIFOLDS_REAL_SPACE_H_

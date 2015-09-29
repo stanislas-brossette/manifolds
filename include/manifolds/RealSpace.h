@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_REAL_SPACE_H_
-#define _MANIFOLDS_REAL_SPACE_H_
+#pragma once
 
 #include <iostream>
 #include <manifolds/defs.h>
@@ -53,4 +52,3 @@ namespace mnf
   };
 }
 
-#endif //_MANIFOLDS_REAL_SPACE_H_

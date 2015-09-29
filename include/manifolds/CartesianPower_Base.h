@@ -15,12 +15,10 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_CARTESIAN_POWER_H_
-#define _MANIFOLDS_CARTESIAN_POWER_H_
+#pragma once
 
 #include <manifolds/defs.h>
 #include <manifolds/CartesianProduct_Base.h>
-#include <manifolds/CartesianPower.h>
 
 namespace mnf
 {
@@ -28,12 +26,10 @@ namespace mnf
   class CartesianPower_Base : public CartesianProduct_Base
   {
     friend CartesianPower;
-  public:
+  private:
     /// \brief Constructor of the \f$ M^n m2\f$
-    CartesianPower_Base(const Manifold& M, const int n);
+    CartesianPower_Base(const Manifold_Base& M, const int n);
   };
 
 }
 
-
-#endif //_MANIFOLDS_CARTESIAN_POWER_H_

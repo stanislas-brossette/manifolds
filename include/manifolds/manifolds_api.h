@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _H_MANIFOLDSAPI_H_
-#define _H_MANIFOLDSAPI_H_
+#pragma once
 
 #ifdef WIN32
     #define MANIFOLDS_DLLIMPORT __declspec(dllimport)
@@ -32,4 +31,3 @@
     #define MANIFOLDS_API MANIFOLDS_DLLIMPORT
 #endif
 
-#endif

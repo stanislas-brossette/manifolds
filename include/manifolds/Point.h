@@ -15,19 +15,18 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_POINT_H_
-#define _MANIFOLDS_POINT_H_
+#pragma once
 
 #include <manifolds/defs.h>
 
 namespace mnf
 {
-  class Manifold;
+  class Manifold_Base;
 
   class MANIFOLDS_API ConstSubPoint
   {
   protected:
-    ConstSubPoint(const Manifold& M, const ConstRefVec& val);
+    ConstSubPoint(const Manifold_Base& M, const ConstRefVec& val);
 
   public:
     ConstSubPoint(const ConstSubPoint&);
@@ -48,7 +47,7 @@ namespace mnf
     //P[i] is equivalent to P(i).value()
     ConstSegment operator[](size_t i) const;
 
-    const Manifold& getManifold() const;
+    const Manifold_Base& getManifold() const;
     const Eigen::IOFormat& format() const;
 
     std::string toString(std::string& prefix, const Eigen::IOFormat& fmt) const; //Dislays point in representation space
@@ -58,7 +57,7 @@ namespace mnf
     void unregisterPoint();
 
   protected:
-    const Manifold& manifold_;
+    const Manifold_Base& manifold_;
 
     /// \internal We keep value as a non const reference here for easy use in SubPoint. 
     /// This require a const_cast upon building ConstSubPoint, however we honor the
@@ -73,7 +72,7 @@ namespace mnf
   class MANIFOLDS_API SubPoint : public ConstSubPoint
   {
   protected:
-    SubPoint(const Manifold& M, RefVec val);
+    SubPoint(const Manifold_Base& M, RefVec val);
 
   public:
     SubPoint(const SubPoint&);
@@ -114,8 +113,8 @@ namespace mnf
   class MANIFOLDS_API Point : public PointMemory, public SubPoint
   {
   private:  //only Manifold can create Point
-    Point(const Manifold& M);
-    Point(const Manifold& M, const ConstRefVec& val);
+    Point(const Manifold_Base& M);
+    Point(const Manifold_Base& M, const ConstRefVec& val);
 
   public:
     Point(const Point& other);
@@ -185,7 +184,7 @@ namespace mnf
 
     virtual const Point& format(const Eigen::IOFormat& fmt) const;
 
-    friend class Manifold;
+    friend class Manifold_Base;
   };
 
   MANIFOLDS_API Point operator+(const Point& x, const ConstRefVec& v);
@@ -198,6 +197,4 @@ namespace mnf
     return os;
   }
 }
-
-#endif //_MANIFOLDS_POINT_H_
 

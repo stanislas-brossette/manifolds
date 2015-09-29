@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_EXPMAPMATRIX_H_
-#define _MANIFOLDS_EXPMAPMATRIX_H_
+#pragma once
 
 #include <Eigen/Core>
 #include <manifolds/defs.h>
@@ -69,4 +68,3 @@ namespace mnf
   };
 }
 
-#endif //_MANIFOLDS_EXPMAPMATRIX_H_

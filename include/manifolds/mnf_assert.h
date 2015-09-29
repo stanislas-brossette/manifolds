@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_ASSERT_
-#define _MANIFOLDS_ASSERT_
+#pragma once
 
 #include <cassert>
 #include <string>
@@ -43,6 +42,4 @@ namespace mnf
 #  define mnf_assert(expr) assert(expr);
 #endif //_MNF_ASSERT_THROW_
 }
-
-#endif //_MANIFOLDS_ASSERT_
 

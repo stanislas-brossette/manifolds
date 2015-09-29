@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_DEFS_H_
-#define _MANIFOLDS_DEFS_H_
+#pragma once
 
 #include <memory>
 #include <Eigen/Core>
@@ -36,19 +35,17 @@ namespace mnf
   typedef Eigen::Ref<const Eigen::VectorXd>::ConstSegmentReturnType ConstSegment;
   typedef Eigen::VectorXd::Index Index;
 
-  class Manifold;
-  typedef std::shared_ptr<Manifold> Manifold_ptr;
-  class CartesianProduct;
-  typedef std::shared_ptr<CartesianProduct> CartesianProduct_ptr;
-  class RealSpace;
-  typedef std::shared_ptr<RealSpace> RealSpace_ptr;
-  class S2;
-  typedef std::shared_ptr<S2> S2_ptr;
+  class Manifold_Base;
+  typedef std::shared_ptr<Manifold_Base> Manifold_Base_ptr;
+  class CartesianProduct_Base;
+  typedef std::shared_ptr<CartesianProduct_Base> CartesianProduct_Base_ptr;
+  class RealSpace_Base;
+  typedef std::shared_ptr<RealSpace_Base> RealSpace_Base_ptr;
+  class S2_Base;
+  typedef std::shared_ptr<S2_Base> S2_Base_ptr;
 
   const Eigen::IOFormat defaultFormat(4, 0, ", ", "\n", "[", "]");
 }
 
 #include <manifolds/manifolds_api.h>
-
-#endif //_MANIFOLDS_DEFS_H_
 

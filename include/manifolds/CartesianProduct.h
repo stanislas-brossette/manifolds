@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_CARTESIAN_PRODUCT_H_
-#define _MANIFOLDS_CARTESIAN_PRODUCT_H_
+#pragma once
 
 #include <vector>
 #include <stdexcept>
@@ -29,7 +28,6 @@
 
 namespace mnf
 {
-  class CartesianProduct_Base;
   /// \brief Manifold representing the cartesian product of several submanifolds
   class MANIFOLDS_API CartesianProduct : public Manifold
   {
@@ -59,4 +57,3 @@ namespace mnf
   };
 }
 
-#endif //_MANIFOLDS_CARTESIAN_PRODUCT_H_

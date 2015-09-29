@@ -63,7 +63,7 @@ namespace mnf
 
   const Manifold& CartesianProduct::operator()(const size_t i) const
   {
-    return std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->operator();
+    return std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->operator()(i);
   }
 
   std::string CartesianProduct::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const

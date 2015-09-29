@@ -15,14 +15,12 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_SO3_H_
-#define _MANIFOLDS_SO3_H_
+#pragma once
 #define _USE_MATH_DEFINES
 #include <math.h>
 
 #include <manifolds/defs.h>
 #include <manifolds/Manifold_Base.h>
-#include <manifolds/SO3.h>
 #include <manifolds/ReusableTemporaryMap.h>
 #include <manifolds/utils.h>
 
@@ -31,15 +29,15 @@ namespace mnf
   /// \brief Manifold representing the space of 3-dimensional rotations, also
   /// known as SO(3). It is templated by its map
   template<typename Map>
-  class SO3_Base: public Manifold
+  class SO3_Base: public Manifold_Base
   {
     friend SO3;
-  public:
+  private:
     SO3_Base();
     SO3_Base(double magnitude);
     SO3_Base(const ConstRefVec& magnitude);
     virtual size_t numberOfSubmanifolds() const;
-    virtual const Manifold& operator()(size_t i) const;
+    virtual const Manifold_Base& operator()(size_t i) const;
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
     virtual void getTypicalMagnitude_(RefVec out) const;
     void setTypicalMagnitude(double magnitude);
@@ -74,7 +72,7 @@ namespace mnf
     virtual void limitMap_(RefVec out) const;
     mutable ReusableTemporaryMap bufferMap_;
 
-    virtual Manifold_ptr getNewCopy() const;
+    virtual Manifold_Base_ptr getNewCopy() const;
 
   private:
     Eigen::Vector3d typicalMagnitude_;
@@ -84,7 +82,7 @@ namespace mnf
   //Implementations of the methods
   template<typename Map>
   inline SO3_Base<Map>::SO3_Base()
-    : Manifold(3, Map::InputDim_, Map::OutputDim_)
+    : Manifold_Base(3, Map::InputDim_, Map::OutputDim_)
   {
     name() = "SO3";
     setTypicalMagnitude(Eigen::Vector3d::Constant(M_PI));
@@ -92,7 +90,7 @@ namespace mnf
   }
   template<typename Map>
   inline SO3_Base<Map>::SO3_Base(double magnitude)
-    : Manifold(3, Map::InputDim_, Map::OutputDim_)
+    : Manifold_Base(3, Map::InputDim_, Map::OutputDim_)
   {
     name() = "SO3";
     setTypicalMagnitude(Eigen::Vector3d::Constant(magnitude));
@@ -100,7 +98,7 @@ namespace mnf
   }
   template<typename Map>
   inline SO3_Base<Map>::SO3_Base(const ConstRefVec& magnitude)
-    : Manifold(3, Map::InputDim_, Map::OutputDim_)
+    : Manifold_Base(3, Map::InputDim_, Map::OutputDim_)
   {
     mnf_assert(magnitude.size() == 3 && "magnitude on SO3 must be of size 3");
     name() = "SO3";
@@ -133,7 +131,7 @@ namespace mnf
   }
 
   template<typename Map>
-  inline const Manifold& SO3_Base<Map>::operator()(size_t i) const
+  inline const Manifold_Base& SO3_Base<Map>::operator()(size_t i) const
   {
     mnf_assert(i < 1 && "invalid index");
     return *this;
@@ -299,7 +297,7 @@ namespace mnf
   }
 
   template<typename Map>
-  Manifold_ptr SO3_Base<Map>::getNewCopy() const
+  Manifold_Base_ptr SO3_Base<Map>::getNewCopy() const
   {
     std::shared_ptr<SO3_Base<Map> > copySO3(new SO3_Base<Map>(*this));
     copySO3->instanceId_ = this->instanceId_;
@@ -307,4 +305,3 @@ namespace mnf
     return copySO3;
   }
 }
-#endif //_MANIFOLDS_SO3_H_

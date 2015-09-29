@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_CARTESIAN_POWER_H_
-#define _MANIFOLDS_CARTESIAN_POWER_H_
+#pragma once
 
 #include <manifolds/defs.h>
 #include <manifolds/CartesianProduct.h>
@@ -35,4 +34,3 @@ namespace mnf
 }
 
 
-#endif //_MANIFOLDS_CARTESIAN_POWER_H_

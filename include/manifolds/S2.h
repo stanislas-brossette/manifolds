@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_S2_H_
-#define _MANIFOLDS_S2_H_
+#pragma once
 #include <stdexcept>
 
 #include <manifolds/defs.h>
@@ -65,4 +64,3 @@ namespace mnf
 
   };
 }
-#endif //_MANIFOLDS_S2_H_

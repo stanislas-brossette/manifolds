@@ -15,11 +15,11 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#include <manifolds/CartesianPower.h>
+#include <manifolds/CartesianPower_Base.h>
 
 namespace mnf
 {
-  CartesianPower_Base::CartesianPower_Base(const Manifold& M, const int n)
+  CartesianPower_Base::CartesianPower_Base(const Manifold_Base& M, const int n)
     : CartesianProduct_Base()
   {
     for (int i = 0; i < n; ++i)

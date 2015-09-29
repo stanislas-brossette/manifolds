@@ -15,8 +15,8 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_SO3_H_
-#define _MANIFOLDS_SO3_H_
+#pragma once
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -141,4 +141,3 @@ namespace mnf
     return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->getTypeId();
   }
 }
-#endif //_MANIFOLDS_SO3_H_

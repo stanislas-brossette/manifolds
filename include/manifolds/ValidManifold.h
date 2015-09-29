@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLD_VALID_OBJECT_H_
-#define _MANIFOLD_VALID_OBJECT_H_
+#pragma once
 
 #include <cstdio>
 #include <assert.h>
@@ -57,4 +56,3 @@ namespace mnf
   };
 }
 
-#endif //_MANIFOLD_VALID_OBJECT_H_

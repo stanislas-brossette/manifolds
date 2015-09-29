@@ -26,7 +26,7 @@
 namespace mnf
 {
   S2_Base::S2_Base()
-    : Manifold(2, 3, 3)
+    : Manifold_Base(2, 3, 3)
   {
     name() = "S2";
     setTypicalMagnitude(Eigen::Vector3d::Constant(M_PI));
@@ -34,14 +34,14 @@ namespace mnf
   }
 
   S2_Base::S2_Base(double magnitude)
-    : Manifold(2, 3, 3)
+    : Manifold_Base(2, 3, 3)
   {
     name() = "S2";
     setTypicalMagnitude(Eigen::Vector3d::Constant( magnitude));
     setTrustMagnitude(Eigen::Vector3d::Constant( magnitude));
   }
   S2_Base::S2_Base(const ConstRefVec& magnitude)
-    : Manifold(2, 3, 3)
+    : Manifold_Base(2, 3, 3)
   {
     mnf_assert(magnitude.size() == 3 && "magnitude on R^n must be of size n");
     name() = "S2";
@@ -78,7 +78,7 @@ namespace mnf
     return true;
   }
 
-  const Manifold& S2_Base::operator()(size_t i) const
+  const Manifold_Base& S2_Base::operator()(size_t i) const
   {
     mnf_assert(i < 1 && "invalid index");
     return *this;
@@ -291,9 +291,9 @@ namespace mnf
     return typeId;
   }
 
-  Manifold_ptr S2_Base::getNewCopy() const
+  Manifold_Base_ptr S2_Base::getNewCopy() const
   {
-    S2_ptr copy(new S2_Base(*this));
+    S2_Base_ptr copy(new S2_Base(*this));
     copy->instanceId_ = this->instanceId_;
 
     return copy;

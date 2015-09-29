@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_REF_COUNTER_H_
-#define _MANIFOLDS_REF_COUNTER_H_
+#pragma once
 
 #include <manifolds/defs.h>
 #include <manifolds/Point.h>
@@ -71,4 +70,3 @@ namespace mnf
   };
 }
 
-#endif //_MANIFOLDS_REF_COUNTER_H_

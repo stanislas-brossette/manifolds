@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_VIEW_H_
-#define _MANIFOLDS_VIEW_H_
+#pragma once
 
 #include <Eigen/Core>
 #include <manifolds/defs.h>
@@ -39,6 +38,4 @@ namespace mnf
   template<> struct ViewReturnType<F, F> { typedef RefMat Type; };
   template<> struct ConstViewReturnType<F, F> { typedef ConstRefMat Type; };
 }
-
-#endif //_MANIFOLDS_VIEW_H_
 

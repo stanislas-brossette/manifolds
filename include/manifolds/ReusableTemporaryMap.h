@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_REUSABLE_TEMPORARY_MAP_H_
-#define _MANIFOLDS_REUSABLE_TEMPORARY_MAP_H_
+#pragma once
 
 #include <Eigen/Core>
 
@@ -60,6 +59,4 @@ namespace mnf
       reallocate_(size);
   }
 }
-
-#endif //_MANIFOLDS_REUSABLE_TEMPORARY_MAP_H_
 

@@ -15,8 +15,7 @@
 // manifolds. If not, see
 // <http://www.gnu.org/licenses/>.
 
-#ifndef _MANIFOLDS_MANIFOLD_H_
-#define _MANIFOLDS_MANIFOLD_H_
+#pragma once
 
 #include <iostream>
 #include <Eigen/Core>
@@ -47,13 +46,14 @@ namespace mnf
   /// \f$ and the map function on a point \f$x\f$ is \f$ \phi_x:T_x^\mathbb{M}\to\mathbb{M}\f$
   class MANIFOLDS_API Manifold  
   {
-  public:
+  protected:
     /// \brief Default Constructor that sets the dimensions of the manifold and of its
     /// representation space
     Manifold(Index dimension, Index tangentDimension, Index representationDimension);
 
     Manifold(std::shared_ptr<Manifold_Base> m);
 
+  public:
     /// \brief The destructor
     virtual ~Manifold();
 
@@ -258,5 +258,5 @@ namespace mnf
     std::shared_ptr<Manifold_Base> manifoldBase_;
 
   };
+}
 
-#endif //_MANIFOLDS_MANIFOLD_H_
