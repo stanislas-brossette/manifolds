@@ -36,18 +36,6 @@ namespace mnf
     S2(double trustMagnitude);
     S2(const ConstRefVec& trustMagnitude);
 
-    virtual size_t numberOfSubmanifolds() const;
-    virtual Manifold operator()(size_t i) const;
-
-    virtual void createRandomPoint_(RefVec out, double coeff) const;
-
-    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
-    virtual void getTypicalMagnitude_(RefVec out) const;
-    void setTypicalMagnitude(double magnitude);
-    void setTypicalMagnitude(const ConstRefVec& out);
-    virtual void getTrustMagnitude_(RefVec out) const;
-    void setTrustMagnitude(const double& magnitude);
-    void setTrustMagnitude(const ConstRefVec& out);
     void logarithm (RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     double distance (const ConstRefVec& x, const ConstRefVec& y) const;
     /// \brief projects each row of \ in on TxM
@@ -59,8 +47,6 @@ namespace mnf
     void rand(RefVec out) const;
     void randVec(RefVec out, const ConstRefVec& x) const;
     Eigen::Vector3d randVec(const ConstRefVec& x) const;
-    virtual bool isElementary() const;
-    virtual long getTypeId() const;
 
   };
 }

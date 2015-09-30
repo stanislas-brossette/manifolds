@@ -36,19 +36,6 @@ namespace mnf
     RealSpace(Index n, double magnitude);
     RealSpace(Index n, const ConstRefVec& magnitude);
 
-    virtual size_t numberOfSubmanifolds() const;
-    virtual Manifold operator()(size_t i) const;
-
-    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
-    virtual void getTypicalMagnitude_(RefVec out) const;
-    void setTypicalMagnitude(double magnitude);
-    void setTypicalMagnitude(const ConstRefVec& out);
-    virtual void getTrustMagnitude_(RefVec out) const;
-    void setTrustMagnitude(const double& magnitude);
-    void setTrustMagnitude(const ConstRefVec& out);
-    virtual bool isElementary() const;
-    virtual long getTypeId() const;
-
   };
 }
 

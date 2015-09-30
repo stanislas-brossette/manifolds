@@ -41,31 +41,6 @@ namespace mnf
   {
   }
 
-  size_t S2::numberOfSubmanifolds() const
-  {
-    return std::static_pointer_cast<S2_Base>(manifoldBase_)->numberOfSubmanifolds();
-  }
-
-  bool S2::isElementary() const
-  {
-    return std::static_pointer_cast<S2_Base>(manifoldBase_)->isElementary();
-  }
-
-  Manifold S2::operator()(size_t i) const
-  {
-    return makeManifold(std::const_pointer_cast<Manifold_Base>(manifoldBase_->operator()(i)));;
-  }
-
-  std::string S2::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const
-  {
-    return std::static_pointer_cast<S2_Base>(manifoldBase_)->toString(val, prefix, fmt);
-  }
-
-  void S2::createRandomPoint_(RefVec out, double d) const
-  {
-    return std::static_pointer_cast<S2_Base>(manifoldBase_)->createRandomPoint_(out, d);
-  }
-
   void S2::logarithm (RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   {
     return std::static_pointer_cast<S2_Base>(manifoldBase_)->logarithm (out, x, y);
@@ -101,40 +76,5 @@ namespace mnf
   Eigen::Vector3d S2::randVec(const ConstRefVec& x) const
   {
     return std::static_pointer_cast<S2_Base>(manifoldBase_)->randVec(x);
-  }
-
-  void S2::getTypicalMagnitude_(RefVec out) const
-  {
-    return std::static_pointer_cast<S2_Base>(manifoldBase_)->getTypicalMagnitude_(out);
-  }
-
-  void S2::setTypicalMagnitude(double magnitude)
-  {
-    return std::static_pointer_cast<S2_Base>(manifoldBase_)->setTypicalMagnitude(magnitude);
-  }
-
-  void S2::setTypicalMagnitude(const ConstRefVec& out)
-  {
-    return std::static_pointer_cast<S2_Base>(manifoldBase_)->setTypicalMagnitude(out);
-  }
-
-  void S2::getTrustMagnitude_(RefVec out) const
-  {
-    return std::static_pointer_cast<S2_Base>(manifoldBase_)->getTrustMagnitude_(out);
-  }
-
-  void S2::setTrustMagnitude(const double& magnitude)
-  {
-    return std::static_pointer_cast<S2_Base>(manifoldBase_)->setTrustMagnitude(magnitude);
-  }
-
-  void S2::setTrustMagnitude(const ConstRefVec& out)
-  {
-    return std::static_pointer_cast<S2_Base>(manifoldBase_)->setTrustMagnitude(out);
-  }
-
-  long S2::getTypeId() const
-  {
-    return std::static_pointer_cast<S2_Base>(manifoldBase_)->getTypeId();
   }
 }
