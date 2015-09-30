@@ -45,12 +45,15 @@ namespace mnf
   /// \f$ and the map function on a point \f$x\f$ is \f$ \phi_x:T_x^\mathbb{M}\to\mathbb{M}\f$
   class MANIFOLDS_API Manifold  
   {
-  protected:
+  public:
     Manifold(std::shared_ptr<Manifold_Base> m);
-    static Manifold makeManifold(std::shared_ptr<Manifold_Base> m)
-    {
-      return Manifold(m);
-    }
+    std::shared_ptr<const Manifold_Base> getManifoldBase() const;
+
+  //protected:
+    //static Manifold makeManifold(std::shared_ptr<Manifold_Base> m)
+    //{
+      //return Manifold(m);
+    //}
 
   public:
     /// \brief The destructor

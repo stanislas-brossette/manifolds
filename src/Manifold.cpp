@@ -31,6 +31,11 @@ namespace mnf
   {
   }
 
+  std::shared_ptr<const Manifold_Base> Manifold::getManifoldBase() const
+  {
+    return std::const_pointer_cast<const Manifold_Base>(manifoldBase_);
+  }
+
   Point Manifold::createPoint() const
   {
     return manifoldBase_->createPoint();

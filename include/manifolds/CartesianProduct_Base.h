@@ -24,6 +24,7 @@
 
 #include <manifolds/defs.h>
 #include <manifolds/Manifold_Base.h>
+#include <manifolds/Manifold.h>
 #include <manifolds/utils.h>
 
 namespace mnf
@@ -39,17 +40,17 @@ namespace mnf
     CartesianProduct_Base();
 
     /// \brief Constructor of the manifold from a list of manifolds
-    CartesianProduct_Base(const std::initializer_list<Manifold_Base*> m);
+    //CartesianProduct_Base(const std::initializer_list<Manifold_Base*> m);
 
     /// \brief Constructor of the manifold composed of \f$ m1\times m2\f$
-    CartesianProduct_Base(const Manifold_Base& m1, const Manifold_Base& m2);
+    CartesianProduct_Base(const Manifold& m1, const Manifold& m2);
 
     /// \brief Adds manifold m to the current composed manifold\n
     /// This method cannot be executed if the manifold is locked
-    CartesianProduct_Base& multiply(const Manifold_Base& m);
+    CartesianProduct_Base& multiply(const Manifold& m);
 
     virtual size_t numberOfSubmanifolds() const;
-    virtual const Manifold_Base& operator()(const size_t i) const;
+    virtual std::shared_ptr<const Manifold_Base> operator()(const size_t i) const;
 
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
 
@@ -90,7 +91,7 @@ namespace mnf
 
   private:
     /// \brief List of pointers on all the manifolds in the cartesian product
-    std::vector<std::shared_ptr<const Manifold_Base>> submanifolds_;
+    std::vector<Manifold> submanifolds_;
 
     /// \brief List of start index of submanifolds in a vector of the
     /// tangent space

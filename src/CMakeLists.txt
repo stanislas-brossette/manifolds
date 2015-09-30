@@ -16,8 +16,8 @@
 ## <http://www.gnu.org/licenses/>.
 
 set(SOURCES
-  #CartesianProduct.cpp
-  #CartesianProduct_Base.cpp
+  CartesianProduct.cpp
+  CartesianProduct_Base.cpp
   #CartesianPower.cpp
   #CartesianPower_Base.cpp
   #ExpMapMatrix.cpp
@@ -33,8 +33,8 @@ set(SOURCES
   utils.cpp
   )
 set(HEADERS
-  #../include/manifolds/CartesianProduct.h
-  #../include/manifolds/CartesianProduct_Base.h
+  ../include/manifolds/CartesianProduct.h
+  ../include/manifolds/CartesianProduct_Base.h
   #../include/manifolds/CartesianPower.h
   #../include/manifolds/CartesianPower_Base.h
   ../include/manifolds/defs.h
