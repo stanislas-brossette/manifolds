@@ -78,10 +78,9 @@ namespace mnf
     return true;
   }
 
-  const Manifold_Base& S2_Base::operator()(size_t i) const
+  std::shared_ptr<const Manifold_Base> S2_Base::operator()(size_t) const
   {
-    mnf_assert(i < 1 && "invalid index");
-    return *this;
+    return shared_from_this();
   }
 
   std::string S2_Base::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const

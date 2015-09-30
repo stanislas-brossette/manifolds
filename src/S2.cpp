@@ -27,17 +27,17 @@
 namespace mnf
 {
   S2::S2()
-    : Manifold(std::make_shared<S2_Base>())
+    : Manifold(std::shared_ptr<Manifold_Base>(new S2_Base()))
   {
   }
 
   S2::S2(double magnitude)
-    : Manifold(std::make_shared<S2_Base>(magnitude))
+    : Manifold(std::shared_ptr<Manifold_Base>(new S2_Base(magnitude)))
   {
   }
 
   S2::S2(const ConstRefVec& magnitude)
-    : Manifold(std::make_shared<S2_Base>(magnitude))
+    : Manifold(std::shared_ptr<Manifold_Base>(new S2_Base(magnitude)))
   {
   }
 
@@ -51,9 +51,9 @@ namespace mnf
     return std::static_pointer_cast<S2_Base>(manifoldBase_)->isElementary();
   }
 
-  const Manifold& S2::operator()(size_t i) const
+  Manifold S2::operator()(size_t i) const
   {
-    return std::static_pointer_cast<S2_Base>(manifoldBase_)->operator()(i);
+    return makeManifold(std::const_pointer_cast<Manifold_Base>(manifoldBase_->operator()(i)));;
   }
 
   std::string S2::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const

@@ -38,7 +38,7 @@ namespace mnf
     S2_Base(const ConstRefVec& trustMagnitude);
 
     virtual size_t numberOfSubmanifolds() const;
-    virtual const Manifold_Base& operator()(size_t i) const;
+    virtual std::shared_ptr<const Manifold_Base> operator()(size_t i) const;
 
     virtual void createRandomPoint_(RefVec out, double coeff) const;
 

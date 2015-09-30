@@ -33,9 +33,9 @@ add_test(RealSpaceTest RealSpaceTest)
 #target_link_libraries(SO3QuaternionTest manifoldsTest ${Boost_LIBRARIES})
 #add_test(SO3QuaternionTest SO3QuaternionTest)
 
-#add_executable(S2Test S2Test.cpp)
-#target_link_libraries(S2Test manifoldsTest ${Boost_LIBRARIES})
-#add_test(S2Test S2Test)
+add_executable(S2Test S2Test.cpp)
+target_link_libraries(S2Test manifoldsTest ${Boost_LIBRARIES})
+add_test(S2Test S2Test)
 
 #add_executable(CartesianProductTest CartesianProductTest.cpp)
 #target_link_libraries(CartesianProductTest manifoldsTest ${Boost_LIBRARIES})

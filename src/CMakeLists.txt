@@ -28,8 +28,8 @@ set(SOURCES
   RealSpace.cpp
   RealSpace_Base.cpp
   ReusableTemporaryMap.cpp
-  #S2.cpp
-  #S2_Base.cpp
+  S2.cpp
+  S2_Base.cpp
   utils.cpp
   )
 set(HEADERS
@@ -49,8 +49,8 @@ set(HEADERS
   ../include/manifolds/ReusableTemporaryMap.h
   #../include/manifolds/SO3.h
   #../include/manifolds/SO3_Base.h
-  #../include/manifolds/S2.h
-  #../include/manifolds/S2_Base.h
+  ../include/manifolds/S2.h
+  ../include/manifolds/S2_Base.h
   ../include/manifolds/utils.h
   ../include/manifolds/view.h
   #../include/manifolds/RefCounter.h

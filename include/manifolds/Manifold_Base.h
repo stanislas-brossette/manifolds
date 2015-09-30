@@ -31,6 +31,7 @@ namespace mnf
 {
   class Manifold;
   class RealSpace;
+  class S2;
 
   /// \brief The Manifold Class represents a manifold. It contains the implementations of
   /// the basic operations on it, like external addition, internal substraction,
@@ -50,6 +51,7 @@ namespace mnf
   {
     friend Manifold;
     friend RealSpace;
+    friend S2;
     friend ConstSubPoint;
     friend SubPoint;
     friend Point;
