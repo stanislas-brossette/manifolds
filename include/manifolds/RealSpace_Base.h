@@ -42,12 +42,6 @@ namespace mnf
     virtual std::shared_ptr<const Manifold_Base> operator()(size_t i) const;
 
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
-    virtual void getTypicalMagnitude_(RefVec out) const;
-    void setTypicalMagnitude(double magnitude);
-    void setTypicalMagnitude(const ConstRefVec& out);
-    virtual void getTrustMagnitude_(RefVec out) const;
-    void setTrustMagnitude(const double& magnitude);
-    void setTrustMagnitude(const ConstRefVec& out);
     virtual bool isElementary() const;
     virtual long getTypeId() const;
 
@@ -75,10 +69,6 @@ namespace mnf
     virtual void limitMap_(RefVec out) const;
 
     virtual Manifold_Base_ptr getNewCopy() const;
-
-  private:
-    Eigen::VectorXd typicalMagnitude_;
-    Eigen::VectorXd trustMagnitude_;
 
   };
 }

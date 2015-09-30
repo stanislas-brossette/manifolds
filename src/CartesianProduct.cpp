@@ -27,51 +27,22 @@ namespace mnf
   {
   }
 
-  //CartesianProduct::CartesianProduct(const std::initializer_list<Manifold_Base*> m)
-    //: Manifold(std::shared_ptr<Manifold_Base>(new CartesianProduct_Base(m)))
-  //{
-    //std::cout << "\n\n\n Need to fix:\n CartesianProduct::CartesianProduct(const std::initializer_list<Manifold_Base*> m) should be CartesianProduct::CartesianProduct(const std::initializer_list<Manifold*> m)\n\n\n" << std::endl;
-  //}
-
-  CartesianProduct::CartesianProduct(const Manifold& m1, const Manifold& m2)
-    : Manifold(std::shared_ptr<Manifold_Base>(new CartesianProduct_Base(m1, m2)))
+  CartesianProduct::CartesianProduct(const std::initializer_list<Manifold*> m)
+    : Manifold(std::shared_ptr<Manifold_Base>(new CartesianProduct_Base()))
   {
+    for(auto s:m)
+      multiply(s->getNonConstPtr());
   }
 
-  //void CartesianProduct::getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const
-  //{
-    //return std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->getIdentityOnTxM_(out, x);
-  //}
+  CartesianProduct::CartesianProduct(const Manifold& m1, const Manifold& m2)
+    : Manifold(std::shared_ptr<Manifold_Base>(
+          new CartesianProduct_Base(m1.getNonConstPtr(), m2.getNonConstPtr())))
+  {
+  }
 
   CartesianProduct& CartesianProduct::multiply(const Manifold& m)
   {
-    std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->multiply(m);
+    std::static_pointer_cast<CartesianProduct_Base>(ptr_)->multiply(m.getNonConstPtr());
     return *this;
-    //std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->multiply(m.getManifoldBase());
   }
-
-  //size_t CartesianProduct::numberOfSubmanifolds() const
-  //{
-    //return std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->numberOfSubmanifolds();
-  //}
-
-  //bool CartesianProduct::isElementary() const
-  //{
-    //return std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->isElementary();
-  //}
-
-  //void CartesianProduct::display(const std::string& prefix) const
-  //{
-    //return std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->display(prefix);
-  //}
-
-  //const Manifold& CartesianProduct::operator()(const size_t i) const
-  //{
-    //return makeManifold(std::const_pointer_cast<CartesianProduct_Base>(manifoldBase_->operator()(i)));;
-  //}
-
-  //std::string CartesianProduct::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const
-  //{
-    //return std::static_pointer_cast<CartesianProduct_Base>(manifoldBase_)->toString(val, prefix, fmt);
-  //}
 }

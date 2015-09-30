@@ -252,38 +252,6 @@ namespace mnf
     out.setConstant(std::numeric_limits<double>::infinity());
   }
 
-  void S2_Base::getTypicalMagnitude_(RefVec out) const
-  {
-    out = typicalMagnitude_;
-  }
-
-  void S2_Base::setTypicalMagnitude(double magnitude)
-  {
-    setTypicalMagnitude (Eigen::VectorXd::Constant(tangentDim(), magnitude));
-  }
-
-  void S2_Base::setTypicalMagnitude(const ConstRefVec& out)
-  {
-    testLock();
-    typicalMagnitude_ = out;
-  }
-
-  void S2_Base::getTrustMagnitude_(RefVec out) const
-  {
-    out = trustMagnitude_;
-  }
-
-  void S2_Base::setTrustMagnitude(const double& magnitude)
-  {
-    setTrustMagnitude (Eigen::VectorXd::Constant(tangentDim(), magnitude));
-  }
-
-  void S2_Base::setTrustMagnitude(const ConstRefVec& out)
-  {
-    testLock();
-    trustMagnitude_ = out;
-  }
-
   long S2_Base::getTypeId() const
   {
     long typeId = utils::hash::computeHash("S2");

@@ -172,40 +172,6 @@ namespace mnf
     out.setConstant(std::numeric_limits<double>::infinity());
   }
 
-  void RealSpace_Base::getTypicalMagnitude_(RefVec out) const
-  {
-    out = typicalMagnitude_;
-  }
-
-  void RealSpace_Base::setTypicalMagnitude(double magnitude)
-  {
-    Eigen::VectorXd temp = Eigen::VectorXd::Constant(tangentDim(), magnitude);
-    setTypicalMagnitude(temp);
-  }
-
-  void RealSpace_Base::setTypicalMagnitude(const ConstRefVec& out)
-  {
-    testLock();
-    typicalMagnitude_ = out;
-  }
-
-  void RealSpace_Base::getTrustMagnitude_(RefVec out) const
-  {
-    out = trustMagnitude_;
-  }
-
-  void RealSpace_Base::setTrustMagnitude(const double& magnitude)
-  {
-    Eigen::VectorXd temp = Eigen::VectorXd::Constant(tangentDim(), magnitude);
-    setTrustMagnitude(temp);
-  }
-
-  void RealSpace_Base::setTrustMagnitude(const ConstRefVec& out)
-  {
-    testLock();
-    trustMagnitude_ = out;
-  }
-
   long RealSpace_Base::getTypeId() const
   {
     long typeId = utils::hash::computeHash("RealSpace");

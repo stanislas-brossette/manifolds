@@ -25,7 +25,7 @@
 #include <manifolds/SO3.h>
 #include <manifolds/RealSpace.h>
 #include <manifolds/CartesianProduct.h>
-#include <manifolds/CartesianPower.h>
+//#include <manifolds/CartesianPower.h>
 #include <manifolds/Point.h>
 #include <manifolds/ExpMapMatrix.h>
 #include <manifolds/ExpMapQuaternion.h>
@@ -48,7 +48,11 @@ BOOST_AUTO_TEST_CASE(CartProdConstructor)
   CartesianProduct P(R2, R3);
   P.multiply(R2);
   CartesianProduct S(P, RotSpace);
-  CartesianPower PowS(S, 3);
+
+  //CartesianPower PowS(S, 3);
+  CartesianProduct PowS(S, S);
+  PowS.multiply(S);
+
   BOOST_CHECK_EQUAL(S.dim(), 10);
   BOOST_CHECK_EQUAL(S.representationDim(), 16);
   BOOST_CHECK_EQUAL(S.numberOfSubmanifolds(), 2);
@@ -547,7 +551,12 @@ BOOST_AUTO_TEST_CASE(CartProdLimitMap)
   SO3<ExpMapMatrix> RotSpace;
   CartesianProduct S(R3, RotSpace);
   S.multiply(R2);
-  CartesianPower Space(S,3);
+
+  //CartesianPower Space(S,3);
+  CartesianProduct Space(S,S);
+  Space.multiply(S);
+
+
   Index dim = Space.dim();
   Eigen::VectorXd res(dim);
   Space.limitMap(res);

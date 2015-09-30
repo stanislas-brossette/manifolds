@@ -30,8 +30,6 @@
 namespace mnf
 {
   class Manifold;
-  class RealSpace;
-  class S2;
 
   /// \brief The Manifold Class represents a manifold. It contains the implementations of
   /// the basic operations on it, like external addition, internal substraction,
@@ -50,8 +48,6 @@ namespace mnf
                           // : public RefCounter, public ValidManifold
   {
     friend Manifold;
-    friend RealSpace;
-    friend S2;
     friend ConstSubPoint;
     friend SubPoint;
     friend Point;
@@ -59,10 +55,6 @@ namespace mnf
     friend Eigen::VectorXd operator-(const Point& x, const Point& y);
 
   public:
-    /// \brief Returns the dimension of the representation space of the manifold
-    Index representationDim() const;
-
-  protected:
     /// \brief Default Constructor that sets the dimensions of the manifold and of its
     /// representation space
     Manifold_Base(Index dimension, Index tangentDimension, Index representationDimension);
@@ -99,6 +91,9 @@ namespace mnf
     /// \brief Returns the number \a t of parameters used to represent a tangent vector
     /// i.e. T_x\mathbb{M} is seen as a subspace of \f$ \mathbb{R}^t \f$
     Index tangentDim() const;
+
+    /// \brief Returns the dimension of the representation space of the manifold
+    Index representationDim() const;
 
     /// \brief Returns True if the manifold is an elementary manyfold, false otherwise
     virtual bool isElementary() const = 0;
@@ -244,13 +239,17 @@ namespace mnf
 
     /// \brief Gets the typical Magnitude of the manifold on its tangent space.
     /// it is typically used for scaling of the variables
-    void getTypicalMagnitude(RefVec out) const;
+    virtual void getTypicalMagnitude(RefVec out) const;
     Eigen::VectorXd getTypicalMagnitude() const;
+    void setTypicalMagnitude(const double& magnitude);
+    void setTypicalMagnitude(const ConstRefVec& out);
 
     /// \brief Gets the trust Magnitude of the manifold on its tangent space.
     /// it is typically used for scaling of the trust regions
     void getTrustMagnitude(RefVec out) const;
     Eigen::VectorXd getTrustMagnitude() const;
+    void setTrustMagnitude(const double& magnitude);
+    void setTrustMagnitude(const ConstRefVec& out);
 
     /// \brief returns a value unique to each instance of a manifold
     long getInstanceId() const;
@@ -322,8 +321,8 @@ namespace mnf
     virtual void getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const = 0;
 
     virtual void limitMap_(RefVec out) const = 0;
-    virtual void getTypicalMagnitude_(RefVec out) const = 0;
-    virtual void getTrustMagnitude_(RefVec out) const = 0;
+    //virtual void getTypicalMagnitude_(RefVec out) const = 0;
+    //virtual void getTrustMagnitude_(RefVec out) const = 0;
 
     /// \brief tests if the manifold is locked, throwing an error if it is
     void testLock() const;
@@ -359,6 +358,9 @@ namespace mnf
     /// \brief if true, the manifold is locked
     mutable bool lock_;
 
+  protected:
+    Eigen::VectorXd typicalMagnitude_;
+    Eigen::VectorXd trustMagnitude_;
   };
 
   template<int D>

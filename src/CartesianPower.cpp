@@ -16,11 +16,12 @@
 // <http://www.gnu.org/licenses/>.
 
 #include <manifolds/CartesianPower.h>
+#include <manifolds/CartesianPower_Base.h>
 
 namespace mnf
 {
   CartesianPower::CartesianPower(const Manifold& M, const int n)
-    : CartesianProduct(std::make_shared<CartesianPower_Base>(M, n))
+    : Manifold(std::shared_ptr<Manifold_Base>(new CartesianPower_Base(M, n)))
   {
   }
 }

@@ -21,32 +21,25 @@
 
 #include <manifolds/defs.h>
 #include <manifolds/Manifold_Base.h>
+#include <manifolds/SO3.h>
 #include <manifolds/ReusableTemporaryMap.h>
 #include <manifolds/utils.h>
 
 namespace mnf
 {
-  class SO3;
-
   /// \brief Manifold representing the space of 3-dimensional rotations, also
   /// known as SO(3). It is templated by its map
   template<typename Map>
   class SO3_Base: public Manifold_Base
   {
-    friend SO3;
+    template<typename> friend class SO3;
   private:
     SO3_Base();
     SO3_Base(double magnitude);
     SO3_Base(const ConstRefVec& magnitude);
     virtual size_t numberOfSubmanifolds() const;
-    virtual const Manifold_Base& operator()(size_t i) const;
+    virtual std::shared_ptr<const Manifold_Base> operator()(size_t i) const;
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
-    virtual void getTypicalMagnitude_(RefVec out) const;
-    void setTypicalMagnitude(double magnitude);
-    void setTypicalMagnitude(const ConstRefVec& out);
-    virtual void getTrustMagnitude_(RefVec out) const;
-    void setTrustMagnitude(const double& magnitude);
-    void setTrustMagnitude(const ConstRefVec& out);
     virtual void createRandomPoint_(RefVec out, double coeff) const;
     virtual bool isElementary() const;
     virtual long getTypeId() const;
@@ -133,10 +126,9 @@ namespace mnf
   }
 
   template<typename Map>
-  inline const Manifold_Base& SO3_Base<Map>::operator()(size_t i) const
+  inline std::shared_ptr<const Manifold_Base> SO3_Base<Map>::operator()(size_t ) const
   {
-    mnf_assert(i < 1 && "invalid index");
-    return *this;
+    return shared_from_this();
   }
 
   template<typename Map>
@@ -251,44 +243,6 @@ namespace mnf
   {
     double limitExpMap = M_PI/sqrt(3);
     out.setConstant(limitExpMap);
-  }
-
-  template<typename Map>
-  void SO3_Base<Map>::getTypicalMagnitude_(RefVec out) const
-  {
-    out = typicalMagnitude_;
-  }
-
-  template<typename Map>
-  void SO3_Base<Map>::setTypicalMagnitude(double magnitude)
-  {
-    setTypicalMagnitude (Eigen::Vector3d::Constant(magnitude));
-  }
-
-  template<typename Map>
-  void SO3_Base<Map>::setTypicalMagnitude(const ConstRefVec& out)
-  {
-    testLock();
-    typicalMagnitude_ = out;
-  }
-
-  template<typename Map>
-  void SO3_Base<Map>::getTrustMagnitude_(RefVec out) const
-  {
-    out = trustMagnitude_;
-  }
-
-  template<typename Map>
-  void SO3_Base<Map>::setTrustMagnitude(const double& magnitude)
-  {
-    setTrustMagnitude (Eigen::Vector3d::Constant(magnitude));
-  }
-
-  template<typename Map>
-  void SO3_Base<Map>::setTrustMagnitude(const ConstRefVec& out)
-  {
-    testLock();
-    trustMagnitude_ = out;
   }
 
   template<typename Map>

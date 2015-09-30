@@ -43,12 +43,6 @@ namespace mnf
     virtual void createRandomPoint_(RefVec out, double coeff) const;
 
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
-    virtual void getTypicalMagnitude_(RefVec out) const;
-    void setTypicalMagnitude(double magnitude);
-    void setTypicalMagnitude(const ConstRefVec& out);
-    virtual void getTrustMagnitude_(RefVec out) const;
-    void setTrustMagnitude(const double& magnitude);
-    void setTrustMagnitude(const ConstRefVec& out);
     void logarithm (RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     double distance (const ConstRefVec& x, const ConstRefVec& y) const;
     /// \brief projects each row of \ in on TxM

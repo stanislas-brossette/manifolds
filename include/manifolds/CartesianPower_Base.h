@@ -29,7 +29,7 @@ namespace mnf
     friend CartesianPower;
   private:
     /// \brief Constructor of the \f$ M^n m2\f$
-    CartesianPower_Base(const Manifold_Base& M, const int n);
+    CartesianPower_Base(const Manifold& M, const int n);
   };
 
 }

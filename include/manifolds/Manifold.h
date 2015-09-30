@@ -47,13 +47,8 @@ namespace mnf
   {
   public:
     Manifold(std::shared_ptr<Manifold_Base> m);
-    std::shared_ptr<const Manifold_Base> getManifoldBase() const;
-
-  //protected:
-    //static Manifold makeManifold(std::shared_ptr<Manifold_Base> m)
-    //{
-      //return Manifold(m);
-    //}
+    std::shared_ptr<const Manifold_Base> ptr() const;
+    std::shared_ptr<Manifold_Base> getNonConstPtr() const;
 
   public:
     /// \brief The destructor
@@ -238,11 +233,15 @@ namespace mnf
     /// it is typically used for scaling of the variables
     void getTypicalMagnitude(RefVec out) const;
     Eigen::VectorXd getTypicalMagnitude() const;
+    void setTypicalMagnitude(const double& magnitude);
+    void setTypicalMagnitude(const ConstRefVec& magnitude);
 
     /// \brief Gets the trust Magnitude of the manifold on its tangent space.
     /// it is typically used for scaling of the trust regions
     void getTrustMagnitude(RefVec out) const;
     Eigen::VectorXd getTrustMagnitude() const;
+    void setTrustMagnitude(const double& magnitude);
+    void setTrustMagnitude(const ConstRefVec& magnitude);
 
     /// \brief returns a value unique to each instance of a manifold
     long getInstanceId() const;
@@ -257,7 +256,7 @@ namespace mnf
     virtual long getTypeId() const;
 
   protected:
-    std::shared_ptr<Manifold_Base> manifoldBase_;
+    std::shared_ptr<Manifold_Base> ptr_;
 
   };
 }

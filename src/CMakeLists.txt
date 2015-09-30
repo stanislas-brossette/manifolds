@@ -20,8 +20,8 @@ set(SOURCES
   CartesianProduct_Base.cpp
   #CartesianPower.cpp
   #CartesianPower_Base.cpp
-  #ExpMapMatrix.cpp
-  #ExpMapQuaternion.cpp
+  ExpMapMatrix.cpp
+  ExpMapQuaternion.cpp
   Manifold.cpp
   Manifold_Base.cpp
   Point.cpp
@@ -47,8 +47,8 @@ set(HEADERS
   ../include/manifolds/RealSpace.h
   ../include/manifolds/RealSpace_Base.h
   ../include/manifolds/ReusableTemporaryMap.h
-  #../include/manifolds/SO3.h
-  #../include/manifolds/SO3_Base.h
+  ../include/manifolds/SO3.h
+  ../include/manifolds/SO3_Base.h
   ../include/manifolds/S2.h
   ../include/manifolds/S2_Base.h
   ../include/manifolds/utils.h

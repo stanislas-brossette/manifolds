@@ -24,11 +24,10 @@
 #include <manifolds/Manifold.h>
 #include <manifolds/ReusableTemporaryMap.h>
 #include <manifolds/utils.h>
+#include <manifolds/SO3_Base.h>
 
 namespace mnf
 {
-  template<typename Map>
-  class SO3_Base<Map>;
   /// \brief Manifold representing the space of 3-dimensional rotations, also
   /// known as SO(3). It is templated by its map
   template<typename Map>
@@ -38,107 +37,23 @@ namespace mnf
     SO3();
     SO3(double magnitude);
     SO3(const ConstRefVec& magnitude);
-    virtual size_t numberOfSubmanifolds() const;
-    virtual const Manifold& operator()(size_t i) const;
-    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
-    virtual void getTypicalMagnitude_(RefVec out) const;
-    void setTypicalMagnitude(double magnitude);
-    void setTypicalMagnitude(const ConstRefVec& out);
-    virtual void getTrustMagnitude_(RefVec out) const;
-    void setTrustMagnitude(const double& magnitude);
-    void setTrustMagnitude(const ConstRefVec& out);
-    virtual void createRandomPoint_(RefVec out, double coeff) const;
-    virtual bool isElementary() const;
-    virtual long getTypeId() const;
   };
 
   //Implementations of the methods
   template<typename Map>
   inline SO3<Map>::SO3()
-    : Manifold(std::make_shared<SO3_Base<Map> >())
+    : Manifold(std::shared_ptr<Manifold_Base>(new SO3_Base<Map> ()))
   {
   }
   template<typename Map>
   inline SO3<Map>::SO3(double magnitude)
-    : Manifold(std::make_shared<SO3_Base<Map> >(magnitude))
+    : Manifold(std::shared_ptr<Manifold_Base>(new SO3_Base<Map> (magnitude)))
   {
   }
   template<typename Map>
   inline SO3<Map>::SO3(const ConstRefVec& magnitude)
-    : Manifold(std::make_shared<SO3_Base<Map> >(magnitude))
+    : Manifold(std::shared_ptr<Manifold_Base>(new SO3_Base<Map> (magnitude)))
   {
-  }
-
-  template<typename Map>
-  inline size_t SO3<Map>::numberOfSubmanifolds() const
-  {
-    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->numberOfSubmanifolds();
-  }
-
-  template<typename Map>
-  inline bool SO3<Map>::isElementary() const
-  {
-    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->isElementary();
-  }
-
-  template<typename Map>
-  inline const Manifold& SO3<Map>::operator()(size_t i) const
-  {
-    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->operator()(i);
-  }
-
-  template<typename Map>
-  inline std::string SO3<Map>::toString(const ConstRefVec& val, const std::string& prefix, const Eigen::IOFormat& fmt) const
-  {
-    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->toString(val, prefix, fmt);
-  }
-
-  template<typename Map>
-  void SO3<Map>::createRandomPoint_(RefVec out, double coeff) const
-  {
-    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->createRandomPoint_(out, coeff);
-  }
-
-  template<typename Map>
-  void SO3<Map>::getTypicalMagnitude_(RefVec out) const
-  {
-    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->getTypicalMagnitude_(out);
-  }
-
-  template<typename Map>
-  void SO3<Map>::setTypicalMagnitude(double magnitude)
-  {
-    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->setTypicalMagnitude(magnitude);
-  }
-
-  template<typename Map>
-  void SO3<Map>::setTypicalMagnitude(const ConstRefVec& out)
-  {
-    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->setTypicalMagnitude(out);
-  }
-
-  template<typename Map>
-  void SO3<Map>::getTrustMagnitude_(RefVec out) const
-  {
-    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->getTrustMagnitude_(out);
-  }
-
-  template<typename Map>
-  void SO3<Map>::setTrustMagnitude(const double& magnitude)
-  {
-    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->setTrustMagnitude(magnitude);
-  }
-
-  template<typename Map>
-  void SO3<Map>::setTrustMagnitude(const ConstRefVec& out)
-  {
-    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->setTrustMagnitude(out);
-  }
-
-  template<typename Map>
-  long SO3<Map>::getTypeId() const
-  {
-    return std::static_pointer_cast<SO3_Base<Map> >(manifoldBase_)->getTypeId();
   }
 }
 

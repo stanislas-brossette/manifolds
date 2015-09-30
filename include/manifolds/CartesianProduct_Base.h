@@ -40,14 +40,15 @@ namespace mnf
     CartesianProduct_Base();
 
     /// \brief Constructor of the manifold from a list of manifolds
-    //CartesianProduct_Base(const std::initializer_list<Manifold_Base*> m);
+    //CartesianProduct_Base(const std::initializer_list<Manifold*> m);
 
     /// \brief Constructor of the manifold composed of \f$ m1\times m2\f$
-    CartesianProduct_Base(const Manifold& m1, const Manifold& m2);
+    CartesianProduct_Base(const std::shared_ptr<Manifold_Base>& m1,
+        const std::shared_ptr<Manifold_Base>& m2);
 
     /// \brief Adds manifold m to the current composed manifold\n
     /// This method cannot be executed if the manifold is locked
-    CartesianProduct_Base& multiply(const Manifold& m);
+    CartesianProduct_Base& multiply(const std::shared_ptr<Manifold_Base>& m);
 
     virtual size_t numberOfSubmanifolds() const;
     virtual std::shared_ptr<const Manifold_Base> operator()(const size_t i) const;
@@ -83,15 +84,15 @@ namespace mnf
     virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const;
     virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
     virtual void limitMap_(RefVec out) const;
-    virtual void getTypicalMagnitude_(RefVec out) const;
-    virtual void getTrustMagnitude_(RefVec out) const;
+    virtual void getTypicalMagnitude(RefVec out) const;
+    virtual void getTrustMagnitude(RefVec out) const;
     virtual long getTypeId() const;
 
     virtual Manifold_Base_ptr getNewCopy() const;
 
   private:
     /// \brief List of pointers on all the manifolds in the cartesian product
-    std::vector<Manifold> submanifolds_;
+    std::vector<std::shared_ptr<Manifold_Base>> submanifolds_;
 
     /// \brief List of start index of submanifolds in a vector of the
     /// tangent space

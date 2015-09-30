@@ -32,6 +32,8 @@ namespace mnf
     mnf_assert(0 <= dimension && "Negative dimension not accepted");
     mnf_assert(dimension <= tangentDimension);
     mnf_assert(tangentDimension <= representationDimension);
+    trustMagnitude_.resize(tangentDimension);
+    typicalMagnitude_.resize(tangentDimension);
     this->instanceId_ = manifoldCounter_++;
   }
 
@@ -348,27 +350,51 @@ namespace mnf
   void Manifold_Base::getTypicalMagnitude(RefVec out) const
   {
     mnf_assert(out.size() == tangentDim_);
-    getTypicalMagnitude_(out);
+    out = typicalMagnitude_;
   }
 
   Eigen::VectorXd Manifold_Base::getTypicalMagnitude() const
   {
     Eigen::VectorXd out(tangentDim_);
-    getTypicalMagnitude_(out);
+    getTypicalMagnitude(out);
     return out;
+  }
+
+  void Manifold_Base::setTypicalMagnitude(const double& magnitude)
+  {
+    Eigen::VectorXd temp = Eigen::VectorXd::Constant(tangentDim(), magnitude);
+    setTypicalMagnitude(temp);
+  }
+
+  void Manifold_Base::setTypicalMagnitude(const ConstRefVec& out)
+  {
+    testLock();
+    typicalMagnitude_ = out;
   }
 
   void Manifold_Base::getTrustMagnitude(RefVec out) const
   {
     mnf_assert(out.size() == tangentDim_);
-    getTrustMagnitude_(out);
+    out = trustMagnitude_;
   }
 
   Eigen::VectorXd Manifold_Base::getTrustMagnitude() const
   {
     Eigen::VectorXd out(tangentDim_);
-    getTrustMagnitude_(out);
+    getTrustMagnitude(out);
     return out;
+  }
+
+  void Manifold_Base::setTrustMagnitude(const double& magnitude)
+  {
+    Eigen::VectorXd temp = Eigen::VectorXd::Constant(tangentDim(), magnitude);
+    setTrustMagnitude(temp);
+  }
+
+  void Manifold_Base::setTrustMagnitude(const ConstRefVec& out)
+  {
+    testLock();
+    trustMagnitude_ = out;
   }
 
   void Manifold_Base::lock() const
@@ -409,4 +435,5 @@ namespace mnf
 
     return copy;
   }
+
 }

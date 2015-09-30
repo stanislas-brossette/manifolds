@@ -35,8 +35,8 @@ namespace mnf
     /// \brief Default constructor
     CartesianProduct();
 
-    /// \brief Constructor of the manifold from a list of manifolds
-    //CartesianProduct(const std::initializer_list<Manifold_Base*> m);
+    ///brief Constructor of the manifold from a list of manifolds
+    CartesianProduct(const std::initializer_list<Manifold*> m);
 
     /// \brief Constructor of the manifold composed of \f$ m1\times m2\f$
     CartesianProduct(const Manifold& m1, const Manifold& m2);
@@ -44,16 +44,6 @@ namespace mnf
     /// \brief Adds manifold m to the current composed manifold\n
     /// This method cannot be executed if the manifold is locked
     CartesianProduct& multiply(const Manifold& m);
-
-    //virtual size_t numberOfSubmanifolds() const;
-    //virtual Manifold operator()(const size_t i) const;
-
-    //virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = defaultFormat) const;
-
-    //virtual bool isElementary() const;
-
-    //virtual void display(const std::string& prefix = "") const;
-
   };
 }
 
