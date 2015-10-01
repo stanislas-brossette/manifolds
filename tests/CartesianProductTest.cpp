@@ -42,6 +42,7 @@ BOOST_AUTO_TEST_CASE(CopyTest)
 {
   RealSpace R0(2);
   RealSpace R1 = R0.copy();
+  RealSpace R2(R0);
   R0.setTrustMagnitude(0);
   R0.setTypicalMagnitude(10);
   R1.setTrustMagnitude(1);
@@ -61,10 +62,12 @@ BOOST_AUTO_TEST_CASE(CopyTest)
   Tr01 << 0, 0, 1, 1;
   Tr11 << 1, 1, 1, 1;
   Tr10 << 1, 1, 0, 0;
+  BOOST_CHECK_EQUAL(R2.getTypicalMagnitude(), R0.getTypicalMagnitude());
   BOOST_CHECK_EQUAL(R0R0.getTypicalMagnitude(), Ty00);
   BOOST_CHECK_EQUAL(R0R1.getTypicalMagnitude(), Ty01);
   BOOST_CHECK_EQUAL(R1R1.getTypicalMagnitude(), Ty11);
   BOOST_CHECK_EQUAL(R1R0.getTypicalMagnitude(), Ty10);
+  BOOST_CHECK_EQUAL(R2.getTrustMagnitude(), R0.getTrustMagnitude());
   BOOST_CHECK_EQUAL(R0R0.getTrustMagnitude(), Tr00);
   BOOST_CHECK_EQUAL(R0R1.getTrustMagnitude(), Tr01);
   BOOST_CHECK_EQUAL(R1R1.getTrustMagnitude(), Tr11);
@@ -81,10 +84,12 @@ BOOST_AUTO_TEST_CASE(CopyTest)
   Tr01 << 3, 3, 9, 9;
   Tr11 << 9, 9, 9, 9;
   Tr10 << 9, 9, 3, 3;
+  BOOST_CHECK_EQUAL(R2.getTypicalMagnitude(), R0.getTypicalMagnitude());
   BOOST_CHECK_EQUAL(R0R0.getTypicalMagnitude(), Ty00);
   BOOST_CHECK_EQUAL(R0R1.getTypicalMagnitude(), Ty01);
   BOOST_CHECK_EQUAL(R1R1.getTypicalMagnitude(), Ty11);
   BOOST_CHECK_EQUAL(R1R0.getTypicalMagnitude(), Ty10);
+  BOOST_CHECK_EQUAL(R2.getTrustMagnitude(), R0.getTrustMagnitude());
   BOOST_CHECK_EQUAL(R0R0.getTrustMagnitude(), Tr00);
   BOOST_CHECK_EQUAL(R0R1.getTrustMagnitude(), Tr01);
   BOOST_CHECK_EQUAL(R1R1.getTrustMagnitude(), Tr11);
