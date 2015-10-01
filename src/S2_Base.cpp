@@ -49,6 +49,11 @@ namespace mnf
     setTrustMagnitude (magnitude);
   }
 
+  S2_Base S2_Base::copy() const
+  {
+    return S2_Base(*this);
+  }
+
   bool S2_Base::isInM_(const Eigen::VectorXd& val , double prec) const
   {
     bool out(fabs(val.lpNorm<2>() - 1.0) < prec);

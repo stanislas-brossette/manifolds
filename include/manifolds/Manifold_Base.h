@@ -44,7 +44,7 @@ namespace mnf
   /// representation space is denoted \f$\mathbb{E}\f$\n
   /// The map function is \f$ \phi:\mathbb{M},T^\mathbb{M}\to\mathbb{M}
   /// \f$ and the map function on a point \f$x\f$ is \f$ \phi_x:T_x^\mathbb{M}\to\mathbb{M}\f$
-  class Manifold_Base : public std::enable_shared_from_this<Manifold_Base>
+  class MANIFOLDS_API Manifold_Base : public std::enable_shared_from_this<Manifold_Base>
                           // : public RefCounter, public ValidManifold
   {
     friend Manifold;
@@ -58,6 +58,8 @@ namespace mnf
     /// \brief Default Constructor that sets the dimensions of the manifold and of its
     /// representation space
     Manifold_Base(Index dimension, Index tangentDimension, Index representationDimension);
+
+    //virtual Manifold_Base copy(const Manifold_Base& m) const = 0;
 
     /// \brief The destructor
     virtual ~Manifold_Base();
@@ -246,7 +248,7 @@ namespace mnf
 
     /// \brief Gets the trust Magnitude of the manifold on its tangent space.
     /// it is typically used for scaling of the trust regions
-    void getTrustMagnitude(RefVec out) const;
+    virtual void getTrustMagnitude(RefVec out) const;
     Eigen::VectorXd getTrustMagnitude() const;
     void setTrustMagnitude(const double& magnitude);
     void setTrustMagnitude(const ConstRefVec& out);
@@ -327,13 +329,13 @@ namespace mnf
     /// \brief tests if the manifold is locked, throwing an error if it is
     void testLock() const;
 
-    /// \brief return a new copy of this manifold, including its instanceId.
-    /// Should only be used within the CartesianProduct to store a copy of
-    /// the manifold inside the std::vector.
-    virtual Manifold_Base_ptr getNewCopy() const = 0;
+    ///// \brief return a new copy of this manifold, including its instanceId.
+    ///// Should only be used within the CartesianProduct to store a copy of
+    ///// the manifold inside the std::vector.
+    //virtual Manifold_Base_ptr getNewCopy() const = 0;
 
-    /// \brief call the getNewCopy() method from any Manifold subclass.
-    static Manifold_Base_ptr copyManifold(const Manifold_Base& m);
+    ///// \brief call the getNewCopy() method from any Manifold subclass.
+    //static Manifold_Base_ptr copyManifold(const Manifold_Base& m);
 
     /// \brief a value used to identify different instances at runtime
     mutable long instanceId_;

@@ -50,6 +50,11 @@ namespace mnf
     name() = m1->name() + "x" + m2->name();
   }
 
+  CartesianProduct_Base CartesianProduct_Base::copy() const
+  {
+    return CartesianProduct_Base(*this);
+  }
+
   bool CartesianProduct_Base::isInM_(const Eigen::VectorXd& val, double ) const
   {
     bool out = true;

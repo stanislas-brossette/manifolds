@@ -28,7 +28,7 @@ namespace mnf
 
   /// \brief Manifold representing the space of real numbers of dimension n
   /// \f$\mathbb{R}^n\f$
-  class RealSpace_Base: public Manifold_Base
+  class MANIFOLDS_API RealSpace_Base: public Manifold_Base
   {
     friend RealSpace;
   private:
@@ -37,6 +37,8 @@ namespace mnf
     RealSpace_Base(Index n);
     RealSpace_Base(Index n, double magnitude);
     RealSpace_Base(Index n, const ConstRefVec& magnitude);
+
+    virtual RealSpace_Base copy() const;
 
     virtual size_t numberOfSubmanifolds() const;
     virtual std::shared_ptr<const Manifold_Base> operator()(size_t i) const;

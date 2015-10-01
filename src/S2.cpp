@@ -26,6 +26,11 @@
 
 namespace mnf
 {
+  S2::S2(std::shared_ptr<S2_Base> p)
+    : Manifold(std::static_pointer_cast<Manifold_Base>(p))
+  {
+  }
+
   S2::S2()
     : Manifold(std::shared_ptr<Manifold_Base>(new S2_Base()))
   {
@@ -39,6 +44,11 @@ namespace mnf
   S2::S2(const ConstRefVec& magnitude)
     : Manifold(std::shared_ptr<Manifold_Base>(new S2_Base(magnitude)))
   {
+  }
+
+  S2 S2::copy() const
+  {
+    return S2(std::make_shared<S2_Base>(std::static_pointer_cast<S2_Base>(ptr_)->copy()));
   }
 
   void S2::logarithm (RefVec out, const ConstRefVec& x, const ConstRefVec& y) const

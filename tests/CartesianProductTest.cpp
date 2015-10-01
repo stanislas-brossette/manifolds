@@ -38,6 +38,59 @@
 
 using namespace mnf;
 
+BOOST_AUTO_TEST_CASE(CopyTest)
+{
+  RealSpace R0(2);
+  RealSpace R1 = R0.copy();
+  R0.setTrustMagnitude(0);
+  R0.setTypicalMagnitude(10);
+  R1.setTrustMagnitude(1);
+  R1.setTypicalMagnitude(11);
+  CartesianProduct R0R0(R0, R0);
+  CartesianProduct R0R1(R0, R1);
+  CartesianProduct R1R1(R1, R1);
+  CartesianProduct R1R0(R1, R0);
+
+  Eigen::VectorXd Ty00(4), Ty01(4), Ty11(4), Ty10(4);
+  Ty00 << 10, 10, 10, 10;
+  Ty01 << 10, 10, 11, 11;
+  Ty11 << 11, 11, 11, 11;
+  Ty10 << 11, 11, 10, 10;
+  Eigen::VectorXd Tr00(4), Tr01(4), Tr11(4), Tr10(4);
+  Tr00 << 0, 0, 0, 0;
+  Tr01 << 0, 0, 1, 1;
+  Tr11 << 1, 1, 1, 1;
+  Tr10 << 1, 1, 0, 0;
+  BOOST_CHECK_EQUAL(R0R0.getTypicalMagnitude(), Ty00);
+  BOOST_CHECK_EQUAL(R0R1.getTypicalMagnitude(), Ty01);
+  BOOST_CHECK_EQUAL(R1R1.getTypicalMagnitude(), Ty11);
+  BOOST_CHECK_EQUAL(R1R0.getTypicalMagnitude(), Ty10);
+  BOOST_CHECK_EQUAL(R0R0.getTrustMagnitude(), Tr00);
+  BOOST_CHECK_EQUAL(R0R1.getTrustMagnitude(), Tr01);
+  BOOST_CHECK_EQUAL(R1R1.getTrustMagnitude(), Tr11);
+  BOOST_CHECK_EQUAL(R1R0.getTrustMagnitude(), Tr10);
+  R0.setTypicalMagnitude(3.14);
+  R1.setTypicalMagnitude(99);
+  Ty00 << 3.14, 3.14, 3.14, 3.14;
+  Ty01 << 3.14, 3.14, 99, 99;
+  Ty11 << 99, 99, 99, 99;
+  Ty10 << 99, 99, 3.14, 3.14;
+  R0.setTrustMagnitude(3);
+  R1.setTrustMagnitude(9);
+  Tr00 << 3, 3, 3, 3;
+  Tr01 << 3, 3, 9, 9;
+  Tr11 << 9, 9, 9, 9;
+  Tr10 << 9, 9, 3, 3;
+  BOOST_CHECK_EQUAL(R0R0.getTypicalMagnitude(), Ty00);
+  BOOST_CHECK_EQUAL(R0R1.getTypicalMagnitude(), Ty01);
+  BOOST_CHECK_EQUAL(R1R1.getTypicalMagnitude(), Ty11);
+  BOOST_CHECK_EQUAL(R1R0.getTypicalMagnitude(), Ty10);
+  BOOST_CHECK_EQUAL(R0R0.getTrustMagnitude(), Tr00);
+  BOOST_CHECK_EQUAL(R0R1.getTrustMagnitude(), Tr01);
+  BOOST_CHECK_EQUAL(R1R1.getTrustMagnitude(), Tr11);
+  BOOST_CHECK_EQUAL(R1R0.getTrustMagnitude(), Tr10);
+}
+
 BOOST_AUTO_TEST_CASE(CartProdConstructor)
 {
   RealSpace R3(3);
@@ -46,12 +99,12 @@ BOOST_AUTO_TEST_CASE(CartProdConstructor)
   RealSpace R2(2);
   SO3<ExpMapMatrix> RotSpace;
   CartesianProduct P(R2, R3);
-  P.multiply(R2);
+  P.multiply(R2.copy());
   CartesianProduct S(P, RotSpace);
 
   //CartesianPower PowS(S, 3);
-  CartesianProduct PowS(S, S);
-  PowS.multiply(S);
+  CartesianProduct PowS(S, S.copy());
+  PowS.multiply(S.copy());
 
   BOOST_CHECK_EQUAL(S.dim(), 10);
   BOOST_CHECK_EQUAL(S.representationDim(), 16);
@@ -88,7 +141,11 @@ BOOST_AUTO_TEST_CASE(CartProdConstructor)
                         2, 2, 2,
                         1, 1,
                         M_PI, M_PI, M_PI;
+  std::cout << "PowS.getTypicalMagnitude() = \n" << PowS.getTypicalMagnitude().transpose() << std::endl;
+  std::cout << "expectedTypicalMag = \n" << expectedTypicalMag.transpose() << std::endl;
   BOOST_CHECK_EQUAL(PowS.getTypicalMagnitude(), expectedTypicalMag);
+  std::cout << "PowS.getTrustMagnitude() = \n" << PowS.getTrustMagnitude().transpose() << std::endl;
+  std::cout << "expectedTrustMag = \n" << expectedTrustMag.transpose() << std::endl;
   BOOST_CHECK_EQUAL(PowS.getTrustMagnitude(), expectedTrustMag);
   BOOST_CHECK(!S.isElementary());
   BOOST_CHECK(!P.isElementary());

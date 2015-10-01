@@ -54,6 +54,11 @@ namespace mnf
     setTrustMagnitude (magnitude);
   }
 
+  RealSpace_Base RealSpace_Base::copy() const
+  {
+    return RealSpace_Base(*this);
+  }
+
   bool RealSpace_Base::isInM_(const Eigen::VectorXd& val , double ) const
   {
     bool out( dim() == val.size());

@@ -30,13 +30,16 @@ namespace mnf
   /// \brief Manifold representing the space of 3-dimensional rotations, also
   /// known as SO(3). It is templated by its map
   template<typename Map>
-  class SO3_Base: public Manifold_Base
+  class MANIFOLDS_API SO3_Base: public Manifold_Base
   {
     template<typename> friend class SO3;
   private:
     SO3_Base();
     SO3_Base(double magnitude);
     SO3_Base(const ConstRefVec& magnitude);
+
+    virtual SO3_Base copy() const;
+
     virtual size_t numberOfSubmanifolds() const;
     virtual std::shared_ptr<const Manifold_Base> operator()(size_t i) const;
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
@@ -111,6 +114,12 @@ namespace mnf
   inline void SO3_Base<Map>::forceOnM_(RefVec out, const ConstRefVec& in) const
   {
     return Map::forceOnM_(out, in);
+  }
+
+  template<typename Map>
+  inline SO3_Base<Map> SO3_Base<Map>::copy() const
+  {
+    return SO3_Base<Map>(*this);
   }
 
   template<typename Map>

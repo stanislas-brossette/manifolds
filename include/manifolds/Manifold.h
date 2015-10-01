@@ -47,8 +47,10 @@ namespace mnf
   {
   public:
     Manifold(std::shared_ptr<Manifold_Base> m);
+
     std::shared_ptr<const Manifold_Base> ptr() const;
-    std::shared_ptr<Manifold_Base> getNonConstPtr() const;
+
+    std::shared_ptr<Manifold_Base> getNonConstPtr();
 
   public:
     /// \brief The destructor
@@ -259,5 +261,101 @@ namespace mnf
     std::shared_ptr<Manifold_Base> ptr_;
 
   };
+
+  template<int D>
+  inline Segment Manifold::getView(RefVec val, size_t i) const
+  {
+    return ptr_->getView<D>(val, i);
+  }
+
+  template<int D>
+  inline ConstSegment Manifold::getConstView(const ConstRefVec& val, size_t i) const
+  {
+    return ptr_->getConstView<D>(val, i);
+  }
+
+  template<int Dr, int Dc>
+  inline typename ViewReturnType<Dr, Dc>::Type Manifold::getView(RefMat val, size_t i) const
+  {
+    return ptr_->getView<Dr, Dc>(val, i);
+  }
+
+  template<int Dr, int Dc>
+  inline typename ConstViewReturnType<Dr, Dc>::Type Manifold::getConstView(const ConstRefMat& val, size_t i) const
+  {
+    return ptr_->getConstView<Dr, Dc>(val, i);
+  }
+
+  template<int Dr, int Dc>
+  inline typename ViewReturnType<Dr, Dc>::Type Manifold::getView(RefMat val, size_t ir, size_t ic) const
+  {
+    return ptr_->getView<Dr, Dc>(val, ir, ic);
+  }
+
+  template<int Dr, int Dc>
+  inline typename ConstViewReturnType<Dr, Dc>::Type Manifold::getConstView(const ConstRefMat& val, size_t ir, size_t ic) const
+  {
+    return ptr_->getConstView<Dr, Dc>(val, ir, ic);
+  }
+
+  template<>
+  inline typename ViewReturnType<F, R>::Type Manifold::getView<F, R>(RefMat val, size_t ir, size_t ic) const
+  {
+    return ptr_->getView<F, R>(val, ir, ic);
+  }
+
+  template<>
+  inline typename ConstViewReturnType<F, R>::Type Manifold::getConstView<F, R>(const ConstRefMat& val, size_t ir, size_t ic) const
+  {
+    return ptr_->getConstView<F, R>(val, ir, ic);
+  }
+
+  template<>
+  inline typename ViewReturnType<F, T>::Type Manifold::getView<F, T>(RefMat val, size_t ir, size_t ic) const
+  {
+    return ptr_->getView<F, T>(val, ir, ic);
+  }
+
+  template<>
+  inline typename ConstViewReturnType<F, T>::Type Manifold::getConstView<F, T>(const ConstRefMat& val, size_t ir, size_t ic) const
+  {
+    return ptr_->getConstView<F, T>(val, ir, ic);
+  }
+
+  template<>
+  inline typename ViewReturnType<R, F>::Type Manifold::getView<R, F>(RefMat val, size_t ir, size_t ic) const
+  {
+    return ptr_->getView<R, F>(val, ir, ic);
+  }
+
+  template<>
+  inline typename ConstViewReturnType<R, F>::Type Manifold::getConstView<R, F>(const ConstRefMat& val, size_t ir, size_t ic) const
+  {
+    return ptr_->getConstView<R, F>(val, ir, ic);
+  }
+
+  template<>
+  inline typename ViewReturnType<T, F>::Type Manifold::getView<T, F>(RefMat val, size_t ir, size_t ic) const
+  {
+    return ptr_->getView<T, F>(val, ir, ic);
+  }
+
+  template<>
+  inline typename ConstViewReturnType<T, F>::Type Manifold::getConstView<T, F>(const ConstRefMat& val, size_t ir, size_t ic) const
+  {
+    return ptr_->getConstView<T, F>(val, ir, ic);
+  }
+
+  template<>
+  inline typename ViewReturnType<F, F>::Type Manifold::getView<F, F>(RefMat val, size_t ir, size_t ic) const
+  {
+    return ptr_->getView<F, F>(val, ir, ic);
+  }
+
+  template<>
+  inline typename ConstViewReturnType<F, F>::Type Manifold::getConstView<F, F>(const ConstRefMat& val, size_t ir, size_t ic) const
+  {
+    return ptr_->getConstView<F, F>(val, ir, ic);
+  }
 }
 

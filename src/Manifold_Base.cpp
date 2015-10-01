@@ -368,7 +368,7 @@ namespace mnf
 
   void Manifold_Base::setTypicalMagnitude(const ConstRefVec& out)
   {
-    testLock();
+    //testLock();
     typicalMagnitude_ = out;
   }
 
@@ -393,7 +393,7 @@ namespace mnf
 
   void Manifold_Base::setTrustMagnitude(const ConstRefVec& out)
   {
-    testLock();
+    //testLock();
     trustMagnitude_ = out;
   }
 
@@ -427,13 +427,14 @@ namespace mnf
     return this->getTypeId() == other.getTypeId();
   }
 
-  Manifold_Base_ptr Manifold_Base::copyManifold(const Manifold_Base& m)
-  {
-    Manifold_Base_ptr copy = m.getNewCopy();
+  //Manifold_Base_ptr Manifold_Base::copyManifold(const Manifold_Base& m)
+  //{
+    //Manifold_Base_ptr copy = m.getNewCopy();
 
-    copy->instanceId_ = m.instanceId_;
+    //copy->instanceId_ = m.instanceId_;
 
-    return copy;
-  }
+    //return copy;
+  //}
 
 }
+

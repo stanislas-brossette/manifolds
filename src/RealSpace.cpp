@@ -22,6 +22,11 @@
 
 namespace mnf
 {
+  RealSpace::RealSpace(std::shared_ptr<RealSpace_Base> p)
+    : Manifold(std::static_pointer_cast<Manifold_Base>(p))
+  {
+  }
+
   RealSpace::RealSpace(Index n)
     : Manifold(std::shared_ptr<Manifold_Base>(new RealSpace_Base(n)))
   {
@@ -35,4 +40,10 @@ namespace mnf
     : Manifold(std::shared_ptr<Manifold_Base>(new RealSpace_Base(n, magnitude)))
   {
   }
+
+  RealSpace RealSpace::copy() const
+  {
+    return RealSpace(std::make_shared<RealSpace_Base>(std::static_pointer_cast<RealSpace_Base>(ptr_)->copy()));
+  }
+
 }

@@ -29,13 +29,15 @@ namespace mnf
   /// \brief Manifold representing the 3-dimensional Sphere, also
   /// known as S2.
   /// All the equations in this class are provided by Manopt
-  class S2_Base : public Manifold_Base
+  class MANIFOLDS_API S2_Base : public Manifold_Base
   {
     friend S2;
   private:
     S2_Base();
-    S2_Base(double trustMagnitude);
-    S2_Base(const ConstRefVec& trustMagnitude);
+    S2_Base(double mag);
+    S2_Base(const ConstRefVec& mag);
+
+    virtual S2_Base copy() const;
 
     virtual size_t numberOfSubmanifolds() const;
     virtual std::shared_ptr<const Manifold_Base> operator()(size_t i) const;

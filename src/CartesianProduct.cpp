@@ -22,27 +22,37 @@
 
 namespace mnf
 {
+  CartesianProduct::CartesianProduct(std::shared_ptr<CartesianProduct_Base> p)
+    : Manifold(std::static_pointer_cast<Manifold_Base>(p))
+  {
+  }
+
   CartesianProduct::CartesianProduct()
     : Manifold(std::shared_ptr<Manifold_Base>(new CartesianProduct_Base()))
   {
   }
 
-  CartesianProduct::CartesianProduct(const std::initializer_list<Manifold*> m)
+  CartesianProduct::CartesianProduct(std::initializer_list<Manifold*> m)
     : Manifold(std::shared_ptr<Manifold_Base>(new CartesianProduct_Base()))
   {
     for(auto s:m)
       multiply(s->getNonConstPtr());
   }
 
-  CartesianProduct::CartesianProduct(const Manifold& m1, const Manifold& m2)
+  CartesianProduct::CartesianProduct(Manifold m1, Manifold m2)
     : Manifold(std::shared_ptr<Manifold_Base>(
           new CartesianProduct_Base(m1.getNonConstPtr(), m2.getNonConstPtr())))
   {
   }
 
-  CartesianProduct& CartesianProduct::multiply(const Manifold& m)
+  CartesianProduct& CartesianProduct::multiply(Manifold m)
   {
     std::static_pointer_cast<CartesianProduct_Base>(ptr_)->multiply(m.getNonConstPtr());
     return *this;
+  }
+
+  CartesianProduct CartesianProduct::copy() const
+  {
+    return CartesianProduct(std::make_shared<CartesianProduct_Base>(std::static_pointer_cast<CartesianProduct_Base>(ptr_)->copy()));
   }
 }

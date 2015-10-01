@@ -29,7 +29,7 @@
 
 namespace mnf
 {
-  class CartesianProduct;
+  class MANIFOLDS_API CartesianProduct;
 
   /// \brief Manifold representing the cartesian product of several submanifolds
   class CartesianProduct_Base : public Manifold_Base
@@ -49,6 +49,8 @@ namespace mnf
     /// \brief Adds manifold m to the current composed manifold\n
     /// This method cannot be executed if the manifold is locked
     CartesianProduct_Base& multiply(const std::shared_ptr<Manifold_Base>& m);
+
+    virtual CartesianProduct_Base copy() const;
 
     virtual size_t numberOfSubmanifolds() const;
     virtual std::shared_ptr<const Manifold_Base> operator()(const size_t i) const;

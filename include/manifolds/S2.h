@@ -32,9 +32,11 @@ namespace mnf
   class MANIFOLDS_API S2 : public Manifold
   {
   public:
+    S2(std::shared_ptr<S2_Base> p);
     S2();
-    S2(double trustMagnitude);
-    S2(const ConstRefVec& trustMagnitude);
+    S2(double mag);
+    S2(const ConstRefVec& mag);
+    virtual S2 copy() const;
 
     void logarithm (RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
     double distance (const ConstRefVec& x, const ConstRefVec& y) const;

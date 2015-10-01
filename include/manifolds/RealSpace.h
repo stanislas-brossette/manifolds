@@ -29,6 +29,8 @@ namespace mnf
   /// \f$\mathbb{R}^n\f$
   class MANIFOLDS_API RealSpace: public Manifold
   {
+  private:
+    RealSpace(std::shared_ptr<RealSpace_Base> p);
   public:
     /// \brief Constructor
     /// \param n the dimension of the realspace \f$\mathbb{R}^n\f$
@@ -36,6 +38,9 @@ namespace mnf
     RealSpace(Index n, double magnitude);
     RealSpace(Index n, const ConstRefVec& magnitude);
 
+    /// @brief Returns a deep copy of this manifold. 
+    /// The output contains a copy of this Manifold_Base that lives independently from this manifold
+    virtual RealSpace copy() const;
   };
 }
 

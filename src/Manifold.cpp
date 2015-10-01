@@ -36,7 +36,7 @@ namespace mnf
     return std::const_pointer_cast<const Manifold_Base>(ptr_);
   }
 
-  std::shared_ptr<Manifold_Base> Manifold::getNonConstPtr() const
+  std::shared_ptr<Manifold_Base> Manifold::getNonConstPtr()
   {
     return ptr_;
   }
@@ -198,11 +198,13 @@ namespace mnf
 
   void Manifold::getTrustMagnitude(RefVec out) const
   {
+    std::cout << "Manifold::getTrustMagnitude(RefVec out)" << std::endl;
     return ptr_->getTrustMagnitude(out);
   }
 
   Eigen::VectorXd Manifold::getTrustMagnitude() const
   {
+    std::cout << "Manifold::getTrustMagnitude()" << std::endl;
     return ptr_->getTrustMagnitude();
   }
 

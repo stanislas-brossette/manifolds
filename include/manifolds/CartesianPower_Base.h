@@ -24,7 +24,7 @@ namespace mnf
 {
   class CartesianPower;
   /// \brief Manifold representing the cartesian product of n times the same manifold
-  class CartesianPower_Base : public CartesianProduct_Base
+  class MANIFOLDS_API CartesianPower_Base : public CartesianProduct_Base
   {
     friend CartesianPower;
   private:
