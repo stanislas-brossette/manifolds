@@ -21,7 +21,7 @@
 #include <Eigen/Core>
 #include <manifolds/defs.h>
 #include <manifolds/view.h>
-#include <manifolds/Point.h>
+//#include <manifolds/Point.h>
 #include <manifolds/mnf_assert.h>
 //#include <manifolds/RefCounter.h>
 //#include <manifolds/ValidManifold.h>
@@ -30,6 +30,7 @@
 namespace mnf
 {
   class Manifold;
+  class Point;
 
   /// \brief The Manifold Class represents a manifold. It contains the implementations of
   /// the basic operations on it, like external addition, internal substraction,
@@ -48,11 +49,11 @@ namespace mnf
                           // : public RefCounter, public ValidManifold
   {
     friend Manifold;
-    friend ConstSubPoint;
-    friend SubPoint;
-    friend Point;
-    friend Point operator+(const Point& x, const ConstRefVec& v);
-    friend Eigen::VectorXd operator-(const Point& x, const Point& y);
+    //friend ConstSubPoint;
+    //friend SubPoint;
+    //friend Point;
+    //friend Point operator+(const Point& x, const ConstRefVec& v);
+    //friend Eigen::VectorXd operator-(const Point& x, const Point& y);
 
   public:
     /// \brief Default Constructor that sets the dimensions of the manifold and of its

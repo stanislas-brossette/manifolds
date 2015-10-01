@@ -17,6 +17,7 @@
 
 #include <stdexcept>
 #include <manifolds/Manifold_Base.h>
+#include <manifolds/Point.h>
 #include <manifolds/mnf_assert.h>
 
 namespace mnf
@@ -45,7 +46,7 @@ namespace mnf
   {
     //mnf_assert(isValid() || seeMessageAbove());
     lock();
-    return Point(shared_from_this());
+    return Point(ConstManifold(shared_from_this()));
   }
 
   Point Manifold_Base::createPoint(const ConstRefVec& val) const

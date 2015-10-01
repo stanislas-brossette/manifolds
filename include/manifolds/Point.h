@@ -17,17 +17,15 @@
 
 #pragma once
 
+#include <manifolds/Manifold.h>
 #include <manifolds/defs.h>
 
 namespace mnf
 {
-  class Manifold;
-  class Manifold_Base;
-
   class MANIFOLDS_API ConstSubPoint
   {
   protected:
-    ConstSubPoint(std::shared_ptr<const Manifold_Base> M, const ConstRefVec& val);
+    ConstSubPoint(ConstManifold M, const ConstRefVec& val);
 
   public:
     ConstSubPoint(const ConstSubPoint&);
@@ -48,7 +46,7 @@ namespace mnf
     //P[i] is equivalent to P(i).value()
     ConstSegment operator[](size_t i) const;
 
-    std::shared_ptr<const Manifold_Base> getManifold() const;
+    ConstManifold getManifold() const;
     const Eigen::IOFormat& format() const;
 
     std::string toString(std::string& prefix, const Eigen::IOFormat& fmt) const; //Dislays point in representation space
@@ -58,7 +56,7 @@ namespace mnf
     //void unregisterPoint();
 
   protected:
-    std::shared_ptr<const Manifold_Base> manifold_;
+    ConstManifold manifold_;
 
     /// \internal We keep value as a non const reference here for easy use in SubPoint. 
     /// This require a const_cast upon building ConstSubPoint, however we honor the
@@ -73,7 +71,7 @@ namespace mnf
   class MANIFOLDS_API SubPoint : public ConstSubPoint
   {
   protected:
-    SubPoint(std::shared_ptr<const Manifold_Base> M, RefVec val);
+    SubPoint(ConstManifold M, RefVec val);
 
   public:
     SubPoint(const SubPoint&);
@@ -114,10 +112,9 @@ namespace mnf
   class MANIFOLDS_API Point : public PointMemory, public SubPoint
   {
     friend class Manifold_Base;
-
   private:  //only Manifold can create Point
-    Point(std::shared_ptr<const Manifold_Base> M);
-    Point(std::shared_ptr<const Manifold_Base> M, const ConstRefVec& val);
+    Point(ConstManifold M);
+    Point(ConstManifold M, const ConstRefVec& val);
 
   public:
     Point(const Point& other);
