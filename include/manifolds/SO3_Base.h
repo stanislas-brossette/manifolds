@@ -39,6 +39,7 @@ namespace mnf
     SO3_Base(const ConstRefVec& magnitude);
 
     virtual SO3_Base copy() const;
+    virtual std::shared_ptr<Manifold_Base> clone() const;
 
     virtual size_t numberOfSubmanifolds() const;
     virtual std::shared_ptr<const Manifold_Base> operator()(size_t i) const;
@@ -69,8 +70,6 @@ namespace mnf
     virtual void getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const;
     virtual void limitMap_(RefVec out) const;
     mutable ReusableTemporaryMap bufferMap_;
-
-    virtual Manifold_Base_ptr getNewCopy() const;
 
   private:
     Eigen::Vector3d typicalMagnitude_;
@@ -120,6 +119,12 @@ namespace mnf
   inline SO3_Base<Map> SO3_Base<Map>::copy() const
   {
     return SO3_Base<Map>(*this);
+  }
+
+  template<typename Map>
+  inline std::shared_ptr<Manifold_Base> SO3_Base<Map>::clone() const
+  {
+    return std::make_shared<SO3_Base<Map>>(*this);
   }
 
   template<typename Map>
@@ -259,14 +264,5 @@ namespace mnf
   {
     constexpr long typeId = utils::hash::computeHash("SO3", Map::hashName);
     return typeId;
-  }
-
-  template<typename Map>
-  Manifold_Base_ptr SO3_Base<Map>::getNewCopy() const
-  {
-    std::shared_ptr<SO3_Base<Map> > copySO3(new SO3_Base<Map>(*this));
-    copySO3->instanceId_ = this->instanceId_;
-
-    return copySO3;
   }
 }

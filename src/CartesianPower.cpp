@@ -21,8 +21,10 @@
 namespace mnf
 {
   CartesianPower::CartesianPower(Manifold M, const int n)
-    : CartesianProduct(std::shared_ptr<CartesianProduct_Base>(new CartesianPower_Base(M.getNonConstPtr(), n)))
+    : CartesianProduct()
   {
+    for (int i = 0; i < n; ++i)
+      multiply(M.ptr()->clone());
   }
 }
 

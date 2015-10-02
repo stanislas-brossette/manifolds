@@ -18,7 +18,7 @@
 set(SOURCES
   CartesianProduct.cpp
   CartesianProduct_Base.cpp
-  #CartesianPower.cpp
+  CartesianPower.cpp
   #CartesianPower_Base.cpp
   ExpMapMatrix.cpp
   ExpMapQuaternion.cpp
@@ -35,7 +35,7 @@ set(SOURCES
 set(HEADERS
   ../include/manifolds/CartesianProduct.h
   ../include/manifolds/CartesianProduct_Base.h
-  #../include/manifolds/CartesianPower.h
+  ../include/manifolds/CartesianPower.h
   #../include/manifolds/CartesianPower_Base.h
   ../include/manifolds/defs.h
   ../include/manifolds/ExpMapMatrix.h

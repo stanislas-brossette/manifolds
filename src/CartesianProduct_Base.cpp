@@ -45,6 +45,11 @@ namespace mnf
     return CartesianProduct_Base(*this);
   }
 
+  std::shared_ptr<Manifold_Base> CartesianProduct_Base::clone() const
+  {
+    return std::make_shared<CartesianProduct_Base>(*this);
+  }
+
   bool CartesianProduct_Base::isInM_(const Eigen::VectorXd& val, double ) const
   {
     bool out = true;

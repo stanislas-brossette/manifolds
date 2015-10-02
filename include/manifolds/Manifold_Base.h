@@ -53,6 +53,9 @@ namespace mnf
     /// \brief The destructor
     virtual ~Manifold_Base();
 
+    /// \brief returns a ptr to a clone of this
+    virtual std::shared_ptr<Manifold_Base> clone() const = 0;
+
     /// \brief CreatePoint allows to create a point that belongs to a manifold and that
     /// behaves according to the manifolds operations
     Point createPoint() const;

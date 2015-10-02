@@ -38,6 +38,7 @@ namespace mnf
     S2_Base(const ConstRefVec& mag);
 
     virtual S2_Base copy() const;
+    virtual std::shared_ptr<Manifold_Base> clone() const;
 
     virtual size_t numberOfSubmanifolds() const;
     virtual std::shared_ptr<const Manifold_Base> operator()(size_t i) const;

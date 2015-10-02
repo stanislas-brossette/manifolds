@@ -25,7 +25,7 @@
 #include <manifolds/SO3.h>
 #include <manifolds/RealSpace.h>
 #include <manifolds/CartesianProduct.h>
-//#include <manifolds/CartesianPower.h>
+#include <manifolds/CartesianPower.h>
 #include <manifolds/Point.h>
 #include <manifolds/ExpMapMatrix.h>
 #include <manifolds/ExpMapQuaternion.h>
@@ -94,6 +94,11 @@ BOOST_AUTO_TEST_CASE(CopyTest)
   BOOST_CHECK_EQUAL(R0R1.getTrustMagnitude(), Tr01);
   BOOST_CHECK_EQUAL(R1R1.getTrustMagnitude(), Tr11);
   BOOST_CHECK_EQUAL(R1R0.getTrustMagnitude(), Tr10);
+
+  CartesianPower powR(R0, 2);
+  BOOST_CHECK_EQUAL(powR.getTypicalMagnitude(), Ty00);
+  BOOST_CHECK_EQUAL(powR.getTrustMagnitude(), Tr00);
+
 }
 
 BOOST_AUTO_TEST_CASE(CartProdConstructor)
@@ -107,9 +112,9 @@ BOOST_AUTO_TEST_CASE(CartProdConstructor)
   P.multiply(R2.copy());
   CartesianProduct S(P, RotSpace);
 
-  //CartesianPower PowS(S, 3);
-  CartesianProduct PowS(S, S.copy());
-  PowS.multiply(S.copy());
+  CartesianPower PowS(S, 3);
+  //CartesianProduct PowS(S, S.copy());
+  //PowS.multiply(S.copy());
 
   BOOST_CHECK_EQUAL(S.dim(), 10);
   BOOST_CHECK_EQUAL(S.representationDim(), 16);
@@ -614,9 +619,9 @@ BOOST_AUTO_TEST_CASE(CartProdLimitMap)
   CartesianProduct S(R3, RotSpace);
   S.multiply(R2);
 
-  //CartesianPower Space(S,3);
-  CartesianProduct Space(S,S);
-  Space.multiply(S);
+  CartesianPower Space(S,3);
+  //CartesianProduct Space(S,S);
+  //Space.multiply(S);
 
 
   Index dim = Space.dim();

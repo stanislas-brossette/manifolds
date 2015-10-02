@@ -54,6 +54,11 @@ namespace mnf
     return S2_Base(*this);
   }
 
+  std::shared_ptr<Manifold_Base> S2_Base::clone() const
+  {
+    return std::make_shared<S2_Base>(*this);
+  }
+
   bool S2_Base::isInM_(const Eigen::VectorXd& val , double prec) const
   {
     bool out(fabs(val.lpNorm<2>() - 1.0) < prec);

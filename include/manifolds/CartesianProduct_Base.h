@@ -51,6 +51,7 @@ namespace mnf
     CartesianProduct_Base& multiply(const std::shared_ptr<Manifold_Base>& m);
 
     virtual CartesianProduct_Base copy() const;
+    virtual std::shared_ptr<Manifold_Base> clone() const;
 
     virtual size_t numberOfSubmanifolds() const;
     virtual std::shared_ptr<const Manifold_Base> operator()(const size_t i) const;

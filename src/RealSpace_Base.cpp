@@ -59,6 +59,11 @@ namespace mnf
     return RealSpace_Base(*this);
   }
 
+  std::shared_ptr<Manifold_Base> RealSpace_Base::clone() const
+  {
+    return std::make_shared<RealSpace_Base>(*this);
+  }
+
   bool RealSpace_Base::isInM_(const Eigen::VectorXd& val , double ) const
   {
     bool out( dim() == val.size());
