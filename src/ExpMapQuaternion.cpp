@@ -60,8 +60,6 @@ namespace mnf
 
   typedef utils::ReverseQuaternion toQuat;
   typedef utils::ConstReverseQuaternion toConstQuat;
-  //typedef Eigen::Map< Eigen::Quaterniond > toQuat;
-  //typedef Eigen::Map< const Eigen::Quaterniond > toConstQuat;
   const double ExpMapQuaternion::prec = 1e-8; //TODO Should be sqrt(sqrt(machine precision))
 #if defined(_MSC_FULL_VER) && _MSC_VER < 1900
   char ExpMapQuaternion::hashName[] = "ExpMapQuaternion";
@@ -235,11 +233,6 @@ namespace mnf
   //void ExpMapQuaternion::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
   void ExpMapQuaternion::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& )
   {
-    //OutputType E;
-    //exponential(E,v);
-    //Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(InputDim_, in.cols());
-    //a.noalias() = E*in;
-    //out = a;
     //TODO Make sure that out=in is OK here...
     out = in;
   }
@@ -247,11 +240,6 @@ namespace mnf
   //void ExpMapQuaternion::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
   void ExpMapQuaternion::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec&)
   {
-    //OutputType E;
-    //exponential(E,v);
-    //Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(), InputDim_);
-    //a.noalias() = in*(E.transpose());
-    //out = a;
     //TODO Make sure that out=in is OK here...
     out = in;
   }

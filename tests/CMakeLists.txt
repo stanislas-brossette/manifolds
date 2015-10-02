@@ -41,9 +41,9 @@ add_executable(CartesianProductTest CartesianProductTest.cpp)
 target_link_libraries(CartesianProductTest manifoldsTest ${Boost_LIBRARIES})
 add_test(CartesianProductTest CartesianProductTest)
 
-#add_executable(PointTest PointTest.cpp)
-#target_link_libraries(PointTest manifoldsTest ${Boost_LIBRARIES})
-#add_test(PointTest PointTest)
+add_executable(PointTest PointTest.cpp)
+target_link_libraries(PointTest manifoldsTest ${Boost_LIBRARIES})
+add_test(PointTest PointTest)
 
 #add_executable(ManifoldTest ManifoldTest.cpp)
 #target_link_libraries(ManifoldTest manifoldsTest ${Boost_LIBRARIES})

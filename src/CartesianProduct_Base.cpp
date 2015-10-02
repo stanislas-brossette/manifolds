@@ -29,16 +29,6 @@ namespace mnf
     name() = "";
   }
 
-  //CartesianProduct_Base::CartesianProduct_Base(const std::initializer_list<Manifold*> m)
-    //: Manifold_Base(0,0,0)
-  //{
-    //startIndexT_.push_back(0);
-    //startIndexR_.push_back(0);
-    //name() = "";
-    //for (auto mi : m)
-      //multiply(*mi);
-  //}
-
   CartesianProduct_Base::CartesianProduct_Base(const std::shared_ptr<Manifold_Base>& m1,
       const std::shared_ptr<Manifold_Base>& m2)
     : Manifold_Base(0,0,0)
@@ -310,13 +300,5 @@ namespace mnf
   long CartesianProduct_Base::getTypeId() const
   {
     return utils::hash::computeHash("CartesianProduct_Base");
-  }
-
-  Manifold_Base_ptr CartesianProduct_Base::getNewCopy() const
-  {
-    CartesianProduct_Base_ptr copy(new CartesianProduct_Base(*this));
-    copy->instanceId_ = this->instanceId_;
-
-    return copy;
   }
 }

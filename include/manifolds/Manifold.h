@@ -23,9 +23,6 @@
 
 #include <manifolds/defs.h>
 #include <manifolds/view.h>
-//#include <manifolds/RefCounter.h>
-//#include <manifolds/Point.h>
-//#include <manifolds/ValidManifold.h>
 #include <manifolds/Manifold_Base.h>
 
 namespace mnf

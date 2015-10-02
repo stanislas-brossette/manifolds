@@ -51,10 +51,6 @@ namespace mnf
 
     std::string toString(std::string& prefix, const Eigen::IOFormat& fmt) const; //Dislays point in representation space
 
-  //private:
-    //void registerPoint();
-    //void unregisterPoint();
-
   protected:
     ConstManifold manifold_;
 
@@ -65,7 +61,6 @@ namespace mnf
     mutable Eigen::IOFormat format_;
 
     friend inline std::ostream& operator<< (std::ostream& os, const ConstSubPoint& x);
-    //friend class RefCounter;
   };
 
   class MANIFOLDS_API SubPoint : public ConstSubPoint
@@ -87,7 +82,6 @@ namespace mnf
     //get a sub point
     SubPoint operator()(size_t i);
     ConstSubPoint operator()(size_t i) const { return ConstSubPoint::operator()(i); }
-    //using ConstSubPoint::operator();
 
     //get the data of a sub point
     //P[i] is equivalent to P(i).value()

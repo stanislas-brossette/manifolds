@@ -20,8 +20,8 @@
 
 namespace mnf
 {
-  CartesianPower::CartesianPower(const Manifold& M, const int n)
-    : Manifold(std::shared_ptr<Manifold_Base>(new CartesianPower_Base(M, n)))
+  CartesianPower::CartesianPower(Manifold M, const int n)
+    : CartesianProduct(std::shared_ptr<CartesianProduct_Base>(new CartesianPower_Base(M.getNonConstPtr(), n)))
   {
   }
 }

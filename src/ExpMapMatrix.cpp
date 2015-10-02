@@ -246,26 +246,14 @@ namespace mnf
     out = a;
   }
 
-  //void ExpMapMatrix::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
   void ExpMapMatrix::applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec&)
   {
-    //OutputType E;
-    //exponential(E,v);
-    //Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(InputDim_, in.cols());
-    //a.noalias() = E*in;
-    //out = a;
     //TODO Make sure that out=in is OK here...
     out = in;
   }
 
-  //void ExpMapMatrix::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
   void ExpMapMatrix::applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec&, const ConstRefVec&)
   {
-    //OutputType E;
-    //exponential(E,v);
-    //Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(), InputDim_);
-    //a.noalias() = in*(E.transpose());
-    //out = a;
     //TODO Make sure that out=in is OK here...
     out = in;
   }

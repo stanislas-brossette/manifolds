@@ -32,11 +32,11 @@ namespace mnf
   {
   }
 
-  CartesianProduct::CartesianProduct(std::initializer_list<Manifold*> m)
+  CartesianProduct::CartesianProduct(std::initializer_list<Manifold*> listM)
     : Manifold(std::shared_ptr<Manifold_Base>(new CartesianProduct_Base()))
   {
-    for(auto s:m)
-      multiply(s->getNonConstPtr());
+    for(auto m:listM)
+      multiply(m->getNonConstPtr());
   }
 
   CartesianProduct::CartesianProduct(Manifold m1, Manifold m2)

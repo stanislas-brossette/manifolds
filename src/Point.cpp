@@ -31,19 +31,16 @@ namespace mnf
     , format_(mnf::defaultFormat)
   {
     mnf_assert(manifold_.representationDim() == val.size());
-    //registerPoint();
   }
 
   ConstSubPoint::ConstSubPoint(const ConstSubPoint& other)
     : manifold_(other.manifold_)
     , value_(other.value_)
   {
-    //registerPoint();
   }
 
   ConstSubPoint::~ConstSubPoint()
   {
-    //unregisterPoint();
   }
 
   ConstRefVec ConstSubPoint::value() const
@@ -75,17 +72,6 @@ namespace mnf
   {
     return manifold_.toString(value_, prefix, fmt);
   }
-
-  //void ConstSubPoint::registerPoint()
-  //{
-    //manifold_->incrementRefCounter();
-  //}
-
-  //void ConstSubPoint::unregisterPoint()
-  //{
-    //manifold_->decrementRefCounter();
-  //}
-
 
 
   SubPoint::SubPoint(ConstManifold M, RefVec val)

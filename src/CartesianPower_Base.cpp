@@ -19,11 +19,14 @@
 
 namespace mnf
 {
-  CartesianPower_Base::CartesianPower_Base(std::shared_ptr<Manifold_Base> M, const int n)
+  CartesianPower_Base::CartesianPower_Base(const std::shared_ptr<Manifold_Base>& M, const int n)
     : CartesianProduct_Base()
   {
     for (int i = 0; i < n; ++i)
-      this->multiply(std::make_shared<const Manifold_Base>(*M.get()));
+    {
+      Manifold_Base newM(*M);
+      this->multiply(std::make_shared<const Manifold_Base>(M->copy()));
+    }
   }
 }
 

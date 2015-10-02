@@ -90,8 +90,6 @@ namespace mnf
     virtual void getTrustMagnitude(RefVec out) const;
     virtual long getTypeId() const;
 
-    virtual Manifold_Base_ptr getNewCopy() const;
-
   private:
     /// \brief List of pointers on all the manifolds in the cartesian product
     std::vector<std::shared_ptr<Manifold_Base>> submanifolds_;
