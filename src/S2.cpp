@@ -26,65 +26,63 @@
 
 namespace mnf
 {
-  S2::S2(std::shared_ptr<S2_Base> p)
+S2::S2(std::shared_ptr<S2_Base> p)
     : Manifold(std::static_pointer_cast<Manifold_Base>(p))
-  {
-  }
+{
+}
 
-  S2::S2()
-    : Manifold(std::shared_ptr<Manifold_Base>(new S2_Base()))
-  {
-  }
+S2::S2() : Manifold(std::shared_ptr<Manifold_Base>(new S2_Base())) {}
 
-  S2::S2(double magnitude)
+S2::S2(double magnitude)
     : Manifold(std::shared_ptr<Manifold_Base>(new S2_Base(magnitude)))
-  {
-  }
+{
+}
 
-  S2::S2(const ConstRefVec& magnitude)
+S2::S2(const ConstRefVec& magnitude)
     : Manifold(std::shared_ptr<Manifold_Base>(new S2_Base(magnitude)))
-  {
-  }
+{
+}
 
-  S2 S2::copy() const
-  {
-    return S2(std::make_shared<S2_Base>(std::static_pointer_cast<S2_Base>(ptr_)->copy()));
-  }
+S2 S2::copy() const
+{
+  return S2(std::make_shared<S2_Base>(
+      std::static_pointer_cast<S2_Base>(ptr_)->copy()));
+}
 
-  void S2::logarithm (RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
-  {
-    return std::static_pointer_cast<S2_Base>(ptr_)->logarithm (out, x, y);
-  }
+void S2::logarithm(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
+{
+  return std::static_pointer_cast<S2_Base>(ptr_)->logarithm(out, x, y);
+}
 
-  double S2::distance (const ConstRefVec& x, const ConstRefVec& y) const
-  {
-    return std::static_pointer_cast<S2_Base>(ptr_)->distance (x, y);
-  }
+double S2::distance(const ConstRefVec& x, const ConstRefVec& y) const
+{
+  return std::static_pointer_cast<S2_Base>(ptr_)->distance(x, y);
+}
 
-  void S2::projRows(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
-  {
-    return std::static_pointer_cast<S2_Base>(ptr_)->projRows(out, in, x);
-  }
-  void S2::projCols(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
-  {
-    return std::static_pointer_cast<S2_Base>(ptr_)->projCols(out, in, x);
-  }
-  void S2::projVec(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const
-  {
-    return std::static_pointer_cast<S2_Base>(ptr_)->projVec(out, in, x);
-  }
+void S2::projRows(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+{
+  return std::static_pointer_cast<S2_Base>(ptr_)->projRows(out, in, x);
+}
+void S2::projCols(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
+{
+  return std::static_pointer_cast<S2_Base>(ptr_)->projCols(out, in, x);
+}
+void S2::projVec(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const
+{
+  return std::static_pointer_cast<S2_Base>(ptr_)->projVec(out, in, x);
+}
 
-  void S2::rand(RefVec out) const
-  {
-    return std::static_pointer_cast<S2_Base>(ptr_)->rand(out);
-  }
+void S2::rand(RefVec out) const
+{
+  return std::static_pointer_cast<S2_Base>(ptr_)->rand(out);
+}
 
-  void S2::randVec(RefVec out, const ConstRefVec& x) const
-  {
-    return std::static_pointer_cast<S2_Base>(ptr_)->randVec(out, x);
-  }
-  Eigen::Vector3d S2::randVec(const ConstRefVec& x) const
-  {
-    return std::static_pointer_cast<S2_Base>(ptr_)->randVec(x);
-  }
+void S2::randVec(RefVec out, const ConstRefVec& x) const
+{
+  return std::static_pointer_cast<S2_Base>(ptr_)->randVec(out, x);
+}
+Eigen::Vector3d S2::randVec(const ConstRefVec& x) const
+{
+  return std::static_pointer_cast<S2_Base>(ptr_)->randVec(x);
+}
 }

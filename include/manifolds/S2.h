@@ -24,31 +24,30 @@
 
 namespace mnf
 {
-  class S2_Base;
+class S2_Base;
 
-  /// \brief Manifold representing the 3-dimensional Sphere, also
-  /// known as S2.
-  /// All the equations in this class are provided by Manopt
-  class MANIFOLDS_API S2 : public Manifold
-  {
-  public:
-    S2(std::shared_ptr<S2_Base> p);
-    S2();
-    S2(double mag);
-    S2(const ConstRefVec& mag);
-    virtual S2 copy() const;
+/// \brief Manifold representing the 3-dimensional Sphere, also
+/// known as S2.
+/// All the equations in this class are provided by Manopt
+class MANIFOLDS_API S2 : public Manifold
+{
+ public:
+  S2(std::shared_ptr<S2_Base> p);
+  S2();
+  S2(double mag);
+  S2(const ConstRefVec& mag);
+  virtual S2 copy() const;
 
-    void logarithm (RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
-    double distance (const ConstRefVec& x, const ConstRefVec& y) const;
-    /// \brief projects each row of \ in on TxM
-    void projRows (RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
-    /// \brief projects each cols of \ in on TxM
-    void projCols (RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
-    /// \brief projects vector \ in on TxM
-    void projVec (RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
-    void rand(RefVec out) const;
-    void randVec(RefVec out, const ConstRefVec& x) const;
-    Eigen::Vector3d randVec(const ConstRefVec& x) const;
-
-  };
+  void logarithm(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
+  double distance(const ConstRefVec& x, const ConstRefVec& y) const;
+  /// \brief projects each row of \ in on TxM
+  void projRows(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
+  /// \brief projects each cols of \ in on TxM
+  void projCols(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
+  /// \brief projects vector \ in on TxM
+  void projVec(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
+  void rand(RefVec out) const;
+  void randVec(RefVec out, const ConstRefVec& x) const;
+  Eigen::Vector3d randVec(const ConstRefVec& x) const;
+};
 }

@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -22,20 +22,52 @@
 
 namespace mnf
 {
-  enum eDimension
-  {
-    R,  //representation space
-    T,  //tangent space
-    F  //full space
-  };
+enum eDimension
+{
+  R,  // representation space
+  T,  // tangent space
+  F  // full space
+};
 
-  template<int Dr, int Dc> struct ViewReturnType { typedef Eigen::Block<RefMat> Type; };
-  template<int Dr, int Dc> struct ConstViewReturnType { typedef const Eigen::Block<ConstRefMat> Type; };
-  template<int Dc> struct ViewReturnType<F, Dc> { typedef RefMat::ColsBlockXpr Type; };
-  template<int Dc> struct ConstViewReturnType<F, Dc> { typedef ConstRefMat::ConstColsBlockXpr Type; };
-  template<int Dr> struct ViewReturnType<Dr, F> { typedef RefMat::RowsBlockXpr Type; };
-  template<int Dr> struct ConstViewReturnType<Dr, F> { typedef ConstRefMat::ConstRowsBlockXpr Type; };
-  template<> struct ViewReturnType<F, F> { typedef RefMat Type; };
-  template<> struct ConstViewReturnType<F, F> { typedef ConstRefMat Type; };
+template <int Dr, int Dc>
+struct ViewReturnType
+{
+  typedef Eigen::Block<RefMat> Type;
+};
+template <int Dr, int Dc>
+struct ConstViewReturnType
+{
+  typedef const Eigen::Block<ConstRefMat> Type;
+};
+template <int Dc>
+struct ViewReturnType<F, Dc>
+{
+  typedef RefMat::ColsBlockXpr Type;
+};
+template <int Dc>
+struct ConstViewReturnType<F, Dc>
+{
+  typedef ConstRefMat::ConstColsBlockXpr Type;
+};
+template <int Dr>
+struct ViewReturnType<Dr, F>
+{
+  typedef RefMat::RowsBlockXpr Type;
+};
+template <int Dr>
+struct ConstViewReturnType<Dr, F>
+{
+  typedef ConstRefMat::ConstRowsBlockXpr Type;
+};
+template <>
+struct ViewReturnType<F, F>
+{
+  typedef RefMat Type;
+};
+template <>
+struct ConstViewReturnType<F, F>
+{
+  typedef ConstRefMat Type;
+};
 }
 

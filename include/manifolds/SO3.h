@@ -28,44 +28,45 @@
 
 namespace mnf
 {
-  /// \brief Manifold representing the space of 3-dimensional rotations, also
-  /// known as SO(3). It is templated by its map
-  template<typename Map>
-  class SO3: public Manifold
-  {
-  public:
-    SO3(std::shared_ptr<SO3_Base<Map>> p);
-    SO3();
-    SO3(double magnitude);
-    SO3(const ConstRefVec& magnitude);
-    virtual SO3 copy() const;
-  };
+/// \brief Manifold representing the space of 3-dimensional rotations, also
+/// known as SO(3). It is templated by its map
+template <typename Map>
+class SO3 : public Manifold
+{
+ public:
+  SO3(std::shared_ptr<SO3_Base<Map>> p);
+  SO3();
+  SO3(double magnitude);
+  SO3(const ConstRefVec& magnitude);
+  virtual SO3 copy() const;
+};
 
-  //Implementations of the methods
-  template<typename Map>
-  inline SO3<Map>::SO3(std::shared_ptr<SO3_Base<Map>> p)
+// Implementations of the methods
+template <typename Map>
+inline SO3<Map>::SO3(std::shared_ptr<SO3_Base<Map>> p)
     : Manifold(std::static_pointer_cast<SO3_Base<Map>>(p))
-  {
-  }
-  template<typename Map>
-  inline SO3<Map>::SO3()
-    : Manifold(std::shared_ptr<Manifold_Base>(new SO3_Base<Map> ()))
-  {
-  }
-  template<typename Map>
-  inline SO3<Map>::SO3(double magnitude)
-    : Manifold(std::shared_ptr<Manifold_Base>(new SO3_Base<Map> (magnitude)))
-  {
-  }
-  template<typename Map>
-  inline SO3<Map>::SO3(const ConstRefVec& magnitude)
-    : Manifold(std::shared_ptr<Manifold_Base>(new SO3_Base<Map> (magnitude)))
-  {
-  }
-  template<typename Map>
-  inline SO3<Map> SO3<Map>::copy() const
-  {
-    return SO3<Map>(std::make_shared<SO3_Base<Map>>(std::static_pointer_cast<SO3_Base<Map>>(ptr_)->copy()));
-  }
+{
+}
+template <typename Map>
+inline SO3<Map>::SO3()
+    : Manifold(std::shared_ptr<Manifold_Base>(new SO3_Base<Map>()))
+{
+}
+template <typename Map>
+inline SO3<Map>::SO3(double magnitude)
+    : Manifold(std::shared_ptr<Manifold_Base>(new SO3_Base<Map>(magnitude)))
+{
+}
+template <typename Map>
+inline SO3<Map>::SO3(const ConstRefVec& magnitude)
+    : Manifold(std::shared_ptr<Manifold_Base>(new SO3_Base<Map>(magnitude)))
+{
+}
+template <typename Map>
+inline SO3<Map> SO3<Map>::copy() const
+{
+  return SO3<Map>(std::make_shared<SO3_Base<Map>>(
+      std::static_pointer_cast<SO3_Base<Map>>(ptr_)->copy()));
+}
 }
 

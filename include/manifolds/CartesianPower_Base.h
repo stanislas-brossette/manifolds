@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -22,15 +22,16 @@
 
 namespace mnf
 {
-  class CartesianPower;
-  /// \brief Manifold representing the cartesian product of n times the same manifold
-  class MANIFOLDS_API CartesianPower_Base : public CartesianProduct_Base
-  {
-    friend CartesianPower;
-  private:
-    /// \brief Constructor of the \f$ M^n m2\f$
-    CartesianPower_Base(const std::shared_ptr<Manifold_Base>& M, const int n);
-  };
+class CartesianPower;
+/// \brief Manifold representing the cartesian product of n times the same
+/// manifold
+class MANIFOLDS_API CartesianPower_Base : public CartesianProduct_Base
+{
+  friend CartesianPower;
 
+ private:
+  /// \brief Constructor of the \f$ M^n m2\f$
+  CartesianPower_Base(const std::shared_ptr<Manifold_Base>& M, const int n);
+};
 }
 

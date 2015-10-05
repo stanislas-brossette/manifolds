@@ -31,42 +31,36 @@
 
 namespace mnf
 {
-  /// \brief object containing a counter and that cannot be destroyed if the
-  /// counter is not at 0.
-  class RefCounter
+/// \brief object containing a counter and that cannot be destroyed if the
+/// counter is not at 0.
+class RefCounter
+{
+ public:
+  RefCounter() : count_(0) {}
+
+  RefCounter(const RefCounter&) : count_(0) {}
+
+  // In C++ 11, by default, a destructor cannot launch an exception, setting
+  // noexcet to false allows it.
+  ~RefCounter() NOEXCEPT(false)
   {
-    public:
-      RefCounter()
-        :count_(0)
-      {
-      }
+    mnf_assert(count_ == 0 &&
+               "You cannot destroy this manifold because some points still "
+               "depend on it");
+  }
 
-  RefCounter(const RefCounter&)
-    :count_(0)
-      {
-      }
+ protected:
+  void incrementRefCounter() const { count_++; }
+  void decrementRefCounter() const
+  {
+    mnf_assert(count_ > 0 && "You cannot decrement when no point exist");
+    count_--;
+  }
 
-      // In C++ 11, by default, a destructor cannot launch an exception, setting noexcet to false allows it.
-      ~RefCounter() NOEXCEPT(false)
-      {
-        mnf_assert(count_ == 0 && "You cannot destroy this manifold because some points still depend on it");
-      }
-
-    protected:
-      void incrementRefCounter() const
-      {
-        count_++;
-      }
-      void decrementRefCounter() const
-      {
-        mnf_assert(count_>0 && "You cannot decrement when no point exist");
-        count_--;
-      }
-
-    private:
-      mutable int count_;
-      friend void ConstSubPoint::registerPoint();
-      friend void ConstSubPoint::unregisterPoint();
-  };
+ private:
+  mutable int count_;
+  friend void ConstSubPoint::registerPoint();
+  friend void ConstSubPoint::unregisterPoint();
+};
 }
 

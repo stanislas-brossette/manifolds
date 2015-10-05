@@ -24,73 +24,83 @@
 
 namespace mnf
 {
-  namespace utils {
-    class MANIFOLDS_API ReverseQuaternion : public Eigen::Quaterniond
-    {
-      double* refData_;
-    public:
-      ReverseQuaternion(double* data);
-      void writeChanges();
-      ~ReverseQuaternion();
+namespace utils
+{
+class MANIFOLDS_API ReverseQuaternion : public Eigen::Quaterniond
+{
+  double* refData_;
 
-      ReverseQuaternion& operator=(const Eigen::Quaterniond& quat);
+ public:
+  ReverseQuaternion(double* data);
+  void writeChanges();
+  ~ReverseQuaternion();
 
-    };
+  ReverseQuaternion& operator=(const Eigen::Quaterniond& quat);
+};
 
-    class MANIFOLDS_API ConstReverseQuaternion : public Eigen::Quaterniond
-    {
-    public:
-      ConstReverseQuaternion(const double* data);
-      ~ConstReverseQuaternion(){}
-    };
-
-  }
-
-  /// \brief Structure representing the exponential map going from
-  /// \f$ \mathbb{R}^3 \f$ to SO(3) represented in the quaternion space
-  /// as a vector, the quaternions are represented as q = (x, y, z, w);
-  struct MANIFOLDS_API ExpMapQuaternion
-  {
-    /// \brief precision constant
-    static const double prec;
-
-    /// \brief dimension of \f$ \mathbb{H}=4 \f$
-    static const int OutputDim_ = 4;
-
-    /// \brief dimension of \f$ \mathbb{R}^3=3 \f$
-    static const int InputDim_ = 3;
-    typedef Eigen::Vector4d DisplayType; //display as q=(x, y, z, w)
-    typedef Eigen::Vector4d OutputType;
-    static bool isInM_(const Eigen::VectorXd& val, double prec);
-    static void forceOnM_(RefVec out, const ConstRefVec& in);
-    static void getIdentityOnTxM_(RefMat out, const ConstRefVec& x);
-    static void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v);
-    static void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y);
-    static void pseudoLog0_(RefVec out, const ConstRefVec& x);
-    static void setZero_(RefVec out);
-
-    static void logarithm(RefVec out, const OutputType& M);
-    static void exponential(OutputType& out, const ConstRefVec& v);
-
-    static Eigen::Matrix<double, 4, 3> diffRetractation_(const ConstRefVec& x);
-    static void applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);
-    static Eigen::Matrix<double, 3, 4> diffPseudoLog0_(const ConstRefVec& x);
-    static void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, ReusableTemporaryMap& m);
-    static void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v);
-    static void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v);
-    static void applyInvTransportOnTheRight_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v);
-
-    static void tangentConstraint_(RefMat out, const ConstRefVec& x);
-    static bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec);
-    static void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x);
-
-#if defined(_MSC_FULL_VER) && _MSC_VER < 1900
-	static char hashName[];
-#else
-	constexpr static char hashName[] = "ExpMapQuaternion";
-#endif
-  };
+class MANIFOLDS_API ConstReverseQuaternion : public Eigen::Quaterniond
+{
+ public:
+  ConstReverseQuaternion(const double* data);
+  ~ConstReverseQuaternion() {}
+};
 }
 
+/// \brief Structure representing the exponential map going from
+/// \f$ \mathbb{R}^3 \f$ to SO(3) represented in the quaternion space
+/// as a vector, the quaternions are represented as q = (x, y, z, w);
+struct MANIFOLDS_API ExpMapQuaternion
+{
+  /// \brief precision constant
+  static const double prec;
 
+  /// \brief dimension of \f$ \mathbb{H}=4 \f$
+  static const int OutputDim_ = 4;
+
+  /// \brief dimension of \f$ \mathbb{R}^3=3 \f$
+  static const int InputDim_ = 3;
+  typedef Eigen::Vector4d DisplayType;  // display as q=(x, y, z, w)
+  typedef Eigen::Vector4d OutputType;
+  static bool isInM_(const Eigen::VectorXd& val, double prec);
+  static void forceOnM_(RefVec out, const ConstRefVec& in);
+  static void getIdentityOnTxM_(RefMat out, const ConstRefVec& x);
+  static void retractation_(RefVec out, const ConstRefVec& x,
+                            const ConstRefVec& v);
+  static void pseudoLog_(RefVec out, const ConstRefVec& x,
+                         const ConstRefVec& y);
+  static void pseudoLog0_(RefVec out, const ConstRefVec& x);
+  static void setZero_(RefVec out);
+
+  static void logarithm(RefVec out, const OutputType& M);
+  static void exponential(OutputType& out, const ConstRefVec& v);
+
+  static Eigen::Matrix<double, 4, 3> diffRetractation_(const ConstRefVec& x);
+  static void applyDiffRetractation_(RefMat out, const ConstRefMat& in,
+                                     const ConstRefVec& x,
+                                     ReusableTemporaryMap& m);
+  static Eigen::Matrix<double, 3, 4> diffPseudoLog0_(const ConstRefVec& x);
+  static void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in,
+                                   const ConstRefVec& x,
+                                   ReusableTemporaryMap& m);
+  static void applyTransport_(RefMat out, const ConstRefMat& in,
+                              const ConstRefVec& x, const ConstRefVec& v);
+  static void applyInvTransport_(RefMat out, const ConstRefMat& in,
+                                 const ConstRefVec& x, const ConstRefVec& v);
+  static void applyInvTransportOnTheRight_(RefMat out, const ConstRefMat& in,
+                                           const ConstRefVec& x,
+                                           const ConstRefVec& v);
+
+  static void tangentConstraint_(RefMat out, const ConstRefVec& x);
+  static bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v,
+                       const double& prec);
+  static void forceOnTxM_(RefVec out, const ConstRefVec& in,
+                          const ConstRefVec& x);
+
+#if defined(_MSC_FULL_VER) && _MSC_VER < 1900
+  static char hashName[];
+#else
+  constexpr static char hashName[] = "ExpMapQuaternion";
+#endif
+};
+}
 
