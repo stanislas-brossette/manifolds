@@ -29,91 +29,106 @@
 
 namespace mnf
 {
-  class MANIFOLDS_API CartesianProduct;
+class MANIFOLDS_API CartesianProduct;
 
-  /// \brief Manifold representing the cartesian product of several submanifolds
-  class CartesianProduct_Base : public Manifold_Base
-  {
-    friend CartesianProduct;
-  protected:
-    /// \brief Default constructor
-    CartesianProduct_Base();
+/// \brief Manifold representing the cartesian product of several submanifolds
+class CartesianProduct_Base : public Manifold_Base
+{
+  friend CartesianProduct;
 
-    /// \brief Constructor of the manifold from a list of manifolds
-    //CartesianProduct_Base(const std::initializer_list<Manifold*> m);
+ protected:
+  /// \brief Default constructor
+  CartesianProduct_Base();
 
-    /// \brief Constructor of the manifold composed of \f$ m1\times m2\f$
-    CartesianProduct_Base(const std::shared_ptr<Manifold_Base>& m1,
-        const std::shared_ptr<Manifold_Base>& m2);
+  /// \brief Constructor of the manifold from a list of manifolds
+  // CartesianProduct_Base(const std::initializer_list<Manifold*> m);
 
-    /// \brief Adds manifold m to the current composed manifold\n
-    /// This method cannot be executed if the manifold is locked
-    CartesianProduct_Base& multiply(const std::shared_ptr<Manifold_Base>& m);
+  /// \brief Constructor of the manifold composed of \f$ m1\times m2\f$
+  CartesianProduct_Base(const std::shared_ptr<Manifold_Base>& m1,
+                        const std::shared_ptr<Manifold_Base>& m2);
 
-    virtual CartesianProduct_Base copy() const;
-    virtual std::shared_ptr<Manifold_Base> clone() const;
+  /// \brief Adds manifold m to the current composed manifold\n
+  /// This method cannot be executed if the manifold is locked
+  CartesianProduct_Base& multiply(const std::shared_ptr<Manifold_Base>& m);
 
-    virtual size_t numberOfSubmanifolds() const;
-    virtual std::shared_ptr<const Manifold_Base> operator()(const size_t i) const;
+  virtual CartesianProduct_Base copy() const;
+  virtual std::shared_ptr<Manifold_Base> clone() const;
 
-    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
+  virtual size_t numberOfSubmanifolds() const;
+  virtual std::shared_ptr<const Manifold_Base> operator()(const size_t i) const;
 
-    virtual bool isElementary() const;
+  virtual std::string toString(
+      const ConstRefVec& val, const std::string& prefix = "",
+      const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
 
-    virtual void display(const std::string& prefix = "") const;
+  virtual bool isElementary() const;
 
-  protected:
-    virtual bool isInM_(const Eigen::VectorXd& val, double prec) const;
-    virtual void forceOnM_(RefVec out, const ConstRefVec& in) const;
-    virtual void getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const;
+  virtual void display(const std::string& prefix = "") const;
 
-    virtual Index startR(const size_t i) const;
-    virtual Index startT(const size_t i) const;
+ protected:
+  virtual bool isInM_(const Eigen::VectorXd& val, double prec) const;
+  virtual void forceOnM_(RefVec out, const ConstRefVec& in) const;
+  virtual void getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const;
 
-    virtual void createRandomPoint_(RefVec out, const double coeff) const;
-    virtual void retractation_(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const;
-    virtual void pseudoLog_(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
-    virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const;
-    virtual void setZero_(RefVec out) const;
-    virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const;
-    virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
-    virtual Eigen::MatrixXd diffPseudoLog0_(const ConstRefVec& x) const;
-    virtual void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
-    virtual void applyTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
-    virtual void applyInvTransport_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
-    virtual void applyInvTransportOnTheRight_(RefMat out, const ConstRefMat& in, const ConstRefVec& x, const ConstRefVec& v) const;
+  virtual Index startR(const size_t i) const;
+  virtual Index startT(const size_t i) const;
 
-    virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const;
-    virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v, const double& prec) const;
-    virtual void forceOnTxM_(RefVec out, const ConstRefVec& in, const ConstRefVec& x) const;
-    virtual void limitMap_(RefVec out) const;
-    virtual void getTypicalMagnitude(RefVec out) const;
-    virtual void getTrustMagnitude(RefVec out) const;
-    virtual long getTypeId() const;
+  virtual void createRandomPoint_(RefVec out, const double coeff) const;
+  virtual void retractation_(RefVec out, const ConstRefVec& x,
+                             const ConstRefVec& v) const;
+  virtual void pseudoLog_(RefVec out, const ConstRefVec& x,
+                          const ConstRefVec& y) const;
+  virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const;
+  virtual void setZero_(RefVec out) const;
+  virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const;
+  virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in,
+                                      const ConstRefVec& x) const;
+  virtual Eigen::MatrixXd diffPseudoLog0_(const ConstRefVec& x) const;
+  virtual void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in,
+                                    const ConstRefVec& x) const;
+  virtual void applyTransport_(RefMat out, const ConstRefMat& in,
+                               const ConstRefVec& x,
+                               const ConstRefVec& v) const;
+  virtual void applyInvTransport_(RefMat out, const ConstRefMat& in,
+                                  const ConstRefVec& x,
+                                  const ConstRefVec& v) const;
+  virtual void applyInvTransportOnTheRight_(RefMat out, const ConstRefMat& in,
+                                            const ConstRefVec& x,
+                                            const ConstRefVec& v) const;
 
-  private:
-    /// \brief List of pointers on all the manifolds in the cartesian product
-    std::vector<std::shared_ptr<Manifold_Base>> submanifolds_;
+  virtual void tangentConstraint_(RefMat out, const ConstRefVec& x) const;
+  virtual bool isInTxM_(const ConstRefVec& x, const ConstRefVec& v,
+                        const double& prec) const;
+  virtual void forceOnTxM_(RefVec out, const ConstRefVec& in,
+                           const ConstRefVec& x) const;
+  virtual void limitMap_(RefVec out) const;
+  virtual void getTypicalMagnitude(RefVec out) const;
+  virtual void getTrustMagnitude(RefVec out) const;
+  virtual long getTypeId() const;
 
-    /// \brief List of start index of submanifolds in a vector of the
-    /// tangent space
-    std::vector<Index> startIndexT_;
+ private:
+  /// \brief List of pointers on all the manifolds in the cartesian product
+  std::vector<std::shared_ptr<Manifold_Base>> submanifolds_;
 
-    /// \brief List of start index of submanifolds in a vector of the
-    /// representation space
-    std::vector<Index> startIndexR_;
-  };
+  /// \brief List of start index of submanifolds in a vector of the
+  /// tangent space
+  std::vector<Index> startIndexT_;
 
-  inline Index CartesianProduct_Base::startR(const size_t i) const
-  {
-    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
-    return startIndexR_[i];
-  }
+  /// \brief List of start index of submanifolds in a vector of the
+  /// representation space
+  std::vector<Index> startIndexR_;
+};
 
-  inline Index CartesianProduct_Base::startT(const size_t i) const
-  {
-    mnf_assert(i < numberOfSubmanifolds() && "invalid index");
-    return startIndexT_[i];
-  }
+inline Index CartesianProduct_Base::startR(const size_t i) const
+{
+  mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+  return startIndexR_[i];
+}
+
+inline Index CartesianProduct_Base::startT(const size_t i) const
+{
+  mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+  return startIndexT_[i];
+}
 }
 

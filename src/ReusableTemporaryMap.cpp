@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -20,41 +20,37 @@
 
 namespace mnf
 {
-  ReusableTemporaryMap::ReusableTemporaryMap(size_t size)
-    : size_(0)
-    , buffer_(0x0)
-  {
-    mnf_assert(size > 0 && "size must be at least one");
-    allocate_(size);
-  }
+ReusableTemporaryMap::ReusableTemporaryMap(size_t size) : size_(0), buffer_(0x0)
+{
+  mnf_assert(size > 0 && "size must be at least one");
+  allocate_(size);
+}
 
-  ReusableTemporaryMap::ReusableTemporaryMap(const ReusableTemporaryMap& other)
-    : size_(0)
-    , buffer_(0x0)
-  {
-    allocate_(other.size_);
-  }
+ReusableTemporaryMap::ReusableTemporaryMap(const ReusableTemporaryMap& other)
+    : size_(0), buffer_(0x0)
+{
+  allocate_(other.size_);
+}
 
-  ReusableTemporaryMap::~ReusableTemporaryMap()
-  {
-    mnf_assert(buffer_ != 0x0);
-    allocator_.deallocate(buffer_, size_);
-  }
+ReusableTemporaryMap::~ReusableTemporaryMap()
+{
+  mnf_assert(buffer_ != 0x0);
+  allocator_.deallocate(buffer_, size_);
+}
 
-  void ReusableTemporaryMap::allocate_(size_t size)
-  {
-    mnf_assert(buffer_ == 0x0);
-    buffer_ = allocator_.allocate(size);
-    size_ = size;
-  }
+void ReusableTemporaryMap::allocate_(size_t size)
+{
+  mnf_assert(buffer_ == 0x0);
+  buffer_ = allocator_.allocate(size);
+  size_ = size;
+}
 
-  void ReusableTemporaryMap::reallocate_(size_t size)
-  {
-    size_t newSize = size_;
-    while (newSize < size)
-      newSize *= 2;
-    allocator_.deallocate(buffer_, size_);
-    buffer_ = allocator_.allocate(newSize);
-    size_ = newSize;
-  }
+void ReusableTemporaryMap::reallocate_(size_t size)
+{
+  size_t newSize = size_;
+  while (newSize < size) newSize *= 2;
+  allocator_.deallocate(buffer_, size_);
+  buffer_ = allocator_.allocate(newSize);
+  size_ = newSize;
+}
 }

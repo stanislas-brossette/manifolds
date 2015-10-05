@@ -31,16 +31,17 @@ using namespace mnf;
 
 // Asserts with exception throwing are performed only in debug
 #ifdef NDEBUG
-# define CHECK_THROW_IN_DEBUG(expression, exception) ((void)0)
+#define CHECK_THROW_IN_DEBUG(expression, exception) ((void)0)
 #else
-# define CHECK_THROW_IN_DEBUG(expression, exception) BOOST_CHECK_THROW(expression, exception)
+#define CHECK_THROW_IN_DEBUG(expression, exception) \
+  BOOST_CHECK_THROW(expression, exception)
 #endif
 #ifdef NDEBUG
-# define CHECK_NO_THROW_IN_DEBUG(expression, exception) ((void)0)
+#define CHECK_NO_THROW_IN_DEBUG(expression, exception) ((void)0)
 #else
-# define CHECK_NO_THROW_IN_DEBUG(expression, exception) BOOST_CHECK_NO_THROW(expression)
+#define CHECK_NO_THROW_IN_DEBUG(expression, exception) \
+  BOOST_CHECK_NO_THROW(expression)
 #endif
-
 
 // This function is not bugged anymore; since the manifolds stored
 // in the CartesianProduct are copies of the original manifold, it
@@ -53,9 +54,9 @@ CartesianProduct* buildProduct()
   return M;
 }
 
-//BOOST_AUTO_TEST_CASE(ManifoldIsValid)
+// BOOST_AUTO_TEST_CASE(ManifoldIsValid)
 //{
-  //CHECK_NO_THROW_IN_DEBUG(buildProduct()->getZero(), mnf::mnf_exception);
+// CHECK_NO_THROW_IN_DEBUG(buildProduct()->getZero(), mnf::mnf_exception);
 //}
 
 Point createR3Point()
@@ -64,7 +65,7 @@ Point createR3Point()
   return R3.createPoint();
 }
 
-//BOOST_AUTO_TEST_CASE(ManifoldRefCounter)
+// BOOST_AUTO_TEST_CASE(ManifoldRefCounter)
 //{
-  //CHECK_THROW_IN_DEBUG(createR3Point(), mnf::mnf_exception);
+// CHECK_THROW_IN_DEBUG(createR3Point(), mnf::mnf_exception);
 //}

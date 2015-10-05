@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -26,7 +26,7 @@
 #include <manifolds/Point.h>
 
 #ifndef _WIN32
-#define BOOST_TEST_MODULE Manifolds 
+#define BOOST_TEST_MODULE Manifolds
 #endif
 
 #include <boost/test/unit_test.hpp>
@@ -82,9 +82,9 @@ BOOST_AUTO_TEST_CASE(testForceOnSo3)
   Eigen::VectorXd perturbedRotVec(3);
   Eigen::VectorXd randM(3);
   Point rot = S.createRandomPoint();
-  randM = 0.01*Eigen::VectorXd::Random(3);
+  randM = 0.01 * Eigen::VectorXd::Random(3);
   perturbedRotVec = rot.value() + randM;
-  S.forceOnM(perturbedRotVec,perturbedRotVec);
+  S.forceOnM(perturbedRotVec, perturbedRotVec);
   BOOST_CHECK(S.isInM(perturbedRotVec));
 }
 
@@ -103,15 +103,15 @@ BOOST_AUTO_TEST_CASE(S2Retractation)
   vx << 0, 0, 0;
   Vector3d valX0(1, 0, 0);
   Point x0 = Space.createPoint(valX0);
-  Space.retractation(x0.value(),x0.value(),vx);
+  Space.retractation(x0.value(), x0.value(), vx);
   BOOST_CHECK_EQUAL(x0.value().size(), 3);
   BOOST_CHECK(x0.value() == valX0);
   vx << 0, 1, 2;
-  Space.retractation(x0.value(),x0.value(),vx);
+  Space.retractation(x0.value(), x0.value(), vx);
   Vector3d xSol(0.408248290463863, 0.408248290463863, 0.816496580927726);
   BOOST_CHECK(x0.value().isApprox(xSol));
   vx << -1, -1, 1;
-  Space.retractation(x0.value(),x0.value(),vx);
+  Space.retractation(x0.value(), x0.value(), vx);
   xSol << -0.295875854768068, -0.295875854768068, 0.908248290463863;
   BOOST_CHECK(x0.value().isApprox(xSol));
 }
@@ -121,11 +121,11 @@ BOOST_AUTO_TEST_CASE(S2Substraction)
   S2 Space;
   Vector3d x;
   Vector3d y;
-  x << 1,0,0;
-  y << 0,1,0;
-  Vector3d z, zSol; 
-  Space.pseudoLog(z,x,y);
-  zSol << 0, M_PI/2, 0;
+  x << 1, 0, 0;
+  y << 0, 1, 0;
+  Vector3d z, zSol;
+  Space.pseudoLog(z, x, y);
+  zSol << 0, M_PI / 2, 0;
   BOOST_CHECK(z.isApprox(zSol));
 }
 
@@ -135,28 +135,23 @@ BOOST_AUTO_TEST_CASE(S2ApplyDiff)
   S2 Space;
   Index tangentDim = Space.tangentDim();
   Index repDim = Space.representationDim();
-  MatrixXd Jf = MatrixXd::Random(r,repDim);
+  MatrixXd Jf = MatrixXd::Random(r, repDim);
   Jf.block(0, 0, 3, 3) << Matrix3d::Identity();
-  Jf.block(3, 0, 2, 3) << 0, 0, 0,
-                          1, 2, 3;
+  Jf.block(3, 0, 2, 3) << 0, 0, 0, 1, 2, 3;
   Point x = Space.createPoint(Vector3d(1, 0, 0));
   MatrixXd expectedRes(r, tangentDim);
-  expectedRes << 0, 0, 0,
-                 0, 1, 0,
-                 0, 0, 1,
-                 0, 0, 0,
-                 0, 2, 3;
+  expectedRes << 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 2, 3;
   MatrixXd J(r, tangentDim);
   Space.applyDiffRetractation(J, Jf, x.value());
   BOOST_CHECK(expectedRes.isApprox(J));
-  
-  //then test random matrix
-  Jf = MatrixXd::Random(r,repDim);
+
+  // then test random matrix
+  Jf = MatrixXd::Random(r, repDim);
   x = Space.createRandomPoint();
   Space.applyDiffRetractation(J, Jf, x.value());
-  
+
   for (Index i = 0; i < J.rows(); ++i)
-    BOOST_CHECK(Space.isInTxM(J.row(i).transpose(),x.value()));
+    BOOST_CHECK(Space.isInTxM(J.row(i).transpose(), x.value()));
 }
 
 BOOST_AUTO_TEST_CASE(S2Transport)
@@ -164,8 +159,8 @@ BOOST_AUTO_TEST_CASE(S2Transport)
   int c = 5;
   S2 Space;
   Index tangentDim = Space.tangentDim();
-  MatrixXd H = MatrixXd::Random(tangentDim,c);
-  MatrixXd Hout(tangentDim,c);
+  MatrixXd H = MatrixXd::Random(tangentDim, c);
+  MatrixXd Hout(tangentDim, c);
   Point x = Space.createRandomPoint();
   for (Index i = 0; i < H.cols(); ++i)
   {
@@ -173,15 +168,15 @@ BOOST_AUTO_TEST_CASE(S2Transport)
   }
   VectorXd v = Space.randVec(x.value());
   Space.applyTransport(Hout, H, x.value(), v);
-  
+
   Eigen::Vector3d y;
   Space.retractation(y, x.value(), v);
   for (Index i = 0; i < Hout.cols(); ++i)
   {
-    BOOST_CHECK(Space.isInTxM(Hout.col(i),y));
+    BOOST_CHECK(Space.isInTxM(Hout.col(i), y));
   }
 
-  H = MatrixXd::Zero(tangentDim,c);
+  H = MatrixXd::Zero(tangentDim, c);
   Space.applyTransport(Hout, H, x.value(), v);
 }
 
@@ -199,14 +194,14 @@ BOOST_AUTO_TEST_CASE(S2InvTransport)
   for (Index i = 0; i < H.cols(); ++i)
   {
     Space.forceOnTxM(H.col(i), H.col(i), y);
-    BOOST_CHECK(Space.isInTxM(H.col(i),y));
+    BOOST_CHECK(Space.isInTxM(H.col(i), y));
   }
 
   Space.applyInvTransport(Hout, H, x.value(), v);
 
   for (Index i = 0; i < Hout.cols(); ++i)
   {
-    BOOST_CHECK(Space.isInTxM(Hout.col(i),x.value()));
+    BOOST_CHECK(Space.isInTxM(Hout.col(i), x.value()));
   }
 }
 
@@ -218,7 +213,7 @@ BOOST_AUTO_TEST_CASE(S2LimitMap)
   Space.limitMap(res);
   VectorXd expectedRes(tangentDim);
   double i = std::numeric_limits<double>::infinity();
-  expectedRes << i,i,i;
+  expectedRes << i, i, i;
   BOOST_CHECK_EQUAL(expectedRes, res);
 }
 
@@ -229,23 +224,24 @@ BOOST_AUTO_TEST_CASE(S2IdentityTxM)
   VectorXd vx = Space.randVec(x);
   MatrixXd H0 = MatrixXd::Random(Space.tangentDim(), Space.tangentDim());
   Space.getIdentityOnTxM(H0, x);
-  BOOST_CHECK((H0*vx).isApprox(vx, 1e-12));
-  Eigen::Vector3d res = H0*x;
+  BOOST_CHECK((H0 * vx).isApprox(vx, 1e-12));
+  Eigen::Vector3d res = H0 * x;
   BOOST_CHECK(res.isZero(1e-12));
 }
 
-#if   EIGEN_WORLD_VERSION > 3 \
-  || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) \
-  || (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && EIGEN_MINOR_VERSION > 0)
+#if EIGEN_WORLD_VERSION > 3 ||                               \
+    (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) || \
+    (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && \
+     EIGEN_MINOR_VERSION > 0)
 BOOST_AUTO_TEST_CASE(S2NoAllocation)
 {
-  //We only test here that the operations on the manifold do not create
-  //temporary. Passing arguments that are not recognize by the Eigen::Ref will
-  //create temporaries, but this is the user's fault.
+  // We only test here that the operations on the manifold do not create
+  // temporary. Passing arguments that are not recognize by the Eigen::Ref will
+  // create temporaries, but this is the user's fault.
   S2 Space;
   Index c = 3;
-  //VectorXd x = VectorXd::Random(Space.representationDim());
-  //VectorXd y = VectorXd::Random(Space.representationDim());
+  // VectorXd x = VectorXd::Random(Space.representationDim());
+  // VectorXd y = VectorXd::Random(Space.representationDim());
   VectorXd x = Space.createRandomPoint().value();
   VectorXd y = Space.createRandomPoint().value();
   VectorXd vx = Space.randVec(x);

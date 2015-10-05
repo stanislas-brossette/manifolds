@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Pierre Gergondet, Adrien Escande 
+// Authors: Pierre Gergondet, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -18,16 +18,16 @@
 #pragma once
 
 #ifdef WIN32
-    #define MANIFOLDS_DLLIMPORT __declspec(dllimport)
-    #define MANIFOLDS_DLLEXPORT __declspec(dllexport)
+#define MANIFOLDS_DLLIMPORT __declspec(dllimport)
+#define MANIFOLDS_DLLEXPORT __declspec(dllexport)
 #else
-    #define MANIFOLDS_DLLIMPORT
-    #define MANIFOLDS_DLLEXPORT
+#define MANIFOLDS_DLLIMPORT
+#define MANIFOLDS_DLLEXPORT
 #endif
 
 #ifdef MANIFOLDS_EXPORT
-    #define MANIFOLDS_API MANIFOLDS_DLLEXPORT
+#define MANIFOLDS_API MANIFOLDS_DLLEXPORT
 #else
-    #define MANIFOLDS_API MANIFOLDS_DLLIMPORT
+#define MANIFOLDS_API MANIFOLDS_DLLIMPORT
 #endif
 

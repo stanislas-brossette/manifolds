@@ -46,7 +46,6 @@ BOOST_AUTO_TEST_CASE(typeIdEqualTest)
   BOOST_CHECK_EQUAL(s1.getTypeId(), s1_1.getTypeId());
   BOOST_CHECK_EQUAL(so3M.getTypeId(), so3M_1.getTypeId());
   BOOST_CHECK_EQUAL(so3Q.getTypeId(), so3Q_1.getTypeId());
-
 }
 
 BOOST_AUTO_TEST_CASE(typeIdDifferentTest)
@@ -59,15 +58,15 @@ BOOST_AUTO_TEST_CASE(typeIdDifferentTest)
   manifolds.push_back(new SO3<ExpMapQuaternion>(5));
 
   for (size_t i = 0; i < manifolds.size(); ++i)
+  {
+    for (size_t j = i + 1; j < manifolds.size(); ++j)
     {
-      for (size_t j = i+1; j < manifolds.size(); ++j)
-	{
-	  BOOST_CHECK(manifolds[i]->getTypeId() != manifolds[j]->getTypeId());
-	}
+      BOOST_CHECK(manifolds[i]->getTypeId() != manifolds[j]->getTypeId());
     }
+  }
 
   for (size_t i = 0; i < manifolds.size(); ++i)
-    {
-      delete manifolds[i];
-    }
+  {
+    delete manifolds[i];
+  }
 }

@@ -28,26 +28,26 @@
 
 namespace mnf
 {
-  /// \brief Manifold representing the cartesian product of several submanifolds
-  class MANIFOLDS_API CartesianProduct : public Manifold
-  {
-  public:
-    CartesianProduct(std::shared_ptr<CartesianProduct_Base> p);
+/// \brief Manifold representing the cartesian product of several submanifolds
+class MANIFOLDS_API CartesianProduct : public Manifold
+{
+ public:
+  CartesianProduct(std::shared_ptr<CartesianProduct_Base> p);
 
-    /// \brief Default constructor
-    CartesianProduct();
+  /// \brief Default constructor
+  CartesianProduct();
 
-    ///brief Constructor of the manifold from a list of manifolds
-    CartesianProduct(std::initializer_list<Manifold*> m);
+  /// brief Constructor of the manifold from a list of manifolds
+  CartesianProduct(std::initializer_list<Manifold*> m);
 
-    /// \brief Constructor of the manifold composed of \f$ m1\times m2\f$
-    CartesianProduct(Manifold m1, Manifold m2);
+  /// \brief Constructor of the manifold composed of \f$ m1\times m2\f$
+  CartesianProduct(Manifold m1, Manifold m2);
 
-    /// \brief Adds manifold m to the current composed manifold\n
-    /// This method cannot be executed if the manifold is locked
-    CartesianProduct& multiply(Manifold m);
+  /// \brief Adds manifold m to the current composed manifold\n
+  /// This method cannot be executed if the manifold is locked
+  CartesianProduct& multiply(Manifold m);
 
-    virtual CartesianProduct copy() const;
-  };
+  virtual CartesianProduct copy() const;
+};
 }
 

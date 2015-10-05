@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -19,15 +19,15 @@
 
 namespace mnf
 {
-  CartesianPower_Base::CartesianPower_Base(const std::shared_ptr<Manifold_Base>& M, const int n)
+CartesianPower_Base::CartesianPower_Base(
+    const std::shared_ptr<Manifold_Base>& M, const int n)
     : CartesianProduct_Base()
+{
+  for (int i = 0; i < n; ++i)
   {
-    for (int i = 0; i < n; ++i)
-    {
-      Manifold_Base newM(*M);
-      this->multiply(std::make_shared<const Manifold_Base>(M->copy()));
-    }
+    Manifold_Base newM(*M);
+    this->multiply(std::make_shared<const Manifold_Base>(M->copy()));
   }
 }
-
+}
 
