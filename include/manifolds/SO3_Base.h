@@ -21,19 +21,20 @@
 
 #include <manifolds/defs.h>
 #include <manifolds/Manifold_Base.h>
-#include <manifolds/SO3.h>
 #include <manifolds/ReusableTemporaryMap.h>
 #include <manifolds/utils.h>
 
 namespace mnf
+{
+template <typename> class SO3;
+namespace internal
 {
 /// \brief Manifold representing the space of 3-dimensional rotations, also
 /// known as SO(3). It is templated by its map
 template <typename Map>
 class MANIFOLDS_API SO3_Base : public Manifold_Base
 {
-  template <typename>
-  friend class SO3;
+  friend class SO3<Map>;
 
  private:
   SO3_Base();
@@ -44,6 +45,7 @@ class MANIFOLDS_API SO3_Base : public Manifold_Base
   virtual std::shared_ptr<Manifold_Base> clone() const;
 
   virtual size_t numberOfSubmanifolds() const;
+  virtual std::shared_ptr<Manifold_Base> operator()(size_t i);
   virtual std::shared_ptr<const Manifold_Base> operator()(size_t i) const;
   virtual std::string toString(
       const ConstRefVec& val, const std::string& prefix = "",
@@ -153,6 +155,13 @@ template <typename Map>
 inline bool SO3_Base<Map>::isElementary() const
 {
   return true;
+}
+
+template <typename Map>
+inline std::shared_ptr<Manifold_Base> SO3_Base<Map>::operator()(
+    size_t)
+{
+  return shared_from_this();
 }
 
 template <typename Map>
@@ -300,5 +309,6 @@ long SO3_Base<Map>::getTypeId() const
 {
   constexpr long typeId = utils::hash::computeHash("SO3", Map::hashName);
   return typeId;
+}
 }
 }

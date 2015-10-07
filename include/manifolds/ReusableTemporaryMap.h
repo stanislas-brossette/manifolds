@@ -23,6 +23,8 @@
 
 namespace mnf
 {
+namespace internal
+{
 class MANIFOLDS_API ReusableTemporaryMap
 {
  public:
@@ -59,6 +61,7 @@ inline Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> ReusableTemporaryMap::getMap(
 inline void ReusableTemporaryMap::reallocate(size_t size)
 {
   if (size > size_) reallocate_(size);
+}
 }
 }
 

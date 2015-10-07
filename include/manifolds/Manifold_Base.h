@@ -27,6 +27,8 @@ namespace mnf
 {
 class Manifold;
 class Point;
+namespace internal
+{
 
 /// \brief The Manifold Class represents a manifold. It contains the
 /// implementations of
@@ -66,20 +68,20 @@ class MANIFOLDS_API Manifold_Base
   /// \brief CreatePoint allows to create a point that belongs to a manifold and
   /// that
   /// behaves according to the manifolds operations
-  Point createPoint() const;
+  //Point createPoint() const;
 
   /// \brief Overload of createPoint to set the value of the point
-  Point createPoint(const ConstRefVec& val) const;
+  //Point createPoint(const ConstRefVec& val) const;
 
   /// \brief Creates a point that represents the identity wrt the addition
   /// operation
   /// defined in this manifold (aka the zero)
-  Point getZero() const;
+  //Point getZero() const;
 
   /// \brief Creates a random point on this manifold (aka the retractation from
   /// point 0
   /// of a random vector of the tangent space)
-  Point createRandomPoint(double coeff = 1.0) const;
+  //Point createRandomPoint(double coeff = 1.0) const;
   void createRandomPoint(RefVec out, double coeff = 1.0) const;
 
   /// \brief Checks that the value val described in the representation space
@@ -112,6 +114,7 @@ class MANIFOLDS_API Manifold_Base
 
   /// \brief Returns a pointer on the submanifold of index i if it exists
   /// Only useful with composed Manifolds
+  virtual std::shared_ptr<Manifold_Base> operator()(size_t i) = 0;
   virtual std::shared_ptr<const Manifold_Base> operator()(size_t i) const = 0;
 
   // view
@@ -563,6 +566,7 @@ inline typename ConstViewReturnType<F, F>::Type
 Manifold_Base::getConstView<F, F>(const ConstRefMat& val, size_t, size_t) const
 {
   return val;
+}
 }
 }
 

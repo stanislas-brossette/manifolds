@@ -22,6 +22,8 @@
 
 namespace mnf
 {
+namespace internal
+{
 RealSpace_Base::RealSpace_Base(Index n) : Manifold_Base(n, n, n)
 {
   name() = "R" + std::to_string(n);
@@ -79,6 +81,11 @@ void RealSpace_Base::getIdentityOnTxM_(RefMat out, const ConstRefVec&) const
 size_t RealSpace_Base::numberOfSubmanifolds() const { return 1; }
 
 bool RealSpace_Base::isElementary() const { return true; }
+
+std::shared_ptr<Manifold_Base> RealSpace_Base::operator()(size_t)
+{
+  return shared_from_this();
+}
 
 std::shared_ptr<const Manifold_Base> RealSpace_Base::operator()(size_t) const
 {
@@ -190,11 +197,12 @@ long RealSpace_Base::getTypeId() const
   return typeId;
 }
 
-Manifold_Base_ptr RealSpace_Base::getNewCopy() const
-{
-  RealSpace_Base_ptr copy(new RealSpace_Base(*this));
-  copy->instanceId_ = this->instanceId_;
+//Manifold_Base_ptr RealSpace_Base::getNewCopy() const
+//{
+  //RealSpace_Base_ptr copy(new RealSpace_Base(*this));
+  //copy->instanceId_ = this->instanceId_;
 
-  return copy;
+  //return copy;
+//}
 }
 }

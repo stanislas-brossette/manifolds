@@ -23,117 +23,151 @@
 
 namespace mnf
 {
-ConstManifold::ConstManifold(std::shared_ptr<const Manifold_Base> m)
-    : ptr_(std::const_pointer_cast<Manifold_Base>(m))
-{
+Manifold::Manifold(std::shared_ptr<internal::Manifold_Base> m) : ptr_(m) {std::cout << "Manifold::Manifold(std::shared_ptr<internal::Manifold_Base> m)" << std::endl;}
+
+Manifold::~Manifold() {std::cout << "Manifold::~Manifold()" << std::endl;}
+
+Manifold& Manifold::operator()(size_t)
+{std::cout << "Manifold& Manifold::operator()" << std::endl;
+  return *this;
 }
 
-ConstManifold::ConstManifold(std::shared_ptr<Manifold_Base> m) : ptr_(m) {}
-
-ConstManifold::~ConstManifold() {}
-
-std::shared_ptr<const Manifold_Base> ConstManifold::ptr() const
-{
-  return std::const_pointer_cast<const Manifold_Base>(ptr_);
+const Manifold& Manifold::operator()(size_t) const
+{std::cout << "const Manifold& Manifold::operator()" << std::endl;
+  return *this;
 }
 
-Point ConstManifold::createPoint() const { return ptr_->createPoint(); }
-
-Point ConstManifold::createPoint(const ConstRefVec& val) const
-{
-  return ptr_->createPoint(val);
+Manifold Manifold::shallowCopy()
+{std::cout << "Manifold Manifold::shallowCopy()" << std::endl;
+  return (Manifold(ptr_));
 }
 
-bool ConstManifold::isInM(const Eigen::VectorXd& val, double prec) const
+Manifold Manifold::deepCopy() const
+{std::cout << "Manifold Manifold::deepCopy()" << std::endl;
+  return (Manifold(ptr_->clone()));
+}
+
+std::shared_ptr<const internal::Manifold_Base> Manifold::ptr() const
+{std::cout << "std::shared_ptr<const internal::Manifold_Base> Manifold::ptr()" << std::endl;
+  return std::const_pointer_cast<const internal::Manifold_Base>(ptr_);
+}
+
+Point Manifold::createPoint() const 
+{std::cout << "Point Manifold::createPoint()" << std::endl; 
+  lock();
+  return Point(*this);
+}
+
+Point Manifold::createPoint(const ConstRefVec& val) const
+{std::cout << "Point Manifold::createPoint(const ConstRefVec& val)" << std::endl;
+  if (isInM(val))
+  {
+    lock();
+    return Point(*this, val);
+  }
+  else
+  {
+    throw std::runtime_error("Bad Point Initialization");
+  }
+}
+
+bool Manifold::isInM(const Eigen::VectorXd& val, double prec) const
 {
   return ptr_->isInM(val, prec);
 }
 
-void ConstManifold::forceOnM(RefVec out, const ConstRefVec& in) const
+void Manifold::forceOnM(RefVec out, const ConstRefVec& in) const
 {
   return ptr_->forceOnM(out, in);
 }
 
-Point ConstManifold::getZero() const { return ptr_->getZero(); }
-
-Point ConstManifold::createRandomPoint(double coeff) const
-{
-  return ptr_->createRandomPoint(coeff);
+Point Manifold::getZero() const 
+{ 
+  Point p = createPoint();
+  setZero(p.value());
+  return p; 
 }
 
-void ConstManifold::createRandomPoint(RefVec out, double coeff) const
+Point Manifold::createRandomPoint(double coeff) const
+{
+  Point p = createPoint();
+  createRandomPoint(p.value(), coeff);
+  return p; 
+}
+
+void Manifold::createRandomPoint(RefVec out, double coeff) const
 {
   return ptr_->createRandomPoint(out, coeff);
 }
 
-Index ConstManifold::dim() const { return ptr_->dim(); }
+Index Manifold::dim() const { return ptr_->dim(); }
 
-Index ConstManifold::tangentDim() const { return ptr_->tangentDim(); }
+Index Manifold::tangentDim() const { return ptr_->tangentDim(); }
 
-Index ConstManifold::representationDim() const
+Index Manifold::representationDim() const
 {
   return ptr_->representationDim();
 }
 
-void ConstManifold::display(const std::string& prefix) const
+void Manifold::display(const std::string& prefix) const
 {
   return ptr_->display(prefix);
 }
 
-void ConstManifold::retractation(RefVec out, const ConstRefVec& x,
+void Manifold::retractation(RefVec out, const ConstRefVec& x,
                                  const ConstRefVec& v) const
 {
   return ptr_->retractation(out, x, v);
 }
 
-void ConstManifold::pseudoLog(RefVec out, const ConstRefVec& x,
+void Manifold::pseudoLog(RefVec out, const ConstRefVec& x,
                               const ConstRefVec& y) const
 {
   return ptr_->pseudoLog(out, x, y);
 }
 
-void ConstManifold::pseudoLog0(RefVec out, const ConstRefVec& x) const
+void Manifold::pseudoLog0(RefVec out, const ConstRefVec& x) const
 {
   return ptr_->pseudoLog0(out, x);
 }
 
-Eigen::MatrixXd ConstManifold::diffRetractation(const ConstRefVec& x) const
+Eigen::MatrixXd Manifold::diffRetractation(const ConstRefVec& x) const
 {
   return ptr_->diffRetractation(x);
 }
 
-void ConstManifold::applyDiffRetractation(RefMat out, const ConstRefMat& in,
+void Manifold::applyDiffRetractation(RefMat out, const ConstRefMat& in,
                                           const ConstRefVec& x) const
 {
   return ptr_->applyDiffRetractation(out, in, x);
 }
 
-Eigen::MatrixXd ConstManifold::diffPseudoLog0(const ConstRefVec& x) const
+Eigen::MatrixXd Manifold::diffPseudoLog0(const ConstRefVec& x) const
 {
   return ptr_->diffPseudoLog0(x);
 }
 
-void ConstManifold::applyDiffPseudoLog0(RefMat out, const ConstRefMat& in,
+void Manifold::applyDiffPseudoLog0(RefMat out, const ConstRefMat& in,
                                         const ConstRefVec& x) const
 {
   return ptr_->applyDiffPseudoLog0(out, in, x);
 }
 
-void ConstManifold::applyTransport(RefMat out, const ConstRefMat& in,
+void Manifold::applyTransport(RefMat out, const ConstRefMat& in,
                                    const ConstRefVec& x,
                                    const ConstRefVec& v) const
 {
   return ptr_->applyTransport(out, in, x, v);
 }
 
-void ConstManifold::applyInvTransport(RefMat out, const ConstRefMat& in,
+void Manifold::applyInvTransport(RefMat out, const ConstRefMat& in,
                                       const ConstRefVec& x,
                                       const ConstRefVec& v) const
 {
   return ptr_->applyInvTransport(out, in, x, v);
 }
 
-void ConstManifold::applyInvTransportOnTheRight(RefMat out,
+void Manifold::applyInvTransportOnTheRight(RefMat out,
                                                 const ConstRefMat& in,
                                                 const ConstRefVec& x,
                                                 const ConstRefVec& v) const
@@ -141,93 +175,83 @@ void ConstManifold::applyInvTransportOnTheRight(RefMat out,
   return ptr_->applyInvTransportOnTheRight(out, in, x, v);
 }
 
-void ConstManifold::setZero(RefVec out) const { return ptr_->setZero(out); }
+void Manifold::setZero(RefVec out) const { return ptr_->setZero(out); }
 
-void ConstManifold::tangentConstraint(RefMat out, const ConstRefVec& x) const
+void Manifold::tangentConstraint(RefMat out, const ConstRefVec& x) const
 {
   return ptr_->tangentConstraint(out, x);
 }
 
-bool ConstManifold::isInTxM(const ConstRefVec& x, const ConstRefVec& v,
+bool Manifold::isInTxM(const ConstRefVec& x, const ConstRefVec& v,
                             const double& prec) const
 {
   return ptr_->isInTxM(x, v, prec);
 }
 
-void ConstManifold::forceOnTxM(RefVec out, const ConstRefVec& in,
+void Manifold::forceOnTxM(RefVec out, const ConstRefVec& in,
                                const ConstRefVec& x) const
 {
   return ptr_->forceOnTxM(out, in, x);
 }
 
-void ConstManifold::getIdentityOnTxM(RefMat out, const ConstRefVec& x) const
+void Manifold::getIdentityOnTxM(RefMat out, const ConstRefVec& x) const
 {
   return ptr_->getIdentityOnTxM(out, x);
 }
 
-void ConstManifold::limitMap(RefVec out) const { return ptr_->limitMap(out); }
+void Manifold::limitMap(RefVec out) const { return ptr_->limitMap(out); }
 
-void ConstManifold::getTypicalMagnitude(RefVec out) const
+void Manifold::getTypicalMagnitude(RefVec out) const
 {
   return ptr_->getTypicalMagnitude(out);
 }
 
-Eigen::VectorXd ConstManifold::getTypicalMagnitude() const
+Eigen::VectorXd Manifold::getTypicalMagnitude() const
 {
   return ptr_->getTypicalMagnitude();
 }
 
-void ConstManifold::getTrustMagnitude(RefVec out) const
+void Manifold::getTrustMagnitude(RefVec out) const
 {
   return ptr_->getTrustMagnitude(out);
 }
 
-Eigen::VectorXd ConstManifold::getTrustMagnitude() const
+Eigen::VectorXd Manifold::getTrustMagnitude() const
 {
   return ptr_->getTrustMagnitude();
 }
 
-void ConstManifold::lock() const { return ptr_->lock(); }
+void Manifold::lock() const { return ptr_->lock(); }
 
-bool ConstManifold::isLocked() const { return ptr_->isLocked(); }
+bool Manifold::isLocked() const { return ptr_->isLocked(); }
 
-const std::string& ConstManifold::name() const { return ptr_->name(); }
+const std::string& Manifold::name() const { return ptr_->name(); }
+std::string& Manifold::name() { return ptr_->name(); }
 
-long ConstManifold::getInstanceId() const { return ptr_->getInstanceId(); }
+long Manifold::getInstanceId() const { return ptr_->getInstanceId(); }
 
-bool ConstManifold::isSameType(const ConstManifold& other) const
+bool Manifold::isSameType(const Manifold& other) const
 {
   return ptr_->isSameType(*(other.ptr_));
 }
 
-bool ConstManifold::isElementary() const { return ptr_->isElementary(); }
+bool Manifold::isElementary() const { return ptr_->isElementary(); }
 
-size_t ConstManifold::numberOfSubmanifolds() const
+size_t Manifold::numberOfSubmanifolds() const
 {
   return ptr_->numberOfSubmanifolds();
 }
 
-ConstManifold ConstManifold::operator()(size_t i) const
-{
-  return ConstManifold(
-      std::const_pointer_cast<Manifold_Base>(ptr_->operator()(i)));
-}
+long Manifold::getTypeId() const { return ptr_->getTypeId(); }
 
-long ConstManifold::getTypeId() const { return ptr_->getTypeId(); }
-
-std::string ConstManifold::toString(const ConstRefVec& val,
+std::string Manifold::toString(const ConstRefVec& val,
                                     const std::string& prefix,
                                     const Eigen::IOFormat& fmt) const
 {
   return ptr_->toString(val, prefix, fmt);
 }
 
-/********************************
- *  NON-CONST MANIFOLD METHODS  *
- ********************************/
-Manifold::Manifold(std::shared_ptr<Manifold_Base> p) : ConstManifold(p) {}
-
-std::shared_ptr<Manifold_Base> Manifold::getNonConstPtr() { return ptr_; }
+std::shared_ptr<internal::Manifold_Base> Manifold::getNonConstPtr() {std::cout << "std::shared_ptr<internal::Manifold_Base> Manifold::getNonConstPtr()" << std::endl; return ptr_; }
 
 void Manifold::setTypicalMagnitude(const ConstRefVec& mag)
 {
@@ -249,5 +273,4 @@ void Manifold::setTrustMagnitude(const double& mag)
   return ptr_->setTrustMagnitude(mag);
 }
 
-std::string& Manifold::name() { return ptr_->name(); }
 }

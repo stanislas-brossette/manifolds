@@ -34,39 +34,55 @@ template <typename Map>
 class SO3 : public Manifold
 {
  public:
-  SO3(std::shared_ptr<SO3_Base<Map>> p);
+  SO3(std::shared_ptr<internal::SO3_Base<Map>> p);
   SO3();
   SO3(double magnitude);
   SO3(const ConstRefVec& magnitude);
-  virtual SO3 copy() const;
+  SO3 copy() const;
+  //virtual Manifold shallowCopy();
+  //virtual Manifold deepCopy() const;
 };
 
 // Implementations of the methods
 template <typename Map>
-inline SO3<Map>::SO3(std::shared_ptr<SO3_Base<Map>> p)
-    : Manifold(std::static_pointer_cast<SO3_Base<Map>>(p))
+inline SO3<Map>::SO3(std::shared_ptr<internal::SO3_Base<Map>> p)
+    : Manifold(std::static_pointer_cast<internal::SO3_Base<Map>>(p))
 {
 }
 template <typename Map>
 inline SO3<Map>::SO3()
-    : Manifold(std::shared_ptr<Manifold_Base>(new SO3_Base<Map>()))
+    : Manifold(std::shared_ptr<internal::Manifold_Base>(new internal::SO3_Base<Map>()))
 {
 }
 template <typename Map>
 inline SO3<Map>::SO3(double magnitude)
-    : Manifold(std::shared_ptr<Manifold_Base>(new SO3_Base<Map>(magnitude)))
+    : Manifold(std::shared_ptr<internal::Manifold_Base>(new internal::SO3_Base<Map>(magnitude)))
 {
 }
 template <typename Map>
 inline SO3<Map>::SO3(const ConstRefVec& magnitude)
-    : Manifold(std::shared_ptr<Manifold_Base>(new SO3_Base<Map>(magnitude)))
+    : Manifold(std::shared_ptr<internal::Manifold_Base>(new internal::SO3_Base<Map>(magnitude)))
 {
 }
 template <typename Map>
 inline SO3<Map> SO3<Map>::copy() const
 {
-  return SO3<Map>(std::make_shared<SO3_Base<Map>>(
-      std::static_pointer_cast<SO3_Base<Map>>(ptr_)->copy()));
+  return SO3<Map>(std::make_shared<internal::SO3_Base<Map>>(
+      std::static_pointer_cast<internal::SO3_Base<Map>>(ptr_)->copy()));
 }
+
+//template <typename Map>
+//Manifold SO3<Map>::shallowCopy()
+//{
+  //std::cout << "SO3<Map>::shallowCopy()" << std::endl;
+  //return (SO3<Map>(ptr_));
+//}
+
+//template <typename Map>
+//Manifold SO3<Map>::deepCopy() const
+//{
+  //std::cout << "SO3<Map>::deepCopy()" << std::endl;
+  //return (SO3<Map>(ptr_->clone()));
+//}
 }
 

@@ -20,6 +20,8 @@
 
 namespace mnf
 {
+namespace internal
+{
 ReusableTemporaryMap::ReusableTemporaryMap(size_t size) : size_(0), buffer_(0x0)
 {
   mnf_assert(size > 0 && "size must be at least one");
@@ -52,5 +54,6 @@ void ReusableTemporaryMap::reallocate_(size_t size)
   allocator_.deallocate(buffer_, size_);
   buffer_ = allocator_.allocate(newSize);
   size_ = newSize;
+}
 }
 }

@@ -22,38 +22,87 @@
 
 namespace mnf
 {
-CartesianProduct::CartesianProduct(std::shared_ptr<CartesianProduct_Base> p)
-    : Manifold(std::static_pointer_cast<Manifold_Base>(p))
-{
+CartesianProduct::CartesianProduct()
+    : Manifold(std::shared_ptr<internal::Manifold_Base>(new internal::CartesianProduct_Base()))
+{std::cout << "CartesianProduct::CartesianProduct()" << std::endl;
 }
 
-CartesianProduct::CartesianProduct()
-    : Manifold(std::shared_ptr<Manifold_Base>(new CartesianProduct_Base()))
-{
+CartesianProduct::CartesianProduct(CartesianProduct&& m)
+    : Manifold(std::move(m))
+{std::cout << "CartesianProduct::CartesianProduct(CartesianProduct&& m)" << std::endl;
+}
+
+CartesianProduct::CartesianProduct(Manifold&& m)
+    : Manifold(nullptr)
+{std::cout << "CartesianProduct::CartesianProduct(Manifold&& m)" << std::endl;
+  CartesianProduct(dynamic_cast<CartesianProduct&&>(m));
+  if (dynamic_cast<internal::CartesianProduct_Base*>(m.getNonConstPtr().get()) != nullptr)
+  {
+    ptr_ = m.getNonConstPtr();
+    m.getNonConstPtr() = nullptr;
+  }
+  else
+    throw std::runtime_error("Up");
 }
 
 CartesianProduct::CartesianProduct(std::initializer_list<Manifold*> listM)
-    : Manifold(std::shared_ptr<Manifold_Base>(new CartesianProduct_Base()))
-{
-  for (auto m : listM) multiply(m->getNonConstPtr());
+    : Manifold(std::shared_ptr<internal::Manifold_Base>(new internal::CartesianProduct_Base()))
+{std::cout << "CartesianProduct::CartesianProduct(std::initializer_list<Manifold*> listM)" << std::endl;
+  for (auto m : listM) 
+    multiply(*m);
 }
 
-CartesianProduct::CartesianProduct(Manifold m1, Manifold m2)
-    : Manifold(std::shared_ptr<Manifold_Base>(
-          new CartesianProduct_Base(m1.getNonConstPtr(), m2.getNonConstPtr())))
-{
+CartesianProduct::CartesianProduct(Manifold& m1, Manifold& m2)
+    : Manifold(std::shared_ptr<internal::Manifold_Base>(new internal::CartesianProduct_Base()))
+{std::cout << "CartesianProduct::CartesianProduct(Manifold& m1, Manifold& m2)" << std::endl;
+  multiply(m1);
+  multiply(m2);
 }
 
-CartesianProduct& CartesianProduct::multiply(Manifold m)
-{
-  std::static_pointer_cast<CartesianProduct_Base>(ptr_)
-      ->multiply(m.getNonConstPtr());
+Manifold CartesianProduct::shallowCopy()
+{std::cout << "Manifold CartesianProduct::shallowCopy()" << std::endl;
+  CartesianProduct m;
+  for(std::size_t i=0; i < subManifolds_.size(); ++i)
+    m.multiply(subManifolds_[i].shallowCopy());
+  return std::move(m);
+}
+
+Manifold CartesianProduct::deepCopy() const
+{std::cout << "Manifold CartesianProduct::deepCopy()" << std::endl;
+  CartesianProduct m;
+  for(std::size_t i=0; i < subManifolds_.size(); ++i)
+    m.multiply(subManifolds_[i].deepCopy());
+  return std::move(m);
+}
+
+CartesianProduct& CartesianProduct::multiply(Manifold& m)
+{std::cout << "CartesianProduct& CartesianProduct::multiply(Manifold& m)" << std::endl;
+  std::static_pointer_cast<internal::CartesianProduct_Base>(ptr_)->multiply(m.getNonConstPtr());
+  subManifolds_.push_back(m.shallowCopy());
   return *this;
 }
 
-CartesianProduct CartesianProduct::copy() const
-{
-  return CartesianProduct(std::make_shared<CartesianProduct_Base>(
-      std::static_pointer_cast<CartesianProduct_Base>(ptr_)->copy()));
+CartesianProduct& CartesianProduct::multiply(Manifold&& m)
+{std::cout << "CartesianProduct& CartesianProduct::multiply(Manifold&& m)" << std::endl;
+  std::static_pointer_cast<internal::CartesianProduct_Base>(ptr_)
+      ->multiply(m.getNonConstPtr());
+  subManifolds_.push_back(std::move(m));
+  return *this;
 }
+
+const Manifold& CartesianProduct::operator()(size_t i) const
+{std::cout << "const Manifold& CartesianProduct::operator()" << std::endl;
+  return subManifolds_[i];
+}
+
+Manifold& CartesianProduct::operator()(size_t i)
+{std::cout << "Manifold& CartesianProduct::operator()" << std::endl;
+  return subManifolds_[i];
+}
+
+//CartesianProduct CartesianProduct::copy() const
+//{
+  //return CartesianProduct(std::make_shared<internal::CartesianProduct_Base>(
+      //std::static_pointer_cast<internal::CartesianProduct_Base>(ptr_)->copy()));
+//}
 }

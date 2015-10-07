@@ -20,9 +20,9 @@
 
 namespace mnf
 {
-CartesianPower::CartesianPower(Manifold M, const int n) : CartesianProduct()
+CartesianPower::CartesianPower(const Manifold& M, const int n) : CartesianProduct()
 {
-  for (int i = 0; i < n; ++i) multiply(M.ptr()->clone());
+  for (int i = 0; i < n; ++i) multiply(M.deepCopy());
 }
 }
 

@@ -35,15 +35,6 @@ typedef Eigen::Ref<Eigen::VectorXd>::SegmentReturnType Segment;
 typedef Eigen::Ref<const Eigen::VectorXd>::ConstSegmentReturnType ConstSegment;
 typedef Eigen::VectorXd::Index Index;
 
-class Manifold_Base;
-typedef std::shared_ptr<Manifold_Base> Manifold_Base_ptr;
-class CartesianProduct_Base;
-typedef std::shared_ptr<CartesianProduct_Base> CartesianProduct_Base_ptr;
-class RealSpace_Base;
-typedef std::shared_ptr<RealSpace_Base> RealSpace_Base_ptr;
-class S2_Base;
-typedef std::shared_ptr<S2_Base> S2_Base_ptr;
-
 const Eigen::IOFormat defaultFormat(4, 0, ", ", "\n", "[", "]");
 }
 

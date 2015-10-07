@@ -25,6 +25,8 @@
 
 namespace mnf
 {
+namespace internal
+{
 S2_Base::S2_Base() : Manifold_Base(2, 3, 3)
 {
   name() = "S2";
@@ -76,6 +78,10 @@ size_t S2_Base::numberOfSubmanifolds() const { return 1; }
 
 bool S2_Base::isElementary() const { return true; }
 
+std::shared_ptr< Manifold_Base> S2_Base::operator()(size_t)
+{
+  return shared_from_this();
+}
 std::shared_ptr<const Manifold_Base> S2_Base::operator()(size_t) const
 {
   return shared_from_this();
@@ -269,11 +275,5 @@ long S2_Base::getTypeId() const
   return typeId;
 }
 
-Manifold_Base_ptr S2_Base::getNewCopy() const
-{
-  S2_Base_ptr copy(new S2_Base(*this));
-  copy->instanceId_ = this->instanceId_;
-
-  return copy;
 }
 }

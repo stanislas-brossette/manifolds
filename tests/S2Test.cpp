@@ -253,7 +253,7 @@ BOOST_AUTO_TEST_CASE(S2NoAllocation)
   MatrixXd H1 = MatrixXd::Random(Space.tangentDim(), Space.tangentDim());
   MatrixXd H2 = MatrixXd::Random(Space.tangentDim(), Space.tangentDim());
 
-  internal::set_is_malloc_allowed(false);
+  Eigen::internal::set_is_malloc_allowed(false);
   utils::set_is_malloc_allowed(false);
   {
     Space.retractation(z, x, vx);
@@ -264,7 +264,7 @@ BOOST_AUTO_TEST_CASE(S2NoAllocation)
     Space.getIdentityOnTxM(H0, x);
   }
   utils::set_is_malloc_allowed(true);
-  internal::set_is_malloc_allowed(true);
+  Eigen::internal::set_is_malloc_allowed(true);
 }
 #endif
 

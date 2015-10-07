@@ -32,22 +32,31 @@ namespace mnf
 class MANIFOLDS_API CartesianProduct : public Manifold
 {
  public:
-  CartesianProduct(std::shared_ptr<CartesianProduct_Base> p);
-
   /// \brief Default constructor
   CartesianProduct();
+  CartesianProduct(CartesianProduct&& m);
+  CartesianProduct(Manifold&& m);
 
   /// brief Constructor of the manifold from a list of manifolds
   CartesianProduct(std::initializer_list<Manifold*> m);
 
   /// \brief Constructor of the manifold composed of \f$ m1\times m2\f$
-  CartesianProduct(Manifold m1, Manifold m2);
+  CartesianProduct(Manifold& m1, Manifold& m2);
+
+  virtual Manifold shallowCopy();
+  virtual Manifold deepCopy() const;
+
+  virtual const Manifold& operator()(size_t i) const;
+  virtual Manifold& operator()(size_t i);
 
   /// \brief Adds manifold m to the current composed manifold\n
   /// This method cannot be executed if the manifold is locked
-  CartesianProduct& multiply(Manifold m);
+  CartesianProduct& multiply(Manifold& m);
+  CartesianProduct& multiply(Manifold&& m);
 
-  virtual CartesianProduct copy() const;
+  CartesianProduct copy() const;
+ private:
+  std::vector<Manifold> subManifolds_;
 };
 }
 

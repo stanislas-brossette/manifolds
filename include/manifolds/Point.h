@@ -22,10 +22,20 @@
 
 namespace mnf
 {
-class MANIFOLDS_API ConstSubPoint
+class MANIFOLDS_API ConstManifoldOwner
+{
+  protected:
+    ConstManifoldOwner(const Manifold& m);
+  public:
+    const Manifold& getManifold() const;
+  private:
+    Manifold manifold_;
+};
+
+class MANIFOLDS_API ConstSubPoint : public ConstManifoldOwner
 {
  protected:
-  ConstSubPoint(ConstManifold M, const ConstRefVec& val);
+  ConstSubPoint(const Manifold& M, const ConstRefVec& val);
 
  public:
   ConstSubPoint(const ConstSubPoint&);
@@ -46,14 +56,12 @@ class MANIFOLDS_API ConstSubPoint
   // P[i] is equivalent to P(i).value()
   ConstSegment operator[](size_t i) const;
 
-  ConstManifold getManifold() const;
   const Eigen::IOFormat& format() const;
 
   std::string toString(std::string& prefix, const Eigen::IOFormat& fmt)
       const;  // Dislays point in representation space
 
  protected:
-  ConstManifold manifold_;
 
   /// \internal We keep value as a non const reference here for easy use in
   /// SubPoint.
@@ -70,7 +78,7 @@ class MANIFOLDS_API ConstSubPoint
 class MANIFOLDS_API SubPoint : public ConstSubPoint
 {
  protected:
-  SubPoint(ConstManifold M, RefVec val);
+  SubPoint(const Manifold& M, RefVec val);
 
  public:
   SubPoint(const SubPoint&);
@@ -112,11 +120,11 @@ class MANIFOLDS_API PointMemory
 
 class MANIFOLDS_API Point : public PointMemory, public SubPoint
 {
-  friend class Manifold_Base;
+  friend class Manifold;
 
  private:  // only Manifold can create Point
-  Point(ConstManifold M);
-  Point(ConstManifold M, const ConstRefVec& val);
+  Point(const Manifold& M);
+  Point(const Manifold& M, const ConstRefVec& val);
 
  public:
   Point(const Point& other);

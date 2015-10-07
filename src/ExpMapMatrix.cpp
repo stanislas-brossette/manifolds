@@ -189,7 +189,7 @@ Eigen::Matrix<double, 9, 3> ExpMapMatrix::diffRetractation_(
 
 void ExpMapMatrix::applyDiffRetractation_(RefMat out, const ConstRefMat& in,
                                           const ConstRefVec& x,
-                                          ReusableTemporaryMap& m)
+                                          internal::ReusableTemporaryMap& m)
 {
   mnf_assert(in.cols() == OutputDim_ && "Dimensions mismatch");
   Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(), 3);
@@ -240,7 +240,7 @@ Eigen::Matrix<double, 3, 9> ExpMapMatrix::diffPseudoLog0_(const ConstRefVec& R)
 
 void ExpMapMatrix::applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in,
                                         const ConstRefVec& x,
-                                        ReusableTemporaryMap& m)
+                                        internal::ReusableTemporaryMap& m)
 {
   mnf_assert(in.cols() == InputDim_ && "Dimensions mismatch");
   Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a =

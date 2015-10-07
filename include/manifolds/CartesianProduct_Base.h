@@ -30,6 +30,8 @@
 namespace mnf
 {
 class MANIFOLDS_API CartesianProduct;
+namespace internal
+{
 
 /// \brief Manifold representing the cartesian product of several submanifolds
 class CartesianProduct_Base : public Manifold_Base
@@ -55,7 +57,8 @@ class CartesianProduct_Base : public Manifold_Base
   virtual std::shared_ptr<Manifold_Base> clone() const;
 
   virtual size_t numberOfSubmanifolds() const;
-  virtual std::shared_ptr<const Manifold_Base> operator()(const size_t i) const;
+  virtual std::shared_ptr<Manifold_Base> operator()(const size_t i);
+  virtual std::shared_ptr<const Manifold_Base> operator()(size_t i) const;
 
   virtual std::string toString(
       const ConstRefVec& val, const std::string& prefix = "",
@@ -108,7 +111,7 @@ class CartesianProduct_Base : public Manifold_Base
 
  private:
   /// \brief List of pointers on all the manifolds in the cartesian product
-  std::vector<std::shared_ptr<Manifold_Base>> submanifolds_;
+  std::vector<std::shared_ptr<Manifold_Base>> subManifolds_;
 
   /// \brief List of start index of submanifolds in a vector of the
   /// tangent space
@@ -131,4 +134,4 @@ inline Index CartesianProduct_Base::startT(const size_t i) const
   return startIndexT_[i];
 }
 }
-
+}

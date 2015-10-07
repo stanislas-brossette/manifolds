@@ -40,9 +40,13 @@ using namespace mnf;
 
 BOOST_AUTO_TEST_CASE(CopyTest)
 {
+  std::cout << "1" << std::endl;
   RealSpace R0(2);
-  RealSpace R1 = R0.copy();
-  RealSpace R2(R0);
+  std::cout << "2" << std::endl;
+  RealSpace R1 = R0.deepCopy();
+  std::cout << "3" << std::endl;
+  RealSpace R2(R0.shallowCopy());
+  std::cout << "4" << std::endl;
   R0.setTrustMagnitude(0);
   R0.setTypicalMagnitude(10);
   R1.setTrustMagnitude(1);

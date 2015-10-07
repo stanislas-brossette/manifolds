@@ -23,6 +23,8 @@
 namespace mnf
 {
 class CartesianPower;
+namespace internal
+{
 /// \brief Manifold representing the cartesian product of n times the same
 /// manifold
 class MANIFOLDS_API CartesianPower_Base : public CartesianProduct_Base
@@ -34,4 +36,4 @@ class MANIFOLDS_API CartesianPower_Base : public CartesianProduct_Base
   CartesianPower_Base(const std::shared_ptr<Manifold_Base>& M, const int n);
 };
 }
-
+}

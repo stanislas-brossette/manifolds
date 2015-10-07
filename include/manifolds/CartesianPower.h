@@ -28,7 +28,7 @@ class MANIFOLDS_API CartesianPower : public CartesianProduct
 {
  public:
   /// \brief Constructor of the \f$ M^n m2\f$
-  CartesianPower(Manifold M, const int n);
+  CartesianPower(const Manifold& M, const int n);
 };
 }
 

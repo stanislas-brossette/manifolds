@@ -20,11 +20,11 @@
 
 #include <manifolds/defs.h>
 #include <manifolds/Manifold.h>
+#include <manifolds/S2_Base.h>
 #include <manifolds/utils.h>
 
 namespace mnf
 {
-class S2_Base;
 
 /// \brief Manifold representing the 3-dimensional Sphere, also
 /// known as S2.
@@ -32,11 +32,13 @@ class S2_Base;
 class MANIFOLDS_API S2 : public Manifold
 {
  public:
-  S2(std::shared_ptr<S2_Base> p);
+  S2(std::shared_ptr<internal::S2_Base> p);
   S2();
   S2(double mag);
   S2(const ConstRefVec& mag);
-  virtual S2 copy() const;
+  S2 copy() const;
+  //virtual Manifold shallowCopy();
+  //virtual Manifold deepCopy() const;
 
   void logarithm(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
   double distance(const ConstRefVec& x, const ConstRefVec& y) const;

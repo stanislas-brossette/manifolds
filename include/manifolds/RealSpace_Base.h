@@ -25,6 +25,8 @@
 namespace mnf
 {
 class RealSpace;
+namespace internal
+{
 
 /// \brief Manifold representing the space of real numbers of dimension n
 /// \f$\mathbb{R}^n\f$
@@ -43,6 +45,7 @@ class MANIFOLDS_API RealSpace_Base : public Manifold_Base
   virtual std::shared_ptr<Manifold_Base> clone() const;
 
   virtual size_t numberOfSubmanifolds() const;
+  virtual std::shared_ptr<Manifold_Base> operator()(size_t i);
   virtual std::shared_ptr<const Manifold_Base> operator()(size_t i) const;
 
   virtual std::string toString(
@@ -85,8 +88,7 @@ class MANIFOLDS_API RealSpace_Base : public Manifold_Base
   virtual void forceOnTxM_(RefVec out, const ConstRefVec& in,
                            const ConstRefVec& x) const;
   virtual void limitMap_(RefVec out) const;
-
-  virtual Manifold_Base_ptr getNewCopy() const;
 };
+}
 }
 

@@ -165,7 +165,7 @@ Eigen::Matrix<double, 4, 3> ExpMapQuaternion::diffRetractation_(
 
 void ExpMapQuaternion::applyDiffRetractation_(RefMat out, const ConstRefMat& in,
                                               const ConstRefVec& x,
-                                              ReusableTemporaryMap& m)
+                                              internal::ReusableTemporaryMap& m)
 {
   mnf_assert(in.cols() == OutputDim_ && "Dimensions mismatch");
   Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(), 3);
@@ -245,7 +245,7 @@ Eigen::Matrix<double, 3, 4> ExpMapQuaternion::diffPseudoLog0_(
 
 void ExpMapQuaternion::applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in,
                                             const ConstRefVec& x,
-                                            ReusableTemporaryMap& m)
+                                            internal::ReusableTemporaryMap& m)
 {
   mnf_assert(in.cols() == InputDim_ && "Dimensions mismatch");
   Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a =
@@ -255,7 +255,7 @@ void ExpMapQuaternion::applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in,
 }
 
 // void ExpMapQuaternion::applyTransport_(RefMat out, const ConstRefMat& in,
-// const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
+// const ConstRefVec&, const ConstRefVec& v, internal::ReusableTemporaryMap& m)
 void ExpMapQuaternion::applyTransport_(RefMat out, const ConstRefMat& in,
                                        const ConstRefVec&, const ConstRefVec&)
 {
@@ -264,7 +264,7 @@ void ExpMapQuaternion::applyTransport_(RefMat out, const ConstRefMat& in,
 }
 
 // void ExpMapQuaternion::applyInvTransport_(RefMat out, const ConstRefMat& in,
-// const ConstRefVec&, const ConstRefVec& v, ReusableTemporaryMap& m)
+// const ConstRefVec&, const ConstRefVec& v, internal::ReusableTemporaryMap& m)
 void ExpMapQuaternion::applyInvTransport_(RefMat out, const ConstRefMat& in,
                                           const ConstRefVec&,
                                           const ConstRefVec&)

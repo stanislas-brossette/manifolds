@@ -30,9 +30,15 @@ namespace mnf
 class MANIFOLDS_API RealSpace : public Manifold
 {
  private:
-  RealSpace(std::shared_ptr<RealSpace_Base> p);
+  RealSpace(std::shared_ptr<internal::RealSpace_Base> p);
 
  public:
+  RealSpace(RealSpace&& m);
+  RealSpace(Manifold&& m);
+
+  //virtual Manifold shallowCopy();
+  //virtual Manifold deepCopy() const;
+
   /// \brief Constructor
   /// \param n the dimension of the realspace \f$\mathbb{R}^n\f$
   RealSpace(Index n);
@@ -42,7 +48,7 @@ class MANIFOLDS_API RealSpace : public Manifold
   /// @brief Returns a deep copy of this manifold.
   /// The output contains a copy of this Manifold_Base that lives independently
   /// from this manifold
-  virtual RealSpace copy() const;
+  RealSpace copy() const;
 };
 }
 

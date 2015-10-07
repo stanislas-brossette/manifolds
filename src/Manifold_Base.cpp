@@ -22,6 +22,8 @@
 
 namespace mnf
 {
+namespace internal
+{
 long Manifold_Base::manifoldCounter_ = 0;
 
 Manifold_Base::Manifold_Base(Index dimension, Index tangentDimension,
@@ -41,24 +43,24 @@ Manifold_Base::Manifold_Base(Index dimension, Index tangentDimension,
 
 Manifold_Base::~Manifold_Base() {}
 
-Point Manifold_Base::createPoint() const
-{
-  lock();
-  return Point(ConstManifold(shared_from_this()));
-}
+//Point Manifold_Base::createPoint() const
+//{
+  //lock();
+  //return Point(Manifold(shared_from_this()));
+//}
 
-Point Manifold_Base::createPoint(const ConstRefVec& val) const
-{
-  if (isInM(val))
-  {
-    lock();
-    return Point(shared_from_this(), val);
-  }
-  else
-  {
-    throw std::runtime_error("Bad Point Initialization");
-  }
-}
+//Point Manifold_Base::createPoint(const ConstRefVec& val) const
+//{
+  //if (isInM(val))
+  //{
+    //lock();
+    //return Point(shared_from_this(), val);
+  //}
+  //else
+  //{
+    //throw std::runtime_error("Bad Point Initialization");
+  //}
+//}
 
 bool Manifold_Base::isInM(const Eigen::VectorXd& val, double prec) const
 {
@@ -73,21 +75,21 @@ void Manifold_Base::forceOnM(RefVec out, const ConstRefVec& in) const
   return forceOnM_(out, in);
 }
 
-Point Manifold_Base::getZero() const
-{
-  lock();
-  Eigen::VectorXd id(representationDim_);
-  setZero(id);
-  return Point(shared_from_this(), id);
-}
+//Point Manifold_Base::getZero() const
+//{
+  //lock();
+  //Eigen::VectorXd id(representationDim_);
+  //setZero(id);
+  //return Point(shared_from_this(), id);
+//}
 
-Point Manifold_Base::createRandomPoint(double coeff) const
-{
-  lock();
-  Eigen::VectorXd val(representationDim_);
-  createRandomPoint(val, coeff);
-  return Point(shared_from_this(), val);
-}
+//Point Manifold_Base::createRandomPoint(double coeff) const
+//{
+  //lock();
+  //Eigen::VectorXd val(representationDim_);
+  //createRandomPoint(val, coeff);
+  //return Point(shared_from_this(), val);
+//}
 
 void Manifold_Base::createRandomPoint(RefVec out, double coeff) const
 {
@@ -343,6 +345,7 @@ long Manifold_Base::getInstanceId() const { return this->instanceId_; }
 bool Manifold_Base::isSameType(const Manifold_Base& other) const
 {
   return this->getTypeId() == other.getTypeId();
+}
 }
 }
 

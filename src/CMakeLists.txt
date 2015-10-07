@@ -90,5 +90,5 @@ endif()
 
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/manifolds)
 
-#add_executable(ManifoldsExe main.cpp)
-#target_link_libraries(ManifoldsExe manifolds)
+add_executable(ManifoldsExe main.cpp)
+target_link_libraries(ManifoldsExe manifolds)
