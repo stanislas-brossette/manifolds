@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -19,12 +19,10 @@
 
 namespace mnf
 {
-  CartesianPower::CartesianPower(const Manifold& M, const int n)
+CartesianPower::CartesianPower(const Manifold& M, const int n)
     : CartesianProduct()
-  {
-    for (int i = 0; i < n; ++i)
-      this->multiply(M);
-  }
+{
+  for (int i = 0; i < n; ++i) this->multiply(M);
 }
-
+}
 

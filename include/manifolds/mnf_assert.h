@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -23,26 +23,26 @@
 
 namespace mnf
 {
-  struct mnf_exception
-  {
-  };
+struct mnf_exception
+{
+};
 
-#ifdef MNF_ASSERT_THROW 
-#  ifndef NDEBUG
-  inline void mnf_assert(bool value)
+#ifdef MNF_ASSERT_THROW
+#ifndef NDEBUG
+inline void mnf_assert(bool value)
+{
+  if (!value)
   {
-    if(!value)
-    {
-      throw mnf_exception();
-    }
+    throw mnf_exception();
   }
-#  else
-#    define mnf_assert(expr) assert(expr);
-#  endif
+}
 #else
-#  define mnf_assert(expr) assert(expr);
-#endif //_MNF_ASSERT_THROW_
+#define mnf_assert(expr) assert(expr);
+#endif
+#else
+#define mnf_assert(expr) assert(expr);
+#endif  //_MNF_ASSERT_THROW_
 }
 
-#endif //_MANIFOLDS_ASSERT_
+#endif  //_MANIFOLDS_ASSERT_
 

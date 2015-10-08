@@ -1,5 +1,5 @@
 // Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande 
+// Authors: Stanislas Brossette, Adrien Escande
 
 // This file is part of manifolds
 // manifolds is free software: you can redistribute it
@@ -28,27 +28,27 @@ typedef unsigned int uint;
 
 namespace mnf
 {
-  typedef Eigen::Ref<Eigen::VectorXd> RefVec;
-  typedef Eigen::Ref<const Eigen::VectorXd> ConstRefVec;
-  typedef Eigen::Ref<Eigen::MatrixXd> RefMat;
-  typedef Eigen::Ref<const Eigen::MatrixXd> ConstRefMat;
-  typedef Eigen::Ref<Eigen::VectorXd>::SegmentReturnType Segment;
-  typedef Eigen::Ref<const Eigen::VectorXd>::ConstSegmentReturnType ConstSegment;
-  typedef Eigen::VectorXd::Index Index;
+typedef Eigen::Ref<Eigen::VectorXd> RefVec;
+typedef Eigen::Ref<const Eigen::VectorXd> ConstRefVec;
+typedef Eigen::Ref<Eigen::MatrixXd> RefMat;
+typedef Eigen::Ref<const Eigen::MatrixXd> ConstRefMat;
+typedef Eigen::Ref<Eigen::VectorXd>::SegmentReturnType Segment;
+typedef Eigen::Ref<const Eigen::VectorXd>::ConstSegmentReturnType ConstSegment;
+typedef Eigen::VectorXd::Index Index;
 
-  class Manifold;
-  typedef std::shared_ptr<Manifold> Manifold_ptr;
-  class CartesianProduct;
-  typedef std::shared_ptr<CartesianProduct> CartesianProduct_ptr;
-  class RealSpace;
-  typedef std::shared_ptr<RealSpace> RealSpace_ptr;
-  class S2;
-  typedef std::shared_ptr<S2> S2_ptr;
+class Manifold;
+typedef std::shared_ptr<Manifold> Manifold_ptr;
+class CartesianProduct;
+typedef std::shared_ptr<CartesianProduct> CartesianProduct_ptr;
+class RealSpace;
+typedef std::shared_ptr<RealSpace> RealSpace_ptr;
+class S2;
+typedef std::shared_ptr<S2> S2_ptr;
 
-  const Eigen::IOFormat defaultFormat(4, 0, ", ", "\n", "[", "]");
+const Eigen::IOFormat defaultFormat(4, 0, ", ", "\n", "[", "]");
 }
 
 #include <manifolds/manifolds_api.h>
 
-#endif //_MANIFOLDS_DEFS_H_
+#endif  //_MANIFOLDS_DEFS_H_
 

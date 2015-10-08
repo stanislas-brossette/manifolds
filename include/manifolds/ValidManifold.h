@@ -23,38 +23,36 @@
 
 namespace mnf
 {
-  class ValidManifold
-  {
-  private:
-    static const int FLAG = 1736274519; //a random number
-  public:
-    ValidManifold() : flag_(FLAG) {}
-    ValidManifold(const ValidManifold&) : flag_(FLAG) {}
-    ~ValidManifold() { flag_ = -271828182; }
+class ValidManifold
+{
+ private:
+  static const int FLAG = 1736274519;  // a random number
+ public:
+  ValidManifold() : flag_(FLAG) {}
+  ValidManifold(const ValidManifold&) : flag_(FLAG) {}
+  ~ValidManifold() { flag_ = -271828182; }
 
 #ifdef NDEBUG
-    bool isValid() const { return true; }
+  bool isValid() const { return true; }
 
-    bool seeMessageAbove() const
-    {
-      return true;
-    }
+  bool seeMessageAbove() const { return true; }
 #else
-    bool isValid() const { return flag_ == FLAG; }
+  bool isValid() const { return flag_ == FLAG; }
 
-    bool seeMessageAbove() const
-    {
-#  ifndef MNF_ASSERT_THROW
-      printf("It appears that you're trying to call a method from a manifold that does not exist \
+  bool seeMessageAbove() const
+  {
+#ifndef MNF_ASSERT_THROW
+    printf(
+        "It appears that you're trying to call a method from a manifold that does not exist \
              anymore. Possible cause: the manifold was statically created in a scope (e.g. a function) which was \
              left since then. For Stan: https://www.youtube.com/watch?v=Yy8MUnlT9Oo\n");
-#  endif
-        return false;
-    }
 #endif
-  private:
-    int flag_;
-  };
+    return false;
+  }
+#endif
+ private:
+  int flag_;
+};
 }
 
-#endif //_MANIFOLD_VALID_OBJECT_H_
+#endif  //_MANIFOLD_VALID_OBJECT_H_
