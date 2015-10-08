@@ -49,11 +49,10 @@ namespace mnf
     virtual size_t numberOfSubmanifolds() const;
     virtual const Manifold& operator()(const size_t i) const;
 
+    virtual std::string description(const std::string& prefix = "", bool firstCall = true) const;
     virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
 
     virtual bool isElementary() const;
-
-    virtual void display(const std::string& prefix = "") const;
 
   protected:
     virtual bool isInM_(const Eigen::VectorXd& val, double prec) const;

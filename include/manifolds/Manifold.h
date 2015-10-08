@@ -90,7 +90,15 @@ namespace mnf
     virtual bool isElementary() const = 0;
 
     /// \brief Displays a description of the manifold
-    virtual void display(const std::string& prefix = "") const;
+    void display() const;
+    virtual std::string description(const std::string& prefix = "", bool firstCall = true) const;
+
+    friend inline std::ostream& operator<<(std::ostream& os,
+                                         const Manifold& v);
+
+    /// \brief Converts val to string for pretty printing
+    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const = 0;
+
 
     /// \brief Returns the number of submanifolds that compose the manifold
     virtual size_t numberOfSubmanifolds() const = 0;
@@ -115,9 +123,6 @@ namespace mnf
 
     /// \brief returns a boolean indicating whether this manifold is currently locked
     bool isLocked() const;
-
-    /// \brief Converts val to string for pretty printing
-    virtual std::string toString(const ConstRefVec& val, const std::string& prefix = "", const Eigen::IOFormat& fmt = mnf::defaultFormat) const = 0;
 
     //map operations
     //The following operations are public and make call to their private version
@@ -346,6 +351,13 @@ namespace mnf
     mutable bool lock_;
 
   };
+
+  inline std::ostream& operator<<(std::ostream& os,
+                                  const Manifold& m)
+  {
+    os << m.name() << std::endl;
+    return os;
+  }
 
   template<int D>
   inline Segment Manifold::getView(RefVec val, size_t i) const

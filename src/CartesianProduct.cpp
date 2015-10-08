@@ -104,19 +104,32 @@ namespace mnf
     return false;
   }
 
-  void CartesianProduct::display(const std::string& prefix) const
+  std::string CartesianProduct::description(const std::string& prefix, bool firstCall) const
   {
-    for (size_t i = 0; i < submanifolds_.size(); ++i)
+    std::stringstream ss;
+    if(firstCall)
     {
-      if(submanifolds_[i]->isElementary())
-        std::cout << prefix << submanifolds_[i]->name()<< std::endl;
-      else
+      ss << "/----------------------------------"<< std::endl;
+      ss << this->description(prefix + "| ", false);
+      ss << prefix << "\\----------------------------------"<< std::endl;
+    }
+    else
+    {
+      for (size_t i = 0; i < submanifolds_.size(); ++i)
       {
-        std::cout << prefix << "/----------------------------------"<< std::endl;
-        submanifolds_[i]->display(prefix + "| ");
-        std::cout << prefix << "\\----------------------------------"<< std::endl;
+        if(submanifolds_[i]->isElementary())
+        {
+          ss << prefix; ss << submanifolds_[i]->description()<< std::endl;
+        }
+        else
+        {
+          ss << prefix << "/----------------------------------"<< std::endl;
+          ss << submanifolds_[i]->description(prefix + "| ", false);
+          ss << prefix << "\\----------------------------------"<< std::endl;
+        }
       }
     }
+    return ss.str();
   }
 
   const Manifold& CartesianProduct::operator()(const size_t i) const

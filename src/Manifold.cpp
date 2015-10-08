@@ -118,9 +118,16 @@ namespace mnf
     return representationDim_;
   }
 
-  void Manifold::display(const std::string& prefix) const
+  void Manifold::display() const
   {
-    std::cout << prefix << name() << std::endl;
+    std::cout << description() << std::endl;
+  }
+
+  std::string Manifold::description(const std::string& prefix, bool) const
+  {
+    std::stringstream ss;
+    ss << prefix << name();
+    return ss.str();
   }
 
   void Manifold::retractation(RefVec out, const ConstRefVec& x, const ConstRefVec& v) const
