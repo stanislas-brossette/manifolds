@@ -70,7 +70,7 @@ bool RealSpace::isElementary() const { return true; }
 
 bool RealSpace::isSameTopology(const Manifold& other) const
 {
-  if(dynamic_cast<const RealSpace*>(&other) && dim() == other.dim())
+  if (dynamic_cast<const RealSpace*>(&other) && dim() == other.dim())
     return true;
   else
     return false;

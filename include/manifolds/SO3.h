@@ -339,7 +339,7 @@ Manifold_ptr SO3<Map>::getNewCopy() const
 template <typename Map>
 bool SO3<Map>::isSameTopology(const Manifold& other) const
 {
-  if(dynamic_cast<const SO3<Map>*>(&other))
+  if (dynamic_cast<const SO3<Map>*>(&other))
     return true;
   else
     return false;

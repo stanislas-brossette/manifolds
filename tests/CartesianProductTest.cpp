@@ -558,10 +558,10 @@ BOOST_AUTO_TEST_CASE(isSameTopology)
   S2 s2;
   SO3<ExpMapMatrix> so3M;
   SO3<ExpMapQuaternion> so3Q;
-  CartesianProduct cp(so3M,R9);
-  CartesianProduct cp2(cp,s2);
-  CartesianProduct cpb(so3M,R9b);
-  CartesianProduct cp2b(cp,s2);
+  CartesianProduct cp(so3M, R9);
+  CartesianProduct cp2(cp, s2);
+  CartesianProduct cpb(so3M, R9b);
+  CartesianProduct cp2b(cp, s2);
 
   BOOST_CHECK(!cp2.isSameTopology(R9));
   BOOST_CHECK(!cp2.isSameTopology(R3));

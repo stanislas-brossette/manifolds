@@ -289,7 +289,8 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   virtual bool isSameType(const Manifold& other) const;
 
   /// \brief Compares this manifolds topological structure to another one
-  /// returns true is all the submanifolds ars same type and dimension and order.
+  /// returns true is all the submanifolds ars same type and dimension and
+  /// order.
   virtual bool isSameTopology(const Manifold& other) const = 0;
 
   /// \brief returns an id that should be unique to each manifold class.

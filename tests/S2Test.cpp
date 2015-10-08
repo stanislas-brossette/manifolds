@@ -240,7 +240,7 @@ BOOST_AUTO_TEST_CASE(isSameTopology)
   RealSpace R3(3);
   S2 s2;
   SO3<ExpMapMatrix> so3;
-  CartesianProduct cp(so3,R9);
+  CartesianProduct cp(so3, R9);
 
   BOOST_CHECK(!s2.isSameTopology(R9));
   BOOST_CHECK(!s2.isSameTopology(R9b));

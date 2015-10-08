@@ -294,7 +294,7 @@ Manifold_ptr S2::getNewCopy() const
 
 bool S2::isSameTopology(const Manifold& other) const
 {
-  if(dynamic_cast<const S2*>(&other))
+  if (dynamic_cast<const S2*>(&other))
     return true;
   else
     return false;

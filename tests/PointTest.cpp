@@ -160,15 +160,15 @@ BOOST_AUTO_TEST_CASE(SubPointManipulation)
       P.representationDim(), 1, static_cast<double>(P.representationDim()));
   Point x = P.createPoint(v);
 
-  ConstSubPoint p1 = x(0);  // const subpoint
-  SubPoint p3 = x(1);  // non const subpoint
-  SubPoint p2 = p3(0);  // non const again
-  SubPoint r2 = x(0)(0);  // chaining subpoint
+  ConstSubPoint p1 = x(0);   // const subpoint
+  SubPoint p3 = x(1);        // non const subpoint
+  SubPoint p2 = p3(0);       // non const again
+  SubPoint r2 = x(0)(0);     // chaining subpoint
   ConstSubPoint r3 = p1(1);  // const subpoint of a const subpoint
   // SubPoint r3b = p1(1);   //non const subpoint to a const subpoint. Does not
   // compile, normal
-  SubPoint r5 = p2(0);  // non const subpoint to a non const subpoint
-  SubPoint r8 = p2(1);  // idem
+  SubPoint r5 = p2(0);        // non const subpoint to a non const subpoint
+  SubPoint r8 = p2(1);        // idem
   ConstSubPoint r13 = p3(1);  // const subpoint of a non-const subpoint
 
   // Correct submanifold

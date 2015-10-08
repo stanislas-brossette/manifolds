@@ -341,13 +341,12 @@ Manifold_ptr CartesianProduct::getNewCopy() const
 
 bool CartesianProduct::isSameTopology(const Manifold& other) const
 {
-  if(dynamic_cast<const CartesianProduct*>(&other) &&
+  if (dynamic_cast<const CartesianProduct*>(&other) &&
       numberOfSubManifolds() == other.numberOfSubManifolds())
   {
     for (size_t i = 0; i < numberOfSubManifolds(); ++i)
     {
-      if(!subManifolds_[i]->isSameTopology(other(i)))
-        return false;
+      if (!subManifolds_[i]->isSameTopology(other(i))) return false;
     }
     return true;
   }

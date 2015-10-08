@@ -268,7 +268,7 @@ BOOST_AUTO_TEST_CASE(isSameTopology)
   S2 s2;
   SO3<ExpMapMatrix> so3M;
   SO3<ExpMapQuaternion> so3Q;
-  CartesianProduct cp(so3M,R9);
+  CartesianProduct cp(so3M, R9);
 
   BOOST_CHECK(!so3M.isSameTopology(R9));
   BOOST_CHECK(!so3M.isSameTopology(R3));
