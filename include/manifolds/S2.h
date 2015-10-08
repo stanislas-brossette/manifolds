@@ -35,7 +35,7 @@ class MANIFOLDS_API S2 : public Manifold
   S2(double trustMagnitude);
   S2(const ConstRefVec& trustMagnitude);
 
-  virtual size_t numberOfSubmanifolds() const;
+  virtual size_t numberOfSubManifolds() const;
   virtual const Manifold& operator()(size_t i) const;
 
   virtual void createRandomPoint_(RefVec out, double coeff) const;
@@ -61,6 +61,7 @@ class MANIFOLDS_API S2 : public Manifold
   void randVec(RefVec out, const ConstRefVec& x) const;
   Eigen::Vector3d randVec(const ConstRefVec& x) const;
   virtual bool isElementary() const;
+  virtual bool isSameTopology(const Manifold& other) const;
   virtual long getTypeId() const;
 
  protected:

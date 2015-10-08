@@ -46,7 +46,7 @@ class MANIFOLDS_API CartesianProduct : public Manifold
   /// This method cannot be executed if the manifold is locked
   CartesianProduct& multiply(const Manifold& m);
 
-  virtual size_t numberOfSubmanifolds() const;
+  virtual size_t numberOfSubManifolds() const;
   virtual const Manifold& operator()(const size_t i) const;
 
   virtual std::string description(const std::string& prefix = "",
@@ -56,6 +56,7 @@ class MANIFOLDS_API CartesianProduct : public Manifold
       const Eigen::IOFormat& fmt = mnf::defaultFormat) const;
 
   virtual bool isElementary() const;
+  virtual bool isSameTopology(const Manifold& other) const;
 
  protected:
   virtual bool isInM_(const Eigen::VectorXd& val, double prec) const;
@@ -102,7 +103,7 @@ class MANIFOLDS_API CartesianProduct : public Manifold
 
  private:
   /// \brief List of pointers on all the manifolds in the cartesian product
-  std::vector<std::shared_ptr<const Manifold>> submanifolds_;
+  std::vector<std::shared_ptr<const Manifold>> subManifolds_;
 
   /// \brief List of start index of submanifolds in a vector of the
   /// tangent space
@@ -115,13 +116,13 @@ class MANIFOLDS_API CartesianProduct : public Manifold
 
 inline Index CartesianProduct::startR(const size_t i) const
 {
-  mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+  mnf_assert(i < numberOfSubManifolds() && "invalid index");
   return startIndexR_[i];
 }
 
 inline Index CartesianProduct::startT(const size_t i) const
 {
-  mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+  mnf_assert(i < numberOfSubManifolds() && "invalid index");
   return startIndexT_[i];
 }
 }

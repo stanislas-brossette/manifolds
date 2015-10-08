@@ -23,9 +23,13 @@
 #include <manifolds/defs.h>
 #include <manifolds/utils.h>
 #include <manifolds/mnf_assert.h>
+#include <manifolds/RealSpace.h>
+#include <manifolds/S2.h>
+#include <manifolds/CartesianProduct.h>
 #include <manifolds/SO3.h>
 #include <manifolds/Point.h>
 #include <manifolds/ExpMapMatrix.h>
+#include <manifolds/ExpMapQuaternion.h>
 
 #include <Eigen/Core>
 #include <Eigen/LU>
@@ -44,7 +48,7 @@ BOOST_AUTO_TEST_CASE(RotSpaceConstructor)
   SO3<ExpMapMatrix> S;
   BOOST_CHECK_EQUAL(S.dim(), 3);
   BOOST_CHECK_EQUAL(S.representationDim(), 9);
-  BOOST_CHECK_EQUAL(S.numberOfSubmanifolds(), 1);
+  BOOST_CHECK_EQUAL(S.numberOfSubManifolds(), 1);
   BOOST_CHECK(S.isElementary());
 }
 
@@ -255,6 +259,23 @@ BOOST_AUTO_TEST_CASE(SO3ApplyInvDiff)
   Eigen::MatrixXd J(c, repDim);
   S.applyDiffPseudoLog0(J, Jf, x);
   BOOST_CHECK(expectedRes.isApprox(J));
+}
+
+BOOST_AUTO_TEST_CASE(isSameTopology)
+{
+  RealSpace R9(9);
+  RealSpace R3(3);
+  S2 s2;
+  SO3<ExpMapMatrix> so3M;
+  SO3<ExpMapQuaternion> so3Q;
+  CartesianProduct cp(so3M,R9);
+
+  BOOST_CHECK(!so3M.isSameTopology(R9));
+  BOOST_CHECK(!so3M.isSameTopology(R3));
+  BOOST_CHECK(!so3M.isSameTopology(s2));
+  BOOST_CHECK(so3M.isSameTopology(so3M));
+  BOOST_CHECK(!so3M.isSameTopology(so3Q));
+  BOOST_CHECK(!so3M.isSameTopology(cp));
 }
 
 // BOOST_AUTO_TEST_CASE(SO3Transport)

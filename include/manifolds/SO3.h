@@ -36,7 +36,7 @@ class SO3 : public Manifold
   SO3();
   SO3(double magnitude);
   SO3(const ConstRefVec& magnitude);
-  virtual size_t numberOfSubmanifolds() const;
+  virtual size_t numberOfSubManifolds() const;
   virtual const Manifold& operator()(size_t i) const;
   virtual std::string toString(
       const ConstRefVec& val, const std::string& prefix = "",
@@ -49,6 +49,7 @@ class SO3 : public Manifold
   void setTrustMagnitude(const ConstRefVec& out);
   virtual void createRandomPoint_(RefVec out, double coeff) const;
   virtual bool isElementary() const;
+  virtual bool isSameTopology(const Manifold& other) const;
   virtual long getTypeId() const;
 
  protected:
@@ -133,7 +134,7 @@ inline void SO3<Map>::forceOnM_(RefVec out, const ConstRefVec& in) const
 }
 
 template <typename Map>
-inline size_t SO3<Map>::numberOfSubmanifolds() const
+inline size_t SO3<Map>::numberOfSubManifolds() const
 {
   return 1;
 }
@@ -333,6 +334,15 @@ Manifold_ptr SO3<Map>::getNewCopy() const
   copySO3->instanceId_ = this->instanceId_;
 
   return copySO3;
+}
+
+template <typename Map>
+bool SO3<Map>::isSameTopology(const Manifold& other) const
+{
+  if(dynamic_cast<const SO3<Map>*>(&other))
+    return true;
+  else
+    return false;
 }
 }
 #endif  //_MANIFOLDS_SO3_H_

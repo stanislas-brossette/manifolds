@@ -51,11 +51,11 @@ BOOST_AUTO_TEST_CASE(CartProdConstructor)
   CartesianPower PowS(S, 3);
   BOOST_CHECK_EQUAL(S.dim(), 10);
   BOOST_CHECK_EQUAL(S.representationDim(), 16);
-  BOOST_CHECK_EQUAL(S.numberOfSubmanifolds(), 2);
-  BOOST_CHECK_EQUAL(P.numberOfSubmanifolds(), 3);
+  BOOST_CHECK_EQUAL(S.numberOfSubManifolds(), 2);
+  BOOST_CHECK_EQUAL(P.numberOfSubManifolds(), 3);
   BOOST_CHECK_EQUAL(PowS.dim(), 30);
   BOOST_CHECK_EQUAL(PowS.representationDim(), 48);
-  BOOST_CHECK_EQUAL(PowS.numberOfSubmanifolds(), 3);
+  BOOST_CHECK_EQUAL(PowS.numberOfSubManifolds(), 3);
   std::string solName("R2xR3xR2xSO3xR2xR3xR2xSO3xR2xR3xR2xSO3");
   BOOST_CHECK(PowS.name().compare(solName) == 0);
   Eigen::VectorXd expectedTypicalMag(30);
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(CartProdVecConstructor)
   BOOST_CHECK(!S.isElementary());
   BOOST_CHECK_EQUAL(S.dim(), 19);
   BOOST_CHECK_EQUAL(S.representationDim(), 27);
-  BOOST_CHECK_EQUAL(S.numberOfSubmanifolds(), 6);
+  BOOST_CHECK_EQUAL(S.numberOfSubManifolds(), 6);
 }
 
 BOOST_AUTO_TEST_CASE(CartProdVecEmptyConstructor)
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(CartProdVecEmptyConstructor)
   BOOST_CHECK(!SEmpty.isElementary());
   BOOST_CHECK_EQUAL(SEmpty.dim(), 0);
   BOOST_CHECK_EQUAL(SEmpty.representationDim(), 0);
-  BOOST_CHECK_EQUAL(SEmpty.numberOfSubmanifolds(), 0);
+  BOOST_CHECK_EQUAL(SEmpty.numberOfSubManifolds(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(CartProdZero)
@@ -548,6 +548,29 @@ BOOST_AUTO_TEST_CASE(CardProdGetView)
   BOOST_CHECK(xR3.isApprox(S.getView<T>(xT, 0)));
   BOOST_CHECK(xSO3T.isApprox(S.getView<T>(xT, 1)));
   BOOST_CHECK(xR2.isApprox(S.getView<T>(xT, 2)));
+}
+
+BOOST_AUTO_TEST_CASE(isSameTopology)
+{
+  RealSpace R9(9);
+  RealSpace R9b(9);
+  RealSpace R3(3);
+  S2 s2;
+  SO3<ExpMapMatrix> so3M;
+  SO3<ExpMapQuaternion> so3Q;
+  CartesianProduct cp(so3M,R9);
+  CartesianProduct cp2(cp,s2);
+  CartesianProduct cpb(so3M,R9b);
+  CartesianProduct cp2b(cp,s2);
+
+  BOOST_CHECK(!cp2.isSameTopology(R9));
+  BOOST_CHECK(!cp2.isSameTopology(R3));
+  BOOST_CHECK(!cp2.isSameTopology(s2));
+  BOOST_CHECK(!cp2.isSameTopology(so3M));
+  BOOST_CHECK(!cp2.isSameTopology(so3Q));
+  BOOST_CHECK(!cp2.isSameTopology(cp));
+  BOOST_CHECK(cp2.isSameTopology(cp2));
+  BOOST_CHECK(cp2.isSameTopology(cp2b));
 }
 
 #if EIGEN_WORLD_VERSION > 3 ||                               \

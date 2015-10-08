@@ -64,9 +64,17 @@ void RealSpace::getIdentityOnTxM_(RefMat out, const ConstRefVec&) const
   out.setIdentity();
 }
 
-size_t RealSpace::numberOfSubmanifolds() const { return 1; }
+size_t RealSpace::numberOfSubManifolds() const { return 1; }
 
 bool RealSpace::isElementary() const { return true; }
+
+bool RealSpace::isSameTopology(const Manifold& other) const
+{
+  if(dynamic_cast<const RealSpace*>(&other) && dim() == other.dim())
+    return true;
+  else
+    return false;
+}
 
 const Manifold& RealSpace::operator()(size_t i) const
 {

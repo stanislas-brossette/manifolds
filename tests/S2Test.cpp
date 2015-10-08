@@ -22,7 +22,11 @@
 #include <manifolds/defs.h>
 #include <manifolds/utils.h>
 #include <manifolds/mnf_assert.h>
+#include <manifolds/RealSpace.h>
 #include <manifolds/S2.h>
+#include <manifolds/SO3.h>
+#include <manifolds/ExpMapMatrix.h>
+#include <manifolds/CartesianProduct.h>
 #include <manifolds/Point.h>
 
 #ifndef _WIN32
@@ -40,7 +44,7 @@ BOOST_AUTO_TEST_CASE(S2Constructor)
   BOOST_CHECK_EQUAL(S.dim(), 2);
   BOOST_CHECK_EQUAL(S.tangentDim(), 3);
   BOOST_CHECK_EQUAL(S.representationDim(), 3);
-  BOOST_CHECK_EQUAL(S.numberOfSubmanifolds(), 1);
+  BOOST_CHECK_EQUAL(S.numberOfSubManifolds(), 1);
   BOOST_CHECK(S.isElementary());
 }
 
@@ -227,6 +231,23 @@ BOOST_AUTO_TEST_CASE(S2IdentityTxM)
   BOOST_CHECK((H0 * vx).isApprox(vx, 1e-12));
   Eigen::Vector3d res = H0 * x;
   BOOST_CHECK(res.isZero(1e-12));
+}
+
+BOOST_AUTO_TEST_CASE(isSameTopology)
+{
+  RealSpace R9(9);
+  RealSpace R9b(9);
+  RealSpace R3(3);
+  S2 s2;
+  SO3<ExpMapMatrix> so3;
+  CartesianProduct cp(so3,R9);
+
+  BOOST_CHECK(!s2.isSameTopology(R9));
+  BOOST_CHECK(!s2.isSameTopology(R9b));
+  BOOST_CHECK(!s2.isSameTopology(R3));
+  BOOST_CHECK(s2.isSameTopology(s2));
+  BOOST_CHECK(!s2.isSameTopology(so3));
+  BOOST_CHECK(!s2.isSameTopology(cp));
 }
 
 #if EIGEN_WORLD_VERSION > 3 ||                               \

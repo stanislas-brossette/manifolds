@@ -50,24 +50,24 @@ CartesianProduct::CartesianProduct(const Manifold& m1, const Manifold& m2)
 bool CartesianProduct::isInM_(const Eigen::VectorXd& val, double) const
 {
   bool out = true;
-  for (std::size_t i = 0; i < numberOfSubmanifolds(); ++i)
+  for (std::size_t i = 0; i < numberOfSubManifolds(); ++i)
   {
-    out = out && submanifolds_[i]->isInM(getConstView<R>(val, i));
+    out = out && subManifolds_[i]->isInM(getConstView<R>(val, i));
   }
   return out;
 }
 
 void CartesianProduct::forceOnM_(RefVec out, const ConstRefVec& in) const
 {
-  for (std::size_t i = 0; i < numberOfSubmanifolds(); ++i)
-    submanifolds_[i]->forceOnM(getView<R>(out, i), getConstView<R>(in, i));
+  for (std::size_t i = 0; i < numberOfSubManifolds(); ++i)
+    subManifolds_[i]->forceOnM(getView<R>(out, i), getConstView<R>(in, i));
 }
 
 void CartesianProduct::getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const
 {
-  for (std::size_t i = 0; i < numberOfSubmanifolds(); ++i)
+  for (std::size_t i = 0; i < numberOfSubManifolds(); ++i)
   {
-    submanifolds_[i]->getIdentityOnTxM(getView<T, T>(out, i),
+    subManifolds_[i]->getIdentityOnTxM(getView<T, T>(out, i),
                                        getConstView<R>(x, i));
     for (std::size_t j = 0; j < i; ++j)
     {
@@ -86,15 +86,15 @@ CartesianProduct& CartesianProduct::multiply(const Manifold& m)
   setDimension(dim() + m.dim());
   setTangentDimension(tangentDim() + m.tangentDim());
   setRepresentationDimension(representationDim() + m.representationDim());
-  submanifolds_.push_back(std::shared_ptr<const Manifold>(copyManifold(m)));
+  subManifolds_.push_back(std::shared_ptr<const Manifold>(copyManifold(m)));
   startIndexT_.push_back(startIndexT_.back() + m.tangentDim());
   startIndexR_.push_back(startIndexR_.back() + m.representationDim());
   return *this;
 }
 
-size_t CartesianProduct::numberOfSubmanifolds() const
+size_t CartesianProduct::numberOfSubManifolds() const
 {
-  return submanifolds_.size();
+  return subManifolds_.size();
 }
 
 bool CartesianProduct::isElementary() const { return false; }
@@ -111,17 +111,17 @@ std::string CartesianProduct::description(const std::string& prefix,
   }
   else
   {
-    for (size_t i = 0; i < submanifolds_.size(); ++i)
+    for (size_t i = 0; i < subManifolds_.size(); ++i)
     {
-      if (submanifolds_[i]->isElementary())
+      if (subManifolds_[i]->isElementary())
       {
         ss << prefix;
-        ss << submanifolds_[i]->description() << std::endl;
+        ss << subManifolds_[i]->description() << std::endl;
       }
       else
       {
         ss << prefix << "/----------------------------------" << std::endl;
-        ss << submanifolds_[i]->description(prefix + "| ", false);
+        ss << subManifolds_[i]->description(prefix + "| ", false);
         ss << prefix << "\\----------------------------------" << std::endl;
       }
     }
@@ -131,8 +131,8 @@ std::string CartesianProduct::description(const std::string& prefix,
 
 const Manifold& CartesianProduct::operator()(const size_t i) const
 {
-  mnf_assert(i < submanifolds_.size() && "invalid index");
-  return *submanifolds_[i];
+  mnf_assert(i < subManifolds_.size() && "invalid index");
+  return *subManifolds_[i];
 }
 
 std::string CartesianProduct::toString(const ConstRefVec& val,
@@ -140,30 +140,30 @@ std::string CartesianProduct::toString(const ConstRefVec& val,
                                        const Eigen::IOFormat& fmt) const
 {
   std::stringstream ss;
-  size_t n = numberOfSubmanifolds();
+  size_t n = numberOfSubManifolds();
   for (std::size_t i = 0; i < n - 1; ++i)
   {
-    ss << submanifolds_[i]->toString(getConstView<R>(val, i), prefix + "  ",
+    ss << subManifolds_[i]->toString(getConstView<R>(val, i), prefix + "  ",
                                      fmt) << std::endl;
     ;
   }
-  ss << submanifolds_.back()->toString(getConstView<R>(val, n - 1),
+  ss << subManifolds_.back()->toString(getConstView<R>(val, n - 1),
                                        prefix + "  ", fmt);
   return ss.str();
 }
 
 void CartesianProduct::createRandomPoint_(RefVec out, const double coeff) const
 {
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
-    submanifolds_[i]->createRandomPoint(getView<R>(out, i), coeff);
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+    subManifolds_[i]->createRandomPoint(getView<R>(out, i), coeff);
 }
 
 void CartesianProduct::retractation_(RefVec out, const ConstRefVec& x,
                                      const ConstRefVec& v) const
 {
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
-    submanifolds_[i]->retractation(getView<R>(out, i), getConstView<R>(x, i),
+    subManifolds_[i]->retractation(getView<R>(out, i), getConstView<R>(x, i),
                                    getConstView<T>(v, i));
   }
 }
@@ -171,35 +171,35 @@ void CartesianProduct::retractation_(RefVec out, const ConstRefVec& x,
 void CartesianProduct::pseudoLog_(RefVec out, const ConstRefVec& x,
                                   const ConstRefVec& y) const
 {
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
-    submanifolds_[i]->pseudoLog(getView<T>(out, i), getConstView<R>(x, i),
+    subManifolds_[i]->pseudoLog(getView<T>(out, i), getConstView<R>(x, i),
                                 getConstView<R>(y, i));
   }
 }
 
 void CartesianProduct::pseudoLog0_(RefVec out, const ConstRefVec& x) const
 {
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
-    submanifolds_[i]->pseudoLog0(getView<T>(out, i), getConstView<R>(x, i));
+    subManifolds_[i]->pseudoLog0(getView<T>(out, i), getConstView<R>(x, i));
   }
 }
 
 void CartesianProduct::setZero_(RefVec out) const
 {
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
-    submanifolds_[i]->setZero(getView<R>(out, i));
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+    subManifolds_[i]->setZero(getView<R>(out, i));
 }
 
 Eigen::MatrixXd CartesianProduct::diffRetractation_(const ConstRefVec& x) const
 {
   Eigen::MatrixXd J(representationDim(), tangentDim());
   J.setZero();
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
     getView<R, T>(J, i) =
-        submanifolds_[i]->diffRetractation(getConstView<R>(x, i));
+        subManifolds_[i]->diffRetractation(getConstView<R>(x, i));
   }
   return J;
 }
@@ -207,9 +207,9 @@ Eigen::MatrixXd CartesianProduct::diffRetractation_(const ConstRefVec& x) const
 void CartesianProduct::applyDiffRetractation_(RefMat out, const ConstRefMat& in,
                                               const ConstRefVec& x) const
 {
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
-    submanifolds_[i]->applyDiffRetractation(getView<F, T>(out, i),
+    subManifolds_[i]->applyDiffRetractation(getView<F, T>(out, i),
                                             getConstView<F, R>(in, i),
                                             getConstView<R>(x, i));
   }
@@ -219,10 +219,10 @@ Eigen::MatrixXd CartesianProduct::diffPseudoLog0_(const ConstRefVec& x) const
 {
   Eigen::MatrixXd J(tangentDim(), representationDim());
   J.setZero();
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
     getView<T, R>(J, i) =
-        submanifolds_[i]->diffPseudoLog0(getConstView<R>(x, i));
+        subManifolds_[i]->diffPseudoLog0(getConstView<R>(x, i));
   }
   return J;
 }
@@ -230,9 +230,9 @@ Eigen::MatrixXd CartesianProduct::diffPseudoLog0_(const ConstRefVec& x) const
 void CartesianProduct::applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in,
                                             const ConstRefVec& x) const
 {
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
-    submanifolds_[i]->applyDiffPseudoLog0(getView<F, R>(out, i),
+    subManifolds_[i]->applyDiffPseudoLog0(getView<F, R>(out, i),
                                           getConstView<F, T>(in, i),
                                           getConstView<R>(x, i));
   }
@@ -242,9 +242,9 @@ void CartesianProduct::applyTransport_(RefMat out, const ConstRefMat& in,
                                        const ConstRefVec& x,
                                        const ConstRefVec& v) const
 {
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
-    submanifolds_[i]->applyTransport(
+    subManifolds_[i]->applyTransport(
         getView<T, F>(out, i), getConstView<T, F>(in, i), getConstView<R>(x, i),
         getConstView<T>(v, i));
   }
@@ -254,9 +254,9 @@ void CartesianProduct::applyInvTransport_(RefMat out, const ConstRefMat& in,
                                           const ConstRefVec& x,
                                           const ConstRefVec& v) const
 {
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
-    submanifolds_[i]->applyInvTransport(
+    subManifolds_[i]->applyInvTransport(
         getView<F, T>(out, i), getConstView<F, T>(in, i), getConstView<R>(x, i),
         getConstView<T>(v, i));
   }
@@ -267,9 +267,9 @@ void CartesianProduct::applyInvTransportOnTheRight_(RefMat out,
                                                     const ConstRefVec& x,
                                                     const ConstRefVec& v) const
 {
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
-    submanifolds_[i]->applyInvTransportOnTheRight(
+    subManifolds_[i]->applyInvTransportOnTheRight(
         getView<F, T>(out, i), getConstView<F, T>(in, i), getConstView<R>(x, i),
         getConstView<T>(v, i));
   }
@@ -280,11 +280,11 @@ void CartesianProduct::tangentConstraint_(RefMat out,
 {
   Index k = 0;
   out.setZero();
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
-    Index s = submanifolds_[i]->tangentDim() - submanifolds_[i]->dim();
+    Index s = subManifolds_[i]->tangentDim() - subManifolds_[i]->dim();
     auto Ci = getView<F, T>(out, i);
-    submanifolds_[i]->tangentConstraint(Ci.middleRows(k, s),
+    subManifolds_[i]->tangentConstraint(Ci.middleRows(k, s),
                                         getConstView<R>(x, i));
     k += s;
   }
@@ -294,8 +294,8 @@ bool CartesianProduct::isInTxM_(const ConstRefVec& x, const ConstRefVec& v,
                                 const double& prec) const
 {
   bool b = true;
-  for (size_t i = 0; i < submanifolds_.size() && b; ++i)
-    b = submanifolds_[i]->isInTxM(getConstView<R>(x, i), getConstView<T>(v, i),
+  for (size_t i = 0; i < subManifolds_.size() && b; ++i)
+    b = subManifolds_[i]->isInTxM(getConstView<R>(x, i), getConstView<T>(v, i),
                                   prec);
   return b;
 }
@@ -303,27 +303,27 @@ bool CartesianProduct::isInTxM_(const ConstRefVec& x, const ConstRefVec& v,
 void CartesianProduct::forceOnTxM_(RefVec out, const ConstRefVec& in,
                                    const ConstRefVec& x) const
 {
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
-    submanifolds_[i]->forceOnTxM(getView<T>(out, i), getConstView<T>(in, i),
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+    subManifolds_[i]->forceOnTxM(getView<T>(out, i), getConstView<T>(in, i),
                                  getConstView<R>(x, i));
 }
 
 void CartesianProduct::limitMap_(RefVec out) const
 {
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
-    submanifolds_[i]->limitMap(getView<T>(out, i));
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+    subManifolds_[i]->limitMap(getView<T>(out, i));
 }
 
 void CartesianProduct::getTypicalMagnitude_(RefVec out) const
 {
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
-    submanifolds_[i]->getTypicalMagnitude(getView<T>(out, i));
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+    subManifolds_[i]->getTypicalMagnitude(getView<T>(out, i));
 }
 
 void CartesianProduct::getTrustMagnitude_(RefVec out) const
 {
-  for (size_t i = 0; i < submanifolds_.size(); ++i)
-    submanifolds_[i]->getTrustMagnitude(getView<T>(out, i));
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+    subManifolds_[i]->getTrustMagnitude(getView<T>(out, i));
 }
 
 long CartesianProduct::getTypeId() const
@@ -337,5 +337,21 @@ Manifold_ptr CartesianProduct::getNewCopy() const
   copy->instanceId_ = this->instanceId_;
 
   return copy;
+}
+
+bool CartesianProduct::isSameTopology(const Manifold& other) const
+{
+  if(dynamic_cast<const CartesianProduct*>(&other) &&
+      numberOfSubManifolds() == other.numberOfSubManifolds())
+  {
+    for (size_t i = 0; i < numberOfSubManifolds(); ++i)
+    {
+      if(!subManifolds_[i]->isSameTopology(other(i)))
+        return false;
+    }
+    return true;
+  }
+  else
+    return false;
 }
 }

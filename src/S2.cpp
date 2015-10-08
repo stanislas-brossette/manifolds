@@ -65,7 +65,7 @@ void S2::getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const
   out -= xxt;
 }
 
-size_t S2::numberOfSubmanifolds() const { return 1; }
+size_t S2::numberOfSubManifolds() const { return 1; }
 
 bool S2::isElementary() const { return true; }
 
@@ -290,5 +290,13 @@ Manifold_ptr S2::getNewCopy() const
   copy->instanceId_ = this->instanceId_;
 
   return copy;
+}
+
+bool S2::isSameTopology(const Manifold& other) const
+{
+  if(dynamic_cast<const S2*>(&other))
+    return true;
+  else
+    return false;
 }
 }

@@ -112,7 +112,7 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
       const Eigen::IOFormat& fmt = mnf::defaultFormat) const = 0;
 
   /// \brief Returns the number of submanifolds that compose the manifold
-  virtual size_t numberOfSubmanifolds() const = 0;
+  virtual size_t numberOfSubManifolds() const = 0;
 
   /// \brief Returns a pointer on the submanifold of index i if it exists
   /// Only useful with composed Manifolds
@@ -288,6 +288,10 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   /// unique to each class implemented in getTypeId().
   virtual bool isSameType(const Manifold& other) const;
 
+  /// \brief Compares this manifolds topological structure to another one
+  /// returns true is all the submanifolds ars same type and dimension and order.
+  virtual bool isSameTopology(const Manifold& other) const = 0;
+
   /// \brief returns an id that should be unique to each manifold class.
   /// Use utils::hash::computeHash("some_string") to generate an ID at
   /// compile-time.
@@ -410,7 +414,7 @@ inline std::ostream& operator<<(std::ostream& os, const Manifold& m)
 template <int D>
 inline Segment Manifold::getView(RefVec val, size_t i) const
 {
-  mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+  mnf_assert(i < numberOfSubManifolds() && "invalid index");
   mnf_assert(val.size() == getDim<D>());
   return val.segment(getStart<D>(i), getDim<D>(i));
 }
@@ -419,7 +423,7 @@ template <int D>
 inline ConstSegment Manifold::getConstView(const ConstRefVec& val,
                                            size_t i) const
 {
-  mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+  mnf_assert(i < numberOfSubManifolds() && "invalid index");
   mnf_assert(val.size() == getDim<D>());
   return val.segment(getStart<D>(i), getDim<D>(i));
 }
@@ -427,14 +431,14 @@ inline ConstSegment Manifold::getConstView(const ConstRefVec& val,
 template <>
 inline Index Manifold::getStart<R>(size_t i) const
 {
-  mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+  mnf_assert(i < numberOfSubManifolds() && "invalid index");
   return startR(i);
 }
 
 template <>
 inline Index Manifold::getStart<T>(size_t i) const
 {
-  mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+  mnf_assert(i < numberOfSubManifolds() && "invalid index");
   return startT(i);
 }
 
@@ -453,26 +457,26 @@ inline Index Manifold::getDim<T>() const
 template <>
 inline Index Manifold::getDim<R>(size_t i) const
 {
-  mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+  mnf_assert(i < numberOfSubManifolds() && "invalid index");
   return this->operator()(i).representationDim();
 }
 
 template <>
 inline Index Manifold::getDim<T>(size_t i) const
 {
-  mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+  mnf_assert(i < numberOfSubManifolds() && "invalid index");
   return this->operator()(i).tangentDim();
 }
 
 inline Index Manifold::startR(size_t /*i*/) const
 {
-  // mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+  // mnf_assert(i < numberOfSubManifolds() && "invalid index");
   return 0;
 }
 
 inline Index Manifold::startT(size_t /*i*/) const
 {
-  // mnf_assert(i < numberOfSubmanifolds() && "invalid index");
+  // mnf_assert(i < numberOfSubManifolds() && "invalid index");
   return 0;
 }
 

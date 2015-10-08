@@ -36,7 +36,7 @@ class MANIFOLDS_API RealSpace : public Manifold
   RealSpace(Index n, double magnitude);
   RealSpace(Index n, const ConstRefVec& magnitude);
 
-  virtual size_t numberOfSubmanifolds() const;
+  virtual size_t numberOfSubManifolds() const;
   virtual const Manifold& operator()(size_t i) const;
 
   virtual std::string toString(
@@ -49,6 +49,7 @@ class MANIFOLDS_API RealSpace : public Manifold
   void setTrustMagnitude(const double& magnitude);
   void setTrustMagnitude(const ConstRefVec& out);
   virtual bool isElementary() const;
+  virtual bool isSameTopology(const Manifold& other) const;
   virtual long getTypeId() const;
 
  protected:
