@@ -98,7 +98,7 @@ class MANIFOLDS_API S2 : public Manifold
                            const ConstRefVec& x) const;
   virtual void limitMap_(RefVec out) const;
 
-  virtual std::unique_ptr<Manifold> getNewCopy() const;
+  virtual std::unique_ptr<Manifold> getNewCopy_() const;
 
  private:
   Eigen::Vector3d typicalMagnitude_;

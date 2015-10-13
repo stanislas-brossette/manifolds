@@ -405,6 +405,14 @@ bool Manifold::isSameType(const Manifold& other) const
   return this->getTypeId() == other.getTypeId();
 }
 
+std::unique_ptr<Manifold> Manifold::getNewCopy() const
+{
+  this->lock();
+  std::unique_ptr<Manifold> copy(this->getNewCopy_());
+  copy->lock();
+  return copy;
+}
+
 std::unique_ptr<Manifold> Manifold::copyManifold(const Manifold& m)
 {
   std::unique_ptr<Manifold> copy = m.getNewCopy();
