@@ -331,11 +331,9 @@ long CartesianProduct::getTypeId() const
   return utils::hash::computeHash("CartesianProduct");
 }
 
-Manifold_ptr CartesianProduct::getNewCopy() const
+std::shared_ptr<Manifold> CartesianProduct::getNewCopy_() const
 {
-  CartesianProduct_ptr copy(new CartesianProduct(*this));
-  copy->instanceId_ = this->instanceId_;
-
+  std::shared_ptr<CartesianProduct> copy(new CartesianProduct(*this));
   return copy;
 }
 

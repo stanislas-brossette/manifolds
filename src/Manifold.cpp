@@ -404,12 +404,18 @@ bool Manifold::isSameType(const Manifold& other) const
   return this->getTypeId() == other.getTypeId();
 }
 
-Manifold_ptr Manifold::copyManifold(const Manifold& m)
+std::shared_ptr<Manifold> Manifold::getNewCopy() const
 {
-  Manifold_ptr copy = m.getNewCopy();
+  lock();
+  std::shared_ptr<Manifold> copy(getNewCopy_());
+  copy->instanceId_ = instanceId_;
+  copy->lock();
+  return copy;
+}
 
-  copy->instanceId_ = m.instanceId_;
-
+std::shared_ptr<Manifold> Manifold::copyManifold(const Manifold& m)
+{
+  std::shared_ptr<Manifold> copy = m.getNewCopy();
   return copy;
 }
 }

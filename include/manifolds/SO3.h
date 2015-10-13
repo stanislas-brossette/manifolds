@@ -87,7 +87,7 @@ class SO3 : public Manifold
   virtual void limitMap_(RefVec out) const;
   mutable ReusableTemporaryMap bufferMap_;
 
-  virtual Manifold_ptr getNewCopy() const;
+  virtual std::shared_ptr<Manifold> getNewCopy_() const;
 
  private:
   Eigen::Vector3d typicalMagnitude_;
@@ -328,11 +328,9 @@ long SO3<Map>::getTypeId() const
 }
 
 template <typename Map>
-Manifold_ptr SO3<Map>::getNewCopy() const
+std::shared_ptr<Manifold> SO3<Map>::getNewCopy_() const
 {
   std::shared_ptr<SO3<Map> > copySO3(new SO3<Map>(*this));
-  copySO3->instanceId_ = this->instanceId_;
-
   return copySO3;
 }
 
