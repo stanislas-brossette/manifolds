@@ -284,9 +284,6 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   /// \brief returns a value unique to each instance of a manifold
   long getInstanceId() const;
 
-  /// \brief Use with caution: sets the instanceID of a manifold
-  void setInstanceId(long i);
-
   /// \brief Compares this manifold to another one using the identifier
   /// unique to each class implemented in getTypeId().
   virtual bool isSameType(const Manifold& other) const;
@@ -380,10 +377,10 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   /// \brief return a new copy of this manifold, including its instanceId.
   /// Should only be used within the CartesianProduct to store a copy of
   /// the manifold inside the std::vector.
-  virtual std::unique_ptr<Manifold> getNewCopy() const = 0;
+  virtual Manifold_ptr getNewCopy() const = 0;
 
   /// \brief call the getNewCopy() method from any Manifold subclass.
-  static std::unique_ptr<Manifold> copyManifold(const Manifold& m);
+  static Manifold_ptr copyManifold(const Manifold& m);
 
   /// \brief a value used to identify different instances at runtime
   mutable long instanceId_;

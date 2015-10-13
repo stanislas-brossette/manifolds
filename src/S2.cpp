@@ -284,10 +284,10 @@ long S2::getTypeId() const
   return typeId;
 }
 
-std::unique_ptr<Manifold> S2::getNewCopy() const
+Manifold_ptr S2::getNewCopy() const
 {
-  std::unique_ptr<Manifold> copy(new S2(*this));
-  copy->setInstanceId(this->instanceId_);
+  S2_ptr copy(new S2(*this));
+  copy->instanceId_ = this->instanceId_;
 
   return copy;
 }

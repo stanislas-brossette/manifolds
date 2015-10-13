@@ -212,10 +212,10 @@ long RealSpace::getTypeId() const
   return typeId;
 }
 
-std::unique_ptr<Manifold> RealSpace::getNewCopy() const
+Manifold_ptr RealSpace::getNewCopy() const
 {
-  std::unique_ptr<Manifold> copy(new RealSpace(*this));
-  copy->setInstanceId(this->instanceId_);
+  RealSpace_ptr copy(new RealSpace(*this));
+  copy->instanceId_ = this->instanceId_;
 
   return copy;
 }

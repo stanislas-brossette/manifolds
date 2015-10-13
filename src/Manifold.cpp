@@ -398,16 +398,15 @@ const std::string& Manifold::name() const { return name_; }
 std::string& Manifold::name() { return name_; }
 
 long Manifold::getInstanceId() const { return this->instanceId_; }
-void Manifold::setInstanceId(long i) { instanceId_ = i; }
 
 bool Manifold::isSameType(const Manifold& other) const
 {
   return this->getTypeId() == other.getTypeId();
 }
 
-std::unique_ptr<Manifold> Manifold::copyManifold(const Manifold& m)
+Manifold_ptr Manifold::copyManifold(const Manifold& m)
 {
-  std::unique_ptr<Manifold> copy = m.getNewCopy();
+  Manifold_ptr copy = m.getNewCopy();
 
   copy->instanceId_ = m.instanceId_;
 

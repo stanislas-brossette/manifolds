@@ -99,7 +99,7 @@ class MANIFOLDS_API CartesianProduct : public Manifold
   virtual void getTrustMagnitude_(RefVec out) const;
   virtual long getTypeId() const;
 
-  virtual std::unique_ptr<Manifold> getNewCopy() const;
+  virtual Manifold_ptr getNewCopy() const;
 
  private:
   /// \brief List of pointers on all the manifolds in the cartesian product
