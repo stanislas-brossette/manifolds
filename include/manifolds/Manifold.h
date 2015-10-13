@@ -301,11 +301,6 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   /// compile-time.
   virtual long getTypeId() const = 0;
 
-  /// \brief return a new copy of this manifold, including its instanceId.
-  /// Should only be used within the CartesianProduct to store a copy of
-  /// the manifold inside the std::vector.
-  std::unique_ptr<Manifold> getNewCopy() const;
-
  protected:
   /// \brief Set manifold dimension to d
   void setDimension(Index d);
@@ -382,7 +377,10 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   /// \brief tests if the manifold is locked, throwing an error if it is
   void testLock() const;
 
-  virtual std::unique_ptr<Manifold> getNewCopy_() const = 0;
+  /// \brief return a new copy of this manifold, including its instanceId.
+  /// Should only be used within the CartesianProduct to store a copy of
+  /// the manifold inside the std::vector.
+  virtual std::unique_ptr<Manifold> getNewCopy() const = 0;
 
   /// \brief call the getNewCopy() method from any Manifold subclass.
   static std::unique_ptr<Manifold> copyManifold(const Manifold& m);
