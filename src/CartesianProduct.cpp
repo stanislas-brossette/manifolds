@@ -105,7 +105,7 @@ std::string CartesianProduct::description(const std::string& prefix,
   std::stringstream ss;
   if (firstCall)
   {
-    ss << "/----------------------------------" << std::endl;
+    ss << prefix << "/cartprod--------------------------" << std::endl;
     ss << this->description(prefix + "| ", false);
     ss << prefix << "\\----------------------------------" << std::endl;
   }
@@ -115,12 +115,11 @@ std::string CartesianProduct::description(const std::string& prefix,
     {
       if (subManifolds_[i]->isElementary())
       {
-        ss << prefix;
-        ss << subManifolds_[i]->description() << std::endl;
+        ss << subManifolds_[i]->description(prefix);
       }
       else
       {
-        ss << prefix << "/----------------------------------" << std::endl;
+        ss << prefix << "/cartprod--------------------------" << std::endl;
         ss << subManifolds_[i]->description(prefix + "| ", false);
         ss << prefix << "\\----------------------------------" << std::endl;
       }

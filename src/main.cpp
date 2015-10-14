@@ -1,66 +1,85 @@
-// Copyright (c) 2015 CNRS
-// Authors: Stanislas Brossette, Adrien Escande
-
-// This file is part of manifolds
-// manifolds is free software: you can redistribute it
-// and/or modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation, either version
-// 3 of the License, or (at your option) any later version.
-
-// manifolds is distributed in the hope that it will be
-// useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// General Lesser Public License for more details.  You should have
-// received a copy of the GNU Lesser General Public License along with
-// manifolds. If not, see
-// <http://www.gnu.org/licenses/>.
-
 #include <iostream>
-#include <stdexcept>
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include <time.h>
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <Eigen/Core>
-
-#include <manifolds/mnf_assert.h>
-#include <manifolds/RealSpace.h>
+#include <manifolds/defs.h>
+#include <manifolds/utils.h>
+#include <manifolds/S2.h>
 #include <manifolds/SO3.h>
+#include <manifolds/RealSpace.h>
 #include <manifolds/CartesianProduct.h>
+#include <manifolds/CartesianPower.h>
 #include <manifolds/Point.h>
 #include <manifolds/ExpMapMatrix.h>
-#include <manifolds/ReusableTemporaryMap.h>
+#include <manifolds/ExpMapQuaternion.h>
 
 using namespace mnf;
 
-void LifeAndDeathOfAPoint()
+class RobotManifold : public mnf::CartesianProduct
 {
-  RealSpace R3(3);
-  Point x = R3.createPoint();
-}
+ public:
+  RobotManifold() {}
+  virtual ~RobotManifold() {}
+
+ private:
+  virtual bool isElementary() const { return true; }
+
+  virtual std::shared_ptr<mnf::Manifold> getNewCopy_() const
+  {
+    std::shared_ptr<RobotManifold> copy(new RobotManifold(*this));
+    return copy;
+  }
+
+  std::string description(const std::string& prefix, bool firstCall) const
+  {
+    std::stringstream ss;
+    if (firstCall)
+    {
+      ss << prefix << "/robot+++++++++++++++++++++++++++++" << std::endl;
+      ss << this->description(prefix + "+ ", false);
+      ss << prefix << "\\++++++++++++++++++++++++++++++++++" << std::endl;
+    }
+    else
+    {
+      for (size_t i = 0; i < subManifolds_.size(); ++i)
+      {
+        if (subManifolds_[i]->isElementary())
+        {
+          ss << subManifolds_[i]->description(prefix);
+        }
+        else
+        {
+          ss << prefix << "/robot+++++++++++++++++++++++++++++" << std::endl;
+          ss << subManifolds_[i]->description(prefix + "+ ", false);
+          ss << prefix << "\\++++++++++++++++++++++++++++++++++" << std::endl;
+        }
+      }
+    }
+    return ss.str();
+  }
+};
 
 int main()
 {
-  LifeAndDeathOfAPoint();
-/*srand((unsigned)time(NULL));
-std::cout << "Using: Eigen" << EIGEN_WORLD_VERSION << "." << EIGEN_MAJOR_VERSION
-<<"." << EIGEN_MINOR_VERSION<< std::endl;
-RealSpace R2(2);
-RealSpace R3(3);
-SO3<ExpMapMatrix> RotSpace;
-CartesianProduct R2R3R2(R2, R3);
-R2R3R2.multiply(R2);
-CartesianProduct SO3R2R3R2(RotSpace, R2R3R2);
-CartesianProduct SO3R2R3R2SO3(SO3R2R3R2, RotSpace);
-CartesianProduct R3SO3(R3, RotSpace);
-CartesianProduct R3SO3R3SO3(R3, RotSpace);
-R3SO3R3SO3.multiply(R3);
-R3SO3R3SO3.multiply(RotSpace);*/
-#ifdef _WIN32
-  system("pause");
-#endif
+  CartesianProduct merged;
+  RealSpace R8(8);
+  RealSpace R3(3);
+  S2 s2;
+  SO3<ExpMapQuaternion> so3;
+  RobotManifold robot1;
+  robot1.multiply(R8);
+  robot1.display();
+  RobotManifold robot2;
+  CartesianProduct se3{&R3, &so3};
+  robot2.multiply(se3);
+  robot2.display();
+  merged.multiply(robot1);
+  merged.display();
+  merged.multiply(robot2);
+  merged.multiply(s2);
+  merged.multiply(R3);
+  merged.multiply(s2);
+  merged.multiply(R3);
+  merged.display();
   return 0;
 }
-

@@ -122,7 +122,7 @@ void Manifold::display() const { std::cout << description() << std::endl; }
 std::string Manifold::description(const std::string& prefix, bool) const
 {
   std::stringstream ss;
-  ss << prefix << name();
+  ss << prefix << name() << std::endl;
   return ss.str();
 }
 

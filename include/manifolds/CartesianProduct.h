@@ -101,10 +101,11 @@ class MANIFOLDS_API CartesianProduct : public Manifold
 
   virtual std::shared_ptr<Manifold> getNewCopy_() const;
 
- private:
+ protected:
   /// \brief List of pointers on all the manifolds in the cartesian product
   std::vector<std::shared_ptr<const Manifold>> subManifolds_;
 
+ private:
   /// \brief List of start index of submanifolds in a vector of the
   /// tangent space
   std::vector<Index> startIndexT_;
