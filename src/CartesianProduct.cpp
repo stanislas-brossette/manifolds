@@ -140,14 +140,12 @@ std::string CartesianProduct::toString(const ConstRefVec& val,
 {
   std::stringstream ss;
   size_t n = numberOfSubManifolds();
-  for (std::size_t i = 0; i < n - 1; ++i)
+  for (std::size_t i = 0; i < n; ++i)
   {
     ss << subManifolds_[i]->toString(getConstView<R>(val, i), prefix + "  ",
-                                     fmt) << std::endl;
-    ;
+                                     fmt);
+    if (i < n - 1) ss << std::endl;
   }
-  ss << subManifolds_.back()->toString(getConstView<R>(val, n - 1),
-                                       prefix + "  ", fmt);
   return ss.str();
 }
 
