@@ -153,15 +153,21 @@ inline const Manifold& SO3<Map>::operator()(size_t i) const
 }
 
 template <typename Map>
-inline std::string SO3<Map>::toString(const ConstRefVec& val,
-                                      const std::string& prefix,
-                                      const Eigen::IOFormat& fmt) const
+inline std::string SO3<Map>::toString(const ConstRefVec& /*val*/,
+                                      const std::string& /*prefix*/,
+                                      const Eigen::IOFormat& /*fmt*/) const
 {
-  std::string matPrefix = prefix + '[';
+  Eigen::IOFormat fmt1234(4, 0, ", ", "\n", "[", "]");
+  //Eigen::Vector3d res;
+  //res.setZero();
   std::stringstream ss;
-  ss << matPrefix
-     << (Eigen::Map<const typename Map::DisplayType>(val.data())).format(fmt);
-  return ss.str();
+  //ss << res.format(fmt);
+  ss << "aaaaaaaaaaa";
+  std::string foo = ss.str();
+  //std::string foo = "aaaaaaaaaaa";
+  //res.format(fmt);
+  //return ss.str();
+  return foo;
 }
 
 template <typename Map>
