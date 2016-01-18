@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(CartProdConstructor)
   BOOST_CHECK_EQUAL(PowS.dim(), 30);
   BOOST_CHECK_EQUAL(PowS.representationDim(), 48);
   BOOST_CHECK_EQUAL(PowS.numberOfSubManifolds(), 3);
-  std::string solName("R2xR3xR2xSO3xR2xR3xR2xSO3xR2xR3xR2xSO3");
+  std::string solName("R2xR3xR2xSO3MatxR2xR3xR2xSO3MatxR2xR3xR2xSO3Mat");
   BOOST_CHECK(PowS.name().compare(solName) == 0);
   Eigen::VectorXd expectedTypicalMag(30);
   expectedTypicalMag << 1, 1, 2, 2, 2, 1, 1, M_PI, M_PI, M_PI, 1, 1, 2, 2, 2, 1,

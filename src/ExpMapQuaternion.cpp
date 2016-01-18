@@ -57,6 +57,7 @@ ConstReverseQuaternion::ConstReverseQuaternion(const double* data)
 
 typedef utils::ReverseQuaternion toQuat;
 typedef utils::ConstReverseQuaternion toConstQuat;
+const std::string ExpMapQuaternion::name = "Quat";
 // typedef Eigen::Map< Eigen::Quaterniond > toQuat;
 // typedef Eigen::Map< const Eigen::Quaterniond > toConstQuat;
 const double ExpMapQuaternion::prec =

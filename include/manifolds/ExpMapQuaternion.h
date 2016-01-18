@@ -60,6 +60,8 @@ struct MANIFOLDS_API ExpMapQuaternion
 
   /// \brief dimension of \f$ \mathbb{R}^3=3 \f$
   static const int InputDim_ = 3;
+
+  static const std::string name;
   typedef Eigen::Vector4d DisplayType;  // display as q=(x, y, z, w)
   typedef Eigen::Vector4d OutputType;
   static bool isInM_(const Eigen::VectorXd& val, double prec);
