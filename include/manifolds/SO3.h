@@ -278,7 +278,8 @@ void SO3<Map>::getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const
 template <typename Map>
 void SO3<Map>::limitMap_(RefVec out) const
 {
-  double limitExpMap = M_PI / sqrt(3);
+  //The limit is such that ||z||<pi, do z < pi/sqrt(3) and we take only 90% of that.
+  double limitExpMap = 0.9 * M_PI / sqrt(3);
   out.setConstant(limitExpMap);
 }
 
