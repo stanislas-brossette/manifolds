@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(SO3LimitMap)
   Eigen::VectorXd res(dim);
   S.limitMap(res);
   Eigen::VectorXd expectedRes(dim);
-  double i = M_PI / sqrt(3);
+  double i = 0.9 * M_PI / sqrt(3);
   expectedRes << i, i, i;
   BOOST_CHECK_EQUAL(expectedRes, res);
 }

@@ -514,7 +514,7 @@ BOOST_AUTO_TEST_CASE(CartProdLimitMap)
   Eigen::VectorXd res(dim);
   Space.limitMap(res);
   Eigen::VectorXd expectedRes(dim);
-  double l = M_PI / sqrt(3);
+  double l = 0.9 * M_PI / sqrt(3);
   double i = std::numeric_limits<double>::infinity();
 
   expectedRes << i, i, i, l, l, l, i, i, i, i, i, l, l, l, i, i, i, i, i, l, l,
