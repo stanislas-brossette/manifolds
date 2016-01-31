@@ -25,7 +25,8 @@ CartesianProduct::CartesianProduct() : Manifold(0, 0, 0)
 {
   startIndexT_.push_back(0);
   startIndexR_.push_back(0);
-  name() = "";
+  std::string name("");
+  setName(name);
 }
 
 CartesianProduct::CartesianProduct(const std::initializer_list<Manifold*> m)
@@ -33,7 +34,8 @@ CartesianProduct::CartesianProduct(const std::initializer_list<Manifold*> m)
 {
   startIndexT_.push_back(0);
   startIndexR_.push_back(0);
-  name() = "";
+  std::string name("");
+  setName(name);
   for (auto mi : m) multiply(*(mi));
 }
 
@@ -44,7 +46,8 @@ CartesianProduct::CartesianProduct(const Manifold& m1, const Manifold& m2)
   startIndexR_.push_back(0);
   multiply(m1);
   multiply(m2);
-  name() = m1.name() + "x" + m2.name();
+  std::string name(m1.name() + "x" + m2.name());
+  setName(name);
 }
 
 bool CartesianProduct::isInM_(const Eigen::VectorXd& val, double) const
@@ -81,8 +84,8 @@ CartesianProduct& CartesianProduct::multiply(const Manifold& m)
 {
   testLock();
   m.lock();
-  if (dim() != 0) name() += "x";
-  name() += m.name();
+  if (dim() != 0) setName(name() + "x");
+  setName(name() + m.name());
   setDimension(dim() + m.dim());
   setTangentDimension(tangentDim() + m.tangentDim());
   setRepresentationDimension(representationDim() + m.representationDim());

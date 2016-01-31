@@ -265,7 +265,7 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   /// \brief name_ getter
   const std::string& name() const;
   /// \brief name_ setter
-  std::string& name();
+  const std::string& setName(const std::string&);
 
   /// \brief fills the \a out vector with the limits of validity of the tangent
   /// map

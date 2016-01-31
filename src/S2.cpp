@@ -27,21 +27,24 @@ namespace mnf
 {
 S2::S2() : Manifold(2, 3, 3)
 {
-  name() = "S2";
+  std::string name("S2");
+  setName(name);
   setTypicalMagnitude(Eigen::Vector3d::Constant(M_PI));
   setTrustMagnitude(Eigen::Vector3d::Constant(M_PI));
 }
 
 S2::S2(double magnitude) : Manifold(2, 3, 3)
 {
-  name() = "S2";
+  std::string name("S2");
+  setName(name);
   setTypicalMagnitude(Eigen::Vector3d::Constant(magnitude));
   setTrustMagnitude(Eigen::Vector3d::Constant(magnitude));
 }
 S2::S2(const ConstRefVec& magnitude) : Manifold(2, 3, 3)
 {
   mnf_assert(magnitude.size() == 3 && "magnitude on R^n must be of size n");
-  name() = "S2";
+  std::string name("S2");
+  setName(name);
   setTypicalMagnitude(magnitude);
   setTrustMagnitude(magnitude);
 }

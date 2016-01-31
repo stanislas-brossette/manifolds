@@ -52,7 +52,6 @@ bool areOverlappingData(const mnf::ConstRefVec& a, const mnf::ConstRefVec& b)
 
 namespace mnf
 {
-const std::string ExpMapMatrix::name = "Mat";
 const double ExpMapMatrix::prec = 1e-8;
 typedef Eigen::Map<const Eigen::Matrix3d> toConstMat3;
 typedef Eigen::Map<Eigen::Matrix3d> toMat3;

@@ -36,8 +36,7 @@ struct MANIFOLDS_API ExpMapMatrix
 
   /// \brief dimension of \f$ \mathbb{R}^3=3 \f$
   static const int InputDim_ = 3;
-
-  static const std::string name;
+  static constexpr const char* name = "Mat";
   typedef Eigen::Matrix3d DisplayType;
   typedef Eigen::Matrix3d OutputType;
   static bool isInM_(const Eigen::VectorXd& val, double prec);

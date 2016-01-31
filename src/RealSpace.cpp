@@ -24,7 +24,8 @@ namespace mnf
 {
 RealSpace::RealSpace(Index n) : Manifold(n, n, n)
 {
-  name() = "R" + std::to_string(n);
+  std::string name("R" + std::to_string(n));
+  setName(name);
   typicalMagnitude_.resize(n);
   trustMagnitude_.resize(n);
   Eigen::VectorXd temp = Eigen::VectorXd::Constant(n, 1.0);
@@ -34,7 +35,8 @@ RealSpace::RealSpace(Index n) : Manifold(n, n, n)
 
 RealSpace::RealSpace(Index n, double magnitude) : Manifold(n, n, n)
 {
-  name() = "R" + std::to_string(n);
+  std::string name("R" + std::to_string(n));
+  setName(name);
   typicalMagnitude_.resize(n);
   trustMagnitude_.resize(n);
   Eigen::VectorXd temp = Eigen::VectorXd::Constant(n, magnitude);
@@ -44,7 +46,8 @@ RealSpace::RealSpace(Index n, double magnitude) : Manifold(n, n, n)
 RealSpace::RealSpace(Index n, const ConstRefVec& magnitude) : Manifold(n, n, n)
 {
   mnf_assert(magnitude.size() == n && "magnitude on R^n must be of size n");
-  name() = "R" + std::to_string(n);
+  std::string name("R" + std::to_string(n));
+  setName(name);
   typicalMagnitude_.resize(n);
   setTypicalMagnitude(magnitude);
   trustMagnitude_.resize(n);

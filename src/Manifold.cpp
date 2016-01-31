@@ -395,7 +395,11 @@ bool Manifold::isLocked() const { return lock_; }
 
 const std::string& Manifold::name() const { return name_; }
 
-std::string& Manifold::name() { return name_; }
+const std::string& Manifold::setName(const std::string& n)
+{
+  name_ = n;
+  return name_;
+}
 
 long Manifold::getInstanceId() const { return this->instanceId_; }
 

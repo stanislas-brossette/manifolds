@@ -99,7 +99,9 @@ template <typename Map>
 inline SO3<Map>::SO3()
     : Manifold(3, Map::InputDim_, Map::OutputDim_)
 {
-  name() = "SO3" + Map::name;
+  std::string n("SO3");
+  n += std::string(Map::name);
+  setName(n);
   setTypicalMagnitude(Eigen::Vector3d::Constant(M_PI));
   setTrustMagnitude(Eigen::Vector3d::Constant(M_PI));
 }
@@ -107,7 +109,9 @@ template <typename Map>
 inline SO3<Map>::SO3(double magnitude)
     : Manifold(3, Map::InputDim_, Map::OutputDim_)
 {
-  name() = "SO3";
+  std::string n("SO3");
+  n += std::string(Map::name);
+  setName(n);
   setTypicalMagnitude(Eigen::Vector3d::Constant(magnitude));
   setTrustMagnitude(Eigen::Vector3d::Constant(magnitude));
 }
@@ -116,7 +120,9 @@ inline SO3<Map>::SO3(const ConstRefVec& magnitude)
     : Manifold(3, Map::InputDim_, Map::OutputDim_)
 {
   mnf_assert(magnitude.size() == 3 && "magnitude on SO3 must be of size 3");
-  name() = "SO3";
+  std::string n("SO3");
+  n += std::string(Map::name);
+  setName(n);
   setTypicalMagnitude(magnitude);
   setTrustMagnitude(magnitude);
 }
