@@ -177,6 +177,20 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   /// \param x element of the manifold\f$x\in\mathbb{M}\f$
   void pseudoLog0(RefVec out, const ConstRefVec& x) const;
 
+  /// @brief Computes the squaredDistance between 2 points
+  /// \f$ out = squaredNorm({Log}_x(y)) \f$
+  /// \param x element of the manifold\f$x\in\mathbb{M}\f$
+  /// \param y element of the manifold\f$x\in\mathbb{M}\f$
+  /// \return out value of the squaredDistance
+  double squaredDistance(const ConstRefVec& x, const ConstRefVec& y) const;
+
+  /// @brief Computes the distance between 2 points
+  /// \f$ out = norm({Log}_x(y)) \f$
+  /// \param x element of the manifold\f$x\in\mathbb{M}\f$
+  /// \param y element of the manifold\f$x\in\mathbb{M}\f$
+  /// \return out value of the squaredDistance
+  double distance(const ConstRefVec& x, const ConstRefVec& y) const;
+
   /// \brief Computes the Jacobian matrix of the map function
   /// \f$\frac{\partial\phi_x}{\partial v}(0)\f$
   /// \param x element of manifold \f$x\in\mathbb{M}\f$
@@ -352,6 +366,8 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   virtual void pseudoLog_(RefVec out, const ConstRefVec& x,
                           const ConstRefVec& v) const = 0;
   virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const = 0;
+  virtual double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y) const = 0;
+  virtual double distance_(const ConstRefVec& x, const ConstRefVec& y) const = 0;
   virtual void setZero_(RefVec out) const = 0;
   virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const = 0;
   virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in,

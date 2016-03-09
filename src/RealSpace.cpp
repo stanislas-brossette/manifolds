@@ -113,6 +113,20 @@ void RealSpace::pseudoLog_(RefVec out, const ConstRefVec& x,
 
 void RealSpace::pseudoLog0_(RefVec out, const ConstRefVec& x) const { out = x; }
 
+double RealSpace::distance_(const ConstRefVec& x,
+                           const ConstRefVec& y) const
+{
+  double out = (y - x).norm();
+  return out;
+}
+
+double RealSpace::squaredDistance_(const ConstRefVec& x,
+                           const ConstRefVec& y) const
+{
+  double out = (y - x).squaredNorm();
+  return out;
+}
+
 void RealSpace::setZero_(RefVec out) const { out.setZero(); }
 
 Eigen::MatrixXd RealSpace::diffRetractation_(const ConstRefVec&) const

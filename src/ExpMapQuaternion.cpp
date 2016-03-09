@@ -113,6 +113,22 @@ void ExpMapQuaternion::pseudoLog0_(RefVec out, const ConstRefVec& x)
   logarithm(out, x);
 }
 
+double ExpMapQuaternion::distance_(const ConstRefVec& x,
+                              const ConstRefVec& y)
+{
+  std::cout << "distance:\n" << x.transpose() << "\n" << y.transpose() << std::endl;
+  std::cerr << "distance not impl in quaternion" << std::endl;
+  return 0;
+}
+
+double ExpMapQuaternion::squaredDistance_(const ConstRefVec& x,
+                              const ConstRefVec& y)
+{
+  std::cout << "squaredDistance:\n" << x.transpose() << "\n" << y.transpose() << std::endl;
+  std::cerr << "squaredDistance not impl in quaternion" << std::endl;
+  return 0;
+}
+
 void ExpMapQuaternion::logarithm(RefVec out, const OutputType& v)
 {
   const toConstQuat vQ(v.data());

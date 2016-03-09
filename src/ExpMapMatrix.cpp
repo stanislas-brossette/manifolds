@@ -106,6 +106,24 @@ void ExpMapMatrix::pseudoLog0_(RefVec out, const ConstRefVec& x)
   logarithm(out, R);
 }
 
+double ExpMapMatrix::distance_(const ConstRefVec& x,
+                              const ConstRefVec& y)
+{
+  OutputType R(((toConstMat3(x.data())).transpose()) * (toConstMat3(y.data())));
+  Eigen::Vector3d d;
+  logarithm(d, R);
+  return d.norm();
+}
+
+double ExpMapMatrix::squaredDistance_(const ConstRefVec& x,
+                              const ConstRefVec& y)
+{
+  OutputType R(((toConstMat3(x.data())).transpose()) * (toConstMat3(y.data())));
+  Eigen::Vector3d d;
+  logarithm(d, R);
+  return d.squaredNorm();
+}
+
 void ExpMapMatrix::logarithm(RefVec out, const OutputType& R)
 {
   Eigen::Vector3d v(-R(1, 2), R(0, 2), -R(0, 1));
@@ -182,8 +200,15 @@ Eigen::Matrix<double, 9, 3> ExpMapMatrix::diffRetractation_(
     const ConstRefVec& x)
 {
   Eigen::Matrix<double, 9, 3> J;
-  J << 0, -x(6), x(3), 0, -x(7), x(4), 0, -x(8), x(5), x(6), 0, -x(0), x(7), 0,
-      -x(1), x(8), 0, -x(2), -x(3), x(0), 0, -x(4), x(1), 0, -x(5), x(2), 0;
+  J << 0, -x(6), x(3),
+       0, -x(7), x(4),
+       0, -x(8), x(5),
+       x(6), 0, -x(0),
+       x(7), 0, -x(1),
+       x(8), 0, -x(2),
+       -x(3), x(0), 0,
+       -x(4), x(1), 0,
+       -x(5), x(2), 0;
   return J;
 }
 

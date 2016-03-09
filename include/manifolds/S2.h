@@ -50,7 +50,6 @@ class MANIFOLDS_API S2 : public Manifold
   void setTrustMagnitude(const double& magnitude);
   void setTrustMagnitude(const ConstRefVec& out);
   void logarithm(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const;
-  double distance(const ConstRefVec& x, const ConstRefVec& y) const;
   /// \brief projects each row of \ in on TxM
   void projRows(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const;
   /// \brief projects each cols of \ in on TxM
@@ -74,6 +73,8 @@ class MANIFOLDS_API S2 : public Manifold
   virtual void pseudoLog_(RefVec out, const ConstRefVec& x,
                           const ConstRefVec& y) const;
   virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const;
+  virtual double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y) const;
+  virtual double distance_(const ConstRefVec& x, const ConstRefVec& y) const;
   virtual void setZero_(RefVec out) const;
   virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const;
   virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in,

@@ -251,9 +251,9 @@ BOOST_AUTO_TEST_CASE(isSameTopology)
 }
 
 #if EIGEN_WORLD_VERSION > 3 ||                               \
-    (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) || \
-    (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && \
-     EIGEN_MINOR_VERSION > 0)
+  (EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION > 2) || \
+(EIGEN_WORLD_VERSION == 3 && EIGEN_MAJOR_VERSION == 2 && \
+ EIGEN_MINOR_VERSION > 0)
 BOOST_AUTO_TEST_CASE(S2NoAllocation)
 {
   // We only test here that the operations on the manifold do not create
@@ -289,3 +289,56 @@ BOOST_AUTO_TEST_CASE(S2NoAllocation)
 }
 #endif
 
+BOOST_AUTO_TEST_CASE(distance)
+{
+  S2 s2;
+  Vector3d x, y;
+  double res, expRes;
+
+  x << 0, 0, -1;
+  y << 0, 0, -1;
+  res = s2.distance(x, y);
+  expRes = 0;
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+
+  Vector3d v(-0.32, 0.5, 0);
+  s2.retractation(x, x, v);
+  res = s2.distance(x, y);
+  expRes = acos(x.dot(y));
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+
+  s2.retractation(y, y, v);
+  v << -0.1, 0.42, 0.321;
+  s2.forceOnTxM(v, v, x);
+  s2.retractation(x, x, v);
+  res = s2.distance(x, y);
+  expRes = acos(x.dot(y));
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(squaredDistance)
+{
+  S2 s2;
+  Vector3d x, y;
+  double res, expRes;
+
+  x << 0, 1, 0;
+  y << 0, 1, 0;
+  res = s2.squaredDistance(x, y);
+  expRes = 0;
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+
+  Vector3d v(0.5, 0, -0.32);
+  s2.retractation(x, x, v);
+  res = s2.squaredDistance(x, y);
+  expRes = pow(acos(x.dot(y)),2);
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+
+  s2.retractation(y, y, v);
+  v << -0.1, 0.42, 0.321;
+  s2.forceOnTxM(v, v, x);
+  s2.retractation(x, x, v);
+  res = s2.squaredDistance(x, y);
+  expRes = pow(acos(x.dot(y)),2);
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+}

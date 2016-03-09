@@ -107,12 +107,21 @@ void S2::logarithm(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   Eigen::Vector3d diff, projDiff;
   diff = y - x;
   projVec(projDiff, diff, x);
-  out = distance(x, y) * projDiff / projDiff.lpNorm<2>();
+  out = distance_(x, y) * projDiff / projDiff.lpNorm<2>();
 }
 
-double S2::distance(const ConstRefVec& x, const ConstRefVec& y) const
+double S2::distance_(const ConstRefVec& x, const ConstRefVec& y) const
 {
-  return acos(x.dot(y));
+  double d = x.dot(y);
+  double res = acos(d);
+  return res;
+}
+
+double S2::squaredDistance_(const ConstRefVec& x, const ConstRefVec& y) const
+{
+  double d = x.dot(y);
+  double res = acos(d)*acos(d);
+  return res;
 }
 
 void S2::projRows(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const

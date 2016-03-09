@@ -72,6 +72,8 @@ struct MANIFOLDS_API ExpMapQuaternion
   static void pseudoLog_(RefVec out, const ConstRefVec& x,
                          const ConstRefVec& y);
   static void pseudoLog0_(RefVec out, const ConstRefVec& x);
+  static double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y);
+  static double distance_(const ConstRefVec& x, const ConstRefVec& y);
   static void setZero_(RefVec out);
 
   static void logarithm(RefVec out, const OutputType& M);

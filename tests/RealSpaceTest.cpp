@@ -35,6 +35,7 @@
 #include <boost/test/unit_test.hpp>
 
 using namespace mnf;
+using namespace Eigen;
 
 BOOST_AUTO_TEST_CASE(RealSpaceConstructor)
 {
@@ -49,7 +50,7 @@ BOOST_AUTO_TEST_CASE(RealPointConstructor)
 {
   RealSpace R3(3);
   Point x = R3.createPoint();
-  Eigen::Vector3d vy;
+  Vector3d vy;
   vy << 1, 2, 3;
   Point y = R3.createPoint(vy);
   BOOST_CHECK_EQUAL(x.value().size(), 3);
@@ -80,8 +81,8 @@ BOOST_AUTO_TEST_CASE(RealSpaceZero)
 BOOST_AUTO_TEST_CASE(RealPointIncrement)
 {
   RealSpace R3(3);
-  Eigen::Vector3d vx;
-  Eigen::Vector3d vy;
+  Vector3d vx;
+  Vector3d vy;
   vx << -7, 2, 1.2;
   vy << 1, 2, 3;
   R3.retractation(vx, vx, vy);
@@ -94,8 +95,8 @@ BOOST_AUTO_TEST_CASE(RealPointIncrement)
 BOOST_AUTO_TEST_CASE(RealPointAddition)
 {
   RealSpace R3(3);
-  Eigen::Vector3d y = Eigen::Vector3d::Zero();
-  Eigen::Vector3d v;
+  Vector3d y = Vector3d::Zero();
+  Vector3d v;
   v << 1, 2, 3;
   R3.retractation(y, y, v);
   R3.retractation(y, y, v);
@@ -108,11 +109,11 @@ BOOST_AUTO_TEST_CASE(RealPointAddition)
 BOOST_AUTO_TEST_CASE(RealPointSubstraction)
 {
   RealSpace R3(3);
-  Eigen::Vector3d x;
-  Eigen::Vector3d y;
+  Vector3d x;
+  Vector3d y;
   x << 4, 3.4, 7;
   y << 1, 2, 3;
-  Eigen::Vector3d z;
+  Vector3d z;
   R3.pseudoLog(z, x, y);
   BOOST_CHECK_EQUAL(z[0], -3);
   BOOST_CHECK_EQUAL(z[1], -1.4);
@@ -122,11 +123,11 @@ BOOST_AUTO_TEST_CASE(RealPointSubstraction)
 BOOST_AUTO_TEST_CASE(RealPointpseudoLog0)
 {
   RealSpace Space(7);
-  Eigen::VectorXd x = Space.getZero().value();
-  Eigen::VectorXd vy = Eigen::VectorXd::Random(Space.dim());
+  VectorXd x = Space.getZero().value();
+  VectorXd vy = VectorXd::Random(Space.dim());
   ;
   Space.retractation(x, x, vy);
-  Eigen::VectorXd z(Space.dim());
+  VectorXd z(Space.dim());
   Space.pseudoLog0(z, x);
   BOOST_CHECK(z.isApprox(vy));
 }
@@ -134,8 +135,8 @@ BOOST_AUTO_TEST_CASE(RealPointpseudoLog0)
 BOOST_AUTO_TEST_CASE(RealPointDiff)
 {
   RealSpace R7(7);
-  Eigen::MatrixXd J;
-  Eigen::VectorXd x = R7.createPoint().value();
+  MatrixXd J;
+  VectorXd x = R7.createPoint().value();
   J = R7.diffRetractation(x);
   BOOST_CHECK(J.isIdentity());
 }
@@ -146,12 +147,12 @@ BOOST_AUTO_TEST_CASE(RealApplyDiff)
   RealSpace Space(7);
   Index dim = Space.dim();
   Index repDim = Space.representationDim();
-  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c, repDim);
-  Eigen::VectorXd x = Space.getZero().value();
-  Space.retractation(x, x, Eigen::VectorXd::Random(dim));
-  Eigen::MatrixXd expectedRes;
+  MatrixXd Jf = MatrixXd::Random(c, repDim);
+  VectorXd x = Space.getZero().value();
+  Space.retractation(x, x, VectorXd::Random(dim));
+  MatrixXd expectedRes;
   expectedRes = Jf * Space.diffRetractation(x);
-  Eigen::MatrixXd J(c, dim);
+  MatrixXd J(c, dim);
   Space.applyDiffRetractation(J, Jf, x);
   BOOST_CHECK(expectedRes.isApprox(J));
 }
@@ -162,12 +163,12 @@ BOOST_AUTO_TEST_CASE(RealApplyInvDiff)
   RealSpace Space(7);
   Index dim = Space.dim();
   Index repDim = Space.representationDim();
-  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c, dim);
-  Eigen::VectorXd x = Space.getZero().value();
-  Space.retractation(x, x, Eigen::VectorXd::Random(dim));
-  Eigen::MatrixXd expectedRes;
+  MatrixXd Jf = MatrixXd::Random(c, dim);
+  VectorXd x = Space.getZero().value();
+  Space.retractation(x, x, VectorXd::Random(dim));
+  MatrixXd expectedRes;
   expectedRes = Jf * Space.diffPseudoLog0(x);
-  Eigen::MatrixXd J(c, repDim);
+  MatrixXd J(c, repDim);
   Space.applyDiffPseudoLog0(J, Jf, x);
   BOOST_CHECK(expectedRes.isApprox(J));
 }
@@ -177,12 +178,12 @@ BOOST_AUTO_TEST_CASE(RealTransport)
   int c = 5;
   RealSpace Space(7);
   Index dim = Space.dim();
-  Eigen::MatrixXd H = Eigen::MatrixXd::Random(dim, c);
-  Eigen::MatrixXd Hout(dim, c);
-  Eigen::VectorXd v = Eigen::VectorXd::Random(dim);
-  Eigen::VectorXd x = Space.getZero().value();
+  MatrixXd H = MatrixXd::Random(dim, c);
+  MatrixXd Hout(dim, c);
+  VectorXd v = VectorXd::Random(dim);
+  VectorXd x = Space.getZero().value();
   Space.retractation(x, x, v);
-  Eigen::MatrixXd expectedRes = H;
+  MatrixXd expectedRes = H;
   Space.applyTransport(Hout, H, x, v);
   BOOST_CHECK(expectedRes.isApprox(Hout));
 }
@@ -192,12 +193,12 @@ BOOST_AUTO_TEST_CASE(RealInvTransport)
   int c = 3;
   RealSpace Space(9);
   Index dim = Space.dim();
-  Eigen::MatrixXd H = Eigen::MatrixXd::Random(dim, c);
-  Eigen::MatrixXd Hout(dim, c);
-  Eigen::VectorXd v = Eigen::VectorXd::Random(dim);
-  Eigen::VectorXd x = Space.getZero().value();
+  MatrixXd H = MatrixXd::Random(dim, c);
+  MatrixXd Hout(dim, c);
+  VectorXd v = VectorXd::Random(dim);
+  VectorXd x = Space.getZero().value();
   Space.retractation(x, x, v);
-  Eigen::MatrixXd expectedRes = H;
+  MatrixXd expectedRes = H;
   Space.applyInvTransport(Hout, H, x, v);
   BOOST_CHECK(expectedRes.isApprox(Hout));
 }
@@ -207,12 +208,12 @@ BOOST_AUTO_TEST_CASE(RealInvTransportOnTheRight)
   int c = 3;
   RealSpace Space(9);
   Index dim = Space.dim();
-  Eigen::MatrixXd H = Eigen::MatrixXd::Random(c, dim);
-  Eigen::MatrixXd Hout(c, dim);
-  Eigen::VectorXd v = Eigen::VectorXd::Random(dim);
-  Eigen::VectorXd x = Space.getZero().value();
+  MatrixXd H = MatrixXd::Random(c, dim);
+  MatrixXd Hout(c, dim);
+  VectorXd v = VectorXd::Random(dim);
+  VectorXd x = Space.getZero().value();
   Space.retractation(x, x, v);
-  Eigen::MatrixXd expectedRes = H;
+  MatrixXd expectedRes = H;
   Space.applyInvTransportOnTheRight(Hout, H, x, v);
   BOOST_CHECK(expectedRes.isApprox(Hout));
 }
@@ -221,9 +222,9 @@ BOOST_AUTO_TEST_CASE(RealLimitMap)
 {
   RealSpace Space(9);
   Index dim = Space.dim();
-  Eigen::VectorXd res(dim);
+  VectorXd res(dim);
   Space.limitMap(res);
-  Eigen::VectorXd expectedRes(dim);
+  VectorXd expectedRes(dim);
   double i = std::numeric_limits<double>::infinity();
   expectedRes << i, i, i, i, i, i, i, i, i;
   BOOST_CHECK_EQUAL(expectedRes, res);
@@ -257,18 +258,18 @@ BOOST_AUTO_TEST_CASE(RealNoAllocation)
   // create temporaries, but this is the user's fault.
   RealSpace R(4);
   Index c = 3;
-  Eigen::VectorXd x = Eigen::VectorXd::Random(R.representationDim());
-  Eigen::VectorXd y = Eigen::VectorXd::Random(R.representationDim());
-  Eigen::VectorXd v = Eigen::VectorXd::Random(R.dim());
-  Eigen::VectorXd z(R.representationDim());
-  Eigen::MatrixXd J0 = Eigen::MatrixXd::Random(c, R.representationDim());
-  Eigen::MatrixXd J1(c, R.representationDim());
-  Eigen::MatrixXd J2(c, R.representationDim());
-  Eigen::MatrixXd H0 = Eigen::MatrixXd::Random(R.dim(), R.dim());
-  Eigen::MatrixXd H1 = Eigen::MatrixXd::Random(R.dim(), R.dim());
-  Eigen::MatrixXd H2 = Eigen::MatrixXd::Random(R.dim(), R.dim());
+  VectorXd x = VectorXd::Random(R.representationDim());
+  VectorXd y = VectorXd::Random(R.representationDim());
+  VectorXd v = VectorXd::Random(R.dim());
+  VectorXd z(R.representationDim());
+  MatrixXd J0 = MatrixXd::Random(c, R.representationDim());
+  MatrixXd J1(c, R.representationDim());
+  MatrixXd J2(c, R.representationDim());
+  MatrixXd H0 = MatrixXd::Random(R.dim(), R.dim());
+  MatrixXd H1 = MatrixXd::Random(R.dim(), R.dim());
+  MatrixXd H2 = MatrixXd::Random(R.dim(), R.dim());
 
-  Eigen::internal::set_is_malloc_allowed(false);
+  internal::set_is_malloc_allowed(false);
   utils::set_is_malloc_allowed(false);
   {
     R.retractation(z, x, v);
@@ -280,6 +281,42 @@ BOOST_AUTO_TEST_CASE(RealNoAllocation)
     R.applyInvTransport(H2, H0, x, v);
   }
   utils::set_is_malloc_allowed(true);
-  Eigen::internal::set_is_malloc_allowed(true);
+  internal::set_is_malloc_allowed(true);
 }
 #endif
+
+BOOST_AUTO_TEST_CASE(distance)
+{
+  RealSpace R9(9);
+  VectorXd x(9), y(9);
+  double res, expRes;
+
+  x << 0.1, 0.2, 0.4, 1.5, 0.2, 2.44, 0, -1, -4.3;
+  y << 0.1, 0.2, 0.4, 1.5, 0.2, 2.44, 0, -1, -4.3;
+  expRes = sqrt((y-x).transpose()*(y-x));
+  res = R9.distance(x,y);
+  BOOST_CHECK_EQUAL(res, expRes);
+
+  y << 1.2, 0.43, -9.3, 1.2, 1, 0, 0, -0.78, 0.01;
+  expRes = sqrt((y-x).transpose()*(y-x));
+  res = R9.distance(x,y);
+  BOOST_CHECK_EQUAL(res, expRes);
+}
+
+BOOST_AUTO_TEST_CASE(squaredDistance)
+{
+  RealSpace R9(9);
+  VectorXd x(9), y(9);
+  double res, expRes;
+
+  x << 0.1, 0.2, 0.4, 1.5, 0.2, 2.44, 0, -1, -4.3;
+  y << 0.1, 0.2, 0.4, 1.5, 0.2, 2.44, 0, -1, -4.3;
+  expRes = (y-x).transpose()*(y-x);
+  res = R9.squaredDistance(x,y);
+  BOOST_CHECK_EQUAL(res, expRes);
+
+  y << 1.2, 0.43, -9.3, 1.2, 1, 0, 0, -0.78, 0.01;
+  expRes = (y-x).transpose()*(y-x);
+  res = R9.squaredDistance(x,y);
+  BOOST_CHECK_EQUAL(res, expRes);
+}

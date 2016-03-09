@@ -186,6 +186,30 @@ void CartesianProduct::pseudoLog0_(RefVec out, const ConstRefVec& x) const
   }
 }
 
+double CartesianProduct::squaredDistance_(const ConstRefVec& x,
+                           const ConstRefVec& y) const
+{
+  double out = 0;
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+  {
+    out += subManifolds_[i]->squaredDistance(getConstView<R>(x, i),
+                                      getConstView<R>(y, i));
+  }
+  return out;
+}
+
+double CartesianProduct::distance_(const ConstRefVec& x,
+                           const ConstRefVec& y) const
+{
+  double out = 0;
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+  {
+    out += subManifolds_[i]->squaredDistance(getConstView<R>(x, i),
+                                      getConstView<R>(y, i));
+  }
+  return sqrt(out);
+}
+
 void CartesianProduct::setZero_(RefVec out) const
 {
   for (size_t i = 0; i < subManifolds_.size(); ++i)

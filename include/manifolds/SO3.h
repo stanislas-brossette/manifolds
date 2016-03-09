@@ -61,6 +61,8 @@ class SO3 : public Manifold
   virtual void pseudoLog_(RefVec out, const ConstRefVec& x,
                           const ConstRefVec& y) const;
   virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const;
+  virtual double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y) const;
+  virtual double distance_(const ConstRefVec& x, const ConstRefVec& y) const;
   virtual void setZero_(RefVec out) const;
   virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const;
   virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in,
@@ -196,6 +198,20 @@ template <typename Map>
 inline void SO3<Map>::pseudoLog0_(RefVec out, const ConstRefVec& x) const
 {
   Map::pseudoLog0_(out, x);
+}
+
+template <typename Map>
+inline double SO3<Map>::squaredDistance_(const ConstRefVec& x,
+                                 const ConstRefVec& y) const
+{
+  return Map::squaredDistance_(x, y);
+}
+
+template <typename Map>
+inline double SO3<Map>::distance_(const ConstRefVec& x,
+                                 const ConstRefVec& y) const
+{
+  return Map::distance_(x, y);
 }
 
 template <typename Map>
