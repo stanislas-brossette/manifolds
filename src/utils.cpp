@@ -68,5 +68,98 @@ bool set_is_malloc_allowed(bool allow __attribute__((unused)))
   return true;
 #endif
 }
+
+Eigen::MatrixXd FDLogarithm(const Manifold& M, const ConstRefVec& constX,
+                            const double& delta)
+{
+  auto repDim = M.representationDim();
+  Eigen::Vector3d refLog;
+  M.pseudoLog0(refLog, constX);
+  Eigen::VectorXd x = constX;
+
+  Eigen::MatrixXd res(3, repDim);
+  for (int i = 0; i < repDim; ++i)
+  {
+    x(i) += delta;
+    Eigen::Vector3d logDelta;
+    M.pseudoLog0(logDelta, x);
+    res.col(i) = (logDelta - refLog) / delta;
+    x(i) -= delta;
+  }
+  return res;
+}
+
+Eigen::MatrixXd FDDerivDistanceX(const Manifold& M, const ConstRefVec& constX,
+                                 const ConstRefVec& constY, const double& delta)
+{
+  auto repDim = M.representationDim();
+  double refDist = M.distance(constX, constY);
+  Eigen::VectorXd x = constX;
+
+  Eigen::MatrixXd res(1, repDim);
+  for (int i = 0; i < repDim; ++i)
+  {
+    x(i) += delta;
+    double dist = M.distance(x, constY);
+    res(i) = (dist - refDist) / delta;
+    x(i) -= delta;
+  }
+  return res;
+}
+Eigen::MatrixXd FDDerivDistanceY(const Manifold& M, const ConstRefVec& constX,
+                                 const ConstRefVec& constY, const double& delta)
+{
+  auto repDim = M.representationDim();
+  double refDist = M.distance(constX, constY);
+  Eigen::VectorXd y = constY;
+
+  Eigen::MatrixXd res(1, repDim);
+  for (int i = 0; i < repDim; ++i)
+  {
+    y(i) += delta;
+    double dist = M.distance(constX, y);
+    res(i) = (dist - refDist) / delta;
+    y(i) -= delta;
+  }
+  return res;
+}
+Eigen::MatrixXd FDDerivSquaredDistanceX(const Manifold& M,
+                                        const ConstRefVec& constX,
+                                        const ConstRefVec& constY,
+                                        const double& delta)
+{
+  auto repDim = M.representationDim();
+  double refDist = M.squaredDistance(constX, constY);
+  Eigen::VectorXd x = constX;
+
+  Eigen::MatrixXd res(1, repDim);
+  for (int i = 0; i < repDim; ++i)
+  {
+    x(i) += delta;
+    double dist = M.squaredDistance(x, constY);
+    res(i) = (dist - refDist) / delta;
+    x(i) -= delta;
+  }
+  return res;
+}
+Eigen::MatrixXd FDDerivSquaredDistanceY(const Manifold& M,
+                                        const ConstRefVec& constX,
+                                        const ConstRefVec& constY,
+                                        const double& delta)
+{
+  auto repDim = M.representationDim();
+  double refDist = M.squaredDistance(constX, constY);
+  Eigen::VectorXd y = constY;
+
+  Eigen::MatrixXd res(1, repDim);
+  for (int i = 0; i < repDim; ++i)
+  {
+    y(i) += delta;
+    double dist = M.squaredDistance(constX, y);
+    res(i) = (dist - refDist) / delta;
+    y(i) -= delta;
+  }
+  return res;
+}
 }
 }

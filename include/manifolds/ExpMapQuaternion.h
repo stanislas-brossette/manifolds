@@ -33,6 +33,7 @@ class MANIFOLDS_API ReverseQuaternion : public Eigen::Quaterniond
 
  public:
   ReverseQuaternion(double* data);
+  void print() const;
   void writeChanges();
   ~ReverseQuaternion();
 
@@ -43,6 +44,7 @@ class MANIFOLDS_API ConstReverseQuaternion : public Eigen::Quaterniond
 {
  public:
   ConstReverseQuaternion(const double* data);
+  void print() const;
   ~ConstReverseQuaternion() {}
 };
 }
@@ -74,6 +76,14 @@ struct MANIFOLDS_API ExpMapQuaternion
   static void pseudoLog0_(RefVec out, const ConstRefVec& x);
   static double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y);
   static double distance_(const ConstRefVec& x, const ConstRefVec& y);
+  static Eigen::Matrix<double, 1, 4> derivDistanceX_(const ConstRefVec& x,
+                                                     const ConstRefVec& y);
+  static Eigen::Matrix<double, 1, 4> derivDistanceY_(const ConstRefVec& x,
+                                                     const ConstRefVec& y);
+  static Eigen::Matrix<double, 1, 4> derivSquaredDistanceX_(
+      const ConstRefVec& x, const ConstRefVec& y);
+  static Eigen::Matrix<double, 1, 4> derivSquaredDistanceY_(
+      const ConstRefVec& x, const ConstRefVec& y);
   static void setZero_(RefVec out);
 
   static void logarithm(RefVec out, const OutputType& M);

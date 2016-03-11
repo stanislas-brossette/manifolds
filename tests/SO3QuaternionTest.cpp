@@ -514,3 +514,112 @@ BOOST_AUTO_TEST_CASE(SO3NoAllocation)
   Eigen::internal::set_is_malloc_allowed(true);
 }
 #endif
+
+BOOST_AUTO_TEST_CASE(distance)
+{
+  SO3<ExpMapQuaternion> so3;
+  VectorXd x(4), y(4);
+  toQuat xQ(x.data());
+  toQuat yQ(y.data());
+  double res, expRes;
+
+  so3.createRandomPoint(x);
+  y = x;
+
+  res = so3.distance(x, y);
+  expRes = 0;
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+
+  Vector3d v(0.1, 0.5, -0.32);
+  so3.retractation(x, x, v);
+  res = so3.distance(x, y);
+  expRes = v.norm();
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+
+  so3.retractation(y, y, v);
+  v << -0.1, 0.42, 0;
+  so3.retractation(x, x, v);
+  res = so3.distance(x, y);
+  expRes = v.norm();
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(squaredDistance)
+{
+  SO3<ExpMapQuaternion> so3;
+  VectorXd x(4), y(4);
+  toQuat xQ(x.data());
+  toQuat yQ(y.data());
+  double res, expRes;
+
+  so3.createRandomPoint(x);
+  y = x;
+
+  res = so3.squaredDistance(x, y);
+  expRes = 0;
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+
+  Vector3d v(0.1, 0.5, -0.32);
+  so3.retractation(x, x, v);
+  res = so3.squaredDistance(x, y);
+  expRes = v.squaredNorm();
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+
+  so3.retractation(y, y, v);
+  v << -0.1, 0.42, 0;
+  so3.retractation(x, x, v);
+  res = so3.squaredDistance(x, y);
+  expRes = v.squaredNorm();
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(diffDistance)
+{
+  SO3<ExpMapQuaternion> M;
+  VectorXd x(4), y(4), xTy(4);
+  toQuat xQ(x.data());
+  toQuat yQ(y.data());
+  toQuat xTyQ(xTy.data());
+  Eigen::Matrix<double, 1, 4> res, expRes;
+  Eigen::Matrix<double, 3, 4> resLog, expResLog;
+
+  M.createRandomPoint(x);
+  M.createRandomPoint(y);
+
+  xTyQ = xQ.inverse() * yQ;  // TODO double-check that formula
+  xTyQ.writeChanges();
+
+  double deltaFD = 1e-10;
+  double deltaRes = 1e-3;
+
+  resLog = M.diffPseudoLog0(xTy);
+  expResLog = utils::FDLogarithm(M, xTy, deltaFD);
+  std::cout << "M.distance(x,y):\n" << M.distance(x, y) << std::endl;
+  std::cout << "resLog:\n" << resLog << std::endl;
+  std::cout << "expResLog:\n" << expResLog << std::endl;
+  BOOST_CHECK(resLog.isApprox(expResLog, deltaRes));
+
+  res = M.derivDistanceX(x, y);
+  std::cout << "res:\n" << res << std::endl;
+  expRes = utils::FDDerivDistanceX(M, x, y, deltaFD);
+  std::cout << "expRes:\n" << expRes << std::endl;
+  BOOST_CHECK(res.isApprox(expRes, deltaRes));
+
+  res = M.derivDistanceY(x, y);
+  std::cout << "res:\n" << res << std::endl;
+  expRes = utils::FDDerivDistanceY(M, x, y, deltaFD);
+  std::cout << "expRes:\n" << expRes << std::endl;
+  BOOST_CHECK(res.isApprox(expRes, deltaRes));
+
+  res = M.derivSquaredDistanceX(x, y);
+  std::cout << "res:\n" << res << std::endl;
+  expRes = utils::FDDerivSquaredDistanceX(M, x, y, deltaFD);
+  std::cout << "expRes:\n" << expRes << std::endl;
+  BOOST_CHECK(res.isApprox(expRes, deltaRes));
+
+  res = M.derivSquaredDistanceY(x, y);
+  std::cout << "res:\n" << res << std::endl;
+  expRes = utils::FDDerivSquaredDistanceY(M, x, y, deltaFD);
+  std::cout << "expRes:\n" << expRes << std::endl;
+  BOOST_CHECK(res.isApprox(expRes, deltaRes));
+}

@@ -188,8 +188,38 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   /// \f$ out = norm({Log}_x(y)) \f$
   /// \param x element of the manifold\f$x\in\mathbb{M}\f$
   /// \param y element of the manifold\f$x\in\mathbb{M}\f$
-  /// \return out value of the squaredDistance
+  /// \return out value of the distance
   double distance(const ConstRefVec& x, const ConstRefVec& y) const;
+
+  /// @brief Computes the derivative of distance WRT the representation of x
+  /// \param x element of the manifold\f$x\in\mathbb{M}\f$
+  /// \param y element of the manifold\f$x\in\mathbb{M}\f$
+  /// \return value of the distance derivative
+  Eigen::MatrixXd derivDistanceX(const ConstRefVec& x,
+                                 const ConstRefVec& y) const;
+
+  /// @brief Computes the derivative of distance WRT the representation of y
+  /// \param x element of the manifold\f$x\in\mathbb{M}\f$
+  /// \param y element of the manifold\f$x\in\mathbb{M}\f$
+  /// \return value of the distance derivative
+  Eigen::MatrixXd derivDistanceY(const ConstRefVec& x,
+                                 const ConstRefVec& y) const;
+
+  /// @brief Computes the derivative of squared distance WRT the representation
+  /// of x
+  /// \param x element of the manifold\f$x\in\mathbb{M}\f$
+  /// \param y element of the manifold\f$x\in\mathbb{M}\f$
+  /// \return value of the squared distance derivative
+  Eigen::MatrixXd derivSquaredDistanceX(const ConstRefVec& x,
+                                        const ConstRefVec& y) const;
+
+  /// @brief Computes the derivative of squared distance WRT the representation
+  /// of y
+  /// \param x element of the manifold\f$x\in\mathbb{M}\f$
+  /// \param y element of the manifold\f$x\in\mathbb{M}\f$
+  /// \return value of the squared distance derivative
+  Eigen::MatrixXd derivSquaredDistanceY(const ConstRefVec& x,
+                                        const ConstRefVec& y) const;
 
   /// \brief Computes the Jacobian matrix of the map function
   /// \f$\frac{\partial\phi_x}{\partial v}(0)\f$
@@ -369,6 +399,14 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   virtual double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y) const = 0;
   virtual double distance_(const ConstRefVec& x, const ConstRefVec& y) const = 0;
   virtual void setZero_(RefVec out) const = 0;
+  virtual Eigen::MatrixXd derivDistanceX_(const ConstRefVec& x,
+                                          const ConstRefVec& y) const = 0;
+  virtual Eigen::MatrixXd derivDistanceY_(const ConstRefVec& x,
+                                          const ConstRefVec& y) const = 0;
+  virtual Eigen::MatrixXd derivSquaredDistanceX_(
+      const ConstRefVec& x, const ConstRefVec& y) const = 0;
+  virtual Eigen::MatrixXd derivSquaredDistanceY_(
+      const ConstRefVec& x, const ConstRefVec& y) const = 0;
   virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const = 0;
   virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in,
                                       const ConstRefVec& x) const = 0;

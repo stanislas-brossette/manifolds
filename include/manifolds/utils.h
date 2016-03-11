@@ -19,6 +19,7 @@
 #define _MANIFOLDS_UTILS_H_
 
 #include <manifolds/defs.h>
+#include <manifolds/Manifold.h>
 
 #if defined(_MSC_FULL_VER) && _MSC_VER < 1900
 #define constexpr const
@@ -51,6 +52,23 @@ void hat2(Eigen::Matrix3d& M, const Eigen::Vector3d& v);
 Eigen::Matrix3d computeRotBetweenVec(const Eigen::Vector3d& x,
                                      const Eigen::Vector3d& y);
 bool MANIFOLDS_API set_is_malloc_allowed(bool allow);
+
+Eigen::MatrixXd FDLogarithm(const Manifold& M, const ConstRefVec& constX,
+                            const double& delta);
+Eigen::MatrixXd FDDerivDistanceX(const Manifold& M, const ConstRefVec& constX,
+                                 const ConstRefVec& constY,
+                                 const double& delta);
+Eigen::MatrixXd FDDerivSquaredDistanceX(const Manifold& M,
+                                        const ConstRefVec& constX,
+                                        const ConstRefVec& constY,
+                                        const double& delta);
+Eigen::MatrixXd FDDerivDistanceY(const Manifold& M, const ConstRefVec& constX,
+                                 const ConstRefVec& constY,
+                                 const double& delta);
+Eigen::MatrixXd FDDerivSquaredDistanceY(const Manifold& M,
+                                        const ConstRefVec& constX,
+                                        const ConstRefVec& constY,
+                                        const double& delta);
 
 namespace hash
 {

@@ -25,7 +25,13 @@
 namespace mnf
 {
 /// \brief Structure representing the exponential map going from
-/// \f$ \mathbb{R}^3 \f$ to SO(3) represented in \f$ \mathbb{R}^{3\times3} \f$
+/// \f$ \mathbb{R}^3 \f$ to SO(3) represented in
+/// \f$ \mathbb{R}^{3\times3}\f$
+
+// An element of \f$ \mathbb{R}^{3\times3}\f$ is ordered as
+// [x1, x4, x7]
+// [x2, x5, x8]
+// [x3, x6, x9]
 struct MANIFOLDS_API ExpMapMatrix
 {
   /// \brief precision constant
@@ -49,6 +55,14 @@ struct MANIFOLDS_API ExpMapMatrix
   static void pseudoLog0_(RefVec out, const ConstRefVec& x);
   static double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y);
   static double distance_(const ConstRefVec& x, const ConstRefVec& y);
+  static Eigen::Matrix<double, 1, 9> derivDistanceX_(const ConstRefVec& x,
+                                                     const ConstRefVec& y);
+  static Eigen::Matrix<double, 1, 9> derivDistanceY_(const ConstRefVec& x,
+                                                     const ConstRefVec& y);
+  static Eigen::Matrix<double, 1, 9> derivSquaredDistanceX_(
+      const ConstRefVec& x, const ConstRefVec& y);
+  static Eigen::Matrix<double, 1, 9> derivSquaredDistanceY_(
+      const ConstRefVec& x, const ConstRefVec& y);
   static void setZero_(RefVec out);
 
   static void logarithm(RefVec out, const OutputType& M);
@@ -59,6 +73,7 @@ struct MANIFOLDS_API ExpMapMatrix
                                      const ConstRefVec& x,
                                      ReusableTemporaryMap& m);
   static Eigen::Matrix<double, 3, 9> diffPseudoLog0_(const ConstRefVec& x);
+  static Eigen::Matrix<double, 3, 9> diffLogarithm(const OutputType& x);
   static void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in,
                                    const ConstRefVec& x,
                                    ReusableTemporaryMap& m);

@@ -86,11 +86,9 @@ void ExpMapMatrix::exponential(OutputType& E, const ConstRefVec& v)
     c = (1 - cos(t)) / n;
     s = sin(t) / t;
   }
-  E << 1 - c*(v.y() * v.y() + v.z() * v.z()), -s * v.z() + c * v.x() * v.y(),
-      s * v.y() + c * v.x() * v.z(), s * v.z() + c * v.x() * v.y(),
-      1 - c * (v.x() * v.x() + v.z() * v.z()), -s * v.x() + c * v.y() * v.z(),
-      -s * v.y() + c * v.x() * v.z(), s * v.x() + c * v.y() * v.z(),
-      1 - c * (v.x() * v.x() + v.y() * v.y());
+  E << 1-c*(v.y()*v.y()+v.z()*v.z()), -s*v.z()+c*v.x()*v.y(), s*v.y()+c*v.x()*v.z(),
+       s*v.z()+c*v.x()*v.y(), 1-c*(v.x()*v.x()+v.z()*v.z()), -s*v.x()+c*v.y()*v.z(),
+       -s*v.y()+c*v.x()*v.z(), s*v.x()+c*v.y()*v.z(), 1-c*(v.x()*v.x()+v.y()*v.y());
 }
 
 void ExpMapMatrix::pseudoLog_(RefVec out, const ConstRefVec& x,
@@ -106,8 +104,7 @@ void ExpMapMatrix::pseudoLog0_(RefVec out, const ConstRefVec& x)
   logarithm(out, R);
 }
 
-double ExpMapMatrix::distance_(const ConstRefVec& x,
-                              const ConstRefVec& y)
+double ExpMapMatrix::distance_(const ConstRefVec& x, const ConstRefVec& y)
 {
   OutputType R(((toConstMat3(x.data())).transpose()) * (toConstMat3(y.data())));
   Eigen::Vector3d d;
@@ -116,12 +113,116 @@ double ExpMapMatrix::distance_(const ConstRefVec& x,
 }
 
 double ExpMapMatrix::squaredDistance_(const ConstRefVec& x,
-                              const ConstRefVec& y)
+                                      const ConstRefVec& y)
 {
   OutputType R(((toConstMat3(x.data())).transpose()) * (toConstMat3(y.data())));
   Eigen::Vector3d d;
   logarithm(d, R);
   return d.squaredNorm();
+}
+
+Eigen::Matrix<double, 1, 9> ExpMapMatrix::derivDistanceX_(const ConstRefVec& x,
+                                                          const ConstRefVec& y)
+{
+  Eigen::Matrix<double, 1, 9> res;
+  OutputType XtY(((toConstMat3(x.data())).transpose()) *
+                 (toConstMat3(y.data())));
+  Eigen::Vector3d d;
+  logarithm(d, XtY);
+  Eigen::Matrix<double, 1, 3> n = d.transpose() / d.norm();
+  Eigen::Matrix<double, 3, 9> diffLog = diffLogarithm(XtY);
+
+  Eigen::Matrix<double,9,9> diffXtY;
+  diffXtY << y(0), y(1), y(2), 0, 0, 0, 0, 0, 0,
+             0, 0, 0, y(0), y(1), y(2), 0, 0, 0,
+             0, 0, 0, 0, 0, 0, y(0), y(1), y(2),
+             y(3), y(4), y(5), 0, 0, 0, 0, 0, 0,
+             0, 0, 0, y(3), y(4), y(5), 0, 0, 0,
+             0, 0, 0, 0, 0, 0, y(3), y(4), y(5),
+             y(6), y(7), y(8), 0, 0, 0, 0, 0, 0,
+             0, 0, 0, y(6), y(7), y(8), 0, 0, 0,
+             0, 0, 0, 0, 0, 0, y(6), y(7), y(8);
+
+  res = n*diffLog*diffXtY;
+  return res;
+}
+
+Eigen::Matrix<double, 1, 9> ExpMapMatrix::derivDistanceY_(const ConstRefVec& x,
+                                                          const ConstRefVec& y)
+{
+  Eigen::Matrix<double, 1, 9> res;
+  OutputType XtY(((toConstMat3(x.data())).transpose()) *
+                 (toConstMat3(y.data())));
+  Eigen::Vector3d d;
+  logarithm(d, XtY);
+  Eigen::Matrix<double, 1, 3> n = d.transpose() / d.norm();
+  Eigen::Matrix<double, 3, 9> diffLog = diffLogarithm(XtY);
+
+  Eigen::Matrix<double,9,9> diffXtY;
+  diffXtY << x(0), x(1), x(2), 0, 0, 0, 0, 0, 0,
+             x(3), x(4), x(5), 0, 0, 0, 0, 0, 0,
+             x(6), x(7), x(8), 0, 0, 0, 0, 0, 0,
+             0, 0, 0, x(0), x(1), x(2), 0, 0, 0,
+             0, 0, 0, x(3), x(4), x(5), 0, 0, 0,
+             0, 0, 0, x(6), x(7), x(8), 0, 0, 0,
+             0, 0, 0, 0, 0, 0, x(0), x(1), x(2),
+             0, 0, 0, 0, 0, 0, x(3), x(4), x(5),
+             0, 0, 0, 0, 0, 0, x(6), x(7), x(8);
+
+  res = n*diffLog*diffXtY;
+  return res;
+}
+
+Eigen::Matrix<double, 1, 9> ExpMapMatrix::derivSquaredDistanceX_(
+    const ConstRefVec& x, const ConstRefVec& y)
+{
+  Eigen::Matrix<double, 1, 9> res;
+  OutputType XtY(((toConstMat3(x.data())).transpose()) *
+                 (toConstMat3(y.data())));
+  Eigen::Vector3d d;
+  logarithm(d, XtY);
+  Eigen::Matrix<double, 1, 3> n = 2 * d.transpose();
+  Eigen::Matrix<double, 3, 9> diffLog = diffLogarithm(XtY);
+
+  Eigen::Matrix<double,9,9> diffXtY;
+  diffXtY << y(0), y(1), y(2), 0, 0, 0, 0, 0, 0,
+             0, 0, 0, y(0), y(1), y(2), 0, 0, 0,
+             0, 0, 0, 0, 0, 0, y(0), y(1), y(2),
+             y(3), y(4), y(5), 0, 0, 0, 0, 0, 0,
+             0, 0, 0, y(3), y(4), y(5), 0, 0, 0,
+             0, 0, 0, 0, 0, 0, y(3), y(4), y(5),
+             y(6), y(7), y(8), 0, 0, 0, 0, 0, 0,
+             0, 0, 0, y(6), y(7), y(8), 0, 0, 0,
+             0, 0, 0, 0, 0, 0, y(6), y(7), y(8);
+
+  res = n*diffLog*diffXtY;
+  return res;
+}
+
+Eigen::Matrix<double, 1, 9> ExpMapMatrix::derivSquaredDistanceY_(
+    const ConstRefVec& x, const ConstRefVec& y)
+{
+  Eigen::Matrix<double, 1, 9> res;
+  OutputType XtY(((toConstMat3(x.data())).transpose()) *
+                 (toConstMat3(y.data())));
+  Eigen::Vector3d d;
+  logarithm(d, XtY);
+  Eigen::Matrix<double, 1, 3> n = 2 * d.transpose();
+  Eigen::Matrix<double, 3, 9> diffLog = diffLogarithm(XtY);
+
+  Eigen::Matrix<double,9,9> diffXtY;
+  diffXtY << x(0), x(1), x(2), 0, 0, 0, 0, 0, 0,
+             x(3), x(4), x(5), 0, 0, 0, 0, 0, 0,
+             x(6), x(7), x(8), 0, 0, 0, 0, 0, 0,
+             0, 0, 0, x(0), x(1), x(2), 0, 0, 0,
+             0, 0, 0, x(3), x(4), x(5), 0, 0, 0,
+             0, 0, 0, x(6), x(7), x(8), 0, 0, 0,
+             0, 0, 0, 0, 0, 0, x(0), x(1), x(2),
+             0, 0, 0, 0, 0, 0, x(3), x(4), x(5),
+             0, 0, 0, 0, 0, 0, x(6), x(7), x(8);
+
+  res = n*diffLog*diffXtY;
+  return res;
 }
 
 void ExpMapMatrix::logarithm(RefVec out, const OutputType& R)
@@ -222,14 +323,14 @@ void ExpMapMatrix::applyDiffRetractation_(RefMat out, const ConstRefMat& in,
   out = a;
 }
 
-Eigen::Matrix<double, 3, 9> ExpMapMatrix::diffPseudoLog0_(const ConstRefVec& R)
+Eigen::Matrix<double, 3, 9> ExpMapMatrix::diffLogarithm(const OutputType& R)
 {
   Eigen::Matrix<double, 3, 9> J;
   J.setZero();
   // Valid approximation of the log when v<<1
-  Eigen::Vector3d v((R(5) - R(7)) / 2, (R(6) - R(2)) / 2, (R(1) - R(3)) / 2);
+  Eigen::Vector3d v((R(2,1) - R(1,2)) / 2, (R(0,2) - R(2,0)) / 2, (R(1,0) - R(0,1)) / 2);
 
-  double trR = R(0) + R(4) + R(8);  // Trace of R;
+  double trR = R.trace();  // Trace of R;
   double trRm1o2 = (trR - 1) / 2;
   double s2 = 1 - trRm1o2 * trRm1o2;
   double f = 1 / boost::math::sinc_pi(
@@ -261,6 +362,12 @@ Eigen::Matrix<double, 3, 9> ExpMapMatrix::diffPseudoLog0_(const ConstRefVec& R)
   J.col(7) = Eigen::Vector3d(-hf, 0, 0);
   J.col(8) = J.col(0);
   return J;
+}
+
+Eigen::Matrix<double, 3, 9> ExpMapMatrix::diffPseudoLog0_(const ConstRefVec& R)
+{
+  OutputType Rmat = toConstMat3(R.data());
+  return diffLogarithm(Rmat);
 }
 
 void ExpMapMatrix::applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in,

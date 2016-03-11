@@ -32,6 +32,14 @@ ReverseQuaternion::ReverseQuaternion(double* data)
 {
 }
 
+void ReverseQuaternion::print() const
+{
+  std::cout << "w: " << w() << std::endl;
+  std::cout << "x: " << x() << std::endl;
+  std::cout << "y: " << y() << std::endl;
+  std::cout << "z: " << z() << std::endl;
+}
+
 void ReverseQuaternion::writeChanges()
 {
   refData_[0] = w();
@@ -52,6 +60,13 @@ ReverseQuaternion& ReverseQuaternion::operator=(const Eigen::Quaterniond& quat)
 ConstReverseQuaternion::ConstReverseQuaternion(const double* data)
     : Eigen::Quaterniond(data[0], data[1], data[2], data[3])
 {
+}
+void ConstReverseQuaternion::print() const
+{
+  std::cout << "w: " << w() << std::endl;
+  std::cout << "x: " << x() << std::endl;
+  std::cout << "y: " << y() << std::endl;
+  std::cout << "z: " << z() << std::endl;
 }
 }
 
@@ -116,17 +131,57 @@ void ExpMapQuaternion::pseudoLog0_(RefVec out, const ConstRefVec& x)
 double ExpMapQuaternion::distance_(const ConstRefVec& x,
                               const ConstRefVec& y)
 {
-  std::cout << "distance:\n" << x.transpose() << "\n" << y.transpose() << std::endl;
-  std::cerr << "distance not impl in quaternion" << std::endl;
-  return 0;
+  Eigen::Vector4d tmp;
+  toQuat q(tmp.data());
+  const toConstQuat xQ(x.data());
+  const toConstQuat yQ(y.data());
+  q = xQ.inverse() * yQ;  // TODO double-check that formula
+  q.writeChanges();
+  Eigen::Vector3d logV;
+  logarithm(logV, tmp);
+  double dist = logV.norm();
+  return dist;
 }
 
 double ExpMapQuaternion::squaredDistance_(const ConstRefVec& x,
                               const ConstRefVec& y)
 {
-  std::cout << "squaredDistance:\n" << x.transpose() << "\n" << y.transpose() << std::endl;
-  std::cerr << "squaredDistance not impl in quaternion" << std::endl;
+  Eigen::Vector4d tmp;
+  toQuat q(tmp.data());
+  const toConstQuat xQ(x.data());
+  const toConstQuat yQ(y.data());
+  q = xQ.inverse() * yQ;  // TODO double-check that formula
+  q.writeChanges();
+  Eigen::Vector3d logV;
+  logarithm(logV, tmp);
+  double dist = logV.squaredNorm();
+  return dist;
   return 0;
+}
+
+Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivDistanceX_(
+    const ConstRefVec&, const ConstRefVec&)
+{
+  Eigen::Matrix<double, 1, 4> J;
+  return J;
+}
+Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivDistanceY_(
+    const ConstRefVec&, const ConstRefVec&)
+{
+  Eigen::Matrix<double, 1, 4> J;
+  return J;
+}
+Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivSquaredDistanceX_(
+    const ConstRefVec&, const ConstRefVec&)
+{
+  Eigen::Matrix<double, 1, 4> J;
+  return J;
+}
+Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivSquaredDistanceY_(
+    const ConstRefVec&, const ConstRefVec&)
+{
+  Eigen::Matrix<double, 1, 4> J;
+  return J;
 }
 
 void ExpMapQuaternion::logarithm(RefVec out, const OutputType& v)

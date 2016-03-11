@@ -210,6 +210,62 @@ double CartesianProduct::distance_(const ConstRefVec& x,
   return sqrt(out);
 }
 
+Eigen::MatrixXd CartesianProduct::derivDistanceX_(const ConstRefVec& x,
+                                                  const ConstRefVec& y) const
+{
+  Eigen::MatrixXd J(1, representationDim());
+  J.setZero();
+  Eigen::Map<Eigen::VectorXd> Jvec(J.data(), representationDim());
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+  {
+    getView<R>(Jvec, i) = subManifolds_[i]->derivDistanceX(
+        getConstView<R>(x, i), getConstView<R>(y, i));
+  }
+  return J;
+}
+
+Eigen::MatrixXd CartesianProduct::derivDistanceY_(const ConstRefVec& x,
+                                                  const ConstRefVec& y) const
+{
+  Eigen::MatrixXd J(1, representationDim());
+  J.setZero();
+  Eigen::Map<Eigen::VectorXd> Jvec(J.data(), representationDim());
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+  {
+    getView<R>(Jvec, i) = subManifolds_[i]->derivDistanceY(
+        getConstView<R>(x, i), getConstView<R>(y, i));
+  }
+  return J;
+}
+
+Eigen::MatrixXd CartesianProduct::derivSquaredDistanceX_(
+    const ConstRefVec& x, const ConstRefVec& y) const
+{
+  Eigen::MatrixXd J(1, representationDim());
+  J.setZero();
+  Eigen::Map<Eigen::VectorXd> Jvec(J.data(), representationDim());
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+  {
+    getView<R>(Jvec, i) = subManifolds_[i]->derivSquaredDistanceX(
+        getConstView<R>(x, i), getConstView<R>(y, i));
+  }
+  return J;
+}
+
+Eigen::MatrixXd CartesianProduct::derivSquaredDistanceY_(
+    const ConstRefVec& x, const ConstRefVec& y) const
+{
+  Eigen::MatrixXd J(1, representationDim());
+  J.setZero();
+  Eigen::Map<Eigen::VectorXd> Jvec(J.data(), representationDim());
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+  {
+    getView<R>(Jvec, i) = subManifolds_[i]->derivSquaredDistanceY(
+        getConstView<R>(x, i), getConstView<R>(y, i));
+  }
+  return J;
+}
+
 void CartesianProduct::setZero_(RefVec out) const
 {
   for (size_t i = 0; i < subManifolds_.size(); ++i)

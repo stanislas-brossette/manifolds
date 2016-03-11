@@ -320,3 +320,40 @@ BOOST_AUTO_TEST_CASE(squaredDistance)
   res = R9.squaredDistance(x,y);
   BOOST_CHECK_EQUAL(res, expRes);
 }
+
+BOOST_AUTO_TEST_CASE(diffDistance)
+{
+  RealSpace M(9);
+  VectorXd x(9), y(9);
+  Eigen::Matrix<double, 1, 9> res, expRes;
+
+  M.createRandomPoint(x);
+  M.createRandomPoint(y);
+
+  double deltaFD = 1e-10;
+  double deltaRes = 1e-3;
+
+  res = M.derivDistanceX(x, y);
+  std::cout << "res:\n" << res << std::endl;
+  expRes = utils::FDDerivDistanceX(M, x, y, deltaFD);
+  std::cout << "expRes:\n" << expRes << std::endl;
+  BOOST_CHECK(res.isApprox(expRes, deltaRes));
+
+  res = M.derivDistanceY(x, y);
+  std::cout << "res:\n" << res << std::endl;
+  expRes = utils::FDDerivDistanceY(M, x, y, deltaFD);
+  std::cout << "expRes:\n" << expRes << std::endl;
+  BOOST_CHECK(res.isApprox(expRes, deltaRes));
+
+  res = M.derivSquaredDistanceX(x, y);
+  std::cout << "res:\n" << res << std::endl;
+  expRes = utils::FDDerivSquaredDistanceX(M, x, y, deltaFD);
+  std::cout << "expRes:\n" << expRes << std::endl;
+  BOOST_CHECK(res.isApprox(expRes, deltaRes));
+
+  res = M.derivSquaredDistanceY(x, y);
+  std::cout << "res:\n" << res << std::endl;
+  expRes = utils::FDDerivSquaredDistanceY(M, x, y, deltaFD);
+  std::cout << "expRes:\n" << expRes << std::endl;
+  BOOST_CHECK(res.isApprox(expRes, deltaRes));
+}

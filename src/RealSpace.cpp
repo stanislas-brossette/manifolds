@@ -127,6 +127,41 @@ double RealSpace::squaredDistance_(const ConstRefVec& x,
   return out;
 }
 
+Eigen::MatrixXd RealSpace::derivDistanceX_(const ConstRefVec& x,
+                                           const ConstRefVec& y) const
+{
+  Eigen::MatrixXd J(1, representationDim());
+  double d = distance_(x, y);
+  J = y.transpose() - x.transpose();
+  J /= -d;
+  return J;
+}
+Eigen::MatrixXd RealSpace::derivDistanceY_(const ConstRefVec& x,
+                                           const ConstRefVec& y) const
+{
+  Eigen::MatrixXd J(1, representationDim());
+  double d = distance_(x, y);
+  J = y.transpose() - x.transpose();
+  J /= d;
+  return J;
+}
+Eigen::MatrixXd RealSpace::derivSquaredDistanceX_(const ConstRefVec& x,
+                                                  const ConstRefVec& y) const
+{
+  Eigen::MatrixXd J(1, representationDim());
+  J = y.transpose() - x.transpose();
+  J *= -2;
+  return J;
+}
+Eigen::MatrixXd RealSpace::derivSquaredDistanceY_(const ConstRefVec& x,
+                                                  const ConstRefVec& y) const
+{
+  Eigen::MatrixXd J(1, representationDim());
+  J = y.transpose() - x.transpose();
+  J *= 2;
+  return J;
+}
+
 void RealSpace::setZero_(RefVec out) const { out.setZero(); }
 
 Eigen::MatrixXd RealSpace::diffRetractation_(const ConstRefVec&) const

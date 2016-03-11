@@ -51,13 +51,13 @@ S2::S2(const ConstRefVec& magnitude) : Manifold(2, 3, 3)
 
 bool S2::isInM_(const Eigen::VectorXd& val, double prec) const
 {
-  bool out(fabs(val.lpNorm<2>() - 1.0) < prec);
+  bool out(fabs(val.norm() - 1.0) < prec);
   return out;
 }
 
 void S2::forceOnM_(RefVec out, const ConstRefVec& in) const
 {
-  out = in / in.lpNorm<2>();
+  out = in / in.norm();
 }
 
 void S2::getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const
@@ -93,7 +93,7 @@ void S2::retractation_(RefVec out, const ConstRefVec& x,
 {
   Eigen::Vector3d sum;
   sum = x + v;
-  out = sum / sum.lpNorm<2>();
+  out = sum / sum.norm();
 }
 
 void S2::pseudoLog_(RefVec out, const ConstRefVec& x,
@@ -107,21 +107,74 @@ void S2::logarithm(RefVec out, const ConstRefVec& x, const ConstRefVec& y) const
   Eigen::Vector3d diff, projDiff;
   diff = y - x;
   projVec(projDiff, diff, x);
-  out = distance_(x, y) * projDiff / projDiff.lpNorm<2>();
+  out = distance_(x, y) * projDiff / projDiff.norm();
 }
 
 double S2::distance_(const ConstRefVec& x, const ConstRefVec& y) const
 {
-  double d = x.dot(y);
-  double res = acos(d);
+  // double d = x.dot(y);
+  // double res = acos(d);
+  double res = 1 - x.dot(y);
   return res;
 }
 
 double S2::squaredDistance_(const ConstRefVec& x, const ConstRefVec& y) const
 {
-  double d = x.dot(y);
-  double res = acos(d)*acos(d);
+  // double d = x.dot(y);
+  // double res = pow(acos(d),2);
+  double res = pow(1 - x.dot(y), 2);
   return res;
+}
+
+Eigen::MatrixXd S2::derivDistanceX_(const ConstRefVec& /*x*/,
+                                    const ConstRefVec& y) const
+{
+  Eigen::Matrix<double, 1, 3> J;
+
+  // double coeff = -1/sqrt(1-pow(x.dot(y),2));
+  // J = (coeff*y).transpose();
+
+  J = -y;
+
+  return J;
+}
+Eigen::MatrixXd S2::derivDistanceY_(const ConstRefVec& x,
+                                    const ConstRefVec& /*y*/) const
+{
+  Eigen::Matrix<double, 1, 3> J;
+
+  // double coeff = -1/sqrt(1-pow(x.dot(y),2));
+  // J = (coeff*x).transpose();
+
+  J = -x;
+
+  return J;
+}
+Eigen::MatrixXd S2::derivSquaredDistanceX_(const ConstRefVec& x,
+                                           const ConstRefVec& y) const
+{
+  Eigen::Matrix<double, 1, 3> J;
+
+  // double coeff = -2*distance(x,y)/sqrt(1-pow(x.dot(y),2));
+  // J = (coeff*y).transpose();
+
+  double coeff = 2 * (1 - x.dot(y));
+  J = -coeff * y;
+
+  return J;
+}
+Eigen::MatrixXd S2::derivSquaredDistanceY_(const ConstRefVec& x,
+                                           const ConstRefVec& y) const
+{
+  Eigen::Matrix<double, 1, 3> J;
+
+  // double coeff = -2*distance(x,y)/sqrt(1-pow(x.dot(y),2));
+  // J = (coeff*x).transpose();
+
+  double coeff = 2 * (1 - x.dot(y));
+  J = -coeff * x;
+
+  return J;
 }
 
 void S2::projRows(RefMat out, const ConstRefMat& in, const ConstRefVec& x) const
@@ -142,7 +195,7 @@ void S2::rand(RefVec out) const
 {
   mnf_assert(out.size() == 3 && "Wrong size of output for S2::rand");
   out = Eigen::Vector3d::Random();
-  double nout = out.lpNorm<2>();
+  double nout = out.norm();
   out = out / nout;
 }
 
@@ -152,7 +205,7 @@ void S2::randVec(RefVec out, const ConstRefVec& x) const
   mnf_assert(x.size() == 3 && "Wrong size of output for S2::rand");
   out = Eigen::Vector3d::Random();
   projVec(out, out, x);
-  double nout = out.lpNorm<2>();
+  double nout = out.norm();
   out = out / nout;
 }
 Eigen::Vector3d S2::randVec(const ConstRefVec& x) const

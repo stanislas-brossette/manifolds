@@ -188,6 +188,36 @@ double Manifold::squaredDistance(const ConstRefVec& x, const ConstRefVec& y) con
   return squaredDistance_(x, y);
 }
 
+Eigen::MatrixXd Manifold::derivDistanceX(const ConstRefVec& x,
+                                         const ConstRefVec& y) const
+{
+  mnf_assert(x.size() == representationDim_);
+  mnf_assert(y.size() == representationDim_);
+  return derivDistanceX_(x, y);
+}
+Eigen::MatrixXd Manifold::derivDistanceY(const ConstRefVec& x,
+                                         const ConstRefVec& y) const
+{
+  mnf_assert(x.size() == representationDim_);
+  mnf_assert(y.size() == representationDim_);
+  return derivDistanceY_(x, y);
+}
+
+Eigen::MatrixXd Manifold::derivSquaredDistanceX(const ConstRefVec& x,
+                                                const ConstRefVec& y) const
+{
+  mnf_assert(x.size() == representationDim_);
+  mnf_assert(y.size() == representationDim_);
+  return derivSquaredDistanceX_(x, y);
+}
+Eigen::MatrixXd Manifold::derivSquaredDistanceY(const ConstRefVec& x,
+                                                const ConstRefVec& y) const
+{
+  mnf_assert(x.size() == representationDim_);
+  mnf_assert(y.size() == representationDim_);
+  return derivSquaredDistanceY_(x, y);
+}
+
 Eigen::MatrixXd Manifold::diffRetractation(const ConstRefVec& x) const
 {
   mnf_assert(isValid() || seeMessageAbove());
