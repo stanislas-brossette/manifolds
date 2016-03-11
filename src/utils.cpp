@@ -73,15 +73,16 @@ Eigen::MatrixXd FDLogarithm(const Manifold& M, const ConstRefVec& constX,
                             const double& delta)
 {
   auto repDim = M.representationDim();
+  auto tanDim = M.tangentDim();
   Eigen::Vector3d refLog;
   M.pseudoLog0(refLog, constX);
   Eigen::VectorXd x = constX;
 
-  Eigen::MatrixXd res(3, repDim);
+  Eigen::MatrixXd res(tanDim, repDim);
   for (int i = 0; i < repDim; ++i)
   {
     x(i) += delta;
-    Eigen::Vector3d logDelta;
+    Eigen::VectorXd logDelta(tanDim);
     M.pseudoLog0(logDelta, x);
     res.col(i) = (logDelta - refLog) / delta;
     x(i) -= delta;

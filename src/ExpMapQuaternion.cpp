@@ -230,9 +230,10 @@ Eigen::Matrix<double, 4, 3> ExpMapQuaternion::diffRetractation_(
   Eigen::Matrix<double, 4, 3> J;
   // This matrix is written in the (w, x, y, z) convention
   // for quaternion notation.
-  J << -0.5 * xQ.x(), -0.5 * xQ.y(), -0.5 * xQ.z(), 0.5 * xQ.w(), -0.5 * xQ.z(),
-      0.5 * xQ.y(), 0.5 * xQ.z(), 0.5 * xQ.w(), -0.5 * xQ.x(), -0.5 * xQ.y(),
-      0.5 * xQ.x(), 0.5 * xQ.w();
+  J << -0.5*xQ.x(), -0.5*xQ.y(), -0.5*xQ.z(),
+        0.5*xQ.w(), -0.5*xQ.z(),  0.5*xQ.y(),
+        0.5*xQ.z(),  0.5*xQ.w(), -0.5*xQ.x(),
+       -0.5*xQ.y(),  0.5*xQ.x(),  0.5*xQ.w();
   return J;
 }
 
@@ -260,7 +261,9 @@ Eigen::Matrix<double, 3, 4> ExpMapQuaternion::diffPseudoLog0_(
     double b = -2 / (vQ.w() * vQ.w());
     // This matrix is written in the (w, x, y, z) convention
     // for quaternion notation.
-    J << b* vQ.x(), a, 0, 0, b * vQ.y(), 0, a, 0, b * vQ.z(), 0, 0, a;
+    J << b*vQ.x(), a, 0, 0,
+         b*vQ.y(), 0, a, 0,
+         b*vQ.z(), 0, 0, a;
   }
   else
   {
