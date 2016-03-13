@@ -577,14 +577,13 @@ BOOST_AUTO_TEST_CASE(diffDistance)
 {
   SO3<ExpMapQuaternion> M;
   VectorXd x(4), y(4), xTy(4);
-  toQuat xQ(x.data());
-  toQuat yQ(y.data());
+  M.createRandomPoint(x);
+  M.createRandomPoint(y);
+  toConstQuat xQ(x.data());
+  toConstQuat yQ(y.data());
   toQuat xTyQ(xTy.data());
   Eigen::Matrix<double, 1, 4> res, expRes;
   Eigen::Matrix<double, 3, 4> resLog, expResLog;
-
-  M.createRandomPoint(x);
-  M.createRandomPoint(y);
 
   xTyQ = xQ.inverse() * yQ;  // TODO double-check that formula
   xTyQ.writeChanges();
@@ -594,32 +593,21 @@ BOOST_AUTO_TEST_CASE(diffDistance)
 
   resLog = M.diffPseudoLog0(xTy);
   expResLog = utils::FDLogarithm(M, xTy, deltaFD);
-  std::cout << "M.distance(x,y):\n" << M.distance(x, y) << std::endl;
-  std::cout << "resLog:\n" << resLog << std::endl;
-  std::cout << "expResLog:\n" << expResLog << std::endl;
   BOOST_CHECK(resLog.isApprox(expResLog, deltaRes));
 
   res = M.derivDistanceX(x, y);
-  std::cout << "res:\n" << res << std::endl;
   expRes = utils::FDDerivDistanceX(M, x, y, deltaFD);
-  std::cout << "expRes:\n" << expRes << std::endl;
   BOOST_CHECK(res.isApprox(expRes, deltaRes));
 
   res = M.derivDistanceY(x, y);
-  std::cout << "res:\n" << res << std::endl;
   expRes = utils::FDDerivDistanceY(M, x, y, deltaFD);
-  std::cout << "expRes:\n" << expRes << std::endl;
   BOOST_CHECK(res.isApprox(expRes, deltaRes));
 
   res = M.derivSquaredDistanceX(x, y);
-  std::cout << "res:\n" << res << std::endl;
   expRes = utils::FDDerivSquaredDistanceX(M, x, y, deltaFD);
-  std::cout << "expRes:\n" << expRes << std::endl;
   BOOST_CHECK(res.isApprox(expRes, deltaRes));
 
   res = M.derivSquaredDistanceY(x, y);
-  std::cout << "res:\n" << res << std::endl;
   expRes = utils::FDDerivSquaredDistanceY(M, x, y, deltaFD);
-  std::cout << "expRes:\n" << expRes << std::endl;
   BOOST_CHECK(res.isApprox(expRes, deltaRes));
 }

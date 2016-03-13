@@ -159,28 +159,143 @@ double ExpMapQuaternion::squaredDistance_(const ConstRefVec& x,
   return 0;
 }
 
-Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivDistanceX_(
-    const ConstRefVec&, const ConstRefVec&)
+Eigen::Matrix<double, 4, 4> diffInvXTimesYdx(const ConstRefVec& x,
+                                             const ConstRefVec& y)
 {
+  Eigen::Matrix<double, 4, 4> diffXtYdx;
+
+  toConstQuat xQ(x.data());
+  toConstQuat yQ(y.data());
+  double nxQ = xQ.w()*xQ.w()+xQ.x()*xQ.x()+xQ.y()*xQ.y()+xQ.z()*xQ.z();
+  double nxQ2 = pow(nxQ,2.0);
+
+  diffXtYdx(0, 0) = 1.0/nxQ2*(-xQ.w()*(xQ.x()*yQ.x()*2.0+xQ.y()*yQ.y()*2.0+xQ.z()*yQ.z()*2.0)-(xQ.w()*xQ.w())*yQ.w()+yQ.w()*(xQ.x()*xQ.x())+yQ.w()*(xQ.y()*xQ.y())+yQ.w()*(xQ.z()*xQ.z()));
+  diffXtYdx(0, 1) = 1.0/nxQ2*(-xQ.x()*(xQ.w()*yQ.w()*2.0+xQ.y()*yQ.y()*2.0+xQ.z()*yQ.z()*2.0)+(xQ.w()*xQ.w())*yQ.x()-(xQ.x()*xQ.x())*yQ.x()+yQ.x()*(xQ.y()*xQ.y())+yQ.x()*(xQ.z()*xQ.z()));
+  diffXtYdx(0, 2) = 1.0/nxQ2*(-xQ.y()*(xQ.w()*yQ.w()*2.0+xQ.x()*yQ.x()*2.0+xQ.z()*yQ.z()*2.0)+(xQ.w()*xQ.w())*yQ.y()+(xQ.x()*xQ.x())*yQ.y()-(xQ.y()*xQ.y())*yQ.y()+yQ.y()*(xQ.z()*xQ.z()));
+  diffXtYdx(0, 3) = 1.0/nxQ2*(-xQ.z()*(xQ.w()*yQ.w()*2.0+xQ.x()*yQ.x()*2.0+xQ.y()*yQ.y()*2.0)+(xQ.w()*xQ.w())*yQ.z()+(xQ.x()*xQ.x())*yQ.z()+(xQ.y()*xQ.y())*yQ.z()-(xQ.z()*xQ.z())*yQ.z());
+  diffXtYdx(1, 0) = 1.0/nxQ2*(xQ.w()*(yQ.w()*xQ.x()*2.0+xQ.y()*yQ.z()*2.0-yQ.y()*xQ.z()*2.0)-(xQ.w()*xQ.w())*yQ.x()+(xQ.x()*xQ.x())*yQ.x()+yQ.x()*(xQ.y()*xQ.y())+yQ.x()*(xQ.z()*xQ.z()));
+  diffXtYdx(1, 1) = -1.0/nxQ2*(xQ.x()*(xQ.w()*yQ.x()*2.0-xQ.y()*yQ.z()*2.0+yQ.y()*xQ.z()*2.0)+(xQ.w()*xQ.w())*yQ.w()-yQ.w()*(xQ.x()*xQ.x())+yQ.w()*(xQ.y()*xQ.y())+yQ.w()*(xQ.z()*xQ.z()));
+  diffXtYdx(1, 2) = -1.0/nxQ2*(xQ.y()*(xQ.w()*yQ.x()*2.0-yQ.w()*xQ.x()*2.0+yQ.y()*xQ.z()*2.0)+(xQ.w()*xQ.w())*yQ.z()+(xQ.x()*xQ.x())*yQ.z()-(xQ.y()*xQ.y())*yQ.z()+(xQ.z()*xQ.z())*yQ.z());
+  diffXtYdx(1, 3) = 1.0/nxQ2*(xQ.z()*(xQ.w()*yQ.x()*-2.0+yQ.w()*xQ.x()*2.0+xQ.y()*yQ.z()*2.0)+(xQ.w()*xQ.w())*yQ.y()+(xQ.x()*xQ.x())*yQ.y()+(xQ.y()*xQ.y())*yQ.y()-yQ.y()*(xQ.z()*xQ.z()));
+  diffXtYdx(2, 0) = 1.0/nxQ2*(xQ.w()*(yQ.w()*xQ.y()*2.0-xQ.x()*yQ.z()*2.0+yQ.x()*xQ.z()*2.0)-(xQ.w()*xQ.w())*yQ.y()+(xQ.x()*xQ.x())*yQ.y()+(xQ.y()*xQ.y())*yQ.y()+yQ.y()*(xQ.z()*xQ.z()));
+  diffXtYdx(2, 1) = 1.0/nxQ2*(xQ.x()*(xQ.w()*yQ.y()*-2.0+yQ.w()*xQ.y()*2.0+yQ.x()*xQ.z()*2.0)+(xQ.w()*xQ.w())*yQ.z()-(xQ.x()*xQ.x())*yQ.z()+(xQ.y()*xQ.y())*yQ.z()+(xQ.z()*xQ.z())*yQ.z());
+  diffXtYdx(2, 2) = -1.0/nxQ2*(xQ.y()*(xQ.w()*yQ.y()*2.0+xQ.x()*yQ.z()*2.0-yQ.x()*xQ.z()*2.0)+(xQ.w()*xQ.w())*yQ.w()+yQ.w()*(xQ.x()*xQ.x())-yQ.w()*(xQ.y()*xQ.y())+yQ.w()*(xQ.z()*xQ.z()));
+  diffXtYdx(2, 3) = -1.0/nxQ2*(xQ.z()*(xQ.w()*yQ.y()*2.0-yQ.w()*xQ.y()*2.0+xQ.x()*yQ.z()*2.0)+(xQ.w()*xQ.w())*yQ.x()+(xQ.x()*xQ.x())*yQ.x()+yQ.x()*(xQ.y()*xQ.y())-yQ.x()*(xQ.z()*xQ.z()));
+  diffXtYdx(3, 0) = 1.0/nxQ2*(xQ.w()*(yQ.w()*xQ.z()*2.0+xQ.x()*yQ.y()*2.0-yQ.x()*xQ.y()*2.0)-(xQ.w()*xQ.w())*yQ.z()+(xQ.x()*xQ.x())*yQ.z()+(xQ.y()*xQ.y())*yQ.z()+(xQ.z()*xQ.z())*yQ.z());
+  diffXtYdx(3, 1) = -1.0/nxQ2*(xQ.x()*(xQ.w()*yQ.z()*2.0-yQ.w()*xQ.z()*2.0+yQ.x()*xQ.y()*2.0)+(xQ.w()*xQ.w())*yQ.y()-(xQ.x()*xQ.x())*yQ.y()+(xQ.y()*xQ.y())*yQ.y()+yQ.y()*(xQ.z()*xQ.z()));
+  diffXtYdx(3, 2) = 1.0/nxQ2*(xQ.y()*(xQ.w()*yQ.z()*-2.0+yQ.w()*xQ.z()*2.0+xQ.x()*yQ.y()*2.0)+(xQ.w()*xQ.w())*yQ.x()+(xQ.x()*xQ.x())*yQ.x()-yQ.x()*(xQ.y()*xQ.y())+yQ.x()*(xQ.z()*xQ.z()));
+  diffXtYdx(3, 3) = -1.0/nxQ2*(xQ.z()*(xQ.w()*yQ.z()*2.0-xQ.x()*yQ.y()*2.0+yQ.x()*xQ.y()*2.0)+(xQ.w()*xQ.w())*yQ.w()+yQ.w()*(xQ.x()*xQ.x())+yQ.w()*(xQ.y()*xQ.y())-yQ.w()*(xQ.z()*xQ.z()));
+
+  return diffXtYdx;
+}
+
+Eigen::Matrix<double, 4, 4> diffInvXTimesYdy(const ConstRefVec& x,
+                                             const ConstRefVec&)
+{
+  Eigen::Matrix<double, 4, 4> diffXtYdy;
+
+  toConstQuat xQ(x.data());
+
+  double nxQ = xQ.w()*xQ.w()+xQ.x()*xQ.x()+xQ.y()*xQ.y()+xQ.z()*xQ.z();
+
+  diffXtYdy(0, 0) = xQ.w()/nxQ;
+  diffXtYdy(0, 1) = xQ.x()/nxQ;
+  diffXtYdy(0, 2) = xQ.y()/nxQ;
+  diffXtYdy(0, 3) = xQ.z()/nxQ;
+  diffXtYdy(1, 0) = -xQ.x()/nxQ;
+  diffXtYdy(1, 1) = xQ.w()/nxQ;
+  diffXtYdy(1, 2) = xQ.z()/nxQ;
+  diffXtYdy(1, 3) = -xQ.y()/nxQ;
+  diffXtYdy(2, 0) = -xQ.y()/nxQ;
+  diffXtYdy(2, 1) = -xQ.z()/nxQ;
+  diffXtYdy(2, 2) = xQ.w()/nxQ;
+  diffXtYdy(2, 3) = xQ.x()/nxQ;
+  diffXtYdy(3, 0) = -xQ.z()/nxQ;
+  diffXtYdy(3, 1) = xQ.y()/nxQ;
+  diffXtYdy(3, 2) = -xQ.x()/nxQ;
+  diffXtYdy(3, 3) = xQ.w()/nxQ;
+
+  return diffXtYdy;
+}
+
+Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivDistanceX_(
+    const ConstRefVec& x, const ConstRefVec& y)
+{
+  OutputType tmp;
+  toQuat q(tmp.data());
+  toConstQuat xQ(x.data());
+  toConstQuat yQ(y.data());
+  q = xQ.inverse() * yQ;  // TODO double-check that formula
+  q.writeChanges();
+
+  Eigen::Vector3d d;
+  logarithm(d, tmp);
+  Eigen::Matrix<double, 1, 3> n = d.transpose() / d.norm();
+
+  Eigen::Matrix<double, 3, 4> diffLog = diffPseudoLog0_(tmp);
+
   Eigen::Matrix<double, 1, 4> J;
+  J = n * diffLog * diffInvXTimesYdx(x, y);
   return J;
 }
 Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivDistanceY_(
-    const ConstRefVec&, const ConstRefVec&)
+    const ConstRefVec& x, const ConstRefVec& y)
 {
+  OutputType tmp;
+  toQuat q(tmp.data());
+  toConstQuat xQ(x.data());
+  toConstQuat yQ(y.data());
+  q = xQ.inverse() * yQ;  // TODO double-check that formula
+  q.writeChanges();
+
+  Eigen::Vector3d d;
+  logarithm(d, tmp);
+  Eigen::Matrix<double, 1, 3> n = d.transpose() / d.norm();
+
+  Eigen::Matrix<double, 3, 4> diffLog = diffPseudoLog0_(tmp);
+
   Eigen::Matrix<double, 1, 4> J;
+  J = n * diffLog * diffInvXTimesYdy(x, y);
   return J;
 }
 Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivSquaredDistanceX_(
-    const ConstRefVec&, const ConstRefVec&)
+    const ConstRefVec& x, const ConstRefVec& y)
 {
+  OutputType tmp;
+  toQuat q(tmp.data());
+  toConstQuat xQ(x.data());
+  toConstQuat yQ(y.data());
+  q = xQ.inverse() * yQ;  // TODO double-check that formula
+  q.writeChanges();
+
+  Eigen::Vector3d d;
+  logarithm(d, tmp);
+  Eigen::Matrix<double, 1, 3> n = 2 * d.transpose();
+
+  Eigen::Matrix<double, 3, 4> diffLog = diffPseudoLog0_(tmp);
+
   Eigen::Matrix<double, 1, 4> J;
+  J = n * diffLog * diffInvXTimesYdx(x, y);
   return J;
 }
 Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivSquaredDistanceY_(
-    const ConstRefVec&, const ConstRefVec&)
+    const ConstRefVec& x, const ConstRefVec& y)
 {
+  OutputType tmp;
+  toQuat q(tmp.data());
+  toConstQuat xQ(x.data());
+  toConstQuat yQ(y.data());
+  q = xQ.inverse() * yQ;  // TODO double-check that formula
+  q.writeChanges();
+
+  Eigen::Vector3d d;
+  logarithm(d, tmp);
+  Eigen::Matrix<double, 1, 3> n = 2 * d.transpose();
+
+  Eigen::Matrix<double, 3, 4> diffLog = diffPseudoLog0_(tmp);
+
   Eigen::Matrix<double, 1, 4> J;
+  J = n * diffLog * diffInvXTimesYdy(x, y);
   return J;
 }
 
