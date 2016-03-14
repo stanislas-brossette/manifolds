@@ -37,6 +37,7 @@
 #include <boost/test/unit_test.hpp>
 
 using namespace mnf;
+using namespace Eigen;
 
 BOOST_AUTO_TEST_CASE(CartProdConstructor)
 {
@@ -58,10 +59,10 @@ BOOST_AUTO_TEST_CASE(CartProdConstructor)
   BOOST_CHECK_EQUAL(PowS.numberOfSubManifolds(), 3);
   std::string solName("R2xR3xR2xSO3MatxR2xR3xR2xSO3MatxR2xR3xR2xSO3Mat");
   BOOST_CHECK(PowS.name().compare(solName) == 0);
-  Eigen::VectorXd expectedTypicalMag(30);
+  VectorXd expectedTypicalMag(30);
   expectedTypicalMag << 1, 1, 2, 2, 2, 1, 1, M_PI, M_PI, M_PI, 1, 1, 2, 2, 2, 1,
       1, M_PI, M_PI, M_PI, 1, 1, 2, 2, 2, 1, 1, M_PI, M_PI, M_PI;
-  Eigen::VectorXd expectedTrustMag(30);
+  VectorXd expectedTrustMag(30);
   expectedTrustMag << 1, 1, 2, 2, 2, 1, 1, M_PI, M_PI, M_PI, 1, 1, 2, 2, 2, 1,
       1, M_PI, M_PI, M_PI, 1, 1, 2, 2, 2, 1, 1, M_PI, M_PI, M_PI;
   BOOST_CHECK_EQUAL(PowS.getTypicalMagnitude(), expectedTypicalMag);
@@ -160,9 +161,9 @@ BOOST_AUTO_TEST_CASE(testForceOnCartProd)
   S2 S2_;
   RealSpace R4(4);
   CartesianProduct S{&SQuat, &S2_, &SMat, &R4};
-  Eigen::VectorXd rotValue(S.representationDim());
-  Eigen::VectorXd perturbedRotVec(S.representationDim());
-  Eigen::VectorXd randM(S.representationDim());
+  VectorXd rotValue(S.representationDim());
+  VectorXd perturbedRotVec(S.representationDim());
+  VectorXd randM(S.representationDim());
   rotValue << 0.128118982404792, -0.1344265650552301, 0.01332271791121291,
       0.9825159185186115, 0.7185061970884602, 0.6612540461438763,
       0.2156198766436694, 0.7372382151024582, 0.04195040037727407,
@@ -189,8 +190,8 @@ BOOST_AUTO_TEST_CASE(CartProdIncrement)
   CartesianProduct P(R2, R3);
   P.multiply(R2);
   CartesianProduct S(P, RotSpace);
-  Eigen::VectorXd x = S.getZero().value();
-  Eigen::VectorXd vy(10);
+  VectorXd x = S.getZero().value();
+  VectorXd vy(10);
   vy << 1, 2, 3, 4, 5, 6, 7, 0.1, 0.2, 0.3;
   S.retractation(x, x, vy);
   S.retractation(x, x, vy);
@@ -221,8 +222,8 @@ BOOST_AUTO_TEST_CASE(CartProdAddition)
   CartesianProduct P(R2, R3);
   P.multiply(R2);
   CartesianProduct S(RotSpace, P);
-  Eigen::VectorXd x = S.getZero().value();
-  Eigen::VectorXd vy(10);
+  VectorXd x = S.getZero().value();
+  VectorXd vy(10);
   vy << 0.1, 0.2, 0.3, 1, 2, 3, 4, 5, 6, 7;
   S.retractation(x, x, vy);
   S.retractation(x, x, vy);
@@ -253,16 +254,16 @@ BOOST_AUTO_TEST_CASE(CartProSubstraction)
   CartesianProduct R2R3R2(R2, R3);
   R2R3R2.multiply(R2);
   CartesianProduct S(RotSpace, R2R3R2);
-  Eigen::VectorXd x = S.getZero().value();
-  Eigen::VectorXd y = S.getZero().value();
-  Eigen::VectorXd vx(10);
-  Eigen::VectorXd vy(10);
+  VectorXd x = S.getZero().value();
+  VectorXd y = S.getZero().value();
+  VectorXd vx(10);
+  VectorXd vy(10);
   vx << 1, 0.1, 1, 1, 2, 3, 4, 5, 6, 7;
   vy << 0.07, 3, 0.01, 4, 6, 2, 1, 4, 6, 4;
   S.retractation(x, x, vx);
   S.retractation(y, y, vy);
-  Eigen::VectorXd z(16);
-  Eigen::VectorXd d(10);
+  VectorXd z(16);
+  VectorXd d(10);
   S.pseudoLog(d, x, y);
   S.retractation(z, x, d);
 
@@ -282,11 +283,11 @@ BOOST_AUTO_TEST_CASE(CardProdPointpseudoLog0)
   R2R3R2.multiply(R2);
   CartesianProduct SO3R2R3R2(RotSpace, R2R3R2);
   CartesianProduct S(SO3R2R3R2, RotSpace);
-  Eigen::VectorXd x = S.getZero().value();
-  Eigen::VectorXd vy = Eigen::VectorXd::Random(S.dim());
+  VectorXd x = S.getZero().value();
+  VectorXd vy = VectorXd::Random(S.dim());
   ;
   S.retractation(x, x, vy);
-  Eigen::VectorXd z(S.dim());
+  VectorXd z(S.dim());
   S.pseudoLog0(z, x);
   BOOST_CHECK(z.isApprox(vy));
 }
@@ -299,18 +300,18 @@ BOOST_AUTO_TEST_CASE(CartPropseudoLog0)
   CartesianProduct R2SO3(R2, RotSpace);
   CartesianProduct R2R3(R2, R3);
   CartesianProduct S(R2SO3, R2R3);
-  Eigen::VectorXd x = S.getZero().value();
-  Eigen::VectorXd Id = S.getZero().value();
-  Eigen::VectorXd vx(10);
-  Eigen::VectorXd vy(10);
+  VectorXd x = S.getZero().value();
+  VectorXd Id = S.getZero().value();
+  VectorXd vx(10);
+  VectorXd vy(10);
   vx << -7, 2, 1, 0.1, 1, 3, 4, 5, 6, 7;
   vy << 4, 6, 0.07, 3, 0.01, 2, 1, 4, 6, 4;
   S.retractation(x, x, vx);
   S.retractation(x, x, vy);
-  Eigen::VectorXd x0(10);
+  VectorXd x0(10);
   S.pseudoLog0(x0, x);
 
-  Eigen::VectorXd newX(16);
+  VectorXd newX(16);
   S.retractation(newX, Id, x0);
 
   BOOST_CHECK_EQUAL(newX.size(), 16);
@@ -326,8 +327,8 @@ BOOST_AUTO_TEST_CASE(CardProdDiff)
   RealSpace R3(3);
   SO3<ExpMapMatrix> RotSpace;
   CartesianProduct S(R2, RotSpace);
-  Eigen::MatrixXd J;
-  Eigen::MatrixXd Jtest(11, 5);
+  MatrixXd J;
+  MatrixXd Jtest(11, 5);
   Jtest << 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, -0.573417053935868,
       -0.109861317404411, 0, 0, 0, 0.249497069246539, 0.920480138494529, 0, 0,
       0, -0.780348700705586, 0.375029072973363, 0, 0, 0.573417053935868, 0,
@@ -335,8 +336,8 @@ BOOST_AUTO_TEST_CASE(CardProdDiff)
       0.780348700705586, 0, 0.500408932506048, 0, 0, 0.109861317404411,
       0.811864134688605, 0, 0, 0, -0.920480138494529, 0.300778202459022, 0, 0,
       0, -0.375029072973363, -0.500408932506048, 0;
-  Eigen::VectorXd x = S.getZero().value();
-  Eigen::VectorXd v(5);
+  VectorXd x = S.getZero().value();
+  VectorXd v(5);
   v << 243.27432598, -2314327.23748, 0.3403857, 0.58526775, 0.223811;
   S.retractation(x, x, v);
   J = S.diffRetractation(x);
@@ -355,12 +356,12 @@ BOOST_AUTO_TEST_CASE(CardProdApplyDiff)
   CartesianProduct S(SO3R2R3R2, RotSpace);
   Index dim = S.dim();
   Index repDim = S.representationDim();
-  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c, repDim);
-  Eigen::VectorXd x = S.getZero().value();
-  S.retractation(x, x, Eigen::VectorXd::Random(dim));
-  Eigen::MatrixXd expectedRes;
+  MatrixXd Jf = MatrixXd::Random(c, repDim);
+  VectorXd x = S.getZero().value();
+  S.retractation(x, x, VectorXd::Random(dim));
+  MatrixXd expectedRes;
   expectedRes = Jf * S.diffRetractation(x);
-  Eigen::MatrixXd J(c, dim);
+  MatrixXd J(c, dim);
   S.applyDiffRetractation(J, Jf, x);
   BOOST_CHECK(expectedRes.isApprox(J));
 }
@@ -372,8 +373,8 @@ BOOST_AUTO_TEST_CASE(CardProdDiffInv)
   SO3<ExpMapMatrix> RotSpace;
   CartesianProduct R2SO3(R2, RotSpace);
   CartesianProduct S(R2SO3, R3);
-  Eigen::MatrixXd J;
-  Eigen::MatrixXd Jtest(8, 14);
+  MatrixXd J;
+  MatrixXd Jtest(8, 14);
   Jtest << 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, -0.064043491813865, 0, 0, 0, -0.064043491813865,
       0.545030346992499, 0, -0.545030346992499, -0.064043491813865, 0, 0, 0, 0,
@@ -383,8 +384,8 @@ BOOST_AUTO_TEST_CASE(CardProdDiffInv)
       -0.042109988599266, 0, 0, 0, -0.042109988599266, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1;
-  Eigen::VectorXd x = S.getZero().value();
-  Eigen::VectorXd v(8);
+  VectorXd x = S.getZero().value();
+  VectorXd v(8);
   v << 243.27432598, -2314327.23748, 0.3403857, 0.58526775, 0.223811, 3.08,
       0.00000001, 232.5;
   S.retractation(x, x, v);
@@ -404,12 +405,12 @@ BOOST_AUTO_TEST_CASE(CardProdApplyInvDiff)
   CartesianProduct S(SO3R2R3R2, RotSpace);
   Index dim = S.dim();
   Index repDim = S.representationDim();
-  Eigen::MatrixXd Jf = Eigen::MatrixXd::Random(c, dim);
-  Eigen::VectorXd x = S.getZero().value();
-  S.retractation(x, x, Eigen::VectorXd::Random(dim));
-  Eigen::MatrixXd expectedRes;
+  MatrixXd Jf = MatrixXd::Random(c, dim);
+  VectorXd x = S.getZero().value();
+  S.retractation(x, x, VectorXd::Random(dim));
+  MatrixXd expectedRes;
   expectedRes = Jf * S.diffPseudoLog0(x);
-  Eigen::MatrixXd J(c, repDim);
+  MatrixXd J(c, repDim);
   S.applyDiffPseudoLog0(J, Jf, x);
   BOOST_CHECK(expectedRes.isApprox(J));
 }
@@ -423,7 +424,7 @@ BOOST_AUTO_TEST_CASE(CardProdApplyInvDiff)
 //  CartesianProduct S(R3, RotSpace);
 //  S.multiply(R2);
 //  Index dim = S.dim();
-//  Eigen::MatrixXd H(dim,c);
+//  MatrixXd H(dim,c);
 //  H <<   1, 2, 3, 4,
 //         5, 6, 7, 8,
 //         9,10,11,12,
@@ -432,8 +433,8 @@ BOOST_AUTO_TEST_CASE(CardProdApplyInvDiff)
 //        21,22,23,24,
 //        25,26,27,28,
 //        29,30,31,32;
-//  Eigen::MatrixXd Hout(dim,c);
-//  Eigen::VectorXd v(dim);
+//  MatrixXd Hout(dim,c);
+//  VectorXd v(dim);
 //  v <<  0.141886338627215,
 //        0.421761282626275,
 //        0.915735525189067,
@@ -442,9 +443,9 @@ BOOST_AUTO_TEST_CASE(CardProdApplyInvDiff)
 //        0.240084140666640,
 //        0.792207329559554,
 //        0.959492426392903;
-//  Eigen::VectorXd x = S.getZero().value();
-//  S.retractation(x, x, Eigen::VectorXd::Random(8));
-//  Eigen::MatrixXd expectedRes(dim,c);
+//  VectorXd x = S.getZero().value();
+//  S.retractation(x, x, VectorXd::Random(8));
+//  MatrixXd expectedRes(dim,c);
 //  expectedRes <<   1, 2, 3, 4,
 //                   5, 6, 7, 8,
 //                   9,10,11,12,
@@ -470,13 +471,13 @@ BOOST_AUTO_TEST_CASE(CardProdApplyInvDiff)
 //  CartesianProduct S(R3, RotSpace);
 //  S.multiply(R2);
 //  Index dim = S.dim();
-//  Eigen::MatrixXd H(r,dim);
+//  MatrixXd H(r,dim);
 //  H <<  1, 2, 3, 4, 5, 6, 7, 8,
 //        9,10,11,12,13,14,15,16,
 //       17,18,19,20,21,22,23,24,
 //       25,26,27,28,29,30,31,32;
-//  Eigen::MatrixXd Hout(r,dim);
-//  Eigen::VectorXd v(dim);
+//  MatrixXd Hout(r,dim);
+//  VectorXd v(dim);
 //  v <<  0.013851417189346,
 //        0.029139534370754,
 //        0.247037348498188,
@@ -486,9 +487,9 @@ BOOST_AUTO_TEST_CASE(CardProdApplyInvDiff)
 //        0.010333824150873,
 //        0.131623307896919;
 //
-//  Eigen::VectorXd x = S.getZero().value();
-//  S.retractation(x, x, Eigen::VectorXd::Random(8));
-//  Eigen::MatrixXd expectedRes(r,dim);
+//  VectorXd x = S.getZero().value();
+//  S.retractation(x, x, VectorXd::Random(8));
+//  MatrixXd expectedRes(r,dim);
 //
 //  expectedRes <<   1, 2, 3, 3.211060456124126,  4.703367298475802,
 //  6.675883971635843, 7, 8,
@@ -511,9 +512,9 @@ BOOST_AUTO_TEST_CASE(CartProdLimitMap)
   S.multiply(R2);
   CartesianPower Space(S, 3);
   Index dim = Space.dim();
-  Eigen::VectorXd res(dim);
+  VectorXd res(dim);
   Space.limitMap(res);
-  Eigen::VectorXd expectedRes(dim);
+  VectorXd expectedRes(dim);
   double l = 0.9 * M_PI / sqrt(3);
   double i = std::numeric_limits<double>::infinity();
 
@@ -529,14 +530,14 @@ BOOST_AUTO_TEST_CASE(CardProdGetView)
   SO3<ExpMapMatrix> RotSpace;
   CartesianProduct S(R3, RotSpace);
   S.multiply(R2);
-  Eigen::VectorXd x(14);
+  VectorXd x(14);
   x << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14;
-  Eigen::VectorXd xT(8);
+  VectorXd xT(8);
   xT << 1, 2, 3, 6, 7, 8, 13, 14;
-  Eigen::Vector3d xR3;
-  Eigen::VectorXd xSO3(9);
-  Eigen::VectorXd xSO3T(3);
-  Eigen::Vector2d xR2;
+  Vector3d xR3;
+  VectorXd xSO3(9);
+  VectorXd xSO3T(3);
+  Vector2d xR2;
   xR3 << 1, 2, 3;
   xSO3 << 4, 5, 6, 7, 8, 9, 10, 11, 12;
   xSO3T << 6, 7, 8;
@@ -592,17 +593,17 @@ BOOST_AUTO_TEST_CASE(CardProdNoAllocation)
   CartesianProduct S(SO3R2R3R2, RotSpace);
   Index dim = S.dim();
   Index repDim = S.representationDim();
-  Eigen::VectorXd x = Eigen::VectorXd::Random(repDim);
-  Eigen::VectorXd p = Eigen::VectorXd::Random(dim);
-  Eigen::VectorXd y = Eigen::VectorXd::Random(repDim);
-  Eigen::VectorXd z(repDim);
-  Eigen::VectorXd d(dim);
-  Eigen::MatrixXd J0 = Eigen::MatrixXd::Random(r, repDim);
-  Eigen::MatrixXd J1(r, dim);
-  Eigen::MatrixXd J2(r, repDim);
-  Eigen::MatrixXd H0 = Eigen::MatrixXd::Random(S.dim(), S.dim());
-  Eigen::MatrixXd H1 = Eigen::MatrixXd::Random(S.dim(), S.dim());
-  Eigen::MatrixXd H2 = Eigen::MatrixXd::Random(S.dim(), S.dim());
+  VectorXd x = VectorXd::Random(repDim);
+  VectorXd p = VectorXd::Random(dim);
+  VectorXd y = VectorXd::Random(repDim);
+  VectorXd z(repDim);
+  VectorXd d(dim);
+  MatrixXd J0 = MatrixXd::Random(r, repDim);
+  MatrixXd J1(r, dim);
+  MatrixXd J2(r, repDim);
+  MatrixXd H0 = MatrixXd::Random(S.dim(), S.dim());
+  MatrixXd H1 = MatrixXd::Random(S.dim(), S.dim());
+  MatrixXd H2 = MatrixXd::Random(S.dim(), S.dim());
 
   // The first call to the following methods might trigger a memory allocation
   // depending on the size of the Ji and the initial buffer size inside S.
@@ -626,3 +627,120 @@ BOOST_AUTO_TEST_CASE(CardProdNoAllocation)
   Eigen::internal::set_is_malloc_allowed(true);
 }
 #endif
+
+BOOST_AUTO_TEST_CASE(distance)
+{
+  RealSpace R5(5);
+  SO3<ExpMapQuaternion> so3Q;
+  SO3<ExpMapMatrix> so3M;
+  S2 s2;
+  CartesianProduct M({&R5, &so3Q, &so3M, &s2});
+
+  M.display();
+
+  VectorXd x(21), y(21);
+  double res, expRes;
+
+  M.createRandomPoint(x);
+  y = x;
+  res = M.distance(x, y);
+  expRes = 0;
+  BOOST_CHECK(fabs(res) < 1e-9);
+
+  VectorXd v(14);
+  v = VectorXd::Random(14);
+  M.forceOnTxM(v, v, x);
+  M.retractation(x, x, v);
+
+  res = M.distance(x, y);
+  expRes = sqrt(pow(R5.distance(x.head(5), y.head(5)), 2) +
+                pow(so3Q.distance(x.segment(5, 4), y.segment(5, 4)), 2) +
+                pow(so3M.distance(x.segment(9, 9), y.segment(9, 9)), 2) +
+                pow(s2.distance(x.segment(18, 3), y.segment(18, 3)), 2));
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+
+  v = VectorXd::Random(14);
+  M.forceOnTxM(v, v, y);
+  M.retractation(y, y, v);
+  res = M.distance(x, y);
+  expRes = sqrt(pow(R5.distance(x.head(5), y.head(5)), 2) +
+                pow(so3Q.distance(x.segment(5, 4), y.segment(5, 4)), 2) +
+                pow(so3M.distance(x.segment(9, 9), y.segment(9, 9)), 2) +
+                pow(s2.distance(x.segment(18, 3), y.segment(18, 3)), 2));
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(squaredDistance)
+{
+  RealSpace R5(5);
+  SO3<ExpMapQuaternion> so3Q;
+  SO3<ExpMapMatrix> so3M;
+  S2 s2;
+  CartesianProduct M({&R5, &so3Q, &so3M, &s2});
+
+  M.display();
+
+  VectorXd x(21), y(21);
+  double res, expRes;
+
+  M.createRandomPoint(x);
+  y = x;
+  res = M.squaredDistance(x, y);
+  expRes = 0;
+  BOOST_CHECK(fabs(res) < 1e-9);
+
+  VectorXd v(14);
+  v = VectorXd::Random(14);
+  M.forceOnTxM(v, v, x);
+  M.retractation(x, x, v);
+
+  res = M.squaredDistance(x, y);
+  expRes = R5.squaredDistance(x.head(5), y.head(5)) +
+           so3Q.squaredDistance(x.segment(5, 4), y.segment(5, 4)) +
+           so3M.squaredDistance(x.segment(9, 9), y.segment(9, 9)) +
+           s2.squaredDistance(x.segment(18, 3), y.segment(18, 3));
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+
+  v = VectorXd::Random(14);
+  M.forceOnTxM(v, v, y);
+  M.retractation(y, y, v);
+  res = M.squaredDistance(x, y);
+  expRes = R5.squaredDistance(x.head(5), y.head(5)) +
+           so3Q.squaredDistance(x.segment(5, 4), y.segment(5, 4)) +
+           so3M.squaredDistance(x.segment(9, 9), y.segment(9, 9)) +
+           s2.squaredDistance(x.segment(18, 3), y.segment(18, 3));
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(diffDistance)
+{
+  RealSpace R5(5);
+  SO3<ExpMapQuaternion> so3Q;
+  SO3<ExpMapMatrix> so3M;
+  S2 s2;
+  CartesianProduct M({&R5, &so3Q, &so3M, &s2});
+  VectorXd x(21), y(21);
+  M.createRandomPoint(x);
+  M.createRandomPoint(y);
+  Eigen::Matrix<double, 1, 21> res, expRes;
+  Eigen::Matrix<double, 14, 21> resLog, expResLog;
+
+  double deltaFD = 1e-10;
+  double deltaRes = 1e-3;
+
+  res = M.derivDistanceX(x, y);
+  expRes = utils::FDDerivDistanceX(M, x, y, deltaFD);
+  BOOST_CHECK(res.isApprox(expRes, deltaRes));
+
+  res = M.derivDistanceY(x, y);
+  expRes = utils::FDDerivDistanceY(M, x, y, deltaFD);
+  BOOST_CHECK(res.isApprox(expRes, deltaRes));
+
+  res = M.derivSquaredDistanceX(x, y);
+  expRes = utils::FDDerivSquaredDistanceX(M, x, y, deltaFD);
+  BOOST_CHECK(res.isApprox(expRes, deltaRes));
+
+  res = M.derivSquaredDistanceY(x, y);
+  expRes = utils::FDDerivSquaredDistanceY(M, x, y, deltaFD);
+  BOOST_CHECK(res.isApprox(expRes, deltaRes));
+}
