@@ -464,7 +464,7 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
 
 inline std::ostream& operator<<(std::ostream& os, const Manifold& m)
 {
-  os << m.name() << std::endl;
+  os << m.name();
   return os;
 }
 
