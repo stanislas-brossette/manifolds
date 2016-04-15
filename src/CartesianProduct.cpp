@@ -198,7 +198,7 @@ double CartesianProduct::squaredDistance_(const ConstRefVec& x,
   return out;
 }
 
-double CartesianProduct::squaredDistanceWeighted_(const ConstRefVec& x,
+double CartesianProduct::squaredDistance_(const ConstRefVec& x,
                            const ConstRefVec& y, const ConstRefVec& w) const
 {
   mnf_assert(static_cast<size_t>(w.size()) == subManifolds_.size());
@@ -294,7 +294,7 @@ Eigen::MatrixXd CartesianProduct::derivSquaredDistanceY_(
   return J;
 }
 
-Eigen::MatrixXd CartesianProduct::derivSquaredDistanceWeightedX_(
+Eigen::MatrixXd CartesianProduct::derivSquaredDistanceX_(
     const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const
 {
   Eigen::MatrixXd J(1, representationDim());
@@ -310,7 +310,7 @@ Eigen::MatrixXd CartesianProduct::derivSquaredDistanceWeightedX_(
   return J;
 }
 
-Eigen::MatrixXd CartesianProduct::derivSquaredDistanceWeightedY_(
+Eigen::MatrixXd CartesianProduct::derivSquaredDistanceY_(
     const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const
 {
   Eigen::MatrixXd J(1, representationDim());

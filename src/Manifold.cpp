@@ -188,16 +188,16 @@ double Manifold::squaredDistance(const ConstRefVec& x, const ConstRefVec& y) con
   return squaredDistance_(x, y);
 }
 
-double Manifold::squaredDistanceWeighted(const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& weight) const
+double Manifold::squaredDistance(const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& weight) const
 {
   mnf_assert(x.size() == representationDim_);
   mnf_assert(y.size() == representationDim_);
   mnf_assert(isInM(x));
   mnf_assert(isInM(y));
-  return squaredDistanceWeighted_(x, y, weight);
+  return squaredDistance_(x, y, weight);
 }
 
-double Manifold::squaredDistanceWeighted_(const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& weight) const
+double Manifold::squaredDistance_(const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& weight) const
 {
   mnf_assert(weight.size() == 1);
   return weight[0]*squaredDistance(x,y);
@@ -233,27 +233,27 @@ Eigen::MatrixXd Manifold::derivSquaredDistanceY(const ConstRefVec& x,
   return derivSquaredDistanceY_(x, y);
 }
 
-Eigen::MatrixXd Manifold::derivSquaredDistanceWeightedX(
+Eigen::MatrixXd Manifold::derivSquaredDistanceX(
     const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const
 {
   mnf_assert(x.size() == representationDim_);
   mnf_assert(y.size() == representationDim_);
-  return derivSquaredDistanceWeightedX_(x, y, w);
+  return derivSquaredDistanceX_(x, y, w);
 }
-Eigen::MatrixXd Manifold::derivSquaredDistanceWeightedY(
+Eigen::MatrixXd Manifold::derivSquaredDistanceY(
     const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const
 {
   mnf_assert(x.size() == representationDim_);
   mnf_assert(y.size() == representationDim_);
-  return derivSquaredDistanceWeightedY_(x, y, w);
+  return derivSquaredDistanceY_(x, y, w);
 }
-Eigen::MatrixXd Manifold::derivSquaredDistanceWeightedX_(
+Eigen::MatrixXd Manifold::derivSquaredDistanceX_(
     const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const
 {
   mnf_assert(w.size() == 1);
   return w[0]*w[0]*derivSquaredDistanceX_(x, y);
 }
-Eigen::MatrixXd Manifold::derivSquaredDistanceWeightedY_(
+Eigen::MatrixXd Manifold::derivSquaredDistanceY_(
     const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const
 {
   mnf_assert(w.size() == 1);

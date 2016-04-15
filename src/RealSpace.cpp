@@ -127,7 +127,7 @@ double RealSpace::squaredDistance_(const ConstRefVec& x,
   return out;
 }
 
-double RealSpace::squaredDistanceWeighted_(const ConstRefVec& x,
+double RealSpace::squaredDistance_(const ConstRefVec& x,
                            const ConstRefVec& y, const ConstRefVec& w) const
 {
   mnf_assert(w.size() == dim());
@@ -174,7 +174,7 @@ Eigen::MatrixXd RealSpace::derivSquaredDistanceY_(const ConstRefVec& x,
   J *= 2;
   return J;
 }
-Eigen::MatrixXd RealSpace::derivSquaredDistanceWeightedX_(
+Eigen::MatrixXd RealSpace::derivSquaredDistanceX_(
     const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const
 {
   Eigen::MatrixXd J(1, representationDim());
@@ -183,7 +183,7 @@ Eigen::MatrixXd RealSpace::derivSquaredDistanceWeightedX_(
   J *= -2;
   return J;
 }
-Eigen::MatrixXd RealSpace::derivSquaredDistanceWeightedY_(
+Eigen::MatrixXd RealSpace::derivSquaredDistanceY_(
     const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const
 {
   Eigen::MatrixXd J(1, representationDim());

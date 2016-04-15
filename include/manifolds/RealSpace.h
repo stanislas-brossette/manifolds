@@ -64,7 +64,7 @@ class MANIFOLDS_API RealSpace : public Manifold
                           const ConstRefVec& y) const;
   virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const;
   virtual double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y) const;
-  virtual double squaredDistanceWeighted_(const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const;
+  virtual double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const;
   virtual double distance_(const ConstRefVec& x, const ConstRefVec& y) const;
   virtual Eigen::MatrixXd derivDistanceX_(const ConstRefVec& x,
                                           const ConstRefVec& y) const;
@@ -74,9 +74,9 @@ class MANIFOLDS_API RealSpace : public Manifold
                                                  const ConstRefVec& y) const;
   virtual Eigen::MatrixXd derivSquaredDistanceY_(const ConstRefVec& x,
                                                  const ConstRefVec& y) const;
-  virtual Eigen::MatrixXd derivSquaredDistanceWeightedX_(
+  virtual Eigen::MatrixXd derivSquaredDistanceX_(
       const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const;
-  virtual Eigen::MatrixXd derivSquaredDistanceWeightedY_(
+  virtual Eigen::MatrixXd derivSquaredDistanceY_(
       const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const;
   virtual void setZero_(RefVec out) const;
   virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const;

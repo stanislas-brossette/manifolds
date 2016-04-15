@@ -762,7 +762,7 @@ BOOST_AUTO_TEST_CASE(squaredDistanceWeighted)
 
   M.createRandomPoint(x);
   y = x;
-  res = M.squaredDistanceWeighted(x, y, w);
+  res = M.squaredDistance(x, y, w);
   expRes = 0;
   BOOST_CHECK(fabs(res) < 1e-9);
 
@@ -771,7 +771,7 @@ BOOST_AUTO_TEST_CASE(squaredDistanceWeighted)
   M.forceOnTxM(v, v, x);
   M.retractation(x, x, v);
 
-  res = M.squaredDistanceWeighted(x, y, w);
+  res = M.squaredDistance(x, y, w);
   expRes =
       w(0) * w(0) * pow(R5.distance(x.head(5), y.head(5)), 2) +
       w(1) * w(1) * pow(so3Q.distance(x.segment(5, 4), y.segment(5, 4)), 2) +
@@ -782,7 +782,7 @@ BOOST_AUTO_TEST_CASE(squaredDistanceWeighted)
   v = VectorXd::Random(14);
   M.forceOnTxM(v, v, y);
   M.retractation(y, y, v);
-  res = M.squaredDistanceWeighted(x, y, w);
+  res = M.squaredDistance(x, y, w);
   expRes =
       w(0) * w(0) * pow(R5.distance(x.head(5), y.head(5)), 2) +
       w(1) * w(1) * pow(so3Q.distance(x.segment(5, 4), y.segment(5, 4)), 2) +
