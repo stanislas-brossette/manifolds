@@ -73,6 +73,7 @@ class MANIFOLDS_API CartesianProduct : public Manifold
                           const ConstRefVec& y) const;
   virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const;
   virtual double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y) const;
+  virtual double squaredDistanceWeighted_(const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const;
   virtual double distance_(const ConstRefVec& x, const ConstRefVec& y) const;
   virtual void setZero_(RefVec out) const;
   virtual Eigen::MatrixXd derivDistanceX_(const ConstRefVec& x,
@@ -83,6 +84,12 @@ class MANIFOLDS_API CartesianProduct : public Manifold
                                                  const ConstRefVec& y) const;
   virtual Eigen::MatrixXd derivSquaredDistanceY_(const ConstRefVec& x,
                                                  const ConstRefVec& y) const;
+
+  virtual Eigen::MatrixXd derivSquaredDistanceWeightedX_(
+      const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const;
+  virtual Eigen::MatrixXd derivSquaredDistanceWeightedY_(
+      const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const;
+
   virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const;
   virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in,
                                       const ConstRefVec& x) const;

@@ -184,6 +184,14 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   /// \return out value of the squaredDistance
   double squaredDistance(const ConstRefVec& x, const ConstRefVec& y) const;
 
+  /// @brief Computes the weighted squaredDistance between 2 points
+  /// \f$ out = squaredNorm({Log}_x(y)) \f$
+  /// \param x element of the manifold\f$x\in\mathbb{M}\f$
+  /// \param y element of the manifold\f$x\in\mathbb{M}\f$
+  /// \param weight vector containing one weight per submanifold$
+  /// \return out value of the weighted squaredDistance
+  double squaredDistanceWeighted(const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& weight) const;
+
   /// @brief Computes the distance between 2 points
   /// \f$ out = norm({Log}_x(y)) \f$
   /// \param x element of the manifold\f$x\in\mathbb{M}\f$
@@ -220,6 +228,26 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   /// \return value of the squared distance derivative
   Eigen::MatrixXd derivSquaredDistanceY(const ConstRefVec& x,
                                         const ConstRefVec& y) const;
+
+  /// @brief Computes the derivative of squared distance weighted WRT the representation
+  /// of x
+  /// \param x element of the manifold\f$x\in\mathbb{M}\f$
+  /// \param y element of the manifold\f$x\in\mathbb{M}\f$
+  /// \param weight vector containing one weight per submanifold$
+  /// \return value of the squared distance weighted derivative
+  Eigen::MatrixXd derivSquaredDistanceWeightedX(const ConstRefVec& x,
+                                                const ConstRefVec& y,
+                                                const ConstRefVec& w) const;
+
+  /// @brief Computes the derivative of squared distance weighted WRT the representation
+  /// of y
+  /// \param x element of the manifold\f$x\in\mathbb{M}\f$
+  /// \param y element of the manifold\f$x\in\mathbb{M}\f$
+  /// \param weight vector containing one weight per submanifold$
+  /// \return value of the squared distance weighted derivative
+  Eigen::MatrixXd derivSquaredDistanceWeightedY(const ConstRefVec& x,
+                                                const ConstRefVec& y,
+                                                const ConstRefVec& w) const;
 
   /// \brief Computes the Jacobian matrix of the map function
   /// \f$\frac{\partial\phi_x}{\partial v}(0)\f$
@@ -397,6 +425,7 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
                           const ConstRefVec& v) const = 0;
   virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const = 0;
   virtual double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y) const = 0;
+  virtual double squaredDistanceWeighted_(const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const;
   virtual double distance_(const ConstRefVec& x, const ConstRefVec& y) const = 0;
   virtual void setZero_(RefVec out) const = 0;
   virtual Eigen::MatrixXd derivDistanceX_(const ConstRefVec& x,
@@ -407,6 +436,10 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
       const ConstRefVec& x, const ConstRefVec& y) const = 0;
   virtual Eigen::MatrixXd derivSquaredDistanceY_(
       const ConstRefVec& x, const ConstRefVec& y) const = 0;
+  virtual Eigen::MatrixXd derivSquaredDistanceWeightedX_(
+      const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const;
+  virtual Eigen::MatrixXd derivSquaredDistanceWeightedY_(
+      const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const;
   virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const = 0;
   virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in,
                                       const ConstRefVec& x) const = 0;

@@ -198,6 +198,20 @@ double CartesianProduct::squaredDistance_(const ConstRefVec& x,
   return out;
 }
 
+double CartesianProduct::squaredDistanceWeighted_(const ConstRefVec& x,
+                           const ConstRefVec& y, const ConstRefVec& w) const
+{
+  mnf_assert(static_cast<size_t>(w.size()) == subManifolds_.size());
+  double out = 0;
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+  {
+    out += w[static_cast<Index>(i)] * w[static_cast<Index>(i)] *
+           subManifolds_[i]->squaredDistance(getConstView<R>(x, i),
+                                             getConstView<R>(y, i));
+  }
+  return out;
+}
+
 double CartesianProduct::distance_(const ConstRefVec& x,
                            const ConstRefVec& y) const
 {
@@ -274,6 +288,38 @@ Eigen::MatrixXd CartesianProduct::derivSquaredDistanceY_(
   for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
     getView<R>(Jvec, i) =
+        (subManifolds_[i]->derivSquaredDistanceY(
+             getConstView<R>(x, i), getConstView<R>(y, i))).transpose();
+  }
+  return J;
+}
+
+Eigen::MatrixXd CartesianProduct::derivSquaredDistanceWeightedX_(
+    const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const
+{
+  Eigen::MatrixXd J(1, representationDim());
+  J.setZero();
+  Eigen::Map<Eigen::VectorXd> Jvec(J.data(), representationDim());
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+  {
+    getView<R>(Jvec, i) =
+        w[static_cast<Index>(i)] * w[static_cast<Index>(i)] *
+        (subManifolds_[i]->derivSquaredDistanceX(
+             getConstView<R>(x, i), getConstView<R>(y, i))).transpose();
+  }
+  return J;
+}
+
+Eigen::MatrixXd CartesianProduct::derivSquaredDistanceWeightedY_(
+    const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const
+{
+  Eigen::MatrixXd J(1, representationDim());
+  J.setZero();
+  Eigen::Map<Eigen::VectorXd> Jvec(J.data(), representationDim());
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+  {
+    getView<R>(Jvec, i) =
+        w[static_cast<Index>(i)] * w[static_cast<Index>(i)] *
         (subManifolds_[i]->derivSquaredDistanceY(
              getConstView<R>(x, i), getConstView<R>(y, i))).transpose();
   }

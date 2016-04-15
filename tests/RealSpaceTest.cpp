@@ -357,3 +357,35 @@ BOOST_AUTO_TEST_CASE(diffDistance)
   std::cout << "expRes:\n" << expRes << std::endl;
   BOOST_CHECK(res.isApprox(expRes, deltaRes));
 }
+
+BOOST_AUTO_TEST_CASE(squaredDistanceWeighted)
+{
+  RealSpace M(9);
+  VectorXd x(9), y(9), w(9);
+
+  double res, expRes;
+
+  w << 0, 3, 1, 2, 0, 5, 0, 2, 2;
+
+  M.createRandomPoint(x);
+  y = x;
+  res = M.squaredDistanceWeighted(x, y, w);
+  expRes = 0;
+  BOOST_CHECK(fabs(res) < 1e-9);
+
+  VectorXd v(9);
+  v = VectorXd::Random(9);
+  M.forceOnTxM(v, v, x);
+  M.retractation(x, x, v);
+
+  res = M.squaredDistanceWeighted(x, y, w);
+  expRes = (w.array()*(y-x).array()).matrix().squaredNorm();
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+
+  v = VectorXd::Random(9);
+  M.forceOnTxM(v, v, y);
+  M.retractation(y, y, v);
+  res = M.squaredDistanceWeighted(x, y, w);
+  expRes = (w.array()*(y-x).array()).matrix().squaredNorm();
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+}

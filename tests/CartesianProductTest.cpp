@@ -744,3 +744,49 @@ BOOST_AUTO_TEST_CASE(diffDistance)
   expRes = utils::FDDerivSquaredDistanceY(M, x, y, deltaFD);
   BOOST_CHECK(res.isApprox(expRes, deltaRes));
 }
+
+BOOST_AUTO_TEST_CASE(squaredDistanceWeighted)
+{
+  RealSpace R5(5);
+  SO3<ExpMapQuaternion> so3Q;
+  SO3<ExpMapMatrix> so3M;
+  S2 s2;
+  CartesianProduct M({&R5, &so3Q, &so3M, &s2});
+
+  M.display();
+
+  VectorXd x(21), y(21), w(4);
+  double res, expRes;
+
+  w << 0, 3, 1, 2;
+
+  M.createRandomPoint(x);
+  y = x;
+  res = M.squaredDistanceWeighted(x, y, w);
+  expRes = 0;
+  BOOST_CHECK(fabs(res) < 1e-9);
+
+  VectorXd v(14);
+  v = VectorXd::Random(14);
+  M.forceOnTxM(v, v, x);
+  M.retractation(x, x, v);
+
+  res = M.squaredDistanceWeighted(x, y, w);
+  expRes =
+      w(0) * w(0) * pow(R5.distance(x.head(5), y.head(5)), 2) +
+      w(1) * w(1) * pow(so3Q.distance(x.segment(5, 4), y.segment(5, 4)), 2) +
+      w(2) * w(2) * pow(so3M.distance(x.segment(9, 9), y.segment(9, 9)), 2) +
+      w(3) * w(3) * pow(s2.distance(x.segment(18, 3), y.segment(18, 3)), 2);
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+
+  v = VectorXd::Random(14);
+  M.forceOnTxM(v, v, y);
+  M.retractation(y, y, v);
+  res = M.squaredDistanceWeighted(x, y, w);
+  expRes =
+      w(0) * w(0) * pow(R5.distance(x.head(5), y.head(5)), 2) +
+      w(1) * w(1) * pow(so3Q.distance(x.segment(5, 4), y.segment(5, 4)), 2) +
+      w(2) * w(2) * pow(so3M.distance(x.segment(9, 9), y.segment(9, 9)), 2) +
+      w(3) * w(3) * pow(s2.distance(x.segment(18, 3), y.segment(18, 3)), 2);
+  BOOST_CHECK_CLOSE(res, expRes, 1e-9);
+}
