@@ -62,6 +62,8 @@ class SO3 : public Manifold
                           const ConstRefVec& y) const;
   virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const;
   virtual double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y) const;
+  virtual double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y,
+                                  const ConstRefVec& w) const;
   virtual double distance_(const ConstRefVec& x, const ConstRefVec& y) const;
   virtual Eigen::MatrixXd derivDistanceX_(const ConstRefVec& x,
                                           const ConstRefVec& y) const;
@@ -71,6 +73,12 @@ class SO3 : public Manifold
                                                  const ConstRefVec& y) const;
   virtual Eigen::MatrixXd derivSquaredDistanceY_(const ConstRefVec& x,
                                                  const ConstRefVec& y) const;
+  virtual Eigen::MatrixXd derivSquaredDistanceX_(const ConstRefVec& x,
+                                                 const ConstRefVec& y,
+                                                 const ConstRefVec& w) const;
+  virtual Eigen::MatrixXd derivSquaredDistanceY_(const ConstRefVec& x,
+                                                 const ConstRefVec& y,
+                                                 const ConstRefVec& w) const;
   virtual void setZero_(RefVec out) const;
   virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const;
   virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in,
@@ -214,6 +222,13 @@ inline double SO3<Map>::squaredDistance_(const ConstRefVec& x,
 {
   return Map::squaredDistance_(x, y);
 }
+template <typename Map>
+inline double SO3<Map>::squaredDistance_(const ConstRefVec& x,
+                                         const ConstRefVec& y,
+                                         const ConstRefVec& w) const
+{
+  return Map::squaredDistance_(x, y, w);
+}
 
 template <typename Map>
 inline double SO3<Map>::distance_(const ConstRefVec& x,
@@ -248,6 +263,20 @@ inline Eigen::MatrixXd SO3<Map>::derivSquaredDistanceY_(
     const ConstRefVec& x, const ConstRefVec& y) const
 {
   return Map::derivSquaredDistanceY_(x, y);
+}
+
+template <typename Map>
+inline Eigen::MatrixXd SO3<Map>::derivSquaredDistanceX_(
+    const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const
+{
+  return Map::derivSquaredDistanceX_(x, y, w);
+}
+
+template <typename Map>
+inline Eigen::MatrixXd SO3<Map>::derivSquaredDistanceY_(
+    const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const
+{
+  return Map::derivSquaredDistanceY_(x, y, w);
 }
 
 template <typename Map>

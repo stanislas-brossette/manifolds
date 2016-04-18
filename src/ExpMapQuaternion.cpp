@@ -128,35 +128,39 @@ void ExpMapQuaternion::pseudoLog0_(RefVec out, const ConstRefVec& x)
   logarithm(out, x);
 }
 
-double ExpMapQuaternion::distance_(const ConstRefVec& x,
-                              const ConstRefVec& y)
+Eigen::Vector3d ExpMapQuaternion::getLog(const ConstRefVec& x, const ConstRefVec& y, Eigen::Vector4d& tmp)
 {
-  Eigen::Vector4d tmp;
   toQuat q(tmp.data());
   const toConstQuat xQ(x.data());
   const toConstQuat yQ(y.data());
   q = xQ.inverse() * yQ;  // TODO double-check that formula
   q.writeChanges();
-  Eigen::Vector3d logV;
-  logarithm(logV, tmp);
-  double dist = logV.norm();
-  return dist;
+  Eigen::Vector3d d;
+  logarithm(d, tmp);
+  return d;
+}
+
+double ExpMapQuaternion::distance_(const ConstRefVec& x,
+                              const ConstRefVec& y)
+{
+  Eigen::Vector4d tmp;
+  return getLog(x, y, tmp).norm();
 }
 
 double ExpMapQuaternion::squaredDistance_(const ConstRefVec& x,
                               const ConstRefVec& y)
 {
   Eigen::Vector4d tmp;
-  toQuat q(tmp.data());
-  const toConstQuat xQ(x.data());
-  const toConstQuat yQ(y.data());
-  q = xQ.inverse() * yQ;  // TODO double-check that formula
-  q.writeChanges();
-  Eigen::Vector3d logV;
-  logarithm(logV, tmp);
-  double dist = logV.squaredNorm();
-  return dist;
-  return 0;
+  return getLog(x, y, tmp).squaredNorm();
+}
+
+double ExpMapQuaternion::squaredDistance_(const ConstRefVec& x,
+                              const ConstRefVec& y, const ConstRefVec& w)
+{
+  Eigen::Vector4d tmp;
+  Eigen::Vector3d d = getLog(x,y, tmp);
+  d = (w.array() * d.array()).matrix();
+  return d.squaredNorm();
 }
 
 Eigen::Matrix<double, 4, 4> diffInvXTimesYdx(const ConstRefVec& x,
@@ -221,15 +225,8 @@ Eigen::Matrix<double, 4, 4> diffInvXTimesYdy(const ConstRefVec& x,
 Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivDistanceX_(
     const ConstRefVec& x, const ConstRefVec& y)
 {
-  OutputType tmp;
-  toQuat q(tmp.data());
-  toConstQuat xQ(x.data());
-  toConstQuat yQ(y.data());
-  q = xQ.inverse() * yQ;  // TODO double-check that formula
-  q.writeChanges();
-
-  Eigen::Vector3d d;
-  logarithm(d, tmp);
+  Eigen::Vector4d tmp;
+  Eigen::Vector3d d = getLog(x,y, tmp);
   Eigen::Matrix<double, 1, 3> n = d.transpose() / d.norm();
 
   Eigen::Matrix<double, 3, 4> diffLog = diffPseudoLog0_(tmp);
@@ -241,15 +238,8 @@ Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivDistanceX_(
 Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivDistanceY_(
     const ConstRefVec& x, const ConstRefVec& y)
 {
-  OutputType tmp;
-  toQuat q(tmp.data());
-  toConstQuat xQ(x.data());
-  toConstQuat yQ(y.data());
-  q = xQ.inverse() * yQ;  // TODO double-check that formula
-  q.writeChanges();
-
-  Eigen::Vector3d d;
-  logarithm(d, tmp);
+  Eigen::Vector4d tmp;
+  Eigen::Vector3d d = getLog(x,y, tmp);
   Eigen::Matrix<double, 1, 3> n = d.transpose() / d.norm();
 
   Eigen::Matrix<double, 3, 4> diffLog = diffPseudoLog0_(tmp);
@@ -261,15 +251,8 @@ Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivDistanceY_(
 Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivSquaredDistanceX_(
     const ConstRefVec& x, const ConstRefVec& y)
 {
-  OutputType tmp;
-  toQuat q(tmp.data());
-  toConstQuat xQ(x.data());
-  toConstQuat yQ(y.data());
-  q = xQ.inverse() * yQ;  // TODO double-check that formula
-  q.writeChanges();
-
-  Eigen::Vector3d d;
-  logarithm(d, tmp);
+  Eigen::Vector4d tmp;
+  Eigen::Vector3d d = getLog(x,y, tmp);
   Eigen::Matrix<double, 1, 3> n = 2 * d.transpose();
 
   Eigen::Matrix<double, 3, 4> diffLog = diffPseudoLog0_(tmp);
@@ -281,15 +264,36 @@ Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivSquaredDistanceX_(
 Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivSquaredDistanceY_(
     const ConstRefVec& x, const ConstRefVec& y)
 {
-  OutputType tmp;
-  toQuat q(tmp.data());
-  toConstQuat xQ(x.data());
-  toConstQuat yQ(y.data());
-  q = xQ.inverse() * yQ;  // TODO double-check that formula
-  q.writeChanges();
+  Eigen::Vector4d tmp;
+  Eigen::Vector3d d = getLog(x,y, tmp);
+  Eigen::Matrix<double, 1, 3> n = 2 * d.transpose();
 
-  Eigen::Vector3d d;
-  logarithm(d, tmp);
+  Eigen::Matrix<double, 3, 4> diffLog = diffPseudoLog0_(tmp);
+
+  Eigen::Matrix<double, 1, 4> J;
+  J = n * diffLog * diffInvXTimesYdy(x, y);
+  return J;
+}
+Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivSquaredDistanceX_(
+    const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w)
+{
+  Eigen::Vector4d tmp;
+  Eigen::Vector3d d = getLog(x,y, tmp);
+  d = (w.array() * d.array()).matrix();
+  Eigen::Matrix<double, 1, 3> n = 2 * d.transpose();
+
+  Eigen::Matrix<double, 3, 4> diffLog = diffPseudoLog0_(tmp);
+
+  Eigen::Matrix<double, 1, 4> J;
+  J = n * diffLog * diffInvXTimesYdx(x, y);
+  return J;
+}
+Eigen::Matrix<double, 1, 4> ExpMapQuaternion::derivSquaredDistanceY_(
+    const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w)
+{
+  Eigen::Vector4d tmp;
+  Eigen::Vector3d d = getLog(x,y, tmp);
+  d = (w.array() * d.array()).matrix();
   Eigen::Matrix<double, 1, 3> n = 2 * d.transpose();
 
   Eigen::Matrix<double, 3, 4> diffLog = diffPseudoLog0_(tmp);

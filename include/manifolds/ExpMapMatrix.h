@@ -54,6 +54,8 @@ struct MANIFOLDS_API ExpMapMatrix
                          const ConstRefVec& y);
   static void pseudoLog0_(RefVec out, const ConstRefVec& x);
   static double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y);
+  static double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y,
+                                 const ConstRefVec& w);
   static double distance_(const ConstRefVec& x, const ConstRefVec& y);
   static Eigen::Matrix<double, 1, 9> derivDistanceX_(const ConstRefVec& x,
                                                      const ConstRefVec& y);
@@ -63,6 +65,10 @@ struct MANIFOLDS_API ExpMapMatrix
       const ConstRefVec& x, const ConstRefVec& y);
   static Eigen::Matrix<double, 1, 9> derivSquaredDistanceY_(
       const ConstRefVec& x, const ConstRefVec& y);
+  static Eigen::Matrix<double, 1, 9> derivSquaredDistanceX_(
+      const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w);
+  static Eigen::Matrix<double, 1, 9> derivSquaredDistanceY_(
+      const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w);
   static void setZero_(RefVec out);
 
   static void logarithm(RefVec out, const OutputType& M);

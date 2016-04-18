@@ -755,10 +755,13 @@ BOOST_AUTO_TEST_CASE(squaredDistanceWeighted)
 
   M.display();
 
-  VectorXd x(21), y(21), w(4);
+  VectorXd x(21), y(21), w(14);
   double res, expRes;
 
-  w << 0, 3, 1, 2;
+  w << 0.4, 0.4, 0.4, 0.4, 0.4,
+    3, 3, 3,
+    1, 1, 1,
+    2, 2, 2;
 
   M.createRandomPoint(x);
   y = x;
@@ -774,9 +777,9 @@ BOOST_AUTO_TEST_CASE(squaredDistanceWeighted)
   res = M.squaredDistance(x, y, w);
   expRes =
       w(0) * w(0) * pow(R5.distance(x.head(5), y.head(5)), 2) +
-      w(1) * w(1) * pow(so3Q.distance(x.segment(5, 4), y.segment(5, 4)), 2) +
-      w(2) * w(2) * pow(so3M.distance(x.segment(9, 9), y.segment(9, 9)), 2) +
-      w(3) * w(3) * pow(s2.distance(x.segment(18, 3), y.segment(18, 3)), 2);
+      w(5) * w(5) * pow(so3Q.distance(x.segment(5, 4), y.segment(5, 4)), 2) +
+      w(8) * w(8) * pow(so3M.distance(x.segment(9, 9), y.segment(9, 9)), 2) +
+      w(11) * w(11) * pow(s2.distance(x.segment(18, 3), y.segment(18, 3)), 2);
   BOOST_CHECK_CLOSE(res, expRes, 1e-9);
 
   v = VectorXd::Random(14);
@@ -785,8 +788,8 @@ BOOST_AUTO_TEST_CASE(squaredDistanceWeighted)
   res = M.squaredDistance(x, y, w);
   expRes =
       w(0) * w(0) * pow(R5.distance(x.head(5), y.head(5)), 2) +
-      w(1) * w(1) * pow(so3Q.distance(x.segment(5, 4), y.segment(5, 4)), 2) +
-      w(2) * w(2) * pow(so3M.distance(x.segment(9, 9), y.segment(9, 9)), 2) +
-      w(3) * w(3) * pow(s2.distance(x.segment(18, 3), y.segment(18, 3)), 2);
+      w(5) * w(5) * pow(so3Q.distance(x.segment(5, 4), y.segment(5, 4)), 2) +
+      w(8) * w(8) * pow(so3M.distance(x.segment(9, 9), y.segment(9, 9)), 2) +
+      w(11) * w(11) * pow(s2.distance(x.segment(18, 3), y.segment(18, 3)), 2);
   BOOST_CHECK_CLOSE(res, expRes, 1e-9);
 }

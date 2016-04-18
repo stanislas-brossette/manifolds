@@ -187,27 +187,26 @@ void CartesianProduct::pseudoLog0_(RefVec out, const ConstRefVec& x) const
 }
 
 double CartesianProduct::squaredDistance_(const ConstRefVec& x,
-                           const ConstRefVec& y) const
+                                          const ConstRefVec& y) const
 {
   double out = 0;
   for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
     out += subManifolds_[i]->squaredDistance(getConstView<R>(x, i),
-                                      getConstView<R>(y, i));
+                                             getConstView<R>(y, i));
   }
   return out;
 }
 
 double CartesianProduct::squaredDistance_(const ConstRefVec& x,
-                           const ConstRefVec& y, const ConstRefVec& w) const
+                                          const ConstRefVec& y,
+                                          const ConstRefVec& w) const
 {
-  mnf_assert(static_cast<size_t>(w.size()) == subManifolds_.size());
   double out = 0;
   for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
-    out += w[static_cast<Index>(i)] * w[static_cast<Index>(i)] *
-           subManifolds_[i]->squaredDistance(getConstView<R>(x, i),
-                                             getConstView<R>(y, i));
+    out += subManifolds_[i]->squaredDistance(
+        getConstView<R>(x, i), getConstView<R>(y, i), getConstView<T>(w, i));
   }
   return out;
 }
@@ -219,7 +218,7 @@ double CartesianProduct::distance_(const ConstRefVec& x,
   for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
     out += subManifolds_[i]->squaredDistance(getConstView<R>(x, i),
-                                      getConstView<R>(y, i));
+                                             getConstView<R>(y, i));
   }
   return sqrt(out);
 }
@@ -302,10 +301,11 @@ Eigen::MatrixXd CartesianProduct::derivSquaredDistanceX_(
   Eigen::Map<Eigen::VectorXd> Jvec(J.data(), representationDim());
   for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
-    getView<R>(Jvec, i) =
-        w[static_cast<Index>(i)] * w[static_cast<Index>(i)] *
-        (subManifolds_[i]->derivSquaredDistanceX(
-             getConstView<R>(x, i), getConstView<R>(y, i))).transpose();
+    getView<R>(Jvec, i) = subManifolds_[i]
+                              ->derivSquaredDistanceX(getConstView<R>(x, i),
+                                                      getConstView<R>(y, i),
+                                                      getConstView<T>(w, i))
+                              .transpose();
   }
   return J;
 }
@@ -318,10 +318,11 @@ Eigen::MatrixXd CartesianProduct::derivSquaredDistanceY_(
   Eigen::Map<Eigen::VectorXd> Jvec(J.data(), representationDim());
   for (size_t i = 0; i < subManifolds_.size(); ++i)
   {
-    getView<R>(Jvec, i) =
-        w[static_cast<Index>(i)] * w[static_cast<Index>(i)] *
-        (subManifolds_[i]->derivSquaredDistanceY(
-             getConstView<R>(x, i), getConstView<R>(y, i))).transpose();
+    getView<R>(Jvec, i) = subManifolds_[i]
+                              ->derivSquaredDistanceY(getConstView<R>(x, i),
+                                                      getConstView<R>(y, i),
+                                                      getConstView<T>(w, i))
+                              .transpose();
   }
   return J;
 }

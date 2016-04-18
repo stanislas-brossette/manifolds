@@ -425,7 +425,7 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
                           const ConstRefVec& v) const = 0;
   virtual void pseudoLog0_(RefVec out, const ConstRefVec& x) const = 0;
   virtual double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y) const = 0;
-  virtual double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const;
+  virtual double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const = 0;
   virtual double distance_(const ConstRefVec& x, const ConstRefVec& y) const = 0;
   virtual void setZero_(RefVec out) const = 0;
   virtual Eigen::MatrixXd derivDistanceX_(const ConstRefVec& x,
@@ -437,9 +437,11 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   virtual Eigen::MatrixXd derivSquaredDistanceY_(
       const ConstRefVec& x, const ConstRefVec& y) const = 0;
   virtual Eigen::MatrixXd derivSquaredDistanceX_(
-      const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const;
+      const ConstRefVec& x, const ConstRefVec& y,
+      const ConstRefVec& w) const = 0;
   virtual Eigen::MatrixXd derivSquaredDistanceY_(
-      const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const;
+      const ConstRefVec& x, const ConstRefVec& y,
+      const ConstRefVec& w) const = 0;
   virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const = 0;
   virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in,
                                       const ConstRefVec& x) const = 0;

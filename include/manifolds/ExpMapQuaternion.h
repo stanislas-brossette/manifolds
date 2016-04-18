@@ -74,7 +74,10 @@ struct MANIFOLDS_API ExpMapQuaternion
   static void pseudoLog_(RefVec out, const ConstRefVec& x,
                          const ConstRefVec& y);
   static void pseudoLog0_(RefVec out, const ConstRefVec& x);
+  static Eigen::Vector3d getLog(const ConstRefVec& x, const ConstRefVec& y, Eigen::Vector4d& tmp);
   static double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y);
+  static double squaredDistance_(const ConstRefVec& x, const ConstRefVec& y,
+                                 const ConstRefVec& w);
   static double distance_(const ConstRefVec& x, const ConstRefVec& y);
   static Eigen::Matrix<double, 1, 4> derivDistanceX_(const ConstRefVec& x,
                                                      const ConstRefVec& y);
@@ -84,6 +87,10 @@ struct MANIFOLDS_API ExpMapQuaternion
       const ConstRefVec& x, const ConstRefVec& y);
   static Eigen::Matrix<double, 1, 4> derivSquaredDistanceY_(
       const ConstRefVec& x, const ConstRefVec& y);
+  static Eigen::Matrix<double, 1, 4> derivSquaredDistanceX_(
+      const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w);
+  static Eigen::Matrix<double, 1, 4> derivSquaredDistanceY_(
+      const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w);
   static void setZero_(RefVec out);
 
   static void logarithm(RefVec out, const OutputType& M);

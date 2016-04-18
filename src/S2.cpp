@@ -126,6 +126,15 @@ double S2::squaredDistance_(const ConstRefVec& x, const ConstRefVec& y) const
   return res;
 }
 
+double S2::squaredDistance_(const ConstRefVec& x, const ConstRefVec& y, const ConstRefVec& w) const
+{
+  // double d = x.dot(y);
+  // double res = pow(acos(d),2);
+  // WARNING: This is ugly. The weight shoud multiply the log. But weight per direction of the tangent space does not make much sense except for RealSpace. So it does not really matter here.
+  double res = pow(w(0)*(1 - x.dot(y)), 2);
+  return res;
+}
+
 Eigen::MatrixXd S2::derivDistanceX_(const ConstRefVec& /*x*/,
                                     const ConstRefVec& y) const
 {
@@ -150,6 +159,7 @@ Eigen::MatrixXd S2::derivDistanceY_(const ConstRefVec& x,
 
   return J;
 }
+
 Eigen::MatrixXd S2::derivSquaredDistanceX_(const ConstRefVec& x,
                                            const ConstRefVec& y) const
 {
@@ -173,6 +183,37 @@ Eigen::MatrixXd S2::derivSquaredDistanceY_(const ConstRefVec& x,
 
   double coeff = 2 * (1 - x.dot(y));
   J = -coeff * x;
+
+  return J;
+}
+
+Eigen::MatrixXd S2::derivSquaredDistanceX_(const ConstRefVec& x,
+                                           const ConstRefVec& y,
+                                           const ConstRefVec& w) const
+{
+  Eigen::Matrix<double, 1, 3> J;
+
+  // double coeff = -2*distance(x,y)/sqrt(1-pow(x.dot(y),2));
+  // J = (coeff*y).transpose();
+
+  double coeff = 2 * (1 - x.dot(y));
+  // WARNING: This is ugly. The weight shoud multiply the log. But weight per direction of the tangent space does not make much sense except for RealSpace. So it does not really matter here.
+  J = -coeff * y * w(0) * w(0);
+
+  return J;
+}
+Eigen::MatrixXd S2::derivSquaredDistanceY_(const ConstRefVec& x,
+                                           const ConstRefVec& y,
+                                           const ConstRefVec& w) const
+{
+  Eigen::Matrix<double, 1, 3> J;
+
+  // double coeff = -2*distance(x,y)/sqrt(1-pow(x.dot(y),2));
+  // J = (coeff*x).transpose();
+
+  double coeff = 2 * (1 - x.dot(y));
+  // WARNING: This is ugly. The weight shoud multiply the log. But weight per direction of the tangent space does not make much sense except for RealSpace. So it does not really matter here.
+  J = -coeff * x * w(0) * w(0);
 
   return J;
 }

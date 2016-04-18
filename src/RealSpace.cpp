@@ -130,13 +130,7 @@ double RealSpace::squaredDistance_(const ConstRefVec& x,
 double RealSpace::squaredDistance_(const ConstRefVec& x,
                            const ConstRefVec& y, const ConstRefVec& w) const
 {
-  mnf_assert(w.size() == dim());
-
-  double out = 0;
-  for(Index i=0; i<dim(); ++i)
-  {
-    out += w[i] * w[i] * (y[i] - x[i]) * (y[i] - x[i]);
-  }
+  double out = (w.array()*(y - x).array()).matrix().squaredNorm();
   return out;
 }
 
@@ -179,7 +173,7 @@ Eigen::MatrixXd RealSpace::derivSquaredDistanceX_(
 {
   Eigen::MatrixXd J(1, representationDim());
   J = y.transpose() - x.transpose();
-  J = (J.array()*w.array()*w.array()).matrix();
+  J = (J.array()*w.transpose().array()*w.transpose().array()).matrix();
   J *= -2;
   return J;
 }
@@ -188,7 +182,7 @@ Eigen::MatrixXd RealSpace::derivSquaredDistanceY_(
 {
   Eigen::MatrixXd J(1, representationDim());
   J = y.transpose() - x.transpose();
-  J = (J.array()*w.array()*w.array()).matrix();
+  J = (J.array()*w.transpose().array()*w.transpose().array()).matrix();
   J *= 2;
   return J;
 }
