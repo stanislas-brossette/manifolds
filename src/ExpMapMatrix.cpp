@@ -293,12 +293,12 @@ Eigen::Matrix<double, 1, 9> ExpMapMatrix::derivSquaredDistanceY_(
 void ExpMapMatrix::logarithm(RefVec out, const OutputType& R)
 {
   Eigen::Vector3d v(-R(1, 2), R(0, 2), -R(0, 1));
-  double acosTr = std::acos((R.trace() - 1) / 2);
   if (v.norm() < prec)
     out = v;
   else
   {
     OutputType diff(R - R.transpose());
+    double acosTr = std::acos((R.trace() - 1) / 2);
     double coeff = acosTr / (2 * std::sin(acosTr));
     v(0) = diff(2, 1) * coeff;
     v(1) = diff(0, 2) * coeff;

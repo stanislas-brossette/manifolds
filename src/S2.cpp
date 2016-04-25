@@ -258,7 +258,9 @@ Eigen::Vector3d S2::randVec(const ConstRefVec& x) const
 
 void S2::pseudoLog0_(RefVec, const ConstRefVec&) const
 {
-  throw std::runtime_error("Unimplemented method in S2");
+  throw std::runtime_error(
+      "Unimplemented method in S2 pseudoLog0_ makes no sense because there is "
+      "no 0");
 }
 
 void S2::setZero_(RefVec out) const
@@ -268,10 +270,13 @@ void S2::setZero_(RefVec out) const
   out << 1.0, 0.0, 0.0;
 }
 
-Eigen::MatrixXd S2::diffRetractation_(const ConstRefVec& out) const
+Eigen::MatrixXd S2::diffRetractation_(const ConstRefVec& x) const
 {
-  throw std::runtime_error("Unimplemented method in S2");
-  return out;
+  Eigen::Matrix3d res;
+  res << 1-x(0)*x(0), -x(0)*x(1), -x(0)*x(2),
+         -x(0)*x(1), 1-x(1)*x(1), -x(1)*x(2),
+         -x(0)*x(2), -x(1)*x(2), 1-x(2)*x(2);
+  return res;
 }
 
 void S2::applyDiffRetractation_(RefMat out, const ConstRefMat& in,
