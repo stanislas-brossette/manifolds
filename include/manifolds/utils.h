@@ -133,7 +133,7 @@ inline uint computeHash(const char* str)
 inline uint computeHash(const char* str, const char* str2)
 {
   return finalize(computeHash_recurse(
-      str2, strlen(str2), 0, computeHash_recurse(str, static_cast<int>(strlen(str)), 0, 0)));
+      str2, static_cast<int>(strlen(str2)), 0, computeHash_recurse(str, static_cast<int>(strlen(str)), 0, 0)));
 }
 #else
 template <int N>

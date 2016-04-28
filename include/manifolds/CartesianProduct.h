@@ -47,7 +47,7 @@ class MANIFOLDS_API CartesianProduct : public Manifold
   CartesianProduct& multiply(const Manifold& m);
 
   virtual size_t numberOfSubManifolds() const;
-  virtual const Manifold& operator()(const size_t i) const;
+  virtual const Manifold& operator()(size_t i) const;
 
   virtual std::string description(const std::string& prefix = "",
                                   bool firstCall = true) const;
@@ -63,10 +63,10 @@ class MANIFOLDS_API CartesianProduct : public Manifold
   virtual void forceOnM_(RefVec out, const ConstRefVec& in) const;
   virtual void getIdentityOnTxM_(RefMat out, const ConstRefVec& x) const;
 
-  virtual Index startR(const size_t i) const;
-  virtual Index startT(const size_t i) const;
+  virtual Index startR(size_t i) const;
+  virtual Index startT(size_t i) const;
 
-  virtual void createRandomPoint_(RefVec out, const double coeff) const;
+  virtual void createRandomPoint_(RefVec out, double coeff) const;
   virtual void retractation_(RefVec out, const ConstRefVec& x,
                              const ConstRefVec& v) const;
   virtual void pseudoLog_(RefVec out, const ConstRefVec& x,
