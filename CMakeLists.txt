@@ -29,6 +29,7 @@ include(cmake/base.cmake)
 include(cmake/boost.cmake)
 include(cmake/eigen.cmake)
 include(cmake/pkg-config.cmake)
+include(cmake/msvc-specific.cmake)
 
 set(PROJECT_NAME manifolds)
 set(PROJECT_DESCRIPTION manifolds)
@@ -74,6 +75,12 @@ include_directories(include)
 
 FIND_PACKAGE(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
+
+# For MSVC, set local environment variable to enable finding the built dlls
+# of roboptim-core and the plugins when launching ctest with RUN_TESTS
+IF(MSVC)
+  SET(CMAKE_MSVCIDE_RUN_PATH "\$(SolutionDir)/src/\$(Configuration)")
+ENDIF(MSVC)
 
 # add_subdirectory(bin)
 # add_subdirectory(share)
