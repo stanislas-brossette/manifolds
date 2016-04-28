@@ -53,19 +53,19 @@ Eigen::Matrix3d computeRotBetweenVec(const Eigen::Vector3d& x,
                                      const Eigen::Vector3d& y);
 bool MANIFOLDS_API set_is_malloc_allowed(bool allow);
 
-Eigen::MatrixXd FDLogarithm(const Manifold& M, const ConstRefVec& constX,
+MANIFOLDS_API Eigen::MatrixXd FDLogarithm(const Manifold& M, const ConstRefVec& constX,
                             const double& delta);
-Eigen::MatrixXd FDDerivDistanceX(const Manifold& M, const ConstRefVec& constX,
+MANIFOLDS_API Eigen::MatrixXd FDDerivDistanceX(const Manifold& M, const ConstRefVec& constX,
                                  const ConstRefVec& constY,
                                  const double& delta);
-Eigen::MatrixXd FDDerivSquaredDistanceX(const Manifold& M,
+MANIFOLDS_API Eigen::MatrixXd FDDerivSquaredDistanceX(const Manifold& M,
                                         const ConstRefVec& constX,
                                         const ConstRefVec& constY,
                                         const double& delta);
-Eigen::MatrixXd FDDerivDistanceY(const Manifold& M, const ConstRefVec& constX,
+MANIFOLDS_API Eigen::MatrixXd FDDerivDistanceY(const Manifold& M, const ConstRefVec& constX,
                                  const ConstRefVec& constY,
                                  const double& delta);
-Eigen::MatrixXd FDDerivSquaredDistanceY(const Manifold& M,
+MANIFOLDS_API Eigen::MatrixXd FDDerivSquaredDistanceY(const Manifold& M,
                                         const ConstRefVec& constX,
                                         const ConstRefVec& constY,
                                         const double& delta);
@@ -105,7 +105,7 @@ constexpr uint finalize(uint hash)
 {
   return finalize_1(finalize_4(finalize_3(finalize_2(finalize_1(hash)))));
 }
-#if defined(_MSC_FULL_VER) && _MSC_VER < 1900
+#if defined(_MSC_FULL_VER) && _MSC_VER <= 1900
 inline uint computeHash_recurse(const char* str, int N, int index = 0,
                                 uint hash = 0)
 {
@@ -127,13 +127,13 @@ inline uint computeHash_recurse(const char* str, int N, int index = 0,
 
 inline uint computeHash(const char* str)
 {
-  return finalize(computeHash_recurse(str, strlen(str), 0, 0));
+  return finalize(computeHash_recurse(str, static_cast<int>(strlen(str)), 0, 0));
 }
 
 inline uint computeHash(const char* str, const char* str2)
 {
   return finalize(computeHash_recurse(
-      str2, strlen(str2), 0, computeHash_recurse(str, strlen(str), 0, 0)));
+      str2, strlen(str2), 0, computeHash_recurse(str, static_cast<int>(strlen(str)), 0, 0)));
 }
 #else
 template <int N>

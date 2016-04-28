@@ -22,6 +22,9 @@
 #include <Eigen/Core>
 
 #if defined(_MSC_FULL_VER)
+//disabling the use of gcc specific __attribute__
+# define __attribute__(X)
+
 typedef unsigned int uint;
 #include <cstdint>
 #endif

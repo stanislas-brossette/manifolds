@@ -76,7 +76,7 @@ typedef utils::ConstReverseQuaternion toConstQuat;
 // typedef Eigen::Map< const Eigen::Quaterniond > toConstQuat;
 const double ExpMapQuaternion::prec =
     1e-8;  // TODO Should be sqrt(sqrt(machine precision))
-#if defined(_MSC_FULL_VER) && _MSC_VER < 1900
+#if defined(_MSC_FULL_VER) && _MSC_VER <= 1900
 char ExpMapQuaternion::hashName[] = "ExpMapQuaternion";
 #endif
 

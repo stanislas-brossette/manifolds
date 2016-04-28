@@ -411,7 +411,11 @@ void SO3<Map>::setTrustMagnitude(const ConstRefVec& out)
 template <typename Map>
 long SO3<Map>::getTypeId() const
 {
+#if defined(_MSC_FULL_VER) && _MSC_VER <= 1900
+  static long typeId = utils::hash::computeHash("SO3", Map::hashName);
+#else
   constexpr long typeId = utils::hash::computeHash("SO3", Map::hashName);
+#endif
   return typeId;
 }
 
