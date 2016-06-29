@@ -379,3 +379,27 @@ BOOST_AUTO_TEST_CASE(diffDistance)
   std::cout << "expRes:\n" << expRes << std::endl;
   BOOST_CHECK(res.isApprox(expRes, deltaRes));
 }
+
+BOOST_AUTO_TEST_CASE(S2TransportConservesH)
+{
+  S2 Space;
+  Index tangentDim = Space.tangentDim();
+  MatrixXd H1 = MatrixXd::Random(tangentDim, tangentDim);
+  H1 = H1*H1.transpose();
+  MatrixXd H2(tangentDim, tangentDim);
+  Point x = Space.createRandomPoint();
+
+  Vector3d z = Space.randVec(x.value());
+  Vector3d v1 = Space.randVec(x.value());
+  Vector3d v2;
+
+  Space.applyTransport(v2, v1, x.value(), z);
+
+  Space.applyTransport(H2, H1, x.value(), z);
+  Space.applyInvTransportOnTheRight(H2, H2, x.value(), z);
+
+  double res1 = v1.transpose()*H1*v1;
+  double res2 = v1.transpose()*H1*v1;
+  double deltaRes = 1e-5;
+  BOOST_CHECK(fabs(res2 - res1) < deltaRes);
+}
