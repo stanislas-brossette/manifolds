@@ -27,25 +27,25 @@ namespace mnf
 {
 namespace utils
 {
-class MANIFOLDS_API ReverseQuaternion : public Eigen::Quaterniond
+class ReverseQuaternion : public Eigen::Quaterniond
 {
   double* refData_;
 
  public:
-  ReverseQuaternion(double* data);
-  void print() const;
-  void writeChanges();
-  ~ReverseQuaternion();
+  MANIFOLDS_API ReverseQuaternion(double* data);
+  MANIFOLDS_API void print() const;
+  MANIFOLDS_API void writeChanges();
+  MANIFOLDS_API ~ReverseQuaternion();
 
-  ReverseQuaternion& operator=(const Eigen::Quaterniond& quat);
+  MANIFOLDS_API ReverseQuaternion& operator=(const Eigen::Quaterniond& quat);
 };
 
-class MANIFOLDS_API ConstReverseQuaternion : public Eigen::Quaterniond
+class ConstReverseQuaternion : public Eigen::Quaterniond
 {
  public:
-  ConstReverseQuaternion(const double* data);
-  void print() const;
-  ~ConstReverseQuaternion() {}
+   MANIFOLDS_API ConstReverseQuaternion(const double* data);
+   MANIFOLDS_API void print() const;
+   MANIFOLDS_API ~ConstReverseQuaternion() {}
 };
 }
 
