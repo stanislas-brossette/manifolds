@@ -200,12 +200,12 @@ void RealSpace::applyDiffRetractation_(RefMat out, const ConstRefMat& in,
   out = in;
 }
 
-Eigen::MatrixXd RealSpace::pinvDiffRetractation_(const ConstRefVec& x) const
+Eigen::MatrixXd RealSpace::pinvDiffRetractation_(const ConstRefVec&) const
 {
   return Eigen::MatrixXd::Identity(tangentDim(), representationDim());
 }
 
-void RealSpace::pinvDiffRetractation_(RefMat out, const ConstRefVec& x) const
+void RealSpace::pinvDiffRetractation_(RefMat out, const ConstRefVec&) const
 {
   out.setIdentity();
 }

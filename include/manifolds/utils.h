@@ -80,7 +80,7 @@ Eigen::Matrix<double,c,r> pseudoInverse(const Eigen::Matrix<double,r,c>& mat)
   //It would be better to compute thin U and V but it is not available for fix-size matrices
   Eigen::JacobiSVD<MatrixRC> svd(mat, Eigen::ComputeFullU | Eigen::ComputeFullV);
 
-  Eigen::JacobiSVD<MatrixRC>::SingularValuesType s = svd.singularValues();
+  typename Eigen::JacobiSVD<MatrixRC>::SingularValuesType s = svd.singularValues();
 
   double tolerance = 1e-8;
   for (int i = 0; i < m; ++i)
