@@ -83,6 +83,8 @@ class SO3 : public Manifold
   virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const;
   virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in,
                                       const ConstRefVec& x) const;
+  virtual Eigen::MatrixXd pinvDiffRetractation_(const ConstRefVec& x) const;
+  virtual void pinvDiffRetractation_(RefMat out, const ConstRefVec& x) const;
   virtual Eigen::MatrixXd diffPseudoLog0_(const ConstRefVec& x) const;
   virtual void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in,
                                     const ConstRefVec& x) const;
@@ -296,6 +298,18 @@ inline void SO3<Map>::applyDiffRetractation_(RefMat out, const ConstRefMat& in,
                                              const ConstRefVec& x) const
 {
   Map::applyDiffRetractation_(out, in, x, bufferMap_);
+}
+
+template <typename Map>
+inline Eigen::MatrixXd SO3<Map>::pinvDiffRetractation_(const ConstRefVec& x) const
+{
+  return Map::pinvDiffRetractation_(x);
+}
+
+template <typename Map>
+inline void SO3<Map>::pinvDiffRetractation_(RefMat out, const ConstRefVec& x) const
+{
+  return Map::pinvDiffRetractation_(out, x);
 }
 
 template <typename Map>

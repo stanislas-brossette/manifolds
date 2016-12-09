@@ -100,6 +100,8 @@ struct MANIFOLDS_API ExpMapQuaternion
   static void applyDiffRetractation_(RefMat out, const ConstRefMat& in,
                                      const ConstRefVec& x,
                                      ReusableTemporaryMap& m);
+  static Eigen::MatrixXd pinvDiffRetractation_(const ConstRefVec& x);
+  static void pinvDiffRetractation_(RefMat out, const ConstRefVec& x);
   static Eigen::Matrix<double, 3, 4> diffPseudoLog0_(const ConstRefVec& x);
   static void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in,
                                    const ConstRefVec& x,

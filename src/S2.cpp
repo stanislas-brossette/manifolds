@@ -285,6 +285,18 @@ void S2::applyDiffRetractation_(RefMat out, const ConstRefMat& in,
   projRows(out, in, x);
 }
 
+Eigen::MatrixXd S2::pinvDiffRetractation_(const ConstRefVec& x) const
+{
+  Eigen::Matrix3d J = diffRetractation_(x);
+  return utils::pseudoInverse<3,3>(J);
+}
+
+void S2::pinvDiffRetractation_(RefMat out, const ConstRefVec& x) const
+{
+  Eigen::Matrix3d J = diffRetractation_(x);
+  out = utils::pseudoInverse<3, 3>(J);
+}
+
 Eigen::MatrixXd S2::diffPseudoLog0_(const ConstRefVec& out) const
 {
   throw std::runtime_error("Unimplemented method in S2");

@@ -22,6 +22,7 @@
 #include <manifolds/defs.h>
 #include <manifolds/ExpMapMatrix.h>
 #include <manifolds/mnf_assert.h>
+#include <manifolds/utils.h>
 
 namespace utility
 {
@@ -386,6 +387,18 @@ void ExpMapMatrix::applyDiffRetractation_(RefMat out, const ConstRefMat& in,
   Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(), 3);
   a.noalias() = in * diffRetractation_(x);
   out = a;
+}
+
+Eigen::MatrixXd ExpMapMatrix::pinvDiffRetractation_(const ConstRefVec& x)
+{
+  Eigen::Matrix<double, 9, 3> J = diffRetractation_(x);
+  return utils::pseudoInverse<9,3>(J);
+}
+
+void ExpMapMatrix::pinvDiffRetractation_(RefMat out, const ConstRefVec& x)
+{
+  Eigen::Matrix<double, 9, 3> J = diffRetractation_(x);
+  out = utils::pseudoInverse<9, 3>(J);
 }
 
 Eigen::Matrix<double, 3, 9> ExpMapMatrix::diffLogarithm(const OutputType& R)

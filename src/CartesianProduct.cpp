@@ -356,6 +356,27 @@ void CartesianProduct::applyDiffRetractation_(RefMat out, const ConstRefMat& in,
   }
 }
 
+Eigen::MatrixXd CartesianProduct::pinvDiffRetractation_(const ConstRefVec& x) const
+{
+  Eigen::MatrixXd iJ(tangentDim(), representationDim());
+  iJ.setZero();
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+  {
+    getView<T, R>(iJ, i) =
+      subManifolds_[i]->pinvDiffRetractation(getConstView<R>(x, i));
+  }
+  return iJ;
+}
+
+void CartesianProduct::pinvDiffRetractation_(RefMat out, const ConstRefVec& x) const
+{
+  out.setZero();
+  for (size_t i = 0; i < subManifolds_.size(); ++i)
+  {
+    subManifolds_[i]->pinvDiffRetractation(getView<T, R>(out, i), getConstView<R>(x, i));
+  }
+}
+
 Eigen::MatrixXd CartesianProduct::diffPseudoLog0_(const ConstRefVec& x) const
 {
   Eigen::MatrixXd J(tangentDim(), representationDim());

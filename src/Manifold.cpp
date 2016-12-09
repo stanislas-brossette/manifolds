@@ -263,6 +263,22 @@ void Manifold::applyDiffRetractation(RefMat out, const ConstRefMat& in,
   applyDiffRetractation_(out, in, x);
 }
 
+Eigen::MatrixXd Manifold::pinvDiffRetractation(const ConstRefVec& x) const
+{
+  mnf_assert(isValid() || seeMessageAbove());
+  mnf_assert(x.size() == representationDim_);
+  return pinvDiffRetractation_(x);
+}
+
+void Manifold::pinvDiffRetractation(RefMat out, const ConstRefVec& x) const
+{
+  mnf_assert(isValid() || seeMessageAbove());
+  mnf_assert(x.size() == representationDim_);
+  mnf_assert(out.rows() == tangentDim_);
+  mnf_assert(out.cols() == representationDim_);
+  return pinvDiffRetractation_(out, x);
+}
+
 Eigen::MatrixXd Manifold::diffPseudoLog0(const ConstRefVec& x) const
 {
   mnf_assert(isValid() || seeMessageAbove());

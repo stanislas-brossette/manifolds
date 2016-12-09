@@ -18,6 +18,8 @@
 #ifndef _MANIFOLDS_UTILS_H_
 #define _MANIFOLDS_UTILS_H_
 
+#include <Eigen/SVD>
+
 #include <manifolds/defs.h>
 #include <manifolds/Manifold.h>
 
@@ -69,6 +71,38 @@ MANIFOLDS_API Eigen::MatrixXd FDDerivSquaredDistanceY(const Manifold& M,
                                         const ConstRefVec& constX,
                                         const ConstRefVec& constY,
                                         const double& delta);
+
+template<int r, int c>
+Eigen::Matrix<double,c,r> pseudoInverse(const Eigen::Matrix<double,r,c>& mat)
+{
+  typedef Eigen::Matrix<double, r, c> MatrixRC;
+  const int m = std::min(r, c);
+  //It would be better to compute thin U and V but it is not available for fix-size matrices
+  Eigen::JacobiSVD<MatrixRC> svd(mat, Eigen::ComputeFullU | Eigen::ComputeFullV);
+
+  Eigen::JacobiSVD<MatrixRC>::SingularValuesType s = svd.singularValues();
+
+  double tolerance = 1e-8;
+  for (int i = 0; i < m; ++i)
+  {
+    if (s(i) > tolerance)
+      s(i) = 1.0 / s(i);
+    else
+      s(i) = 0.0;
+  }
+
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+  if (r>c)
+    return svd.matrixV() * s.asDiagonal() * svd.matrixU().leftCols(c).transpose();
+  else
+    return svd.matrixV().leftCols(r) * s.asDiagonal() * svd.matrixU().transpose();
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
+}
 
 namespace hash
 {

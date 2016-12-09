@@ -22,6 +22,7 @@
 #include <manifolds/defs.h>
 #include <manifolds/ExpMapQuaternion.h>
 #include <manifolds/mnf_assert.h>
+#include <manifolds/utils.h>
 
 namespace mnf
 {
@@ -364,6 +365,18 @@ void ExpMapQuaternion::applyDiffRetractation_(RefMat out, const ConstRefMat& in,
   Eigen::Map<Eigen::MatrixXd, Eigen::Aligned> a = m.getMap(in.rows(), 3);
   a.noalias() = in * diffRetractation_(x);
   out = a;
+}
+
+Eigen::MatrixXd ExpMapQuaternion::pinvDiffRetractation_(const ConstRefVec& x)
+{
+  Eigen::Matrix<double, 4, 3> J = diffRetractation_(x);
+  return utils::pseudoInverse<4, 3>(J);
+}
+
+void ExpMapQuaternion::pinvDiffRetractation_(RefMat out, const ConstRefVec& x)
+{
+  Eigen::Matrix<double, 4, 3> J = diffRetractation_(x);
+  out = utils::pseudoInverse<4, 3>(J);
 }
 
 Eigen::Matrix<double, 3, 4> ExpMapQuaternion::diffPseudoLog0_(

@@ -95,6 +95,8 @@ class MANIFOLDS_API S2 : public Manifold
   virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const;
   virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in,
                                       const ConstRefVec& x) const;
+  virtual Eigen::MatrixXd pinvDiffRetractation_(const ConstRefVec& x) const;
+  virtual void pinvDiffRetractation_(RefMat out, const ConstRefVec& x) const;
   virtual Eigen::MatrixXd diffPseudoLog0_(const ConstRefVec& x) const;
   virtual void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in,
                                     const ConstRefVec& x) const;

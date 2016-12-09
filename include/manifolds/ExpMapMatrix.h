@@ -78,6 +78,8 @@ struct MANIFOLDS_API ExpMapMatrix
   static void applyDiffRetractation_(RefMat out, const ConstRefMat& in,
                                      const ConstRefVec& x,
                                      ReusableTemporaryMap& m);
+  static Eigen::MatrixXd pinvDiffRetractation_(const ConstRefVec& x);
+  static void pinvDiffRetractation_(RefMat out, const ConstRefVec& x);
   static Eigen::Matrix<double, 3, 9> diffPseudoLog0_(const ConstRefVec& x);
   static Eigen::Matrix<double, 3, 9> diffLogarithm(const OutputType& x);
   static void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in,

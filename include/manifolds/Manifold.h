@@ -264,6 +264,9 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   void applyDiffRetractation(RefMat out, const ConstRefMat& in,
                              const ConstRefVec& x) const;
 
+  Eigen::MatrixXd pinvDiffRetractation(const ConstRefVec& x) const;
+  void pinvDiffRetractation(RefMat out, const ConstRefVec& x) const;
+
   /// \brief Computes the Jacobian matrix of the pseudoLog0 function
   /// \f$\frac{\partial\phi^{-1}_0}{\partial x}(x)\f$
   /// \param x element of manifold \f$x\in\mathbb{M}\f$
@@ -445,6 +448,8 @@ class MANIFOLDS_API Manifold : public RefCounter, public ValidManifold
   virtual Eigen::MatrixXd diffRetractation_(const ConstRefVec& x) const = 0;
   virtual void applyDiffRetractation_(RefMat out, const ConstRefMat& in,
                                       const ConstRefVec& x) const = 0;
+  virtual Eigen::MatrixXd pinvDiffRetractation_(const ConstRefVec& x) const = 0;
+  virtual void pinvDiffRetractation_(RefMat out, const ConstRefVec& x) const = 0;
   virtual Eigen::MatrixXd diffPseudoLog0_(const ConstRefVec& x) const = 0;
   virtual void applyDiffPseudoLog0_(RefMat out, const ConstRefMat& in,
                                     const ConstRefVec& x) const = 0;
