@@ -403,3 +403,17 @@ BOOST_AUTO_TEST_CASE(S2TransportConservesH)
   double deltaRes = 1e-5;
   BOOST_CHECK(fabs(res2 - res1) < deltaRes);
 }
+
+BOOST_AUTO_TEST_CASE(S2pinvDiffMap)
+{
+  S2 Space;
+  Point x = Space.createRandomPoint();
+  auto J = Space.diffRetractation(x.value());
+  auto K = Space.pinvDiffRetractation(x.value());
+
+  //checking Moore-Penrose properties
+  BOOST_CHECK((J*K*J).isApprox(J));
+  BOOST_CHECK((K*J*K).isApprox(K));
+  BOOST_CHECK((J*K).transpose().isApprox(J*K));
+  BOOST_CHECK((K*J).transpose().isApprox(K*J));
+}

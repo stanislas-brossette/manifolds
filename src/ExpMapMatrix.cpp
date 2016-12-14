@@ -391,14 +391,21 @@ void ExpMapMatrix::applyDiffRetractation_(RefMat out, const ConstRefMat& in,
 
 Eigen::MatrixXd ExpMapMatrix::pinvDiffRetractation_(const ConstRefVec& x)
 {
-  Eigen::Matrix<double, 9, 3> J = diffRetractation_(x);
-  return utils::pseudoInverse<9,3>(J);
+  Eigen::Matrix<double, 3, 9> J;
+  pinvDiffRetractation_(J, x);
+  return J;
 }
 
 void ExpMapMatrix::pinvDiffRetractation_(RefMat out, const ConstRefVec& x)
 {
-  Eigen::Matrix<double, 9, 3> J = diffRetractation_(x);
-  out = utils::pseudoInverse<9, 3>(J);
+  Eigen::Matrix<double, 3, 9> J;
+  Eigen::Matrix<double, 1, 3> u = 0.5 * x.head<3>().transpose();
+  Eigen::Matrix<double, 1, 3> v = 0.5 * x.segment<3>(3).transpose();
+  Eigen::Matrix<double, 1, 3> w = 0.5 * x.tail<3>().transpose();
+  Eigen::Matrix<double, 1, 3> z = Eigen::Matrix<double, 1, 3>::Zero();
+  out << z,  w, -v,
+        -w,  z,  u,
+         v, -u,  z;
 }
 
 Eigen::Matrix<double, 3, 9> ExpMapMatrix::diffLogarithm(const OutputType& R)

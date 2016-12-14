@@ -369,14 +369,17 @@ void ExpMapQuaternion::applyDiffRetractation_(RefMat out, const ConstRefMat& in,
 
 Eigen::MatrixXd ExpMapQuaternion::pinvDiffRetractation_(const ConstRefVec& x)
 {
-  Eigen::Matrix<double, 4, 3> J = diffRetractation_(x);
-  return utils::pseudoInverse<4, 3>(J);
+  Eigen::Matrix<double, 3, 4> J;
+  pinvDiffRetractation_(J, x);
+  return J;
 }
 
 void ExpMapQuaternion::pinvDiffRetractation_(RefMat out, const ConstRefVec& x)
 {
-  Eigen::Matrix<double, 4, 3> J = diffRetractation_(x);
-  out = utils::pseudoInverse<4, 3>(J);
+  toConstQuat xQ(x.data());
+  out << -2*xQ.x(),  2*xQ.w(),  2*xQ.z(), -2*xQ.y(),
+         -2*xQ.y(), -2*xQ.z(),  2*xQ.w(),  2*xQ.x(),
+         -2*xQ.z(),  2*xQ.y(), -2*xQ.x(),  2*xQ.w();
 }
 
 Eigen::Matrix<double, 3, 4> ExpMapQuaternion::diffPseudoLog0_(

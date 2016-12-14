@@ -611,3 +611,18 @@ BOOST_AUTO_TEST_CASE(diffDistance)
   expRes = utils::FDDerivSquaredDistanceY(M, x, y, deltaFD);
   BOOST_CHECK(res.isApprox(expRes, deltaRes));
 }
+
+
+BOOST_AUTO_TEST_CASE(pinvDiffMap)
+{
+  SO3<ExpMapQuaternion> Space;
+  Point x = Space.createRandomPoint();
+  auto J = Space.diffRetractation(x.value());
+  auto K = Space.pinvDiffRetractation(x.value());
+
+  //checking Moore-Penrose properties
+  BOOST_CHECK((J*K*J).isApprox(J));
+  BOOST_CHECK((K*J*K).isApprox(K));
+  BOOST_CHECK((J*K).transpose().isApprox(J*K));
+  BOOST_CHECK((K*J).transpose().isApprox(K*J));
+}
