@@ -36,6 +36,8 @@ set(PROJECT_DESCRIPTION manifolds)
 set(PROJECT_URL https://brossette@idh.lirmm.fr/././././pgsolver.git)
 set(PROJECT_DEBUG_POSTFIX "_d")
 
+option(DISABLE_TESTS "Disable unit tests" OFF)
+
 set(HEADERS )
 
 setup_project()
@@ -85,7 +87,10 @@ ENDIF(MSVC)
 # add_subdirectory(bin)
 # add_subdirectory(share)
 add_subdirectory(src)
-add_subdirectory(tests)
+
+if(NOT ${DISABLE_TESTS})
+  add_subdirectory(tests)
+endif()
 # add_subdirectory(var)
 
 setup_project_finalize()
